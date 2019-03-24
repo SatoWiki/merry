@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initialscale=1.0">
+	<meta name="robots" content="INDEX,FOLLOW">
+	<meta name="keywords" content="論理演算子,論理積,AND,論理和,OR,否定,NOT,条件演算子">
+	<meta name="description" content="論理演算子と条件演算子の説明をします。">
+	<meta name="author" content="T.Hagiwara">
+	<link rel="stylesheet" href="../../CSS3/seminar.css" type="text/css">
+	<link rel="stylesheet" href="../../CSS3/hl_clang.css" type="text/css">
+	<link rel="prev" href="../SECTION04/section04_2.html">
+	<link rel="next" href="./section05_2.html">
+	<title>Ｃ言語プログラミング入門&nbsp;-&nbsp;いろいろな演算子（1/2）</title>
+	<style type="text/css">
+	</style>
+</head>
+<body>
+<div id="container">
+	<header>
+		<p>Linux講座にようこそ。このページは「Ｃ言語プログラミング入門&nbsp;-&nbsp;第５章．いろいろな演算子」です。</p>
+		<h1>Ｃ言語プログラミング入門</h1>
+		<nav>
+			<ul>
+				<li><a href="../../index.html">ホーム</a></li>
+				<li><a href="../c_langtop.html#lbl_index">目次</a></li>
+				<li><a href="../SECTION04/section04_2.html">前のページ</a></li>
+				<li><a href="./section05_2.html">次のページ</a></li>
+			</ul>
+		</nav>
+	</header>
+
+	<section class="contents">
+		<h1>5. いろいろな演算子（1/2）</h1>
+		<section>
+			<h2 id="lbl_logic">5.1 論理演算子</h2>
+			<p>条件分岐の条件で、複数の条件が組み合わさっている場合があります。例えば「番号の値が１から４の範囲」というような場合です。これは、もう少し詳しく書くと「番号の値が１以上<strong>かつ</strong>、４以下」という条件になります。このような条件を指定するための演算子を論理演算子と呼んでいます。</p>
+			<p>論理演算子には論理積（かつ：AND）、論理和（または：OR）、否定（NOT）の３種類があります。</p>
+			<section>
+				<h3>5.1.1 形式</h3>
+				<p>論理積は<strong>&amp;&amp;</strong>（アンパサンド２つ）、論理和は<strong>||</strong>（縦線２つ）、否定は<strong>!</strong>（感嘆符）を使用します。</p>
+				<div class="form-exp">
+					条件１ &amp;&amp; 条件２<br>
+					条件１ || 条件２<br>
+					! 条件
+				</div>
+				<dl>
+					<dt>条件１ &amp;&amp; 条件２</dt>
+						<dd>条件１が真<strong>かつ</strong>、条件２が真の場合は真になり、それ以外は偽になります。（条件１と条件２が真の場合は真になります）</dd>
+					<dt>条件１ || 条件２</dt>
+						<dd>条件１<strong>または</strong>、条件２が真の場合は真になり、それ以外は偽になります。（条件１と条件２のどちらか一方が真の場合は真になります）</dd>
+					<dt>! 条件</dt>
+						<dd>条件の真偽を反転します。（条件が真の場合は偽に、偽の場合は真になります）</dd>
+				</dl>
+				<p>これらの演算子は複数組み合わせて使用することが出来ます。</p>
+			</section>
+			<section>
+				<h3>5.1.2 例題</h3>
+				<section>
+					<h4>例題１</h4>
+					<p>メニューに表示される計算の種類を指定する記号（+、-、*、/）と、２つの数値を入力し、計算結果を出力します。最初に記号のチェックを行い、正しいときは計算結果を出力し、不当な場合はメッセージを出力します。</p>
+					<div class="source-code">
+						<div class="c"><ol><li class="li1"><div class="de1"><span class="co2">#include &lt;stdio.h&gt;</span></div></li>
+						<li class="li1"><div class="de1"><span class="kw4">int</span> main<span class="br0">&#40;</span><span class="br0">&#41;</span></div></li>
+						<li class="li1"><div class="de1"><span class="br0">&#123;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">char</span> &nbsp; &nbsp;enzansi<span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">double</span> &nbsp;atai1<span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">double</span> &nbsp;atai2<span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp;</div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;四則演算を行います<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;演算子を入力してください ==&gt; &quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">scanf</span><span class="br0">&#40;</span><span class="st0">&quot;%c&quot;</span><span class="sy0">,</span> <span class="sy0">&amp;</span>enzansi<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp;</div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="coMULTI">/* 入力した演算子のチェック */</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">if</span> <span class="br0">&#40;</span>enzansi <span class="sy0">==</span> <span class="st0">'+'</span> <span class="sy0">||</span> enzansi <span class="sy0">==</span> <span class="st0">'-'</span> <span class="sy0">||</span> enzansi <span class="sy0">==</span> <span class="st0">'*'</span> <span class="sy0">||</span> enzansi <span class="sy0">==</span> <span class="st0">'/'</span><span class="br0">&#41;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;２つの値を入力してください ==&gt; &quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; <span class="kw3">scanf</span><span class="br0">&#40;</span><span class="st0">&quot;%lf%lf&quot;</span><span class="sy0">,</span> <span class="sy0">&amp;</span>atai1<span class="sy0">,</span> <span class="sy0">&amp;</span>atai2<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp;</div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; <span class="coMULTI">/* 演算子により、処理を振り分ける */</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; <span class="kw1">switch</span> <span class="br0">&#40;</span>enzansi<span class="br0">&#41;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">case</span> <span class="st0">'+'</span><span class="sy0">:</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* 加算 */</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;%lf + %lf = %lf<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> atai1<span class="sy0">,</span> atai2<span class="sy0">,</span> atai1 <span class="sy0">+</span> atai2<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw2">break</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">case</span> <span class="st0">'-'</span><span class="sy0">:</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* 減算 */</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;%lf - %lf = %lf<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> atai1<span class="sy0">,</span> atai2<span class="sy0">,</span> atai1 <span class="sy0">-</span> atai2<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw2">break</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">case</span> <span class="st0">'*'</span><span class="sy0">:</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* 乗算 */</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;%lf × %lf = %lf<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> atai1<span class="sy0">,</span> atai2<span class="sy0">,</span> atai1 <span class="sy0">*</span> atai2<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw2">break</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">case</span> <span class="st0">'/'</span><span class="sy0">:</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* 除算 */</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;%lf ÷ %lf = %lf<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> atai1<span class="sy0">,</span> atai2<span class="sy0">,</span> atai1 <span class="sy0">/</span> atai2<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw2">break</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">else</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;演算子が不当です<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp;</div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">return</span> <span class="nu0">0</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1"><span class="br0">&#125;</span></div></li>
+						</ol></div>
+					</div>
+					<div class="exe-samp">
+<pre><samp>$ <kbd>./ex05_1.prg</kbd>
+四則演算を行います
+演算子を入力してください ==&gt; <kbd>+</kbd>
+２つの値を入力してください ==&gt; <kbd>10 20</kbd>
+10.000000 + 20.000000 = 30.000000
+$ <kbd>./ex05_1.prg</kbd>
+四則演算を行います
+演算子を入力してください ==&gt; <kbd>/</kbd>
+２つの値を入力してください ==&gt; <kbd>10 20</kbd>
+10.000000 ÷ 20.000000 = 0.500000
+$ <kbd>./ex05_1.prg</kbd>
+四則演算を行います
+演算子を入力してください ==&gt; <kbd>^</kbd>
+演算子が不当です
+$</samp></pre>
+					</div>
+					<dl>
+						<dt>10行目</dt>
+							<dd>計算の種類を指定する記号（+、-、*、/）を入力します。</dd>
+						<dt>13行目</dt>
+							<dd>入力した記号のチェックを行います。記号が「+<strong>または</strong>、-<strong>または</strong>、*<strong>または</strong>、/」の条件が真の場合は計算結果を出力し、偽の場合はメッセージを出力します。</dd>
+						<dt>19行目</dt>
+							<dd>変数enzansiはchar型ですが、char型は整数型の一種ですので、switch文で取り扱えます。</dd>
+					</dl>
+					<aside>
+						<h5>補足</h5>
+						<p>文が長くなってしまう場合は、適当なところで改行して構いません。Ｃ言語の場合、改行や空行は文法的には意味がありませんので、ソースプログラムを読み易くするために、適宜改行するとよいでしょう。</p>
+						<div class="source-code"><code>
+							if (enzansi == '+' ||<br>
+							&nbsp;&nbsp;&nbsp;&nbsp;enzansi == '-' ||<br>
+							&nbsp;&nbsp;&nbsp;&nbsp;enzansi == '*' ||<br>
+							&nbsp;&nbsp;&nbsp;&nbsp;enzansi == '/')</code>
+						</div>
+					</aside>
+				</section>
+				<section>
+					<h4>例題２</h4>
+					<p>肥満度（BMI）のめやすは18.5〜25.0（18.5以上でかつ、25.0未満）の範囲が普通（標準値）で、18.5未満はやせすぎ、25.0以上は太り過ぎといわれています。そこで、BMIの値が18.5〜25.0（18.5以上でかつ、25.0未満）の範囲の場合は「肥満度は標準値の範囲です」を、それ以外の場合は「肥満度は標準値の範囲を超えています。やせすぎ、太り過ぎに注意しましょう」のメッセージを出力します。</p>
+					<div class="source-code">
+						<div class="c"><ol><li class="li1"><div class="de1"><span class="co2">#include &lt;stdio.h&gt;</span></div></li>
+						<li class="li1"><div class="de1"><span class="kw4">int</span> main<span class="br0">&#40;</span><span class="br0">&#41;</span></div></li>
+						<li class="li1"><div class="de1"><span class="br0">&#123;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">double</span> &nbsp;taijyu<span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">double</span> &nbsp;sinchyo<span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">double</span> &nbsp;bmi<span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp;</div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;肥満度(BMI)の計算を行います<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;体重(kg)と身長(m)を入力してください ==&gt; &quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">scanf</span><span class="br0">&#40;</span><span class="st0">&quot;%lf%lf&quot;</span><span class="sy0">,</span> <span class="sy0">&amp;</span>taijyu<span class="sy0">,</span> <span class="sy0">&amp;</span>sinchyo<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp;</div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="coMULTI">/* 肥満度(BMI) = 体重(kg) / 身長(m) / 身長(m) */</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; bmi <span class="sy0">=</span> taijyu <span class="sy0">/</span> sinchyo <span class="sy0">/</span> sinchyo<span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;肥満度は%.2fです<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> bmi<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp;</div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="coMULTI">/* BMIのチェック &nbsp;*/</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">if</span> <span class="br0">&#40;</span>bmi <span class="sy0">&gt;=</span> <span class="nu16">18.5</span> <span class="sy0">&amp;&amp;</span> bmi <span class="sy0">&lt;</span> <span class="nu16">25.0</span><span class="br0">&#41;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;肥満度は標準値の範囲です<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">else</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;肥満度は標準値の範囲を超えています。やせすぎ、太り過ぎに注意しましょう<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp;</div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">return</span> <span class="nu0">0</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1"><span class="br0">&#125;</span></div></li>
+						</ol></div>
+					</div>
+					<div class="exe-samp">
+<pre><samp>$ <kbd>./ex05_2.prg</kbd>
+肥満度(BMI)の計算を行います
+体重(kg)と身長(m)を入力してください ==&gt; 65.5 1.75
+肥満度は21.39です
+肥満度は標準値の範囲です
+$ <kbd>./ex05_2.prg</kbd>
+肥満度(BMI)の計算を行います
+体重(kg)と身長(m)を入力してください ==&gt; 88.0 1.75
+肥満度は28.73です
+肥満度は標準値の範囲を超えています。やせすぎ、太り過ぎに注意しましょう
+$ <kbd>./ex05_2.prg</kbd>
+肥満度(BMI)の計算を行います
+体重(kg)と身長(m)を入力してください ==&gt; 55.5 1.8
+肥満度は17.13です
+肥満度は標準値の範囲を超えています。やせすぎ、太り過ぎに注意しましょう
+$</samp></pre>
+					</div>
+					<dl>
+						<dt>17行目</dt>
+							<dd>変数bmiの値が18.5〜25.0（18.5以上でかつ、25.0未満）の条件が真の場合は標準値ですので、その旨のメッセージを出力します。</dd>
+					</dl>
+				</section>
+			</section>
+		</section>
+
+		<section>
+			<h2 id="lbl_cond">5.2 条件演算子</h2>
+			<p>通常、条件判定はif文を使うことが多いのですが、条件判定のための演算子も用意されています。単純な条件の場合は条件演算子を使った方が簡潔に表現できます。</p>
+			<section>
+				<h3>5.2.1 形式</h3>
+				<p>条件演算子は<strong>?</strong>（疑問符）と<strong>:</strong>（コロン）を使用します。指定の仕方が通常の演算子と異なりますので注意してください。</p>
+				<div class="form-exp">
+					式１ ? 式２ : 式３
+				</div>
+				<dl>
+					<dt>式１</dt>
+						<dd>通常は条件演算子や論理演算子を使った式を指定しますが、四則演算子を使った式や、変数１個だけでも構いません。式の値が０の場合は偽で、０以外の場合は真です</dd>
+					<dt>式２</dt>
+						<dd>式１が<strong>真</strong>の場合に実行する式を指定します。この式の値が全体の式の値になります。</dd>
+					<dt>式３</dt>
+						<dd>式１が<strong>偽</strong>の場合に実行する式を指定します。この式の値が全体の式の値になります。</dd>
+				</dl>
+				<p>条件演算子は次のif文と同じような意味です。</p>
+				<div class="form-exp">
+					if (式１)<br>
+					&nbsp;&nbsp;&nbsp;&nbsp;式２;<br>
+					else<br>
+					&nbsp;&nbsp;&nbsp;&nbsp;式３;
+				</div>
+			</section>
+			<section>
+				<h3>5.2.2 例題</h3>
+				<p>月の日数を出力します。ただし、閏年は考慮していません。</p>
+				<div class="source-code">
+					<div class="c"><ol><li class="li1"><div class="de1"><span class="co2">#include &lt;stdio.h&gt;</span></div></li>
+					<li class="li1"><div class="de1"><span class="kw4">int</span> main<span class="br0">&#40;</span><span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">int</span> tuki<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">int</span> nisuu<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;月の日数を求めます<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;何月ですか ==&gt; &quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">scanf</span><span class="br0">&#40;</span><span class="st0">&quot;%d&quot;</span><span class="sy0">,</span> <span class="sy0">&amp;</span>tuki<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="coMULTI">/* 入力した月のチェック */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">if</span> <span class="br0">&#40;</span>tuki <span class="sy0">&gt;=</span> <span class="nu0">1</span> <span class="sy0">&amp;&amp;</span> tuki <span class="sy0">&lt;=</span> <span class="nu0">12</span><span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; <span class="kw1">if</span> <span class="br0">&#40;</span>tuki <span class="sy0">==</span> <span class="nu0">2</span><span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* 2月 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; nisuu <span class="sy0">=</span> <span class="nu0">28</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; <span class="kw1">else</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* ２月以外。４、６、９、１１月は３０日、それ以外は３１日 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; nisuu <span class="sy0">=</span> tuki <span class="sy0">==</span> <span class="nu0">4</span> <span class="sy0">||</span> tuki <span class="sy0">==</span> <span class="nu0">6</span> <span class="sy0">||</span> tuki <span class="sy0">==</span> <span class="nu0">9</span> <span class="sy0">||</span> tuki <span class="sy0">==</span> <span class="nu0">11</span> <span class="sy0">?</span> <span class="nu0">30</span> <span class="sy0">:</span> <span class="nu0">31</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;%d月の日数は%d日です<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> tuki<span class="sy0">,</span> nisuu<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">else</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;月の値が不当です<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">return</span> <span class="nu0">0</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#125;</span></div></li>
+					</ol></div>
+				</div>
+				<div class="source-code">
+<pre><samp>$ <kbd>./ex05_3.prg</kbd>
+月の日数を求めます
+何月ですか ==&gt; <kbd>3</kbd>
+3月の日数は31日です
+$ <kbd>./ex05_3.prg</kbd>
+月の日数を求めます
+何月ですか ==&gt; <kbd>2</kbd>
+2月の日数は28日です
+$</samp></pre>
+				</div>
+				<dl>
+					<dt>22行目</dt>
+						<dd>右辺の式の値は条件「<code>tuki == 4 || tuki == 6 || tuki == 9 || tuki == 11</code>」が真のとき30に、偽のとき31になります。</dd>
+				</dl>
+				<aside>
+					<h4>補足</h4>
+					<p>上記例題の22行目は演算子が多すぎて意味が分かりにくくなっています。このような場合は括弧で括ると意味がわかりやすくなります。（括弧は演算の優先順位を上げるためのものですが、ここでは意味をわかりやすくすることを目的に使用しています）</p>
+					<p>例：<code>nisuu = (tuki == 4 || tuki == 6 || tuki == 9 || tuki == 11) ? 30 : 31;</code></p>
+				</aside>
+			</section>
+		</section>
+	</section>
+
+	<footer>
+		<nav>
+			<ul>
+				<li><a href="../../index.html">ホーム</a></li>
+				<li><a href="../c_langtop.html#lbl_index">目次</a></li>
+				<li><a href="../SECTION04/section04_2.html">前のページ</a></li>
+				<li><a href="./section05_2.html">次のページ</a></li>
+			</ul>
+		</nav>
+		<p id="footer-author">更新日：<time datetime="2018-05-16">2018年05月16日</time> Merry</p>
+	</footer>
+</div>
+</body>
+</html>

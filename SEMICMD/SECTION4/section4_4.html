@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initialscale=1.0">
+	<meta name="robots" content="INDEX,FOLLOW">
+	<meta name="keywords" content="圧縮,解凍,テキストファイルの編集,gzip,bzip2,zip,unzip,lha,vi">
+	<meta name="description" content="ファイルの圧縮・解凍とテキストファイルの編集コマンドの使い方をご紹介します。">
+	<meta name="author" content="T.Hagiwara">
+	<link rel="stylesheet" href="../../CSS3/seminar.css" type="text/css">
+	<link rel="Prev" href="./section4_3.html">
+	<link rel="Next" href="./section4_5.html">
+	<title>Linuxの使い方&nbsp;-&nbsp;ファイル操作のコマンド２（4/5）</title>
+	<style type="text/css">
+	</style>
+</head>
+<body>
+<div id="container">
+	<header>
+		<p>Linux講座にようこそ。このページは「Linuxの使い方&nbsp;-&nbsp;第４章&nbsp;ファイル操作のコマンド２」です。</p>
+		<h1>Linuxの使い方</h1>
+		<nav>
+			<ul>
+				<li><a href="../../index.html">ホーム</a></li>
+				<li><a href="../cmdtop.html#lbl_index">目次</a></li>
+				<li><a href="./section4_3.html">前のページ</a></li>
+				<li><a href="./section4_5.html">次のページ</a></li>
+			</ul>
+		</nav>
+	</header>
+
+	<section class="contents">
+		<h1>4. ファイル操作のコマンド２（4/5）</h1>
+		<section>
+			<h2>4.3 コマンドのご紹介２（3/4）</h2>
+			<section>
+				<!-- gzip、bzip2、zip、unzip、lhaコマンドの説明 -->
+				<h3 id="lbl_compression">4.3.10 ファイルの圧縮と解凍（gzip、bzip2、zip、unzip、lhaコマンド）</h3>
+				<p>gzipとbzip2コマンドはUNIX系OSでよく使われている圧縮・解凍ツールで、ほとんどのLinuxディストリビューションで標準でインストールされています。また、Windows系OSで使われているzipやlzh形式の圧縮ファイルを取り扱うzip、unzip、lhaコマンドもあります。（Fedoraではlhaコマンドはインストールされないため、個別にインストールする必要があります）</p>
+				<p>gzipとbzip2コマンドは、主にtarコマンドで作成したアーカイブファイルを圧縮するのに使用します。一般に、bzip2コマンドの方が圧縮率が高いと言われていますので、最近はbzip2コマンドの方がよく使われているようです。</p>
+				<p>Windows系OSで解凍する可能性がある場合は、zipコマンドで圧縮しておけばWindowsの標準機能で解凍できます。ただし、ファイル名に全角文字を含んでいる場合は、ファイル名が文字化けしてしまうことがありますので、ファイル名は半角文字にしておいた方がよいでしょう。</p>
+				<p>この他のコマンドとして、gzipで圧縮したファイルの解凍を行うgunzipや、bzip2で圧縮したファイルの解凍を行うbunzip2がありますが、解凍はgzipやbzip2でもできますので、ここでは説明しません。使い方をお知りになりたい方はmanコマンド等で調べてください。</p>
+				<p>なお、KDEの場合はファイルマネージャーのDolphinで対話的に圧縮・解凍が行えますので、通常はそちらを使った方が簡単です。また、ArkというGUIのアーカイブツールもあります。</p>
+				<section>
+					<h4>一般形式</h4>
+					<p>gzip及び、bzip2コマンドは圧縮結果を元のファイルに上書きします。上書きしたくない場合は-cオプションで標準出力に出力し、それをリダイレクトします。そのときの出力ファイルの拡張子は「.gz」及び、「.bz2」にします。</p>
+					<p>zip及び、lhaコマンドで作成した圧縮ファイルの拡張子は、それぞれ「.zip」及び、「.lzh」にします。</p>
+					<div class="form-exp">
+						$ gzip -cdr ファイルパス名１ ファイルパス名２ …<br>
+						$ bzip2 -zcd ファイルパス名１ ファイルパス名２ …<br>
+						$ zip -r 圧縮ファイルパス名 ファイルパス名１ ファイルパス名２ …<br>
+						$ unzip 圧縮ファイルパス名<br>
+						$ lha ael 圧縮ファイルパス名 ファイルパス名１ ファイルパス名２ …
+					</div>
+					<p>gzipコマンドのオプションには、次のようなものがあります。</p>
+					<table class="simple-table">
+						<caption>【表4-16】gzipコマンド・オプション</caption>
+						<tr><th>オプション</th><th>意味</th></tr>
+						<tr><td>-c, --stdout, --to-stdout</td><td>圧縮結果を標準出力に出力します。</td></tr>
+						<tr><td>-d, --decompress, --uncompress</td><td>圧縮ファイルを解凍します。当オプションを指定しないと圧縮を行います。</td></tr>
+						<tr><td>-r, --recursive</td><td>ファイルパス名としてディレクトリを指定すると、そのディレクトリを含めてツリー構造全体を圧縮します。</td></tr>
+					</table>
+					<p>bzip2コマンドのオプションには、次のようなものがあります。</p>
+					<table class="simple-table">
+						<caption>【表4-17】bzip2コマンド・オプション</caption>
+						<tr><th>オプション</th><th>意味</th></tr>
+						<tr><td>-z, --compress</td><td>圧縮します。当オプションはデフォルト値です。</td></tr>
+						<tr><td>-c, --stdout </td><td>圧縮結果を標準出力に出力します。</td></tr>
+						<tr><td>-d, --decompress</td><td>圧縮ファイルを解凍します。</td></tr>
+					</table>
+					<p>zipコマンドのオプションには、次のようなものがあります。</p>
+					<table class="simple-table">
+						<caption>【表4-18】zipコマンド・オプション</caption>
+						<tr><th>オプション</th><th>意味</th></tr>
+						<tr><td>-r,--recurse-paths</td><td>ファイルパス名としてディレクトリを指定すると、そのディレクトリを含めてツリー構造全体を圧縮します。</td></tr>
+					</table>
+					<p>lhaコマンドのオプションには、次のようなものがあります。（オプションの先頭の-はありませんので注意してください）</p>
+					<table class="simple-table">
+						<caption>【表4-19】lhaコマンド・オプション</caption>
+						<tr><th>オプション</th><th>意味</th></tr>
+						<tr><td>a</td><td>圧縮します。</td></tr>
+						<tr><td>e</td><td>圧縮ファイルを解凍します。</td></tr>
+						<tr><td>l</td><td>圧縮情報を表示します。</td></tr>
+					</table>
+				</section>
+				<section>
+					<h4>実行例</h4>
+					<p>gzipコマンドでカレントディレクトリの下のファイルを圧縮・解凍します。</p>
+					<div class="exe-samp">
+<pre><samp>$ <kbd>ls</kbd>
+ex02_1.c  ex02_2.c  makefile
+$
+$ <kbd>gzip ex02_1.c makefile</kbd><strong> ← 圧縮します</strong>
+$ <kbd>ls</kbd>
+ex02_1.c.gz  ex02_2.c  makefile.gz<strong> ← 拡張子「.gz」が付きます</strong>
+$
+$ <kbd>gzip -d ex02_1.c.gz makefile.gz</kbd><strong> ← 解凍します</strong>
+$ <kbd>ls</kbd>
+ex02_1.c  ex02_2.c  makefile<strong> ← 元に戻ります</strong>
+$
+</samp></pre>
+					</div>
+					<p>bzip2コマンドでカレントディレクトリの下のファイルを圧縮・解凍します。</p>
+					<div class="exe-samp">
+<pre><samp>$ <kbd>ls</kbd>
+ex02_1.c  ex02_2.c  makefile
+$
+$ <kbd>bzip2 ex02_1.c makefile</kbd><strong> ← 圧縮します（-zオプションを付けても同じ）</strong>
+$ <kbd>ls</kbd>
+ex02_1.c.bz2  ex02_2.c  makefile.bz2<strong> ← 拡張子「.bz2」が付きます</strong>
+$
+$ <kbd>bzip2 -d ex02_1.c.bz2 makefile.bz2</kbd><strong> ← 解凍します</strong>
+$ <kbd>ls</kbd>
+ex02_1.c  ex02_2.c  makefile<strong> ← 元に戻ります</strong>
+$
+</samp></pre>
+					</div>
+					<p>tarのアーカイブファイルをbzip2で圧縮・解凍します。</p>
+					<div class="exe-samp">
+<pre><samp>$ <kbd>tar -cf - . | bzip2 -c &gt; ~/TMP/BACKUP/bkup1.tar.bz2</kbd>
+$
+$ <kbd>bzip2 -cd ~/TMP/BACKUP/bkup1.tar.bz2 | tar -xC ~/RESTORE -f -</kbd><strong> ← カレントディレクトリをRESTOREに変更して回復します</strong>
+$ <kbd>ls ~/RESTORE</kbd>
+ex02_1.c  ex02_2.c  makefile
+$
+</samp></pre>
+					</div>
+					<p>zipコマンドで圧縮し、unzipコマンドで解凍します。</p>
+					<div class="exe-samp">
+<pre><samp>$ <kbd>zip ~/TMP/BACKUP/bkup2.zip ex02_1.c makefile</kbd>
+  adding: ex02_1.c (deflated 23%)
+  adding: makefile (deflated 57%)
+$
+$ <kbd>cd ~/RESTORE</kbd>
+$ <kbd>unzip ~/TMP/BACKUP/bkup2.zip</kbd>
+Archive:  /home/merry/TMP/BACKUP/bkup2.zip
+  inflating: ex02_1.c
+  inflating: makefile
+$ <kbd>ls</kbd>
+ex02_1.c  makefile
+$
+</samp></pre>
+					</div>
+					<p>lhaコマンドで圧縮・解凍します。</p>
+					<div class="exe-samp">
+<pre><samp>$ <kbd>lha a ~/TMP/BACKUP/bkup3.lzh ex02_1.c makefile</kbd>
+ex02_1.c    - Frozen(77%) o
+makefile    - Frozen(44%) o
+$ <kbd>lha l ~/TMP/BACKUP/bkup3.lzh</kbd><strong> ← 圧縮ファイルの内容を表示します</strong>
+ PERMSSN    UID  GID      SIZE  RATIO     STAMP           NAME
+---------- ----------- ------- ------ ------------ --------------------
+-rw-r--r--  1001/501       132  77.3% May 19 14:20 ex02_1.c
+-rw-r--r--  1001/501       267  44.9% May 18 10:49 makefile
+---------- ----------- ------- ------ ------------ --------------------
+ Total         2 files     399  55.6% May 19 17:23
+$
+$ <kbd>cd ~/RESTORE</kbd>
+$ <kbd>lha e ~/TMP/BACKUP/bkup3.lzh</kbd>
+ex02_1.c    - Melted   :  o
+makefile    - Melted   :  o
+$ <kbd>ls</kbd>
+ex02_1.c  makefile
+$ 		<!-- viコマンドの説明 -->
+</samp></pre>
+					</div>
+				</section>
+			</section>
+			<section>
+				<h3 id="vi">4.3.11 テキストファイルの作成・編集（viコマンド）</h3>
+				<figure class="left-box myphoto">
+					<dl>
+						<dt><img src="../IMAGES/sec04_3.jpg" alt="viエディタ"></dt>
+						<dd>【図４-３】viエディタの操作画面</dd>
+						<dd>C言語のソースファイルを編集中</dd>
+					</dl>
+				</figure>
+				<p>UNIX系OSでのテキストエディタといえばEmacsが有名ですが、最近はディスクトップ環境の標準エディタも充実してきました。例えば、GNOMEならばgedit、KDEならばKwite等があります。これらのほかに、UNIX系OSであればどれでも使えて手軽なviエディタがあります。初心者には使いにくいでしょうが、システム管理を行う方はviが使えたほうがよいでしょう。</p>
+				<section>
+					<h4>一般形式</h4>
+					<p>viはスクリーンエディタですが、マウスやファンクションキーは使えません。操作はサブコマンドで行います。</p>
+					<div class="form-exp">
+						$ vi ファイルパス名<strong>　← viの起動　</strong>
+					</div>
+					<p>viは<strong>入力モード</strong>と<strong>コマンドモード</strong>の２つのモードがあります。入力モードはデータの入力が出来るモードで、コマンドモードはviのサブコマンドが実行できるモードです。viを起動した直後はコマンドモードになっています。</p>
+					<p>モードの切替えは、入力モードからコマンドモードへは「<strong>Esc</strong>」（エスケープ）キーで、コマンドモードから入力モードへは文字や行の<strong>挿入コマンド</strong>を実行します。</p>
+				</section>
+				<section>
+					<h4>サブコマンド</h4>
+					<p>サブコマンドは沢山ありますが、ここで紹介しているのは基本的なもののみです。</p>
+					<table class="simple-table">
+						<caption>【表4-20】挿入と削除のコマンド</caption>
+						<tr><th>サブコマンド</th><th>機能</th></tr>
+						<tr><td>a、i</td><td>aコマンドはカーソルの後ろに、iコマンドはカーソルの前に文字を追加します。入力モードになります。</td></tr>
+						<tr><td>o、O</td><td>oコマンドはカーソル行の前に、Oコマンドはカーソル行の後ろに１行追加します。入力モードになります。</td></tr>
+						<tr><td>x</td><td>カーソルの１文字を削除します。文字列を削除するには「削除文字数x」とします。</td></tr>
+						<tr><td>dd</td><td>カーソル行の１行を削除します。連続行を削除するには「削除行数dd」とします。</td></tr>
+					</table>
+					<p>「:xx」の形式のコマンドはedエディタのサブコマンドです。コマンドモードで:（コロン）を入力すると最終行にカーソルが移動しますので、そのままサブコマンドを入力します。</p>
+					<table class="simple-table">
+						<caption>【表4-21】格納と終了のコマンド</caption>
+						<tr><th>サブコマンド</th><th>機能</th></tr>
+						<tr><td>ZZ</td><td>データを元のファイルに格納して、viを終了します。</td></tr>
+						<tr><td>:w</td><td>データを元のファイルに格納します。「:write」も同じです。</td></tr>
+						<tr><td>:w ファイルパス名</td><td>データを指定したファイルに格納します。「:write ファイルパス名」も同じです。</td></tr>
+						<tr><td>:q</td><td>viを終了します。「:quit」も同じです。変更を加えた後に、格納しないで終了する場合は「:q!」で強制終了します。</td></tr>
+					</table>
+					<p>矢印キーはサポートされていないことがありますので注意してください。</p>
+					<table class="simple-table">
+						<caption>【表4-22】カーソルの移動、その他のコマンド</caption>
+						<tr><th>サブコマンド</th><th>機能</th></tr>
+						<tr><td>h、l</td><td>hコマンドは左、lコマンドは右にカーソルを移動します。</td></tr>
+						<tr><td>←、→</td><td>←キーは左、→キーは右にカーソルを移動します。</td></tr>
+						<tr><td>j、k</td><td>jコマンドは下、kコマンドは上にカーソルを移動します。</td></tr>
+						<tr><td>↓、↑</td><td>↓キーは下、↑は上にカーソルを移動します。</td></tr>
+						<tr><td>:sh</td><td>viから一時的に抜け出します。viに戻るにはexitコマンドを実行します。</td></tr>
+					</table>
+				</section>
+			</section>
+		</section>
+	</section>
+
+	<footer>
+		<nav>
+			<ul>
+				<li><a href="../../index.html">ホーム</a></li>
+				<li><a href="../cmdtop.html#lbl_index">目次</a></li>
+				<li><a href="./section4_3.html">前のページ</a></li>
+				<li><a href="./section4_5.html">次のページ</a></li>
+			</ul>
+		</nav>
+		<p id="footer-author">更新日：<time datetime="2015-10-06">2015年10月06日</time> Merry</p>
+	</footer>
+</div>
+</body>
+</html>

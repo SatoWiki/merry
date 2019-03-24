@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initialscale=1.0">
+	<meta name="robots" content="INDEX,FOLLOW">
+	<meta name="keywords" content="ユーザー管理,root,su,ユーザー名,パスワード,ユーザーID,グループ名,system-config-users,useradd,groupadd,userdel,groupdel,passwd">
+	<meta name="description" content="システム管理のうち、ユーザー管理についてご説明します。">
+	<meta name="author" content="T.Hagiwara">
+	<link rel="stylesheet" href="../../CSS3/seminar.css" type="text/css">
+	<link rel="prev" href="../SECTION6/section6_8.html">
+	<link rel="next" href="./section7_2.html">
+	<title>Linuxの使い方 - システム管理（1/3）</title>
+	<style type="text/css">
+	</style>
+</head>
+<body>
+<div id="container">
+	<header>
+		<p>Linux講座にようこそ。このページは「Linuxの使い方&nbsp;-&nbsp;第７章&nbsp;システム管理」です。</p>
+		<h1>Linuxの使い方</h1>
+		<nav>
+			<ul>
+				<li><a href="../../index.html">ホーム</a></li>
+				<li><a href="../cmdtop.html#lbl_index">目次</a></li>
+				<li><a href="../SECTION6/section6_8.html">前のページ</a></li>
+				<li><a href="./section7_2.html">次のページ</a></li>
+			</ul>
+		</nav>
+	</header>
+
+	<section class="contents">
+		<h1>7. システム管理（1/3）</h1>
+		<p>システム管理はディストリビューション独自のシステム管理ツールを用意していることや、ファイルシステムのレイアウトが異なることなどにより、ディストリビューションによって異なりますし、ディスクトップ環境（GNOMEやKDE等）でも異なります。ここでは、Fedoraを対象に説明して行きますが、他のディストリビューションでも参考になると思います。ここでは、次の内容について説明します。</p>
+		<ul>
+			<li><a href="./section7_1.html#lbl_user">ユーザ管理</a></li>
+			<li><a href="./section7_2.html">プロセス（サービス）管理</a></li>
+			<li><a href="./section7_3.html">パッケージ管理</a></li>
+		</ul>
+		<section>
+			<h2 id="lbl_user">7.1 ユーザー管理</h2>
+			<p>UNIXは<strong>マルチユーザー／マルチプロセス</strong>のOSとして開発されましたので、UNIX系のOSではユーザー管理は必須です。ユーザーはシステム管理者（スーパーユーザー）と一般ユーザーの２種類あります。システム管理者のユーザー名は<strong>root</strong>（ルート）と決まっていて、システムのインストール時にユーザー登録を行ないます。</p>
+			<p>システム管理者はシステムを変更できる権限を持っていて、ソフトウェアのインストール/削除やソフトウェアアップデートなどを行うことが出来ます。</p>
+			<p>一般ユーザーはインストール時に登録するか、別途システム管理者がGUIツールかコマンドを使って登録します。個人で使っていて、ユーザーが一人の場合はrootだけでもよいのですが、rootは何でもできてしまいますので、日常使うには危険すぎます。一人だけで使う場合も一般ユーザーを登録しておき、通常はこちらを使うようにすることをお勧めします。</p>
+			<p id="lbl_sudo">Fedoraの場合、インストール時に登録する一般ユーザーは、システム管理者の権限が必要なコマンドを実行できる機能を持っています。システム管理のコマンドを実行する場合は、次のように、sudoコマンドで実行できます。</p>
+			<div class="exe-samp">
+<pre><samp>$ <kbd>sudo システム管理コマンド</kbd><strong> ← 引数にシステム管理のコマンドを指定します</strong>
+[sudo] merry のパスワード:<strong> ← パスワードを聞いて来るので、一般ユーザーのパスワードを入力します</strong>
+$</samp></pre>
+			</div>
+			<p>最初のsudoコマンドの実行時にはパスワードの入力が必要ですが、２回目以降は不要です。</p>
+			<p id="lbl_su">他の方法として、一時的に他のユーザーにログインする<strong>su</strong>コマンドでrootになることもできます。</p>
+			<div class="exe-samp">
+<pre><samp>$ <kbd>su -</kbd>
+Password:<strong> ← パスワードを聞いて来るので、rootのパスワードを入力します</strong>
+#<strong> ← プロンプトが「#&nbsp;」になります。システム管理コマンドが実行可能になります</strong></samp></pre>
+			</div>
+			<aside>
+				<h3>補足</h3>
+				<p>Fedoraではインストール後の最初のsudoコマンドの実行時に、次のようなメッセージが表示されます。（以降は表示されません）</p>
+				<div class="exe-samp">
+<pre><samp>$ <kbd>sudo システム管理コマンド</kbd>
+
+あなたはシステム管理者から通常の講習を受けたはずです。<strong> ← このようなメッセージが表示されます</strong>
+これは通常、以下の3点に要約されます:
+
+    #1) 他人のプライバシーを尊重すること。
+    #2) タイプする前に考えること。
+    #3) 大いなる力には大いなる責任が伴うこと。
+
+[sudo] merry のパスワード:
+$</samp></pre>
+				</div>
+			</aside>
+			<section>
+				<h3>7.1.1 ユーザー登録</h3>
+				<p>ユーザー登録はGUIツールを使えば簡単に行えます。登録時に指定する情報として一般に、次のものがあります。</p>
+				<div class="form-exp">
+					<dl>
+						<dt>ユーザー名</dt>
+							<dd>登録するユーザーのユーザー名です。</dd>
+						<dt>パスワード</dt>
+							<dd>正当なユーザーかを確認するための合い言葉のようなものです。</dd>
+						<dt>ユーザーID</dt>
+							<dd>ユーザー名に対するIDで、一般ユーザーの場合は1000以上の整数です。</dd>
+						<dt>グループ名</dt>
+							<dd>ユーザーが属するグループで、あらかじめ登録しておく必要があります。</dd>
+						<dt>コメント</dt>
+							<dd>ユーザーの本名や、連絡先などをコンマ（,）で区切って指定します。</dd>
+						<dt>ホームディレクトリ</dt>
+							<dd>ホームディレクトリのパス名で、通常は/homeの下にユーザー名と同じ名前で作ります。</dd>
+						<dt>使用するシェル</dt>
+							<dd>シェルの起動コマンドで、通常はbash（/bin/bash）です。</dd>
+					</dl>
+				</div>
+				<figure class="left-box myphoto">
+					<dl>
+						<dt><img src="../IMAGES/sec07_1.jpg" alt="ユーザー管理ツール"></dt>
+						<dd>【図７-１】</dd>
+						<dd>ユーザー管理ツール</dd>
+					</dl>
+				</figure>
+				<p>図7-1はsystem-config-usersというユーザー管理ツールです。このツールを使えばユーザー名やパスワード等、必要最低限の情報を指定するだけでユーザーの新規登録・削除・更新が行えます。また、グループの新規登録・削除や、グループへのユーザーの登録なども行えます。登録や削除を行うにはシステム管理の権限が必要です。</p>
+				<p>このようにGUIツールを使えば簡単にユーザー管理が出来るのですが、ツールによってはツールが勝手にユーザーIDをつけてしまうものがあります。保護モード（パーミッション）によるファイルやディレクトリの保護は、ユーザーIDにより行っていますので、ユーザーの再登録等でユーザーIDが途中で変わってしまうと、ファイルやディレクトリのアクセスができなくなってしまいます。従って、一人のユーザーに対しては常に同じユーザーIDを割り振ったほうがよいでしょう。</p>
+				<p id="lbl_user_cmd">ユーザー登録はもちろんコマンドでもできます。また、パスワードは必須ですので、必ずパスワードの設定も行なう必要があります。パスワードの設定はユーザー登録時或は、passwdコマンドで行います。</p>
+				<div class="form-exp">
+					※ ユーザー登録<br>
+					# useradd -u ユーザーID -g グループ名又は、グループID -c コメント -d ホームディレクトリ -p パスワード ユーザー名<br>
+					※ グループ登録<br>
+					# groupadd -g グループID グループ名<br>
+					※ ユーザー削除<br>
+					# userdel -r ユーザー名<br>
+					※ グループ削除<br>
+					# groupdel グループ名<br>
+					※ パスワード設定<br>
+					# passwd ユーザー名<strong> ← ユーザー名を指定できるのはシステム管理者（root）のみです</strong>
+				</div>
+				<table class="simple-table">
+					<caption>【表7-1】 ユーザー管理コマンドのオプション一覧</caption>
+					<tr><th>オプション</th><th>意味</th></tr>
+					<tr><td>-u</td><td>ユーザーIDを指定します。省略すると1000以上で、まだ使われていない値を自動採番します。</td></tr>
+					<tr><td>-g</td><td>useraddの場合は登録するユーザーが所属するグループのグループ名又は、グループIDを指定します。ここで指定するグループは既に存在するものでなければなりません。<br>groupaddの場合は登録するグループのグループIDを指定します。省略すると1000以上で、まだ使われていない値を自動採番します。</td></tr>
+					<tr><td>-c</td><td>ユーザー名に対するコメントを指定します。通常、ユーザーの本名や連絡先をコンマ（,）で区切って指定します。省略可能です。</td></tr>
+					<tr><td>-d</td><td>ユーザーのホームディレクトリを絶対パス名で指定します。省略するとデフォルトのディレクトリ（通常は/home/）にユーザー名と同じ名前のディレクトリを作り、ホームディレクトリとします。</td></tr>
+					<tr><td>-p</td><td>パスワードを指定します。省略できますが、その場合は登録したユーザー名は使用できませんので、別途、passwdコマンドでパスワードを設定する必要があります。</td></tr>
+					<tr><td>-r</td><td>ホームディレクトリも削除します。省略した場合はホームディレクトリを削除しません。</td></tr>
+				</table>
+				<p>ユーザー情報は次の設定ファイルに格納されます。/etc/passwdと/etc/groupはテキストファイルですのでcatやmoreコマンドで簡単に参照できます。（/etc/shadowはバイナリファイルです）</p>
+				<dl>
+					<dt>/etc/passwd</dt>
+						<dd>ユーザー情報です。</dd>
+					<dt>/etc/group</dt>
+						<dd>グループ情報です。</dd>
+					<dt>/etc/shadow</dt>
+						<dd>パスワード情報です。</dd>
+				</dl>
+				<p>次の例では、ユーザーを新規登録後、パスワードの設定を行います。</p>
+				<div class="exe-samp">
+<pre><samp># <kbd>useradd -u 1001 -g users -d /home/merry merry</kbd>
+<strong>     ↑ ユーザー名「merry」を登録します。グループusersはインストール時に登録済みとします</strong>
+#
+# <kbd>passwd merry</kbd><strong> ← パスワードを設定します</strong>
+New password:<strong> ← 設定するパスワードを入力します（エコーバックはありません）</strong>
+Retype new password:<strong> ← 設定するパスワードを再入力します</strong>
+passwd: all authentication tokens updated successfully<strong> ← 設定完了です</strong>
+#</samp></pre>
+				</div>
+			</section>
+			<section>
+				<h3>7.1.2 ファイルやディレクトリの所有者の変更</h3>
+				<p>ファイルやディレクトリを作成すると、自動的に<strong>所有者</strong>と<strong>グループ</strong>情報が付加されます。これらの情報はlsコマンドの<strong>-l</strong>オプションで表示できます。（保護モードの変更については【<a href="../SECTION4/section4_1.html#chmod">4.2.1 一般形式（chmodコマンド）</a>】をご覧ください）</p>
+				<div class="exe-samp">
+<pre><samp>$ <kbd>ls -l syomei.txt</kbd>
+-rw-r--r--  1 merry users 572  3月 15  2004 syomei.txt
+<strong>                   ↑ 所有者の属するグループです</strong>
+<strong>             ↑ ファイルの所有者（ユーザー名）です</strong>
+$</samp></pre>
+				</div>
+				<p id="lbl_chown">一般ユーザーの場合はこれらの情報を変更したいということはほとんど有りませんが、システム管理を行なうときには変更したいことが度々有ります。例えばシステム管理者（root）がファイルを一般ユーザーの領域にコピーすると、そのファイルの所有者はroot、グループもrootになります。所有者とグループの変更はchownコマンドで行ないます。</p>
+				<div class="form-exp">
+					# chown -R ユーザー名又は、ユーザーID:グループ名又は、グループID ファイルパス名１ ファイルパス名２ …
+				</div>
+				<p>-Rオプションを指定すると、ファイルパス名として指定したディレクトリ以下の全てのファイルとディレクトリを処理します。</p>
+				<p>次の例では、システム管理者が所有するファイルの所有者をmerryに変更して、結果を確認します。</p>
+				<div class="exe-samp">
+<pre><samp># <kbd>ls -l linux-2.6.7.tar.bz2</kbd>
+-rw-r--r--  1 root root 51364541  9月  6 15:24 linux-2.6.7.tar.bz2
+<strong>              ↑ 所有者はroot、グループもrootです</strong>
+#
+# <kbd>chown merry:users linux-2.6.7.tar.bz2</kbd><strong> ← 所有者はmerry、グループはusersに変更します</strong>
+# <kbd>ls -l linux-2.6.7.tar.bz2</kbd>
+-rw-r--r--  1 merry users 51364541  9月  6 15:24 linux-2.6.7.tar.bz2
+#</samp></pre>
+				</div>
+			</section>
+		</section>
+	</section>
+
+	<footer>
+		<nav>
+			<ul>
+				<li><a href="../../index.html">ホーム</a></li>
+				<li><a href="../cmdtop.html#lbl_index">目次</a></li>
+				<li><a href="../SECTION6/section6_8.html">前のページ</a></li>
+				<li><a href="./section7_2.html">次のページ</a></li>
+			</ul>
+		</nav>
+		<p id="footer-author">更新日：<time datetime="2018-03-06">2018年03月06日</time> Merry</p>
+	</footer>
+</div>
+</body>
+</html>

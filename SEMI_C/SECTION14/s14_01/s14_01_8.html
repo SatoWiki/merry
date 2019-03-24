@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initialscale=1.0">
+	<meta name="robots" content="INDEX,FOLLOW">
+	<meta name="keywords" content="入出力ライブラリ,関数,バッファ操作,unbuffered,fully,line,buffered,setvbuf,_IONBF,_IOFBF,_IOLBF,setbuf">
+	<meta name="description" content="setvbuf関数、setbuf関数の使い方を説明します。">
+	<meta name="author" content="T.Hagiwara">
+	<link rel="stylesheet" href="../../../CSS3/seminar.css" type="text/css">
+	<link rel="stylesheet" href="../../../CSS3/hl_clang.css" type="text/css">
+	<link rel="prev" href="./s14_01_7.html">
+	<link rel="next" href="./s14_01_9.html">
+	<title>Ｃ言語プログラミング入門&nbsp;-&nbsp;ライブラリ関数&nbsp;-&nbsp;入出力ライブラリ（8/10）-</title>
+	<style type="text/css">
+	</style>
+</head>
+<body>
+<div id="container">
+	<header>
+		<p>Linux講座にようこそ。このページは「Ｃ言語プログラミング入門&nbsp;-&nbsp;第14章．ライブラリ関数&nbsp;-&nbsp;入出力ライブラリ」です。</p>
+		<h1>Ｃ言語プログラミング入門</h1>
+		<nav>
+			<ul>
+				<li><a href="../../../index.html">ホーム</a></li>
+				<li><a href="../../c_langtop.html#lbl_index">目次</a></li>
+				<li><a href="./s14_01_7.html">前のページ</a></li>
+				<li><a href="./s14_01_9.html">次のページ</a></li>
+			</ul>
+		</nav>
+	</header>
+
+	<section class="contents">
+		<h1>14. ライブラリ関数（9/36）&nbsp;-&nbsp;入出力ライブラリ（8/10）</h1>
+		<section>
+			<h2>14.12 バッファ操作関数</h2>
+			<p>通常、ファイルはハードディスク（HDD）に作成しますが、ハードディスクの動作はCPUやメモリと比べると大変に低速です。これをカバーするために、出力データをメモリ上のバッファ領域に溜め込んでおき、バッファが満杯になったあるいは、一定時間経過した時点でハードディスクに出力する、といったことを行っています。通常は、これで問題ないと思いますが、入出力データや媒体の種類により、バッファを経由したくないことがあるかもしれません。そのような場合は、ここで紹介する関数を使うとよいでしょう。なお、強制的にバッファの内容を出力するには<a href="./s14_01_2.html#lbl_fflush">fflush関数</a>を使用します。</p>
+			<p>バッファリングには、次の３つの方法があります。</p>
+			<ul>
+				<li>unbufferedはバッファリングを行わずに、すぐに出力します。</li>
+				<li>fully bufferedは通常のバッファリングで、入出力データはバッファ経由で入出力します。</li>
+				<li>line bufferedは新しい行が出力されるか、新しい行が入力されるまでバッファに溜め込みます。</li>
+			</ul>
+			<section>
+				<h3 id="lbl_setvbuf">14.12.1 setvbuf関数</h3>
+				<p>setvbuf関数はバッファリング方法（バッファリング・モード）とバッファ領域を設定します。この関数はファイルオープン後で、入出力関数を呼び出す前に使用します。</p>
+				<table>
+					<caption>【表14-1-35】 setvbuf関数</caption>
+					<tr><th>形式</th><td>#include &lt;stdio.h&gt;<br>
+										int setvbuf(FILE *fp, char *buf, int mode, size_t size);</td></tr>
+					<tr><th>返り値</th><td>正常に処理ができた場合は０を返します。エラーの場合は０以外を返します。</td></tr>
+					<tr><th>引数</th>
+						<td>
+							<dl>
+								<dt>FILE *fp</dt>
+									<dd>入力または、出力するファイルのファイルポインタを指定します。</dd>
+								<dt>char *buf</dt>
+									<dd>バッファ領域を指定します。バッファ領域は第４引数のsize以上の容量が必要です。なお、NULLを指定するとシステムで用意したバッファを使用します。</dd>
+								<dt>int mode</dt>
+									<dd>バッファリング方法（バッファリング・モード）を、次の値で指定します。
+										<dl>
+											<dt>_IONBF</dt>
+												<dd>unbufferedです。</dd>
+											<dt>_IOFBF</dt>
+												<dd>fully bufferedです。</dd>
+											<dt>_IOLBF</dt>
+												<dd>line bufferedです。</dd>
+										</dl></dd>
+								<dt>size_t size</dt>
+									<dd>バッファの大きさを指定します。第２引数にNULLを指定した場合は０を指定します。
+									</dd>
+							</dl>
+						</td></tr>
+				</table>
+			</section>
+			<section>
+				<h3 id="lbl_setbuf">14.12.2 setbuf関数</h3>
+				<p>setbuf関数はバッファ領域を設定します。</p>
+				<table>
+					<caption>【表14-1-36】 setbuf関数</caption>
+					<tr><th>形式</th><td>#include &lt;stdio.h&gt;<br>
+										void setbuf(FILE *fp, char *buf);</td></tr>
+					<tr><th>返り値</th><td>ありません。</td></tr>
+					<tr><th>引数</th>
+						<td>
+							<dl>
+								<dt>FILE *fp</dt>
+									<dd>入力または、出力するファイルのファイルポインタを指定します。</dd>
+								<dt>char *buf</dt>
+									<dd>バッファ領域を指定します。</dd>
+							</dl>
+						</td></tr>
+				</table>
+			</section>
+			<section>
+				<h3>14.12.3 例題</h3>
+				<p>実行時引数として２つのファイルパス名を指定して、ファイルのコピーを行います。入力ファイルに対してはバッファ領域を指定し、出力ファイルに対してはバッファリングを行わない指定をしています。なお、ソースファイルの行数を少なくしてプログラムのポイントを明確にするため、エラー処理は省略しています。</p>
+				<div class="source-code">
+					<div class="c"><ol><li class="li1"><div class="de1"><span class="co2">#include &lt;stdio.h&gt;</span></div></li>
+					<li class="li1"><div class="de1"><span class="co2">#define IOB_SIZE 4096</span></div></li>
+					<li class="li1"><div class="de1"><span class="co2">#define LINE_SIZE 1024</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1"><span class="kw4">int</span> main<span class="br0">&#40;</span><span class="kw4">int</span> argc<span class="sy0">,</span> <span class="kw4">char</span> <span class="sy0">**</span>argv<span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; FILE &nbsp; &nbsp;<span class="sy0">*</span>fp_src<span class="sy0">;</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* コピー元ファイル */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; FILE &nbsp; &nbsp;<span class="sy0">*</span>fp_dest<span class="sy0">;</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="coMULTI">/* コピー先ファイル */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">char</span> &nbsp; &nbsp;src_iobuff<span class="br0">&#91;</span>IOB_SIZE<span class="br0">&#93;</span><span class="sy0">;</span> &nbsp; &nbsp; &nbsp;<span class="coMULTI">/* コピー元IOバッファ */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">char</span> &nbsp; &nbsp;line<span class="br0">&#91;</span>LINE_SIZE<span class="br0">&#93;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; fp_src <span class="sy0">=</span> <span class="kw3">fopen</span><span class="br0">&#40;</span><span class="sy0">*</span><span class="br0">&#40;</span>argv <span class="sy0">+</span> <span class="nu0">1</span><span class="br0">&#41;</span><span class="sy0">,</span> <span class="st0">&quot;r&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">setvbuf</span><span class="br0">&#40;</span>fp_src<span class="sy0">,</span> src_iobuff<span class="sy0">,</span> _IOFBF<span class="sy0">,</span> IOB_SIZE<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; fp_dest <span class="sy0">=</span> <span class="kw3">fopen</span><span class="br0">&#40;</span><span class="sy0">*</span><span class="br0">&#40;</span>argv <span class="sy0">+</span> <span class="nu0">2</span><span class="br0">&#41;</span><span class="sy0">,</span> <span class="st0">&quot;w&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">setvbuf</span><span class="br0">&#40;</span>fp_dest<span class="sy0">,</span> <span class="br0">&#40;</span><span class="kw4">char</span> <span class="sy0">*</span><span class="br0">&#41;</span>NULL<span class="sy0">,</span> _IONBF<span class="sy0">,</span> <span class="nu0">0</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">while</span><span class="br0">&#40;</span><span class="kw3">fgets</span><span class="br0">&#40;</span>line<span class="sy0">,</span> LINE_SIZE<span class="sy0">,</span> fp_src<span class="br0">&#41;</span> <span class="sy0">!=</span> NULL<span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">fputs</span><span class="br0">&#40;</span>line<span class="sy0">,</span> fp_dest<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">fclose</span><span class="br0">&#40;</span>fp_dest<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">fclose</span><span class="br0">&#40;</span>fp_src<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">return</span> <span class="nu0">0</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#125;</span></div></li>
+					</ol></div>
+				</div>
+				<div class="exe-samp">
+<pre><samp>$ <kbd>cat /etc/issue</kbd><strong> ← catコマンドで/etc/issueファイルの内容を確認します</strong>
+Fedora release 8 (Werewolf)
+Kernel \r on an \m
+
+$ <kbd>./ex14_1_11.prg /etc/issue ./temp.txt</kbd><strong> ← 実行時引数に/etc/issue指定して実行します</strong>
+$ cat ./temp.txt
+Fedora release 8 (Werewolf)
+Kernel \r on an \m
+
+$</samp></pre>
+				</div>
+				<dl>
+					<dt>2行目</dt>
+						<dd>バッファ領域の大きさをIOB_SIZEというマクロ名で宣言します。</dd>
+					<dt>9行目</dt>
+						<dd>バッファ領域として使用する配列を宣言します。容量は4096バイトです。</dd>
+					<dt>13行目</dt>
+						<dd>入力ファイル用のバッファ領域として、９行目で宣言しているsrc_iobuffを指定します。バッファリング・モードはfully bufferedです。</dd>
+					<dt>16行目</dt>
+						<dd>出力ファイルはバッファリングをしない指定をします。（バッファリング・モードはunbufferedです）</dd>
+				</dl>
+			</section>
+		</section>
+	</section>
+
+	<footer>
+		<nav>
+			<ul>
+				<li><a href="../../../index.html">ホーム</a></li>
+				<li><a href="../../c_langtop.html#lbl_index">目次</a></li>
+				<li><a href="./s14_01_7.html">前のページ</a></li>
+				<li><a href="./s14_01_9.html">次のページ</a></li>
+			</ul>
+		</nav>
+		<p id="footer-author">更新日：<time datetime="2018-12-23">2018年12月23日</time> Merry</p>
+	</footer>
+</div>
+</body>
+</html>

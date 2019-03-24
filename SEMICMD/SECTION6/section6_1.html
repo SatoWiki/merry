@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initialscale=1.0">
+	<meta name="robots" content="INDEX,FOLLOW">
+	<meta name="keywords" content="シェルスクリプト,シェル変数,echo,read">
+	<meta name="description" content="シェルスクリプトを作成するための基本事項を例題も使ってご説明します。">
+	<meta name="author" content="T.Hagiwara">
+	<link rel="stylesheet" href="../../CSS3/seminar.css" type="text/css">
+	<link rel="stylesheet" href="../../CSS3/hl_bash.css" type="text/css">
+	<link rel="prev" href="../SECTION5/section5_2.html">
+	<link rel="next" href="./section6_2.html">
+	<title>Linuxの使い方 - シェルスクリプトの作り方（1/8）</title>
+	<style type="text/css">
+	</style>
+</head>
+<body>
+<div id="container">
+	<header>
+		<p>Linux講座にようこそ。このページは「Linuxの使い方&nbsp;-&nbsp;第６章&nbsp;シェルスクリプトの作り方」です。</p>
+		<h1>Linuxの使い方</h1>
+		<nav>
+			<ul>
+				<li><a href="../../index.html">ホーム</a></li>
+				<li><a href="../cmdtop.html#lbl_index">目次</a></li>
+				<li><a href="../SECTION5/section5_2.html">前のページ</a></li>
+				<li><a href="./section6_2.html">次のページ</a></li>
+			</ul>
+		</nav>
+	</header>
+
+	<section class="contents">
+		<h1>6. シェルスクリプトの作り方（1/8）</h1>
+		<section>
+			<h2>6.1 概要</h2>
+			<p>UNIX系OSでは実行したいコマンドをファイルに記述しておき、コマンド名として、そのファイルを指定することにより、ファイル中のコマンドを実行することが出来ます。このコマンドを記述したファイルを<strong>シェルスクリプト</strong>と呼んでいます。シェルスクリプトに記述するコマンドの形式は、ターミナル・エミュレータ上で実行するときとまったく同じですし、ファイルは普通のテキストファイルです。また、コンパイルのような前処理も必要ありません。</p>
+			<p>ここでは、次の内容について説明します。</p>
+			<ul>
+				<li><a href="#exec">実行方法とよく使うコマンド</a></li>
+				<li><a href="./section6_2.html#var">シェル変数と文字列演算</a></li>
+				<li><a href="./section6_3.html#param">位置パラメータ（引数の取り扱い）</a></li>
+				<li><a href="./section6_3.html#esc">文字列のエスケープ</a></li>
+				<li><a href="./section6_4.html#comp">四則演算</a></li>
+				<li><a href="./section6_5.html">制御演算</a></li>
+				<li><a href="./section6_7.html">関数</a></li>
+			</ul>
+			<figure class="left-box myphoto">
+				<dl>
+					<dt><img src="../IMAGES/sec06_1.jpg" alt="例題のシェルスクリプトの実行環境"></dt>
+					<dd>【図６-１】例題のシェルスクリプトの実行環境</dd>
+					<dd>コマンドサーチパスの設定をしているため、コマンド名としてファイル名を指定すれば実行できます</dd>
+				</dl>
+			</figure>
+			<p>以降の説明での例題の実行環境は図６-1のようになっています。ホームディレクトリの下にmybinディレクトリがあり、そこにシェルスクリプトが置いてあります。そして、環境変数PATHにmybinを登録してあります。（コマンドサーチパスの設定）</p>
+			<p>シェススクリプトの名称には拡張子の".sh"が付けてありますが、シェルスクリプトであることを明確にするために付けているだけです。それ以上の意味はありません。</p>
+		</section>
+		<!-- 実行方法とよく使うコマンド -->
+		<section>
+			<h2 id="exec">6.2 実行方法とよく使うコマンド</h2>
+			<section>
+				<h3>6.2.1 作成方法と実行方法</h3>
+				<p>シェルスクリプトはテキストファイルですので、viなどのテキストエディタで作成します。シェルスクリプトに記述するコマンドについては特別な制限はありませんので、ターミナル・エミュレータ上で実行する場合と同じ形式でコマンドを記述します。ただし、1つだけ特別なこととして、シェルスクリプト中のコマンドを処理するシェルのパス名を先頭に指定します。これを省略するとログインシェル（ターミナル・エミュレータを開いた時に起動しているシェル）で処理されます。Linuxディストリビューションの場合、Bashが標準になっていると思いますので省略しても動くと思いますが、確実を帰すために指定しておいたほうが良いでしょう。</p>
+				<div class="form-exp">
+					#!/bin/bash<strong> ← bash用のシェルスクリプトの指定です</strong><br>
+					（コマンド群）
+				</div>
+				<p>シェルスクリプト中に注釈（コメント）を記述することが出来ます。<strong>#</strong>（番号記号）を行の先頭に記述すれば行全体が、行の途中に記述すれば#以降がコメントになります。なお、これはシェルスクリプトに特有なことではなく、ターミナル・エミュレータ上で実行するコマンドも同じです。</p>
+				<div class="exe-samp">
+<pre><samp>$ # これはコメント行です
+$
+$ <kbd>ls # カレントディレクトリ以下のファイルやディレクトリを表示します</kbd>
+BACKUP    MYHOMEPAGE   SAMPLE  UTF-8  public_html
+BUSINESS  MyDocuments  TMP     mybin  デスクトップ
+$
+</samp></pre>
+				</div>
+				<p>シェルスクリプトを通常のコマンドと同じように実行するには、ファイルの保護モードに<strong>実行許可</strong>を与えます。通常は3種類のユーザに実行許可を与えてよいと思いますが、機密保護上問題がある場合は「所有者」だけに許可を与えるというような運用も出来ます。また、環境変数PATHにコマンドサーチパスの設定をしておけば、ファイル名の指定だけで実行できます。PATHに設定していない場合はパス名で指定します。環境変数の設定については「<a href="../SECTION5/section5_2.html#lbl_envsetting">環境の自動設定</a>」をご覧ください。</p>
+				<div class="form-exp">
+					$ chmod ugo+x ファイルパス名<strong> ← 全てのユーザに実行許可を与えます</strong><br>
+					$ ファイルパス名<strong> ← 実行します</strong>
+				</div>
+				<p>bashコマンドの引数にファイルパス名を指定して実行することも出来ますが、この場合はファイルの実行許可は不要です。また、-xオプションを指定すると、実行するコマンドを表示してから実行しますので、デバックの時にとても便利です。</p>
+				<div class="form-exp">
+					$ bash ファイルパス名<strong> ← 実行許可は不要です</strong><br>
+					$ bash -x ファイルパス名<strong> ← 実行するコマンドを表示します</strong>
+				</div>
+			</section>
+			<section>
+				<h3 id="echo_read">6.2.2 便利なコマンド</h3>
+				<p>コマンドやコマンドの形式には、シェルスクリプトで使った場合に便利なものがいくつかあります。もちろん、それらはターミナル・エミュレータ上で入力しても使えますが、その場合はあまり有効ではないということです。ここでは、echoとreadコマンドを紹介しますが、readコマンドに必要な<strong>変数</strong>については後で説明します。</p>
+				<p>echoコマンドは引数に指定したメッセージを標準出力に出力し、readコマンドは引数に指定した変数に標準入力から入力します。readコマンドは複数の変数を指定すると、その数分のデータを入力出来ますが、個々の入力データは空白文字（スペース、タブ、改行等）で区切ります。</p>
+				<section>
+					<h4>形式</h4>
+					<div class="form-exp">
+						$ echo -en メッセージ１ メッセージ２ …<br>
+						$ read -p プロンプト 変数１ 変数２ …
+					</div>
+					<table class="simple-table">
+						<caption>【表6-1】echoコマンド・オプション</caption>
+						<tr><th>オプション</th><th>意味</th></tr>
+						<tr><td>メッセージ</td><td>標準出力に出力するメッセージを指定します。最後のメッセージの後ろで改行します。メッセージに空白文字などを含む場合は'（アポストロフィ）または、"（引用符）で括ります。</td></tr>
+						<tr><td>-n</td><td>改行を抑止します。当オプションを省略すると改行します。</td></tr>
+						<tr><td>-e</td><td>表6-2のエスケープシーケンスを有効にします。これらのエスケープシーケンスは'（アポストロフィ）または、"（引用符）で括ります。</td></tr>
+					</table>
+					<table class="simple-table">
+						<caption>【表6-2】echoコマンドのエスケープシーケンス</caption>
+						<tr><th>エスケープシーケンス</th><th>意味</th></tr>
+						<tr><td>\a</td><td>警告音を発します。</td></tr>
+						<tr><td>\c</td><td>改行を抑止します。</td></tr>
+						<tr><td>\n</td><td>改行します。（複数のメッセージを指定して、それぞれのメッセージ毎に改行するような場合に使用します）</td></tr>
+						<tr><td>\t</td><td>水平タブを出力します。</td></tr>
+					</table>
+					<p>readコマンドは変数を複数指定出来ますが、入力データの数より変数の数のほうが多い場合は、残りの変数の値は空（ヌル）になります。また、入力データのほうが多い場合は、最後の変数に残りのデータ全てが格納されます。</p>
+					<table class="simple-table">
+						<caption>【表6-3】readコマンド・オプション</caption>
+						<tr><th>オプション</th><th>意味</th></tr>
+						<tr><td>-p プロンプト</td><td>指定したプロンプト（入力促進文字列）を標準エラー出力に出力します。当オプションは省略可能です。プロンプトに空白文字などを含む場合は'（アポストロフィ）または、"（引用符）で括ります。</td></tr>
+						<tr><td>変数</td><td>入力したデータを格納する変数です。</td></tr>
+					</table>
+				</section>
+			</section>
+			<section>
+				<h3>6.2.3 例題</h3>
+				<section>
+					<h4>例題１</h4>
+					<p>echoとreadコマンドをターミナル・エミュレータ上で実行して動作を確認します。</p>
+					<div class="exe-samp">
+<pre><samp>$ <kbd>echo</kbd><strong> ← 引数を指定しません</strong>
+<strong> ← 改行のみ行います</strong>
+$ <kbd>echo Hello World</kbd><strong> ← 「Hello」が第１引数、「World」が第２引数です</strong>
+Hello World
+$ <kbd>echo Hello     World</kbd>
+Hello World<strong> ← 第１引数と第２引数の間に半角スペースが複数あっても無視されます</strong>
+$ <kbd>echo 'Hello     World'</kbd><strong> ← アポストロフィで括っているので「Hello     World」が第１引数です</strong>
+Hello     World
+$ <kbd>echo -e 'Hello World!!\c'</kbd>
+Hello World!!$ <strong> ← 改行を抑止したのでメッセージの最後にシェルのプロンプト（$）が表示されます</strong>
+$ <kbd>echo -e 'No.\nName\nE-Mail'</kbd>
+No.<strong> ← \nによる改行です</strong>
+Name<strong> ← \nによる改行です</strong>
+E-Mail<strong> ← メッセージの最後は自動的に改行されます</strong>
+$ <kbd>echo -e 'No.\tName\tE-Mail'</kbd>
+No.     Name    E-Mail<strong> ← /tにより等幅（半角８文字分）で表示されます</strong>
+$
+$ <kbd>read -p Input pleas ans</kbd>
+Input<strong> ← 「Input」が第２引数のプロンプトで、pleasとansは入力データを格納するための変数です。
+         入力待ちになりますので入力します。最後はEnterキーです</strong>
+$ <kbd>read -p 'Input pleas' ans</kbd>
+Input pleas<strong> ← アポストロフィで括っているので「Input pleas」が第２引数のプロンプトです。入力待ちになります</strong>
+$
+</samp></pre>
+					</div>
+					<p>readコマンドでデータを入力して結果を確認します。（変数に格納されている値は<code>echo $変数名</code>で表示できます）</p>
+					<div class="exe-samp">
+<pre><samp>$ <kbd>read -p 'Input pleas : ' data1</kbd><strong> ← 入力したデータを格納する変数（data1）を１つ指定します</strong>
+Input pleas : <kbd>hello</kbd><strong> ← 文字列「hello」を１つ入力します</strong>
+$ <kbd>echo $data1</kbd><strong> ← 入力したデータを確認します</strong>
+hello
+$ 
+$ <kbd>read -p 'Input pleas : ' data1 data2</kbd><strong> ← 入力したデータを格納する変数を２つ指定します</strong>
+Input pleas : <kbd>hello world</kbd><strong> ← 文字列を２つ入力します（文字列を空白文字で区切ります）</strong>
+$ <kbd>echo $data1</kbd>
+hello
+$ <kbd>echo $data2</kbd>
+world
+$ 
+$ <kbd>read -p 'Input pleas : ' data1</kbd><strong> ← 入力したデータを格納する変数を１つ指定します</strong>
+Input pleas : <kbd>hello world</kbd><strong> ← 文字列を２つ入力します</strong>
+$ <kbd>echo $data1</kbd>
+hello world<strong> ← 入力した文字列が全てdata1に格納されます</strong>
+$ 
+$ <kbd>read -p 'Input pleas : ' data1 data2 data3</kbd><strong> ← 入力したデータを格納する変数を３つ指定します</strong>
+Input pleas : <kbd>hello world</kbd><strong> ← 文字列を２つ入力します</strong>
+$ <kbd>echo $data1</kbd>
+hello
+$ <kbd>echo $data2</kbd>
+world
+$ <kbd>echo $data3</kbd>
+$<strong> ← 余分な変数（data3）は空です</strong>
+$
+</samp></pre>
+					</div>
+				</section>
+				<section>
+					<h4>例題２</h4>
+					<p>ホームディレクトリの下のmybinディレクトリのバックアップを取ります。２～３行目はコメント（注釈）行です。（ex01.sh）</p>
+					<div class="exe-samp">
+<pre class="bash"><span class="co0">#!/bin/bash</span>
+<span class="co0"># 機能  :  ~/mybinの下のバックアップを~/BACKUPに取ります</span>
+<span class="co0"># 作成  :  メリー</span>
+&nbsp;
+<span class="kw3">cd</span> ~<span class="sy0">/</span>mybin                                   <span class="co0"># カレントをmybinに移動</span>
+<span class="kw2">tar</span> -cjvf ~<span class="sy0">/</span>BACKUP<span class="sy0">/</span>backup.tar.bz2 .           <span class="co0"># バックアップ取得</span>
+&nbsp;
+<span class="kw3">echo</span> <span class="st0">&quot;バックアップ完了&quot;</span></pre>
+					</div>
+					<div class="exe-samp">
+<pre><samp>$ <kbd>ex01.sh</kbd>
+bash: /home/merry/mybin/ex01.sh: Permission denied<strong> ← 実行許可を与えていないので実行できません</strong>
+$ <kbd>chmod ugo+x ./mybin/ex01.sh</kbd><strong> ← 実行許可を与えます</strong>
+$ <kbd>ls -l ./mybin/ex01.sh</kbd>
+-rwx--x--x 1 merry merry 292 11月 29 09:02 ./mybin/ex01.sh
+$
+$ <kbd>ex01.sh</kbd>
+./<strong> ← 以降はtarコマンドの実行結果です</strong>
+./hello.c
+./hello.prg
+./ex01.sh
+バックアップ完了<strong> ← echoコマンドの実行結果です</strong>
+$
+</samp></pre>
+					</div>
+				</section>
+				<section>
+					<h4>例題３</h4>
+					<p>バックアップ実行前に確認メッセージを出力します。（ex02.sh）</p>
+					<div class="exe-samp">
+<pre class="bash"><span class="co0">#!/bin/bash</span>
+<span class="co0"># 機能  :  ~/mybinの下のバックアップを~/BACKUPに取ります</span>
+<span class="co0"># 作成  :  メリー</span>
+&nbsp;
+<span class="kw2">read</span> <span class="re5">-p</span> <span class="st0">&quot;バックアップを開始します&quot;</span> ans            <span class="co0"># ansは変数</span>
+&nbsp;
+<span class="kw3">cd</span> ~<span class="sy0">/</span>mybin                                       <span class="co0"># カレントをmybinに移動</span>
+<span class="kw2">tar</span> -cjvf ~<span class="sy0">/</span>BACKUP<span class="sy0">/</span>backup.tar.bz2 .               <span class="co0"># バックアップ取得</span>
+&nbsp;
+<span class="kw3">echo</span> <span class="st0">&quot;バックアップ完了&quot;</span></pre>
+					</div>
+					<div class="exe-samp">
+<pre><samp>$ <kbd>ex02.sh</kbd>
+バックアップを開始します<strong> ← readコマンドのプロンプトです。Enterで実行を開始します</strong>
+./
+./hello.c
+./hello.prg
+./ex02.sh
+./ex01.sh
+バックアップ完了
+$
+</samp></pre>
+					</div>
+				</section>
+				<section>
+					<h4>例題４</h4>
+					<p>完了メッセージに実行日時を含めます。（「YYYY年MM月DD日 HH時MM分SS秒 : バックアップ完了」のメッセージを出力します）（ex03.sh）</p>
+					<div class="exe-samp">
+<pre class="bash"><span class="co0">#!/bin/bash</span>
+<span class="co0"># 機能  :  ~/mybinの下のバックアップを~/BACKUPに取ります</span>
+<span class="co0"># 作成  :  メリー</span>
+&nbsp;
+<span class="kw3">cd</span> ~<span class="sy0">/</span>mybin                                      <span class="co0"># カレントをmybinに移動</span>
+<span class="kw2">tar</span> -cjvf ~<span class="sy0">/</span>BACKUP<span class="sy0">/</span>backup.tar.bz2 .              <span class="co0"># バックアップ取得</span>
+&nbsp;
+<span class="kw3">echo</span> <span class="st0">&quot;<span class="es4">$(date '+%c')</span> : バックアップ完了&quot;</span>         <span class="co0"># 日時とメッセージを出力</span></pre>							</div>
+					<div class="exe-samp">
+<pre><samp>$ <kbd>ex03.sh</kbd>
+./
+./hello.c
+./hello.prg
+./ex02.sh
+./ex03.sh
+./ex01.sh
+2017年11月29日 09時28分45秒 : バックアップ完了
+$
+</samp></pre>
+					</div>
+				</section>
+			</section>
+		</section>
+	</section>
+
+	<footer>
+		<nav>
+			<ul>
+				<li><a href="../../index.html">ホーム</a></li>
+				<li><a href="../cmdtop.html#lbl_index">目次</a></li>
+				<li><a href="../SECTION5/section5_2.html">前のページ</a></li>
+				<li><a href="./section6_2.html">次のページ</a></li>
+			</ul>
+		</nav>
+		<p id="footer-author">更新日：<time datetime="2018-02-15">2018年02月15日</time> Merry</p>
+	</footer>
+</div>
+</body>
+</html>

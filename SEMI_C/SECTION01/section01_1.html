@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initialscale=1.0">
+	<meta name="robots" content="INDEX,FOLLOW">
+	<meta name="keywords" content="Ｃ言語プログラミング入門,Ｃ言語,基礎知識,ソースプログラムファイル,ヘッダファイル,文,インデンテーション,コンパイル,リンク,実行可能プログラムファイル,gcc,オブジェクトプログラムファイル,ブロック,複文">
+	<meta name="description" content="簡単な例題プログラムを使用してＣ言語の基本構造を説明します。また、コンパイルと実行の仕方も説明します。">
+	<meta name="author" content="T.Hagiwara">
+	<link rel="stylesheet" href="../../CSS3/seminar.css" type="text/css">
+	<link rel="stylesheet" href="../../CSS3/hl_clang.css" type="text/css">
+	<link rel="prev" href="../c_langtop.html">
+	<link rel="next" href="../SECTION02/section02_1.html">
+	<title>Ｃ言語プログラミング入門&nbsp;-&nbsp;Ｃ言語の基礎知識</title>
+	<style type="text/css">
+	</style>
+</head>
+<body>
+<div id="container">
+	<header>
+			<p>Linux講座にようこそ。このページは「Ｃ言語プログラミング入門&nbsp;-&nbsp;第１章&nbsp;Ｃ言語の基礎知識」です。</p>
+			<h1>Ｃ言語プログラミング入門</h1>
+		<nav>
+			<ul>
+				<li><a href="../../index.html">ホーム</a></li>
+				<li><a href="../c_langtop.html#lbl_index">目次</a></li>
+				<li><a href="../SECTION02/section02_1.html">次のページ</a></li>
+			</ul>
+		</nav>
+	</header>
+
+	<section class="contents">
+		<h1>1. Ｃ言語の基礎知識</h1>
+		<section>
+			<h2>1.1 Ｃ言語の基本構造</h2>
+			<p>ここでは、Ｃ言語でプログラムを作成する際に必要な基本的な約束事と必要な作業を説明します。</p>
+			<p>Ｃ言語の基本構造を説明するための簡単なプログラムといえば、やはりHello&nbsp;Worldプログラムでしょう。ここでも、「Hello&nbsp;World」メッセージを標準出力に出力するプログラムを例題として取り上げて、Ｃ言語の基本構造を説明します。</p>
+			<section>
+				<h3 id="lbl_sample">1.1.1 例題</h3>
+				<p>Ｃ言語に限らず、プログラムはテキストエディタを使ってファイルに記述します。このファイルを<strong>ソースプログラムファイル</strong>あるいは、単にソースファイルと呼んでいます。下記がHello&nbsp;Worldプログラムのソースファイルの内容です。左端の「1.」や「2.」は説明をしやすくするために付けた行番号ですので、実際のソースファイルには記述しませんので注意してください。</p>
+				<div class="source-code">
+					<div class="c"><ol><li class="li1"><div class="de1"><span class="co2">#include &lt;stdio.h&gt;</span></div></li>
+					<li class="li1"><div class="de1"><span class="kw4">int</span> main<span class="br0">&#40;</span><span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;Hello World!!<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">return</span> <span class="nu0">0</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#125;</span></div></li>
+					</ol><pre><strong>↑ 行番号です。実際のソースファイルには記述しません</strong></pre></div>
+				</div>
+				<dl>
+					<dt>1行目</dt>
+						<dd>ヘッダファイルと呼ぶファイルを取り込むための指示を行います。詳しい説明は後ほど行いますので、ここでは標準入出力を行うときに必要な手続きであると思っていただく程度で十分です。</dd>
+					<dt>2行目</dt>
+						<dd>プログラムの入口です。複数のソースファイルで構成するプログラムも、ここから実行を開始します。この行は必須です。</dd>
+					<dt>3行目から7行目</dt>
+						<dd>プログラムの本体です。本体は３行目の<strong>{</strong>（左中括弧）と、7行目の<strong>}</strong>（右中括弧）で括ります。</dd>
+					<dt id="lbl_sentence">4行目</dt>
+						<dd>標準出力に「Hello World!!」メッセージを出力する命令です。出力するメッセージは<strong>"</strong>（引用符）で括ります。このようにプログラムの本体に記述する命令を「<strong>文</strong>」と呼んでいます。文は<strong>;</strong>（セミコロン）で区切ります。</dd>
+					<dt>6行目</dt>
+						<dd>プログラムの出口です。指定した値（この場合は0）を呼び出し元に戻して終了します。</dd>
+				</dl>
+				<aside>
+					<h4>補足</h4>
+					<ul>
+						<li>#include、main、printfは半角小文字です。Ｃ言語はこのように小文字ベースの言語です。（出力メッセージには大文字や日本語が使えます）</li>
+						<li id="lbl_note_2">4行目と6行目は他の行に比べて、記述開始位置が右にずれていますが、これはプログラムを読みやすくするためにしていることで、インデンテーションと呼んでいます。インデンテーションは文法上は意味がありません。また、5行目は空行ですが、これも読みやすくするためです。</li>
+						<li>4行目の「Hello&nbsp;World!!\n」メッセージの最後の<strong>\n</strong>は改行文字で、バックスラッシュとnです。改行文字は目に見えない文字のため、このように表わします。なお、ブラウザの種類によってはバックスラッシュが円記号で表示されているかもしれませんが、実際はバックスラッシュです。以降、円記号が出てきたらバックスラッシュに読み替えてください。</li>
+						<li id="lbl_note_4">プログラムの本体は{と}で括りますが、この括った部分をブロックまたは、複文と呼んでいます。</li>
+						<li>mainとreturnの詳細は後ほど説明します。（<a href="../SECTION09/section09_1.html">9.1 関数とは</a>）</li>
+					</ul>
+				</aside>
+			</section>
+		</section>
+
+		<section>
+			<h2 id="lbl_compile">1.2 コンパイルと実行</h2>
+			<p>ここでは、Ｃ言語で記述したソースファイルを元に、コンピュータで実際に動作するプログラムを作成する方法を説明します。</p>
+			<figure class="left-box myphoto">
+				<dl>
+					<dt><img src="../IMAGES/sec01_1.jpg" alt="プログラム作成手順"></dt>
+					<dd>【図１-１】プログラム作成手順</dd>
+				</dl>
+			</figure>
+			<p>言語によってはソースファイルを作ればすぐにコンピュータで実行できるものも有りますが、Ｃ言語の場合は実行できません。</p>
+			<p>Ｃ言語の場合はコンパイルとリンクという作業を行って、コンピュータで実行できる形式のプログラムを格納した「<strong>実行可能プログラムファイル</strong>」を作る必要が有ります。このプログラムはコンピュータが直接実行できるマシン語と呼ぶ言語に翻訳されたものですので、コンピュータの性能をフルに引き出すことができます。なお、実行可能プログラムファイルは一般的には「実行ファイル（Executable&nbsp;file）」や「実行形式ファイル」と呼ばれていますが、当講座では以降「実行可能ファイル」と記述します。</p>
+			<p>コンパイルはソースファイルの内容をコンピュータが解釈できるマシン語に翻訳する作業です。コンパイルを行うプログラムをコンパイラと呼んでおり、コンパイラはＣ言語で記述されたプログラムをアセンブリと呼ぶ言語（アセンブリ言語：マシン語に１対１に対応したような言語）に翻訳した後、アセンブラと呼ぶ翻訳プログラムを使ってマシン語プログラムに翻訳します。</p>
+			<p>この状態のプログラムファイルを「オブジェクトプログラムファイル」または、オブジェクトファイルと呼んでいます。リンクは複数のオブジェクトファイルや、ライブラリと呼ぶ部品プログラム等を連結して実行可能ファイルを作ります。</p>
+			<p>ここでは、多くのLinuxディストリビューションに標準的に含まれているgcc（GNU&nbsp;project&nbsp;C&nbsp;Compiler）コマンドを使用して実行可能ファイルを作り、実行する方法を説明します。</p>
+			<section>
+				<h3 id="lbl_gcc">1.2.1 gccコマンドの一般形式</h3>
+				<p>ここで説明する機能はgccコマンドのほんの一部だけです。全ての機能を知りたい場合はmanコマンド等で調べてください。なお、下記コマンド形式で括弧で括っている部分は省略可能を表しています。</p>
+				<p>gccコマンドを実行すると、コンパイルとリンクを行い、実行可能ファイルを作成します。ただし、ソースファイルに文法的な誤りがある場合は、エラーメッセージを出力して終了してしまいます。そういう場合は誤りを修正して、再度gccを実行します。</p>
+				<div class="form-exp">
+					$ gcc [-o 実行可能ファイル] ソースファイル１ [ソースファイル２ …]
+				</div>
+				<dl>
+					<dt>-o 実行可能ファイル</dt>
+						<dd>実行可能ファイルのパス名を指定します。当オプションを省略した場合は、カレントディレクトリの下に「a.out」という名前で作ります。</dd>
+					<dt>ソースファイル１</dt>
+						<dd>ソースファイルのパス名を指定します。ソースファイルの拡張子は「<strong>.c</strong>」と決まっていますので、エディタでソースファイルを作るときに注意してください。Ｃ言語の場合、１つのプログラムを複数のソースファイルに分割して作ることができますので、複数のソースファイルを指定できるようになっています。</dd>
+				</dl>
+				<aside>
+					<h4>補足</h4>
+						<p>ここではFedoraの環境でのgccコマンドの説明をしています。gccがインストールされていない場合は、dnfやyumコマンドを使ってインストールができます。Fedoraの場合は次のコマンドになります。</p>
+						<p><kbd># dnf install gcc</kbd></p>
+						<p>gccの別名としてccも用意されますので、コマンド名としてccも使えます。</p>
+				</aside>
+			</section>
+			<section>
+				<h3>1.2.2 実行方法</h3>
+				<p>実行可能ファイルを実行するにはターミナル上で、実行可能ファイルのパス名を指定します。プログラムの入出力が標準入出力になっていれば、シェルの機能のリダイレクションやパイプラインが使えます。</p>
+				<div class="form-exp">
+					$ ./実行可能ファイル <strong> ← カレントディレクトリに有る実行可能ファイルを実行します</strong><br>
+					$<br>
+					$ ~/mybin/実行可能ファイル <strong> ← ホームディレクトリの下のmybinディレクトリに有る実行可能ファイルを実行します</strong><br>
+					$<br>
+					$ ./実行可能ファイル &gt; 出力ファイル <strong> ← 標準出力を出力ファイルにリダイレクトします</strong><br>
+					$<br>
+					$ ./実行可能ファイル | コマンド１ <strong> ← 標準出力をパイプラインでコマンド１に送ります</strong>
+				</div>
+				<p>作成したプログラムを特定のディレクトリの下に集めておき、ディレクトリのパス名をコマンドサーチパス（環境変数PATH）として登録しておけば、実行可能ファイル名だけで実行できます。詳細は「<a href="../../SEMICMD/SECTION5/section5_2.html#environ">Linuxの使い方 - ユーザ環境の設定</a>」をご覧ください。</p>
+			</section>
+			<section>
+				<h3>1.2.3 例題</h3>
+				<p>ここでは、先にあげたHello&nbsp;Worldプログラムをコンパイルして実行します。ソースファイル名はex01_1.cで、カレントディレクトリに作成してあることとします。</p>
+				<section>
+					<h4>例題１</h4>
+					<p>gccコマンドに-oオプションを指定して、実行可能ファイルをカレントディレクトリにex01_1.prgとして作成します。</p>
+					<div class="exe-samp">
+<pre><samp>$ <kbd>ls -l ./ex01_1.c</kbd> <strong> ← ソースファイルを確認します</strong>
+-rw------- 1 merry merry 80  4月 20 09:22 ./ex01_1.c
+$ <kbd>cat -n ./ex01_1.c</kbd> <strong> ← -nは行番号を付加するオプションです</strong>
+     1  #include &lt;stdio.h&gt;
+     2  int main()
+     3  {
+     4      printf("Hello World!!\n");
+     5
+     6      return 0;
+     7  }
+$ <kbd>gcc <strong>-o</strong> ./ex01_1.prg ./ex01_1.c</kbd> <strong> ← gccコマンドでコンパイルを行います</strong>
+$ <kbd>ls -l ./ex01_1.*</kbd>
+-rw------- 1 merry merry   80  4月 20 09:22 ./ex01_1.c
+-rw<strong>x</strong>r-<strong>x</strong>r-<strong>x</strong> 1 merry merry 8216  4月 20 10:07 ./ex01_1.prg<strong> ← 実行許可が与えられています</strong>
+$
+$ <kbd>ex01_1.prg</kbd><strong> ← ファイル名（ex01_1.prg）だけで実行を試みます</strong>
+bash: /home/merry/mybin/ex01_1.prg: No such file or directory<strong> ← ファイルが見つかりません</strong>
+$
+$ <kbd>./ex01_1.prg</kbd><strong> ← カレントディレクトリにあることを明示します</strong>
+Hello World!!<strong> ← 実行結果です。\n（改行文字）も出力しますので、カーソルは次の行の先頭に移動します</strong>
+$ echo $?<strong> ← return文により呼び出し元に戻した値（戻り値や終了ステータスと呼ばれる値）を表示します</strong>
+0
+$
+$ <kbd>./ex01_1.prg &gt; output.txt</kbd><strong> ← メッセージをoutput.txtファイルにリダイレクトします</strong>
+$ <kbd>cat output.txt</kbd>
+Hello World!!
+$</samp></pre>
+					</div>
+				</section>
+					<h4>例題２</h4>
+					<p>コマンドサーチパス（環境変数PATH）に登録してある$HOME/mybin/ディレクトリに、例題１で作成したex01_1.prgをコピーして実行します。</p>
+					<div class="exe-samp">
+<pre><samp>$ <kbd>echo $PATH</kbd> <strong> ← 環境変数PATHの内容を表示します</strong>
+/usr/lib64/qt-3.3/bin:/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:<strong>/home/merry/mybin</strong>
+$
+$ <kbd>cp ./ex01_1.prg $HOME/mybin</kbd><strong> ← $HOME/mybinにコピーします</strong>
+$ <kbd>ls -l $HOME/mybin/ex01_1.prg</kbd>
+-rwxr-xr-x 1 merry merry 8216  4月 20 10:13 /home/merry/mybin/ex01_1.prg
+$
+$ <kbd>ex01_1.prg</kbd><strong> ← ファイル名（ex01_1.prg）だけで実行します</strong>
+Hello World!!
+$</samp></pre>
+					</div>
+				</section>
+			<section>	
+				<aside>
+					<h4>補足</h4>
+					<p>gccコマンドに「-Wa,-a」オプションを指定すると、アセンブラリストを標準出力に出力します。-Waはアセンブラに対してオプションを渡す指定で、-aはアセンブラリストを出力するオプションです。</p>
+					<p>次の出力例の「.LC0:」や「main:」はアセンブラ言語のラベルで、「.string&nbsp;&nbsp;&nbsp;&nbsp;"Hello&nbsp;World!!"」はアセンブラ言語の文です。その左側の「48656C6C」などはアセンブラ文に対するマシン語です。</p>
+					<div class="exe-samp">
+<pre><samp>$ <kbd>gcc <strong>-Wa,-a</strong> ex01_1.c</kbd>
+GAS LISTING /tmp/ccQ1rkNT.s                     page 1
+
+
+   1                            .file   "ex01_1.c"
+   2                            .text
+   3                            .section        .rodata
+   4                    .LC0:
+   5 0000 48656C6C              .string "Hello World!!"
+   5      6F20576F 
+   5      726C6421 
+   5      2100
+   6                            .text
+   7                            .globl  main
+   8                            .type   main, @function
+   9                    main:
+  10                    .LFB0:
+  11                            .cfi_startproc
+  12 0000 55                    pushq   %rbp
+  13                            .cfi_def_cfa_offset 16
+  14                            .cfi_offset 6, -16
+  15 0001 4889E5                movq    %rsp, %rbp
+  16                            .cfi_def_cfa_register 6
+  17 0004 BF000000              movl    $.LC0, %edi
+  17      00
+  18 0009 E8000000              call    puts
+  18      00
+  19 000e B8000000              movl    $0, %eax
+  19      00
+  20 0013 5D                    popq    %rbp
+  21                            .cfi_def_cfa 7, 8
+  22 0014 C3                    ret
+  23                            .cfi_endproc
+  24                    .LFE0:
+  25                            .size   main, .-main
+  26                            .ident  "GCC: (GNU) 7.3.1 20180130 (Red Hat 7.3.1-2)"
+  27                            .section        .note.GNU-stack,"",@progbits
+
+GAS LISTING /tmp/ccQ1rkNT.s                     page 2
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 ex01_1.c
+     /tmp/ccQ1rkNT.s:9      .text:0000000000000000 main
+
+UNDEFINED SYMBOLS
+puts</samp></pre>
+					</div>
+				</aside>
+			</section>
+		</section>
+	</section>
+
+	<footer>
+		<nav>
+			<ul>
+				<li><a href="../../index.html">ホーム</a></li>
+				<li><a href="../c_langtop.html#lbl_index">目次</a></li>
+				<li><a href="../SECTION02/section02_1.html">次のページ</a></li>
+			</ul>
+		</nav>
+		<p id="footer-author">更新日：<time datetime="2018-04-20">2018年04月20日</time> Merry</p>
+	</footer>
+</div>
+</body>
+</html>

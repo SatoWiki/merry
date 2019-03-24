@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initialscale=1.0">
+	<meta name="robots" content="INDEX,FOLLOW">
+	<meta name="keywords" content="ファイルシステム,ディレクトリ,ファイル,ルートディレクトリ,/,木構造,木構造のファイルシステム,パス名,絶対パス名,相対パス名,カレントディレクトリ,ホームディレクトリ,~,$HOME">
+	<meta name="description" content="UNIX系OSのファイルシステムはディレクトリとファイルから構成されていて、木を逆さにしたような形ですので、木（ツリー）構造のファイルシステムと呼んでいます。ここではファイルシステムの取り扱い方を説明します。">
+	<meta name="author" content="T.Hagiwara">
+	<link rel="stylesheet" href="../../CSS3/seminar.css" type="text/css">
+	<link rel="prev" href="../SECTION2/section2_2.html">
+	<link rel="next" href="./section3_2.html">
+	<title>Linuxの使い方&nbsp;-&nbsp;ファイル操作のコマンド１（1/2）</title>
+	<style type="text/css">
+	</style>
+</head>
+<body>
+<div id="container">
+	<header>
+		<p>Linux講座にようこそ。このページは「Linuxの使い方&nbsp;-&nbsp;第３章&nbsp;ファイル操作のコマンド１」です。</p>
+		<h1>Linuxの使い方</h1>
+		<nav>
+			<ul>
+				<li><a href="../../index.html">ホーム</a></li>
+				<li><a href="../cmdtop.html#lbl_index">目次</a></li>
+				<li><a href="../SECTION2/section2_2.html">前のページ</a></li>
+				<li><a href="./section3_2.html">次のページ</a></li>
+			</ul>
+		</nav>
+	</header>
+
+	<section class="contents">
+		<h1>3. ファイル操作のコマンド１（1/2）</h1>
+		<section>
+			<h2>3.1 ファイル操作の基本</h2>
+			<figure class="left-box myphoto">
+				<dl>
+					<dt><img src="../IMAGES/sec03_1.jpg" alt="UNIX系OSのファイルシステム"></dt>
+					<dd>【図３-１】UNIX系OSのファイルシステム</dd>
+					<dd>木構造のファイルシステムと呼んでいます</dd>
+				</dl>
+			</figure>
+			<p>UNIX系OSのファイルシステムは<strong>ディレクトリ</strong>と<strong>ファイル</strong>から構成されています。ディレクトリにはそのディレクトリが管理しているディレクトリやファイルの管理情報が入っており、ファイルにはデータが入っています。</p>
+			<p>ファイルシステムを絵に描くと、図3-1のような形になります。この図では楕円形がディレクトリを、四角形がファイルを表していますが、木を逆さにしたような形ですので、木（ツリー）構造のファイルシステムと呼んでいます。</p>
+			<p>先頭のディレクトリを<strong>ルートディレクトリ</strong>（指定するときは<strong>/</strong>記号）と呼んでおり木の根に相当します。ルートディレクトリ以外のディレクトリは幹や枝に、ファイルは葉に相当します。</p>
+			<p>ディレクトリで管理情報を持っている方を親、管理される方を子としますと、ルートディレクトリ以外のディレクトリは必ず親のディレクトリを持っています。子供のディレクトリをサブディレクトリと呼ぶこともあります。</p>
+			<p>ファイルを取り扱うには、通常、コマンド引数にファイルの名前を指定することになりますが、そこで問題になるのがファイル名の指定方法です。</p>
+			<p>UNIX系OSの場合、ディレクトリやファイルは<strong>パス名</strong>と言う形式で指定します。パス名とは木構造上でのディレクトリやファイルへの経路（道順）を指定したもので、次の２種類があります。</p>
+			<div class="form-exp">
+				<dl>
+					<dt><dfn>絶対パス名</dfn></dt>
+						<dd>木構造の先頭ディレクトリ（ルート）からの経路です。</dd>
+					<dt><dfn>相対パス名</dfn></dt>
+						<dd>予め設定してある起点となるディレクトリからの経路です。起点のディレクトリを<strong>カレントディレクトリ</strong>と呼んでいます。</dd>
+				</dl>
+			</div>
+			<p>相対パス名の起点となるカレントディレクトリは、後程説明するcdコマンドで変更できます。</p>
+			<p>パス名はファイルシステム上の位置情報を含んでいることになりますので、名前が同じでもパス名が異なれば別ものとなります。従って、場所が異なれば同じ名前のファイルやディレクトリを複数作成できます。</p>
+			<p>以下に絶対パス名と相対パス名の例を示します。ここで注意して頂きたい点は、絶対パス名の先頭の/（斜線）はルートディレクトリを表し、２個目以降の/はディレクトリとディレクトリ或は、ディレクトリとファイルの区切り記号です。相対パス名の/は全て区切り記号です。また、カレントディレクトリや親ディレクトリを名前で指定することは出来ません。カレントディレクトリは<strong>.（ピリオド１個）</strong>、親ディレクトリは<strong>..（ピリオド２個）</strong>で指定します。</p>
+			<p>図3-1のdata1ファイルのパス名を示します。カレントディレクトリはmerryとします。</p>
+			<div class="exe-samp">
+<pre><code>/home/merry/data1</code><strong> ← 絶対パス名です。先頭の/はルートディレクトリを表し、それ以外の/は区切り記号です</strong>
+<code>data1</code><strong> ← 相対パス名です</strong>
+<code>./data1</code><strong>← 相対パス名です。.はカレントディレクトリを表し、/は区切り記号です</strong></pre>
+			</div>
+			<p>図3-1のmeiboファイルのパス名を示します。カレントディレクトリはhomeとします。</p>
+			<div class="exe-samp">
+<pre><code>/home/ken/meibo</code><strong> ← 絶対パス名です</strong>
+<code>ken/meibo</code><strong> ← 相対パス名です</strong>
+<code>./ken/meibo</code><strong>← 相対パス名です。.はカレントディレクトリを表します</strong></pre>
+			</div>
+			<p>図3-1のfstabファイルのパス名を示します。カレントディレクトリはhomeとします。</p>
+			<div class="exe-samp">
+<pre><code>/etc/fstab</code><strong> ← 絶対パス名です</strong>
+<code>../etc/fstab</code><strong> ← 相対パス名です。..は親ディレクトリを表します</strong></pre>
+			</div>
+			<p>ディレクトリやファイルは権限さえあれば、ファイルシステム上のどこにでも作ることが出来ます。一方、UNIX系OSはマルチユーザーシステムですので、ファイルシステムを複数のユーザーが共有しています。各ユーザーがディレクトリやファイルを適当な場所に作成してしまいますと、後々のファイルシステムの管理が繁雑になってしまいます。そこで、各ユーザー毎に作成場所を決めており、その先頭のディレクトリを<strong>ホームディレクトリ</strong>と呼んでいます。</p>
+			<p>ホームディレクトリはシステム管理者がユーザー登録時に、通常、/home/の下にユーザー名と同じ名前で作成します。例えば、ユーザー名がmerryのホームディレクトリは/home/merry/になります。なお、システムにログインしたときは、ホームディレクトリがカレントディレクトリとして自動的に設定されています。</p>
+			<p>ホームディレクトリはパス名の外に、<strong>~</strong>（オーバーライン）や<strong>$HOME</strong>で指定することも出来ます。</p>
+			<p>図3-1でmerryのホームディレクトリは/home/merry/とします。</p>
+			<div class="exe-samp">
+<pre><code>~/data1</code><strong> ← /home/merry/data1と同じです</strong>
+<code>~/mybin</code><strong> ← /home/merry/mybinと同じです</strong>
+
+<code>$HOME/data1</code><strong> ← /home/merry/data1と同じです</strong>
+<code>$HOME/mybin</code><strong> ← /home/merry/mybinと同じです</strong></pre>
+			</div>
+			<aside>
+				<h3>補足</h3>
+				<p>ディレクトリやファイルの権限に付いては後程説明します。システム管理者（ユーザー名root）は全ての権限を持っていますので、ファイルシステム上の全てのディレクトリやファイルの操作が出来ます。</p>
+			</aside>
+		</section>
+	</section>
+
+	<footer>
+		<nav>
+			<ul>
+				<li><a href="../../index.html">ホーム</a></li>
+				<li><a href="../cmdtop.html#lbl_index">目次</a></li>
+				<li><a href="../SECTION2/section2_2.html">前のページ</a></li>
+				<li><a href="./section3_2.html">次のページ</a></li>
+			</ul>
+		</nav>
+		<p id="footer-author">更新日：<time datetime="2015-09-06">2015年09月06日</time> Merry</p>
+	</footer>
+</div>
+</body>
+</html>

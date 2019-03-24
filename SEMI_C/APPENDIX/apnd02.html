@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initialscale=1.0">
+	<meta name="robots" content="INDEX,FOLLOW">
+	<meta name="keywords" content="優先順位,一覧">
+	<meta name="description" content="演算子の優先順位一覧です。">
+	<meta name="author" content="T.Hagiwara">
+	<link rel="stylesheet" href="../../CSS3/seminar.css" type="text/css">
+	<link rel="prev" href="../c_langtop.html">
+	<title>Ｃ言語プログラミング入門&nbsp;-&nbsp;付録２．演算子の優先順位</title>
+	<style type="text/css">
+	table td	{
+		vertical-align: middle;
+		}
+	</style>
+</head>
+<body>
+<div id="container">
+	<header>
+		<p>Linux講座にようこそ。このページは「Ｃ言語プログラミング入門&nbsp;-&nbsp;付録２．演算子の優先順位」です。</p>
+		<h1>Ｃ言語プログラミング入門</h1>
+		<nav>
+			<ul>
+				<li><a href="../../index.html">ホーム</a></li>
+				<li><a href="../c_langtop.html#lbl_index">目次</a></li>
+			</ul>
+		</nav>
+	</header>
+
+	<section class="contents">
+		<h1>付録２．演算子の優先順位一覧</h1>
+		<p>一つの式の中に複数の演算子が有る場合、優先順位の高い演算子から順に評価されます。同じ優先順位の演算子が有る場合は、結合規則の方向に評価されます。</p>
+		<p>優先順位の変更は(（左小括弧）と)（右小括弧）で括ります。</p>
+		<table>
+			<caption>付録１．演算子の優先順位一覧</caption>
+			<tr><th style="font-size: small;">優先順位</th><th>演算子</th><th>意味</th><th style="font-size: small;">結合規則</th></tr>
+			<tr><td class="text-center" rowspan="17">高<br>↑<br>&nbsp;<br>&nbsp;<br>&nbsp;<br>&nbsp;<br>&nbsp;<br>&nbsp;<br>&nbsp;<br>&nbsp;<br>&nbsp;<br>&nbsp;<br>&nbsp;<br>↓<br>低</td><td class="text-center">[]<br>()<br>.<br>-&gt;</td><td>配列要素の参照<br>関数呼び出し（func(...)）<br>構造体メンバ参照<br>構造体メンバ間接参照</td><td class="text-center">→<br>→<br>→<br>→</td></tr>
+			<tr><td class="text-center">++、--</td><td>インクリメント、デクリメント（前置）</td><td class="text-center">→</td></tr>
+			<tr><td class="text-center">++、--<br>sizeof<br>~<br>!<br>+、-<br>&amp;<br>*</td><td>インクリメント、デクリメント（後置）<br>サイズ取得<br>ビット反転<br>論理反転<br>正、負（正の値、負の値を表す）<br>アドレス<br>間接参照</td><td class="text-center">←<br>←<br>←<br>←<br>←<br>←<br>←</td></tr>
+			<tr><td class="text-center">(型名)</td><td>型変換</td><td class="text-center">←</td></tr>
+			<tr><td class="text-center">*、/、%</td><td>乗算、除算、除算（整数型除算の余り）</td><td class="text-center">→</td></tr>
+			<tr><td class="text-center">+、-</td><td>加算、減算</td><td class="text-center">→</td></tr>
+			<tr><td class="text-center">&lt;&lt;、&gt;&gt;</td><td>ビットの左シフト、右シフト</td><td class="text-center">→</td></tr>
+			<tr><td class="text-center">&lt;、&lt;=、&gt;、&gt;=</td><td>より小、以下、より大、以上</td><td class="text-center">→</td></tr>
+			<tr><td class="text-center">==、!=</td><td>等しい、等しくない</td><td class="text-center">→</td></tr>
+			<tr><td class="text-center">&amp;</td><td>ビットごとの論理積（AND）</td><td class="text-center">→</td></tr>
+			<tr><td class="text-center">^</td><td>ビットごとの排他的論理和（XOR）</td><td class="text-center">→</td></tr>
+			<tr><td class="text-center">|</td><td>ビットごとの論理和（OR）</td><td class="text-center">→</td></tr>
+			<tr><td class="text-center">&amp;&amp;</td><td>論理積（AND）</td><td class="text-center">→</td></tr>
+			<tr><td class="text-center">||</td><td>論理和（OR）</td><td class="text-center">→</td></tr>
+			<tr><td class="text-center">?:</td><td>条件演算</td><td class="text-center">←</td></tr>
+			<tr><td class="text-center">=、+=、-=、*=、<br>/=、%=、&lt;&lt;=、&gt;&gt;=、<br>&amp;=、~=、|=</td><td>代入</td><td class="text-center">←</td></tr>
+			<tr><td class="text-center">,</td><td>順次実行</td><td class="text-center">→</td></tr>
+		</table>
+	</section>
+
+	<footer>
+		<nav>
+			<ul>
+				<li><a href="../../index.html">ホーム</a></li>
+				<li><a href="../c_langtop.html#lbl_index">目次</a></li>
+			</ul>
+		</nav>
+		<p id="footer-author">更新日：<time datetime="2012-05-20">2012年05月20日</time> Merry</p>
+	</footer>
+</div>
+</body>
+</html>

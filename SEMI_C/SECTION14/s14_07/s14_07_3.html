@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initialscale=1.0">
+	<meta name="robots" content="INDEX,FOLLOW">
+	<meta name="keywords" content="一般ユーティリティライブラリ,関数,atof,atoi,atol,strtod,strtol,strtoul,オーバーフロー,アンダーフロー">
+	<meta name="description" content="atof関数、atoi関数、atol関数、strtod関数、strtol関数、strtoul関数の使用法を説明します。">
+	<meta name="author" content="T.Hagiwara">
+	<link rel="stylesheet" href="../../../CSS3/seminar.css" type="text/css">
+	<link rel="stylesheet" href="../../../CSS3/hl_clang.css" type="text/css">
+	<link rel="prev" href="./s14_07_2.html">
+	<link rel="next" href="./s14_07_4.html">
+	<title>Ｃ言語プログラミング入門&nbsp;-&nbsp;ライブラリ関数&nbsp;-&nbsp;ユーティリティライブラリ（3/5）-</title>
+	<style type="text/css">
+	</style>
+</head>
+<body>
+<div id="container">
+	<header>
+		<p>Linux講座にようこそ。このページは「Ｃ言語プログラミング入門&nbsp;-&nbsp;第14章．ライブラリ関数&nbsp;-&nbsp;一般ユーティリティライブラリ」です。</p>
+		<h1>Ｃ言語プログラミング入門</h1>
+		<nav>
+			<ul>
+				<li><a href="../../../index.html">ホーム</a></li>
+				<li><a href="../../c_langtop.html#lbl_index">目次</a></li>
+				<li><a href="./s14_07_2.html">前のページ</a></li>
+				<li><a href="./s14_07_4.html">次のページ</a></li>
+			</ul>
+		</nav>
+	</header>
+
+	<section class="contents">
+		<h1>14. ライブラリ関数（30/36）&nbsp;-&nbsp;ユーティリティライブラリ（3/5）</h1>
+		<section>
+			<h2 id="lbl_numcnv">14.42 文字列の数値変換関数</h2>
+			<section>
+				<h3 id="lbl_atox">14.42.1 atof関数、atoi関数、atol関数</h3>
+				<p>atof関数は文字列をdouble型の数値に、atoi関数は文字列をint型の数値に、atol関数は文字列をlong int型の数値に変換します。指定した文字列が数字でない場合は返り値として０が返りますが、数字の０の場合も返り値が０になりますので区別が付きませんので、これらの関数を使う場合は注意してください。</p>
+				<p>変換する文字列の先頭は空白（スペースやタブ、等）でも構いませんし、+や-は正・負の符号とみなします。また、atof関数は途中の.は小数点とみなします。これらの記号や数字以外が現れた時点で変換を終了します。</p>
+				<table>
+					<caption>【表14-7-5】 atof関数、atoi関数、atol関数</caption>
+					<tr><th>形式</th><td>#include &lt;stdlib.h&gt;<br>
+										double atof(const char *nptr);<br>
+										int atoi(const char *nptr);<br>
+										long atol(const char *nptr);</td></tr>
+					<tr><th>返り値</th><td>数値に変換した値を返します。変換出来なかった場合は０を返します。</td></tr>
+					<tr><th>引数</th>
+						<td>
+							<dl>
+								<dt>const char *nptr</dt>
+									<dd>変換する文字列を指定します。</dd>
+							</dl>
+						</td></tr>
+				</table>
+			</section>
+			<section>
+				<h3 id="lbl_strtod">14.42.2 strtod関数</h3>
+				<p>strtod関数は文字列をdouble型の数値に変換します。atof関数との相違は、指定した文字列が数字でない場合の判別手段が用意されている事です。</p>
+				<p>変換する文字列の先頭は空白（スペースやタブ、等）でも構いませんし、+や-は正・負の符号とみなします。また、途中の.は小数点とみなします。これらの記号や数字以外が現れた時点で変換を終了します。（「整数.整数E±整数」（Eは小文字も可）の形式もサポートしています）</p>
+				<p>なお、"INF"または"INFINITY"は無限、"NAN"は計算できない数（not-a-number）とみなします。（大文字小文字は区別しません）</p>
+				<table>
+					<caption>【「14-7-6】 strtod関数</caption>
+					<tr><th>形式</th><td>#include &lt;stdlib.h&gt;<br>
+										double strtod(const char *nptr, char **endptr);</td></tr>
+					<tr><th>返り値</th><td>数値に変換した値を返します。変換出来なかった場合は０を返します。</td></tr>
+					<tr><th>引数</th>
+						<td>
+							<dl>
+								<dt>const char *nptr</dt>
+									<dd>変換する文字列を指定します。</dd>
+								<dt>char **endptr</dt>
+									<dd>変換した数字文字の、次の文字のアドレスを格納するポインタ変数のアドレスを指定します。NULLを指定することも出来ます。</dd>
+							</dl>
+						</td></tr>
+				</table>
+				<p>変換結果がオーバーフローまたはアンダーフローを起こした場合には、外部変数errnoにERANGEが設定され、返り値はオーバーフローの場合はHUGE_VALが、アンダーフローの場合は０が返ります。</p>
+				<p>第１引数で指定した文字列が正常に変換されたか否かは、第２引数で指定したポインタ変数の指し示す文字がヌル文字（'\0'）かどうかで判別できます。ヌル文字であれば、ヌル文字の前の文字、つまり、文字列の最後の文字までが変換対象になったことになります。</p>
+			</section>
+			<section>
+				<h3 id="lbl_strtolong">14.42.3 strtol関数、strtoul関数</h3>
+				<p>strtol関数は文字列をlong int型の数値に、strtoul関数はunsigned long int型の数値に変換します。strtod関数と同様に、指定した文字列が数字でない場合の判別手段が用意されています。</p>
+				<p>変換する文字列の先頭は空白（スペースやタブ、等）でも構いませんし、+や-は正・負の符号とみなします。また、'0X'や'0x'で始まる場合は十六進数、０で始まる場合は八進数とみなします。</p>
+				<table>
+					<caption>【表14-7-7】 strtol関数、strtoul関数</caption>
+					<tr><th>形式</th><td>#include &lt;stdlib.h&gt;<br>
+										long int strtol(const char *nptr, char **endptr, int base);<br>
+										unsigned long int strtoul(const char *nptr, char **endptr, int base);</td></tr>
+					<tr><th>返り値</th><td>数値に変換した値を返します。変換出来なかった場合は０を返します。</td></tr>
+					<tr><th>引数</th>
+						<td>
+							<dl>
+								<dt>const char *nptr</dt>
+									<dd>変換する文字列を指定します。</dd>
+								<dt>char **endptr</dt>
+									<dd>変換した数字文字の、次の文字のアドレスを格納するポインタ変数のアドレスを指定します。NULLを指定することも出来ます。</dd>
+								<dt>int base</dt>
+									<dd>変換する数値の基数を指定します。2〜36までの値を指定することが出来ます。</dd>
+							</dl>
+						</td></tr>
+				</table>
+				<p>変換結果がオーバーフローまたはアンダーフローを起こした場合には、外部変数errnoにERANGEが設定され、返り値は次の値になります。</p>
+				<ul>
+					<li>strtol関数の場合は、オーバーフローした場合にはLONG_MAXが、アンダーフローした場合にはLONG_MINが返ります。</li>
+					<li>strtoul関数の場合は、オーバーフローした場合にはULONG_MAXが返ります。また、先頭が-符号の場合は、変換結果は符号を反転した値が返ります。</li>
+				</ul>
+				<p>第１引数で指定した文字列が正常に変換されたか否かは、第２引数で指定したポインタ変数の指し示す文字がヌル文字（'\0'）かどうかで判別できます。ヌル文字であれば、ヌル文字の前の文字、つまり、文字列の最後の文字までが変換対象になったことになります。</p>
+				<p>第３引数で０又は16を指定した場合、変換する文字列の先頭に'0X'や'0x'を指定すると十六進数とみなします。また、０を指定して、変換する文字列の先頭に０を指定すると八進数とみなします。</p>
+			</section>
+			<section>
+				<h3>14.42.4 例題</h3>
+				<p>入力した文字列を整数値に変換して表示することを繰り返します。入力文字列として、endを入力したら終了します。</p>
+				<div class="source-code">	<!-- ex14_7_2.c -->
+					<div class="c"><ol><li class="li1"><div class="de1"><span class="co2">#include &lt;stdio.h&gt;</span></div></li>
+					<li class="li1"><div class="de1"><span class="co2">#include &lt;stdlib.h&gt;</span></div></li>
+					<li class="li1"><div class="de1"><span class="co2">#include &lt;string.h&gt;</span></div></li>
+					<li class="li1"><div class="de1"><span class="co2">#include &lt;errno.h&gt;</span></div></li>
+					<li class="li1"><div class="de1"><span class="co2">#define BUFFSIZE &nbsp; &nbsp;1024</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1"><span class="kw4">int</span> main<span class="br0">&#40;</span><span class="kw4">void</span><span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">long</span> <span class="kw4">int</span> &nbsp; &nbsp; &nbsp; &nbsp;conv<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">char</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;buff<span class="br0">&#91;</span>BUFFSIZE<span class="br0">&#93;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">char</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="sy0">*</span>buff_p<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">char</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="sy0">*</span>endptr<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">while</span><span class="br0">&#40;</span><span class="nu0">1</span><span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;文字列を入力してください ==&gt; &quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">fgets</span><span class="br0">&#40;</span>buff<span class="sy0">,</span> BUFFSIZE<span class="sy0">,</span> stdin<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">if</span> <span class="br0">&#40;</span><span class="kw3">strncmp</span><span class="br0">&#40;</span>buff<span class="sy0">,</span> <span class="st0">&quot;end&quot;</span><span class="sy0">,</span> <span class="nu0">3</span><span class="br0">&#41;</span> <span class="sy0">!=</span> <span class="nu0">0</span><span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* 改行をヌル文字に置き換える */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">if</span> <span class="br0">&#40;</span><span class="br0">&#40;</span>buff_p <span class="sy0">=</span> <span class="kw3">strchr</span><span class="br0">&#40;</span>buff<span class="sy0">,</span> <span class="st0">'<span class="es1">\n</span>'</span><span class="br0">&#41;</span><span class="br0">&#41;</span> <span class="sy0">!=</span> NULL<span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="sy0">*</span>buff_p <span class="sy0">=</span> <span class="st0">'<span class="es5">\0</span>'</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; errno <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">;</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* 外部変数errnoを初期化 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* 文字列をlong int型に変換 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; conv <span class="sy0">=</span> <span class="kw3">strtol</span><span class="br0">&#40;</span>buff<span class="sy0">,</span> <span class="sy0">&amp;</span>endptr<span class="sy0">,</span> <span class="nu0">0</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* 完全に変換できたかのチェック */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">if</span> <span class="br0">&#40;</span>errno <span class="sy0">==</span> <span class="nu0">0</span> <span class="sy0">&amp;&amp;</span> <span class="sy0">*</span>endptr <span class="sy0">==</span> <span class="st0">'<span class="es5">\0</span>'</span><span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;%s --&gt; %ld<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> buff<span class="sy0">,</span> conv<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">else</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;変換できませんでした。<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">else</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw2">break</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">return</span> <span class="nu0">0</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#125;</span></div></li>
+					</ol></div>
+				</div>
+				<div class="exe-samp">
+<pre><samp>$ <kbd>./ex14_7_2.prg</kbd>
+文字列を入力してください ==&gt; <kbd>123</kbd>
+123 --&gt; 123
+文字列を入力してください ==&gt; <kbd>+123</kbd>
++123 --&gt; 123
+文字列を入力してください ==&gt; <kbd>-123</kbd>
+-123 --&gt; -123
+文字列を入力してください ==&gt; <kbd>123.5</kbd>
+変換できませんでした。
+文字列を入力してください ==&gt; <kbd>0x1a</kbd>
+0x1a --&gt; 26
+文字列を入力してください ==&gt; <kbd>012</kbd>
+012 --&gt; 10
+文字列を入力してください ==&gt; <kbd>   345</kbd>
+345 --&gt; 345
+文字列を入力してください ==&gt; <kbd>   34 5</kbd>
+変換できませんでした。
+文字列を入力してください ==&gt; <kbd>0Z1a</kbd>
+変換できませんでした。
+文字列を入力してください ==&gt; <kbd>2000000000</kbd>
+2000000000 --&gt; 2000000000
+文字列を入力してください ==&gt; <kbd>2222222222</kbd>
+変換できませんでした。
+文字列を入力してください ==&gt; <kbd>end</kbd>
+$</samp></pre>
+				</div>
+				<dl>
+					<dt>27行目</dt>
+						<dd>変換結果がオーバーフローやアンダーフローを起こす場合を考慮して、外部変数errnoを０で初期化します。</dd>
+					<dt>29行目</dt>
+						<dd>入力した文字列をstrtol関数でlong int型の整数値に変換します。</dd>
+					<dt>31行目</dt>
+						<dd>文字列が変換出来たかをチェックします。errnoが０以外の場合はオーバーフロー又はアンダーフローが起きたことになりますし、*endptrがヌル文字でない場合は文字列中の最後の文字までが変換対象になっていないことになります。</dd>
+				</dl>
+			</section>
+		</section>
+	</section>
+
+	<footer>
+		<nav>
+			<ul>
+				<li><a href="../../../index.html">ホーム</a></li>
+				<li><a href="../../c_langtop.html#lbl_index">目次</a></li>
+				<li><a href="./s14_07_2.html">前のページ</a></li>
+				<li><a href="./s14_07_4.html">次のページ</a></li>
+			</ul>
+		</nav>
+		<p id="footer-author">更新日：<time datetime="2019-01-12">2019年01月12日</time> Merry</p>
+	</footer>
+</div>
+</body>
+</html>

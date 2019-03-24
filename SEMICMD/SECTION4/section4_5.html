@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initialscale=1.0">
+	<meta name="robots" content="INDEX,FOLLOW">
+	<meta name="keywords" content="ファイル種別,リンク,ファイル容量,文字コード変換,内容表示,file,ln,wc,nkf,od,cmp">
+	<meta name="description" content="一般的に良く使われているディレクトリやファイルを取り扱うコマンドの使い方をご紹介します。">
+	<meta name="author" content="T.Hagiwara">
+	<link rel="stylesheet" href="../../CSS3/seminar.css" type="text/css">
+	<link rel="prev" href="./section4_4.html">
+	<link rel="next" href="../SECTION5/section5_1.html">
+	<title>Linuxの使い方&nbsp;-&nbsp;ファイル操作のコマンド２（5/5）</title>
+	<style type="text/css">
+	</style>
+</head>
+<body>
+<div id="container">
+	<header>
+		<p>Linux講座にようこそ。このページは「Linuxの使い方&nbsp;-&nbsp;第４章&nbsp;ファイル操作のコマンド２」です。</p>
+		<h1>Linuxの使い方</h1>
+		<nav>
+			<ul>
+				<li><a href="../../index.html">ホーム</a></li>
+				<li><a href="../cmdtop.html#lbl_index">目次</a></li>
+				<li><a href="./section4_4.html">前のページ</a></li>
+				<li><a href="../SECTION5/section5_1.html">次のページ</a></li>
+			</ul>
+		</nav>
+	</header>
+
+	<section class="contents">
+		<h1>4. ファイル操作のコマンド２（5/5）</h1>
+		<section>
+			<h2>4.3 コマンドのご紹介２（4/4）</h2>
+			<section>
+				<!-- その他のコマンドの説明 -->
+				<h3 id="other_4">4.3.12 その他、知っておくと便利なコマンド（file、ln、wc、nkf、od、cmpコマンド）</h3>
+				<p>ここでは、次のコマンドの説明を行います。</p>
+				<dl>
+					<dt>fileコマンド</dt>
+						<dd>ファイルの内容を解析して種別を表示します。</dd>
+					<dt>lnコマンド</dt>
+						<dd>ファイルに複数のパス名を付加します。</dd>
+					<dt>wcコマンド</dt>
+						<dd>ファイルに格納されているデータのバイト数、単語数、行数などを表示します。</dd>
+					<dt>nkfコマンド</dt>
+						<dd>文字コード（UTF-8やシフトJIS等）を変換します。</dd>
+					<dt>odコマンド</dt>
+						<dd>ファイルの内容を八進数や十六進数で表示します。</dd>
+					<dt>cmpコマンド</dt>
+						<dd>２つのファイルの内容を比較します。</dd>
+				</dl>
+				<p>Fedoraの場合、標準ではnkfコマンドはインストールされないようですので、個別にインストールする必要があります。</p>
+				<section>
+					<h4>一般形式</h4>
+					<div class="form-exp">
+						$ file ファイルパス名１ ファイルパス名２ …<br>
+						$ ln -s 元のファイルパス名 新しいファイルパス名<br>
+						$ wc -cwl ファイルパス名１ ファイルパス名２ …<br>
+						$ nkf -jeswcd ファイルパス名<br>
+						$ od -cx ファイルパス名１ ファイルパス名２ …<br>
+						$ cmp -ls -i バイト１:バイト２ -n バイト ファイルパス名１ ファイルパス名２
+					</div>
+					<p>fileコマンドのオプションに付いては省略します。</p>
+					<p>lnコマンドはファイルに複数のパス名を付加しますが、これは別名をつけると思っていただければよいでしょう。別名の付け方として、ハードリンクとシンボリックリンクと呼ぶ２つの方法があります。ハードリンクはファイルに対して別名を付けるだけで、ディレクトリに別名を付けることは出来ませんし、別のファイルシステムのファイルや、ディレクトリに別名を付けることも出来ません。これに対して、シンボリックリンクはディレクトリに別名を付けることも出来ますし、別のファイルシステムのファイルや、ディレクトリに別名を付けることも出来ます。</p>
+					<table class="simple-table">
+						<caption>【表4-23】lnコマンド・オプション</caption>
+						<tr><th>オプション</th><th>意味</th></tr>
+						<tr><td>-s, --symbolic</td><td>シンボリックリンク（ソフトリンク）と呼ぶリンクを作成します。指定しない場合はハードリンクを作成します。</td></tr>
+					</table>
+					<p>wcコマンドのオプションを省略した場合は、バイト数・単語数・行数を表示します。</p>
+					<table class="simple-table">
+						<caption>【表4-24】wcコマンド・オプション</caption>
+						<tr><th>オプション</th><th>意味</th></tr>
+						<tr><td>-c, --bytes</td><td>バイト数を表示します。</td></tr>
+						<tr><td>-w, --words</td><td>単語数（ワード数）を表示します。</td></tr>
+						<tr><td>-l, --lines</td><td>行数を表示します。</td></tr>
+						<tr><td>-m, --chars</td><td>文字数を表示します。日本語の漢字や平仮名はもちろん、半角スペースや改行も１文字と数えます。</td></tr>
+					</table>
+					<table class="simple-table">
+						<caption>【表4-25】nkfコマンド・オプション</caption>
+						<tr><th>オプション</th><th>意味</th></tr>
+						<tr><td>-j</td><td>JISコードに変換します。</td></tr>
+						<tr><td>-e</td><td>日本語EUCコードに変換します。</td></tr>
+						<tr><td>-s</td><td>シフトJISコードに変換します。</td></tr>
+						<tr><td>-w</td><td>UTF-8コードに変換します。</td></tr>
+						<tr><td>-c</td><td>改行コードとして、NL（New Line）の後ろにCR（Carriage Return）を付加します。これはMS-DOSやWindowsのテキストファイル形式です。</td></tr>
+						<tr><td>-d</td><td>NLの後ろのCRを削除します。</td></tr>
+					</table>
+					<p>odコマンドは「-t 表示形式」または「--format=表示形式」オプションで表示形式を指定できますが、同じことが表4-26のオプションでもできます。こちらは直接表示種別を指定していることになります。なお、オプションを指定しない場合は八進数として表示します。</p>
+					<table class="simple-table">
+						<caption>【表4-26】odコマンド・オプション</caption>
+						<tr><th>オプション</th><th>意味</th></tr>
+						<tr><td>-c</td><td>ASCIIコードで表示します。「-t c」及び「--format=c」でも同じです。</td></tr>
+						<tr><td>-x</td><td>十六進数として表示します。当オプションを省略すると八進数として表示します。「-t x」及び「--format=x」でも同じです。</td></tr>
+					</table>
+					<p>cmpコマンドはバイト単位に比較しますので、バイナリファイルの比較もできます。また、比較するファイルとして-（負記号）を指定すると、標準入力からの入力となります。比較結果は終了ステータスで分かります。０の場合は同じ、１の場合は異なる、２の場合はエラー発生を表します。</p>
+					<table class="simple-table">
+						<caption>【表4-27】cmpコマンド・オプション</caption>
+						<tr><th>オプション</th><th>意味</th></tr>
+						<tr><td>-l, --verbose</td><td>異なる全てのバイトの情報（オフセット行とバイト数）を表示します。</td></tr>
+						<tr><td>-s, --quiet, --silent</td><td>なにも表示しません。（シェルスクリプトで使うときに便利かもしれません）</td></tr>
+						<tr><td>-i バイト１:バイト２,<br>--ignore-initial=バイト１:バイト２</td><td>比較するファイルのバイト１あるいはバイト２までをスキップ（比較しない）します。バイト２は２つ目のファイルに対する指定です。</td></tr>
+						<tr><td>-n, --bytes=バイト</td><td>ファイルの先頭から指定したバイト数分だけ比較します。</td></tr>
+					</table>
+				</section>
+				<section>
+					<h4>実行例</h4>
+					<p>カレントディレクトリの下のファイルの種類を調べます。</p>
+					<div class="exe-samp">
+<pre><samp>$ <kbd>file *</kbd>
+BKUP:    directory
+a.out:   ELF 32-bit LSB executable, Intel 80386, version 1, dynamically linked (uses shared libs), not stripped
+file1:   EUC text
+prg1.c:  C program text
+scr1.sh: Bourne-Again shell script text
+$
+</samp></pre>
+					</div>
+					<p>./a.outに別名（ハードリンク）../../mybin/hello.prgを付けます。</p>
+					<div class="exe-samp">
+<pre><samp>$ <kbd>ls -l a.out</kbd>
+-rwxr-xr-x 1 merry merry 4667 2010-11-17 17:11 a.out
+$
+$ <kbd>ln a.out ../../mybin/hello.prg</kbd>
+$
+$ <kbd>ls -l a.out ../../mybin/hello.prg</kbd>
+-rwxr-xr-x <strong>2</strong> merry merry 4667 2010-11-17 17:11 ../../mybin/hello.prg
+-rwxr-xr-x <strong>2</strong> merry merry 4667 2010-11-17 17:11 a.out
+           <strong>↑ リンク数と呼ばれているもので、</strong>
+<strong>この場合、１つのファイル実体が２つの名前（パス）を持っていることを表わします</strong>
+$
+$ <kbd>rm a.out</kbd><strong> ← a.outを削除します</strong>
+$ <kbd>ls -l ../../mybin/hello.prg</kbd>
+-rwxr-xr-x <strong>1</strong> merry merry 4667 2010-11-17 17:11 ../../mybin/hello.prg
+           <strong>↑ a.outを削除したため、リンク数が１になりました</strong>
+$
+</samp></pre>
+					</div>
+					<p>TMP/BACKUPディレクトリに別名（シンボリックリンク）MYBKUPを付けます。</p>
+					<div class="exe-samp">
+<pre><samp>$ <kbd>ln -s ./TMP/BACKUP MYBKUP</kbd>
+$ <kbd>ls -ld MYBKUP</kbd>
+lrwxr-xr-x  1 merry users 13 10月  5 17:21 MYBKUP -&gt; ./TMP/BACKUP/
+<strong>↑「l」はシンボリックリンクであることを表わし、</strong>
+<strong>MYBKUP -&gt; ./TMP/BACKUP/は./TMP/BACKUP/へのシンボリックリンクであることを表わします</strong>
+$
+$ <kbd>ls MYBKUP</kbd>
+merry.tar.bz2  merry_back.tar.bz2  merryall.tar.bz2
+$
+</samp></pre>
+					</div>
+					<p>カレントディレクトリの下のmemo.txtファイルのバイト数、単語数、行数、文字数を表示します。</p>
+					<div class="exe-samp">
+<pre><samp>$ <kbd>cat memo.txt</kbd>
+Hello World.
+
+今日は世界
+
+(^ ^);
+$ <kbd>wc memo.txt</kbd>
+ 5  5 38 memo.txt<strong> ← 行数、単語数、バイト数の順で表示します</strong>
+$
+$ <kbd>wc -c memo.txt</kbd>
+38 memo.txt<strong> ← バイト数のみ表示します</strong>
+$
+$ <kbd>wc -w memo.txt</kbd>
+5 memo.txt<strong> ← 単語数のみ表示します</strong>
+$
+$ <kbd>wc -l memo.txt</kbd>
+5 memo.txt<strong> ← 行数のみ表示します</strong>
+$
+$ <kbd>wc -m memo.txt</kbd>
+28 memo.txt<strong> ← 文字数のみ表示します</strong>
+$
+</samp></pre>
+					</div>
+					<p>Windowsで作成したファイル（シフトJIS）をLinuxで取り扱えるファイル（UTF-8）に変換します。変換結果は標準出力に出力されますので、ファイルに保存したい場合はリダイレクトします。</p>
+					<div class="exe-samp">
+<pre><samp>$ <kbd>nkf -wd winfile.txt &gt; linuxfile.txt</kbd>
+$
+</samp></pre>
+					</div>
+					<p>カレントディレクトリの下のa.outファイルの内容を十六進数とASCIIコードで表示します。</p>
+					<div class="exe-samp">
+<pre><samp>$ <kbd>od -x a.out</kbd><strong> ← -xオプションを指定して十六進数で表示します</strong>
+0000000 457f 464c 0102 0001 0000 0000 0000 0000
+0000020 0002 003e 0001 0000 0440 0040 0000 0000
+0000040 0040 0000 0000 0000 1168 0000 0000 0000
+0000060 0000 0000 0040 0038 0009 0040 001e 001b
+0000100 0006 0000 0005 0000 0040 0000 0000 0000
+（以下省略）
+$
+$ <kbd>od -xc a.out | head</kbd><strong> ← -xcオプションを指定して十六進数とASCIIコードで表示します（headコマンで先頭から10行だけを表示）</strong>
+0000000    457f    464c    0102    0001    0000    0000    0000    0000
+        177   E   L   F 002 001 001  \0  \0  \0  \0  \0  \0  \0  \0  \0
+0000020    0002    003e    0001    0000    0440    0040    0000    0000
+        002  \0   &gt;  \0 001  \0  \0  \0   @ 004   @  \0  \0  \0  \0  \0
+0000040    0040    0000    0000    0000    1168    0000    0000    0000
+          @  \0  \0  \0  \0  \0  \0  \0   h 021  \0  \0  \0  \0  \0  \0
+0000060    0000    0000    0040    0038    0009    0040    001e    001b
+         \0  \0  \0  \0   @  \0   8  \0  \t  \0   @  \0 036  \0 033  \0
+0000100    0006    0000    0005    0000    0040    0000    0000    0000
+        006  \0  \0  \0 005  \0  \0  \0   @  \0  \0  \0  \0  \0  \0  \0
+$</samp></pre>
+					</div>
+					<p>カレントディレクトリの下の２つのファイルの内容を比較します。</p>
+					<div class="exe-samp">
+<pre><samp>$ <kbd>cat file_1.txt</kbd>
+Hello World.<strong> ← 以下３行がfile_1.txtファイルの内容です</strong>
+
+2015年 10月 25日 日曜日 09:26:45 JST
+$
+$ <kbd>cat file_2.txt</kbd>
+Hello world.<strong> ← 以下３行がfile_2.txtファイルの内容です</strong>
+
+2015年 10月 25日 日曜日 09:27:07 JST
+$
+$ <kbd>cmp file_1.txt file_2.txt</kbd><strong> ← オプションの指定をしていません</strong>
+file_1.txt file_2.txt 異なります: バイト 7、行 1
+$
+$ <kbd>cmp -l file_1.txt file_2.txt</kbd><strong> ← -lオプションを指定して異なる部分の位置と内容を表示します</strong>
+ 7 127 167
+49  66  67
+51  64  60
+52  65  67
+$
+</samp></pre>
+					</div>
+				</section>
+				<aside>
+					<h4>補足</h4>
+					<p>fileコマンドは拡張子によりファイルの種類を判定しているのではなく、ファイルの内容を数バイト読み込んで、いくつかのテストを行い種類を判定しています。</p>
+					<p>ファイルの内容は同じで、拡張子がある場合とない場合で結果を確認します。</p>
+					<div class="exe-samp">
+<pre><samp>$ <kbd>ls</kbd>
+DIR01  DIR02
+$
+$ <kbd>file ./DIR01/*</kbd><strong> ← 拡張子の付いているファイルの種類を調べます</strong>
+./DIR01/Screenshot.png: PNG image data, 433 x 311, 8-bit/color RGBA, non-interlaced
+./DIR01/command.txt:    UTF-8 Unicode text
+./DIR01/mousikomi.odt:  OpenDocument Text
+./DIR01/mozilla.pdf:    PDF document, version 1.5
+$
+$ <kbd>file ./DIR02/*</kbd><strong> ← 拡張子の付いていないファイルの種類を調べます</strong>
+./DIR02/Screenshot: PNG image data, 433 x 311, 8-bit/color RGBA, non-interlaced
+./DIR02/command:    UTF-8 Unicode text
+./DIR02/mousikomi:  OpenDocument Text
+./DIR02/mozilla:    PDF document, version 1.5
+$
+</samp></pre>
+					</div>
+				</aside>
+				<aside>
+					<h4>補足</h4>
+					<p>cmpコマンドは単にファイルの内容が等しいか否かだけを知りたい場合は便利です。しかし、異なる場所と内容を知りたい場合は表示が分かりにくいため、他の比較コマンドを使ったほうがよいかもしれません。ファイル比較のコマンドとしてはdiffやcommコマンドがありますので、興味のある方はmanコマンドなどで調べてください。</p>
+				</aside>
+			</section>
+		</section>
+	</section>
+
+	<footer>
+		<nav>
+			<ul>
+				<li><a href="../../index.html">ホーム</a></li>
+				<li><a href="../cmdtop.html#lbl_index">目次</a></li>
+				<li><a href="./section4_4.html">前のページ</a></li>
+				<li><a href="../SECTION5/section5_1.html">次のページ</a></li>
+			</ul>
+		</nav>
+		<p id="footer-author">更新日：<time datetime="2017-11-09">2017年11月09日</time> Merry</p>
+	</footer>
+</div>
+</body>
+</html>

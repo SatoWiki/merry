@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initialscale=1.0">
+	<meta name="robots" content="INDEX,FOLLOW">
+	<meta name="keywords" content="ライブラリ,関数,その他のライブラリ,デバッグ支援,ロケール情報の取得と設定,非局所分岐,シグナル操作,非同期イベント,可変個引数,構造体">
+	<meta name="description" content="その他のライブラリとして説明する関数です。">
+	<meta name="author" content="T.Hagiwara">
+	<link rel="stylesheet" href="../../../CSS3/seminar.css" type="text/css">
+	<link rel="prev" href="../s14_07/s14_07_5.html">
+	<link rel="next" href="./s14_08_2.html">
+	<title>Ｃ言語プログラミング入門&nbsp;-&nbsp;ライブラリ関数&nbsp;-&nbsp;その他のライブラリ（1/4）-</title>
+	<style type="text/css">
+	</style>
+</head>
+<body>
+<div id="container">
+	<header>
+		<p>Linux講座にようこそ。このページは「Ｃ言語プログラミング入門&nbsp;-&nbsp;第14章．ライブラリ関数&nbsp;-&nbsp;その他のライブラリ」です。</p>
+		<h1>Ｃ言語プログラミング入門</h1>
+		<nav>
+			<ul>
+				<li><a href="../../../index.html">ホーム</a></li>
+				<li><a href="../../c_langtop.html#lbl_index">目次</a></li>
+				<li><a href="../s14_07/s14_07_5.html">前のページ</a></li>
+				<li><a href="./s14_08_2.html">次のページ</a></li>
+			</ul>
+		</nav>
+	</header>
+
+	<section class="contents">
+		<h1>14. ライブラリ関数（33/36）&nbsp;-&nbsp;その他のライブラリ（1/4）</h1>
+		<p>ここで説明する関数は次の通りです。使用するヘッダファイルは個々の関数毎に異なりますので注意してください。</p>
+		<table class="simple-table">
+			<caption>【表14-8-1】 その他のライブラリ関数一覧</caption>
+			<thead>
+			<tr><th>区分</th><th>関数名</th><th>機能概要</th></tr>
+			</thead>
+			<tbody>
+			<tr><td><a href="./s14_08_2.html">デバッグ支援</a></td><td><a href="./s14_08_2.html#lbl_assert">assert()</a></td><td>引数の値が偽（0）の場合、異常終了します。</td></tr>
+			<tr><td rowspan="2"><a href="./s14_08_2.html#lbl_locale">ロケール情報の取得と設定</a></td><td><a href="./s14_08_2.html#lbl_localeconv">localeconv()</a></td><td>現在のロケール（地域情報）の数値に関する書式情報を取得します。</td></tr>
+			<tr><td><a href="./s14_08_2.html#lbl_setlocale">setlocale()</a></td><td>ロケール（地域情報）の設定と取得を行います。</td></tr>
+			<tr><td rowspan="2"><a href="./s14_08_3.html">非局所分岐</a></td><td><a href="./s14_08_3.html#lbl_setjmp">setjmp()</a></td><td>非局所的なジャンプのために、実行環境（スタック・コンテキスト）を保存します。</td></tr>
+			<tr><td><a href="./s14_08_3.html#lbl_longjmp">longjmp()</a></td><td>保存された実行環境（スタック・コンテキスト）を使用して非局所的なジャンプを行います。</td></tr>
+			<tr><td rowspan="2"><a href="./s14_08_3.html#lbl_sigop">シグナル（非同期イベント）操作</a></td><td><a href="./s14_08_3.html#lbl_raise">raise()</a></td><td>指定されたシグナルを送信します。</td></tr>
+			<tr><td><a href="./s14_08_3.html#lbl_signal">signal()</a></td><td>指定されたシグナルに対応するシグナル処理関数（シグナル・ハンドラ）を登録します。</td></tr>
+			<tr><td rowspan="3"><a href="./s14_08_4.html">可変個引数</a></td><td><a href="./s14_08_4.html#lbl_start">va_start()</a></td><td>引数リストを初期化します。</td></tr>
+			<tr><td><a href="./s14_08_4.html#lbl_arg">va_arg()</a></td><td>引数の値を取得します。</td></tr>
+			<tr><td><a href="./s14_08_4.html#lbl_end">va_end()</a></td><td>引数リストをリセットします。</td></tr>
+			<tr><td><a href="./s14_08_4.html#lbl_struct">構造体</a></td><td><a href="./s14_08_4.html#lbl_offsetof">offsetof()</a></td><td>構造体メンバーの位置（構造体の先頭からのバイト数）を取得します。</td></tr>
+			</tbody>
+		</table>
+	</section>
+
+	<footer>
+		<nav>
+			<ul>
+				<li><a href="../../../index.html">ホーム</a></li>
+				<li><a href="../../c_langtop.html#lbl_index">目次</a></li>
+				<li><a href="../s14_07/s14_07_5.html">前のページ</a></li>
+				<li><a href="./s14_08_2.html">次のページ</a></li>
+			</ul>
+		</nav>
+		<p id="footer-author">更新日：<time datetime="2012-05-20">2012年05月20日</time> Merry</p>
+	</footer>
+</div>
+</body>
+</html>

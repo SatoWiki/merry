@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initialscale=1.0">
+	<meta name="robots" content="INDEX,FOLLOW">
+	<meta name="keywords" content="四則演算,演算子,乗算,除算,商,余り,インクリメント,デクリメント,代入演算子,優先順位">
+	<meta name="description" content="乗算・除算の説明をしています。">
+	<meta name="author" content="T.Hagiwara">
+	<link rel="stylesheet" href="../../CSS3/seminar.css" type="text/css">
+	<link rel="stylesheet" href="../../CSS3/hl_clang.css" type="text/css">
+	<link rel="prev" href="./section03_1.html">
+	<link rel="next" href="../SECTION04/section04_1.html">
+	<title>Ｃ言語プログラミング入門&nbsp;-&nbsp;四則演算をするための演算子（2/2）</title>
+	<style type="text/css">
+	</style>
+</head>
+<body>
+<div id="container">
+	<header>
+		<p>Linux講座にようこそ。このページは「Ｃ言語プログラミング入門&nbsp;-&nbsp;第３章&nbsp;四則演算をするための演算子」です。</p>
+		<h1>Ｃ言語プログラミング入門</h1>
+		<nav>
+			<ul>
+				<li ><a href="../../index.html">ホーム</a></li>
+				<li><a href="../c_langtop.html#lbl_index">目次</a></li>
+				<li><a href="./section03_1.html">前のページ</a></li>
+				<li><a href="../SECTION04/section04_1.html">次のページ</a></li>
+			</ul>
+		</nav>
+	</header>
+
+	<section class="contents">
+		<h1>3. 四則演算をするための演算子（2/2）</h1>
+		<section>
+			<h2>3.3 乗除算</h2>
+			<p>ここでは四則演算のうち、乗算と除算について説明します。これらは日常の計算では×記号と÷記号を使いますが、キーボード上にはこれらの記号はありませんので、Ｃ言語では別の記号を演算子として使用します。また、除算の場合は演算子が２つ（/と%）ありますので使い分けが必要です。</p>
+			<section>
+				<h3>3.3.1 形式</h3>
+				<p>乗算は<strong>*</strong>（アステリスク）、除算は<strong>/</strong>（斜線）を演算子として使用します。ただし、整数型の除算の場合は/演算子は<strong>商</strong>が、<strong>%</strong>演算子は<strong>余り</strong>が求まります。</p>
+				<div class="form-exp">
+					値１ * 値２<br>
+					値１ / 値２<br>
+					値１ % 値２
+				</div>
+				<dl>
+					<dt>値１ * 値２</dt>
+						<dd>値１と値２の乗算を行います。</dd>
+					<dt>値１ / 値２</dt>
+						<dd>値１から値２の除算を行います。値１と値２が整数型の場合は商が求まります。</dd>
+					<dt>値１ % 値２</dt>
+						<dd>値１と値２が整数型の場合は余りが求まります。実数型の場合はコンパイルエラーになります。</dd>
+				</dl>
+				<p>値１と値２の型名が異なっている場合は加減算と同じく、精度が高い方に型変換して演算を行います。</p>
+			</section>
+			<section>
+				<h3>3.3.2 例題</h3>
+				<p>２つの値を入力して、乗算と除算を行うプログラムです。浮動小数点型の除算の場合は余りも求めます。</p>
+				<div class="source-code">
+					<div class="c"><ol><li class="li1"><div class="de1"><span class="co2">#include &lt;stdio.h&gt;</span></div></li>
+					<li class="li1"><div class="de1"><span class="kw4">int</span> main<span class="br0">&#40;</span><span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">int</span> &nbsp; &nbsp; atai_1<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">int</span> &nbsp; &nbsp; atai_2<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">double</span> &nbsp;atai_3<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">double</span> &nbsp;atai_4<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="coMULTI">/* 整数の計算 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;整数の乗除算を行います<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;整数の値を２つ入力してください ==&gt; &quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">scanf</span><span class="br0">&#40;</span><span class="st0">&quot;%d%d&quot;</span><span class="sy0">,</span> <span class="sy0">&amp;</span>atai_1<span class="sy0">,</span> <span class="sy0">&amp;</span>atai_2<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;%d * %d = %d<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> atai_1<span class="sy0">,</span> atai_2<span class="sy0">,</span> atai_1 <span class="sy0">*</span> atai_2<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;%d / %d = %d<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> atai_1<span class="sy0">,</span> atai_2<span class="sy0">,</span> atai_1 <span class="sy0">/</span> atai_2<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;%d %% %d = %d<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> atai_1<span class="sy0">,</span> atai_2<span class="sy0">,</span> atai_1 <span class="sy0">%</span> atai_2<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="coMULTI">/* 実数の計算 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;浮動小数点数の乗除算を行います<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;浮動小数点数の値を２つ入力してください ==&gt; &quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">scanf</span><span class="br0">&#40;</span><span class="st0">&quot;%lf%lf&quot;</span><span class="sy0">,</span> <span class="sy0">&amp;</span>atai_3<span class="sy0">,</span> <span class="sy0">&amp;</span>atai_4<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;%f * %f = %f<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> atai_3<span class="sy0">,</span> atai_4<span class="sy0">,</span> atai_3 <span class="sy0">*</span> atai_4<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;%f / %f = %f<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> atai_3<span class="sy0">,</span> atai_4<span class="sy0">,</span> atai_3 <span class="sy0">/</span> atai_4<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">return</span> <span class="nu0">0</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#125;</span></div></li>
+					</ol></div>
+				</div>
+				<div class="exe-samp">
+<pre><samp>$ <kbd>./ex03_4.prg</kbd><strong> ← 上記例題を実行します</strong>
+整数の乗除算を行います
+整数の値を２つ入力してください ==&gt; <kbd>10 3</kbd>
+10 * 3 = 30
+10 / 3 = 3
+10 % 3 = 1<strong> ← 10 ÷ 3の余りを求めます</strong>
+実数の乗除算を行います
+実数の値を２つ入力してください ==&gt; <kbd>10.0 3.0</kbd>
+10.000000 * 3.000000 = 30.000000
+10.000000 / 3.000000 = 3.333333
+$</samp></pre>
+				</div>
+				<dl>
+					<dt>13行目</dt>
+						<dd>入力した整数値と乗算結果を出力します。</dd>
+					<dt>14行目</dt>
+						<dd>入力した整数値と除算結果を出力します。整数型の演算のため商を出力します。</dd>
+					<dt>15行目</dt>
+						<dd>入力した整数値と除算結果の余りを出力します。printf関数の書式文字列中の「%%」は「%」を文字として出力するための指定です。</dd>
+					<dt>21行目</dt>
+						<dd>入力した浮動小数点値と乗算結果を出力します。</dd>
+					<dt>22行目</dt>
+						<dd>入力した浮動小数点値と除算結果を出力します。</dd>
+				</dl>
+			</section>
+		</section>
+		<section>
+			<h2 id="lbl_other">3.4 その他の演算子および、関連事項</h2>
+			<p>今まで説明してきた演算子以外でよく使う演算子と、それに関連する下記の事項を説明します。</p>
+			<ul>
+				<li>複合代入演算子</li>
+				<li>インクリメント、デクリメント演算子</li>
+				<li>優先順位の変更</li>
+			</ul>
+			<section>
+				<h3 id="lbl_substitute">3.4.1 複合代入演算子の形式</h3>
+				<p>右辺の値を左辺の変数に代入する代入演算子は既に説明しましたが、演算の種類と代入を同時に指定する複合代入演算子も用意されています。これらをうまく使用すると、プログラムがより簡潔に記述できます。</p>
+				<div class="form-exp">
+					変数 += 値<br>
+					変数 -= 値<br>
+					変数 *= 値<br>
+					変数 /= 値<br>
+					変数 %= 値
+				</div>
+				<dl>
+					<dt>変数 += 値</dt>
+						<dd>左辺の変数の式の値に右辺の値を加算します。「変数 = 変数 + 値」と同じ意味です。</dd>
+					<dt>変数 -= 値</dt>
+						<dd>左辺の変数の式の値から右辺の値を減算します。「変数 = 変数 - 値」と同じ意味です。</dd>
+					<dt>変数 *= 値</dt>
+						<dd>左辺の変数の式の値に右辺の値を乗算します。「変数 = 変数 * 値」と同じ意味です。</dd>
+					<dt>変数 /= 値</dt>
+						<dd>左辺の変数の式の値を右辺の値で除算します。「変数 = 変数 / 値」と同じ意味です。</dd>
+					<dt>変数 %= 値</dt>
+						<dd>左辺の変数の式の値を右辺の値で除算した結果の余りを求めます。変数と値は整数型に限ります。「変数 = 変数 % 値」と同じ意味です。</dd>
+				</dl>
+			</section>
+			<section>
+				<h3 id="lbl_inc_dec">3.4.2 インクリメント、デクリメント演算子の形式</h3>
+				<p>一般的に、プログラム中では変数に１を加算したり、１を減算することが頻繁に行われます。このため、Ｃ言語では<strong>１を加算</strong>するためのインクリメント演算子と、<strong>１を減算</strong>するためのデクリメント演算子が用意されています。</p>
+				<div class="form-exp">
+					++変数<br>
+					変数++<br>
+					--変数<br>
+					変数--
+				</div>
+				<dl>
+					<dt>++変数</dt>
+						<dd>変数の値（内容）と、「++変数」の式の値は１を加算した値になります。</dd>
+					<dt>変数++</dt>
+						<dd>変数の値（内容）は１を加算した値になりますが、「変数++」の式の値は加算前の値のままです。</dd>
+					<dt>--変数</dt>
+						<dd>変数の値（内容）と、「--変数」の式の値は１を減算した値になります。</dd>
+					<dt>変数--</dt>
+						<dd>変数の値（内容）は１を減算した値になりますが、「変数--」の式の値は減算前の値のままです。</dd>
+				</dl>
+				<p>変数に１を加えるだけであれば「++変数」でも「変数++」でも結果的には同じですが、式の値も使う場合は結果が異なります。例えば、変数「atai」に10が設定されている場合の結果を示します。</p>
+				<div class="exe-samp"><pre>
+kotae = ++atai;<strong> ← 変数「kotae」には「++atai」の式の値の11が代入されます。</strong>
+<strong>          ↑ 変数「atai」の値は11になります。</strong>
+kotae = atai++;<strong> ← 変数「kotae」には「atai++」の式の値の10が代入されます。</strong>
+<strong>          ↑ 変数「atai」の値は11になります。</strong>
+kotae = --atai;<strong> ← 変数「kotae」には「--atai」の式の値の9が代入されます。</strong>
+<strong>          ↑ 変数「atai」の値は9になります。</strong>
+kotae = atai--;<strong> ← 変数「kotae」には「atai--」の式の値の10が代入されます。</strong>
+<strong>          ↑ 変数「atai」の値は9になります。</strong>
+</pre>
+				</div>
+			</section>
+			<section>
+				<h3 id="lbl_priority">3.4.3 優先順位の変更</h3>
+				<p>加減算と乗除算の混合演算の場合、乗除算を先に演算しなければなりませんが、Ｃ言語の演算子には優先順位が定義されていますので、通常は優先順位を余り考慮する必要はありません。しかし、複雑な演算の場合は優先順位を変更したいこともありますし、明示的に優先順位を指定したいこともあります。優先順位の指定は算数と同じく、<strong>(</strong>（左小括弧）と<strong>)</strong>（右小括弧）で括ります。複雑な式の場合は明示的に括弧で括って、優先順位を明確にするのが良いでしょう。</p>
+				<p>なお、全ての演算子の優先順位については<a href="../APPENDIX/apnd02.html">「付録２．演算子の優先順位」</a>をご覧ください。</p>
+			</section>
+			<section>
+				<h3 id="lbl-ex-other">3.4.4 例題</h3>
+				<p>３人の肥満度（BMI）の計算を行うプログラムです。肥満度は次の計算式で行います。</p>
+				<p>肥満度（BMI）＝ 体重（キログラム）÷ 身長（メートル）÷ 身長（メートル）</p>
+				<div class="source-code">
+					<div class="c"><ol><li class="li1"><div class="de1"><span class="co2">#include &lt;stdio.h&gt;</span></div></li>
+					<li class="li1"><div class="de1"><span class="kw4">int</span> main<span class="br0">&#40;</span><span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">int</span> &nbsp; &nbsp; bango <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">double</span> &nbsp;taijyu<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">double</span> &nbsp;sinchyo<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">double</span> &nbsp;bmi<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">double</span> &nbsp;bmi_gokei <span class="sy0">=</span> <span class="nu16">0.0</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="coMULTI">/* 肥満度(BMI) = 体重(kg) * 身長(m) / 身長(m) */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;肥満度(BMI)の計算を行います<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="coMULTI">/* 一人目の肥満度の計算 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;%d人目の方の体重(kg)と身長(m)を入力してください ==&gt; &quot;</span><span class="sy0">,</span> <span class="sy0">++</span>bango<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">scanf</span><span class="br0">&#40;</span><span class="st0">&quot;%lf%lf&quot;</span><span class="sy0">,</span> <span class="sy0">&amp;</span>taijyu<span class="sy0">,</span> <span class="sy0">&amp;</span>sinchyo<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; bmi <span class="sy0">=</span> taijyu <span class="sy0">/</span> sinchyo <span class="sy0">/</span> sinchyo<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;%d人目の方の肥満度は%.2fです<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> bango<span class="sy0">,</span> bmi<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; bmi_gokei <span class="sy0">+=</span> bmi<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="coMULTI">/* 二人目の肥満度の計算 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;%d人目の方の体重(kg)と身長(m)を入力してください ==&gt; &quot;</span><span class="sy0">,</span> <span class="sy0">++</span>bango<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">scanf</span><span class="br0">&#40;</span><span class="st0">&quot;%lf%lf&quot;</span><span class="sy0">,</span> <span class="sy0">&amp;</span>taijyu<span class="sy0">,</span> <span class="sy0">&amp;</span>sinchyo<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; bmi <span class="sy0">=</span> taijyu <span class="sy0">/</span> sinchyo <span class="sy0">/</span> sinchyo <span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;%d人目の方の肥満度は%.2fです<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> bango<span class="sy0">,</span> bmi<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; bmi_gokei <span class="sy0">+=</span> bmi<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="coMULTI">/* 三人目の肥満度の計算 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;%d人目の方の体重(kg)と身長(m)を入力してください ==&gt; &quot;</span><span class="sy0">,</span> <span class="sy0">++</span>bango<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">scanf</span><span class="br0">&#40;</span><span class="st0">&quot;%lf%lf&quot;</span><span class="sy0">,</span> <span class="sy0">&amp;</span>taijyu<span class="sy0">,</span> <span class="sy0">&amp;</span>sinchyo<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; bmi <span class="sy0">=</span> taijyu <span class="sy0">/</span> sinchyo <span class="sy0">/</span> sinchyo<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;%d人目の方の肥満度は%.2fです<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> bango<span class="sy0">,</span> bmi<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; bmi_gokei <span class="sy0">+=</span> bmi<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="coMULTI">/* 肥満度の平均値の計算 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;<span class="es1">\n</span>肥満度の平均値は%.2fです<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> bmi_gokei <span class="sy0">/</span> <span class="nu16">3.0</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">return</span> <span class="nu0">0</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#125;</span></div></li>
+					</ol></div>
+				</div>
+				<div class="exe-samp">
+<pre><samp>$ <kbd>./ex03_5.prg</kbd><strong> ← 上記例題を実行します</strong>
+肥満度(BMI)の計算を行います
+1人目の方の体重(kg)と身長(m)を入力してください ==&gt; <kbd>84.0 1.87</kbd>
+1人目の方の肥満度は24.02です
+2人目の方の体重(kg)と身長(m)を入力してください ==&gt; <kbd>68.0 1.84</kbd>
+2人目の方の肥満度は20.09です
+3人目の方の体重(kg)と身長(m)を入力してください ==&gt; <kbd>75.0 1.86</kbd>
+3人目の方の肥満度は21.68です
+
+肥満度の平均値は21.93です
+$</samp></pre>
+				</div>
+				<dl>
+					<dt>13行目</dt>
+						<dd>変数bangoには初期値として０を設定していますので、１を加算していくことで「1人」、「2人」、「3人」とメッセージに出力します。ここでは式の値を使いますので、++はbangoの前に付けています。また、「bango = bango + 1」や「bango += 1」と記述しても同じです。</dd>
+					<dt>15行目</dt>
+						<dd>「肥満度（BMI）＝ 体重（キログラム）÷ 身長（メートル）÷ 身長（メートル）」の計算式を使って肥満度の計算を行います。身長の単位はメートルですので注意してください。</dd>
+					<dt>17行目</dt>
+						<dd>最後に平均値を算出するために、計算した肥満度の値を変数bmi_gokeiに加算していきます。bmi_gokeiには初期値として0.0を設定しています。「<code>bmi_gokei = bmi_gokei + bmi;</code>」と記述しても同じです。</dd>
+					<dt>34行目</dt>
+						<dd>肥満度の合計を３で除算することで平均値を算出します。bmi_gokeiはdouble型（浮動小数点）ですので、型を合わせるために3.0と指定しています。</dd>
+				</dl>
+			</section>
+		</section>
+	</section>
+
+	<footer>
+		<nav>
+			<ul>
+				<li><a href="../../index.html">ホーム</a></li>
+				<li><a href="../c_langtop.html#lbl_index">目次</a></li>
+				<li><a href="./section03_1.html">前のページ</a></li>
+				<li><a href="../SECTION04/section04_1.html">次のページ</a></li>
+			</ul>
+		</nav>
+		<p id="footer-author">更新日：<time datetime="2018-04-24">2018年04月24日</time> Merry</p>
+	</footer>
+</div>
+</body>
+</html>

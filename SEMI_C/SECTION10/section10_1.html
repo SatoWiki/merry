@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initialscale=1.0">
+	<meta name="robots" content="INDEX,FOLLOW">
+	<meta name="keywords" content="記憶クラス,識別子.有効範囲,有効期間,内部変数,ローカル変数,外部変数,グローバル変数,自動変数,静的変数,関数内静的変数,関数外静的変数,auto,static,extern,register,strlen">
+	<meta name="description" content="識別子の有効範囲と寿命を指定する記憶クラスの説明です。">
+	<meta name="author" content="T.Hagiwara">
+	<link rel="stylesheet" href="../../CSS3/seminar.css" type="text/css">
+	<link rel="stylesheet" href="../../CSS3/hl_clang.css" type="text/css">
+	<link rel="prev" href="../SECTION09/section09_3.html">
+	<link rel="next" href="../SECTION11/section11_1.html">
+	<title>Ｃ言語プログラミング入門&nbsp;-&nbsp;データの有効範囲と寿命を規定する記憶クラス</title>
+	<style type="text/css">
+	</style>
+</head>
+<body>
+<div id="container">
+	<header>
+		<p>Linux講座にようこそ。このページは「Ｃ言語プログラミング入門&nbsp;-&nbsp;第10章．データの有効範囲と寿命を規定する記憶クラス」です。</p>
+		<h1>Ｃ言語プログラミング入門</h1>
+		<nav>
+			<ul>
+				<li><a href="../../index.html">ホーム</a></li>
+				<li><a href="../c_langtop.html#lbl_index">目次</a></li>
+				<li><a href="../SECTION09/section09_3.html">前のページ</a></li>
+				<li><a href="../SECTION11/section11_1.html">次のページ</a></li>
+			</ul>
+		</nav>
+	</header>
+
+	<section class="contents">
+		<h1>10. データの有効範囲と寿命を規定する記憶クラス（1/1）</h1>
+		<section>
+			<h2>10.1 記憶クラスとは</h2>
+			<p>関数間のデータのやりとりは引数と返り値で行えますが、これらにはちょっとした欠点があります。関数間でやりとりするデータが多い場合、引数の数が多くなりますが、そうするとコーディングが面倒になりますし、分かりにくいプログラムになりがちです。また、返り値で返せるデータは１個のみです。</p>
+			<figure class="left-box myphoto">
+				<dl>
+					<dt><img src="../IMAGES/sec10_1.jpg" alt="記憶クラスとは"></dt>
+					<dd>【図１０-１】記憶クラスとは</dd>
+				</dl>
+			</figure>
+			<p>そこで、もっと簡単にデータのやりとりができるように、変数や配列を関数間で共有することができます。つまり、１つの変数の値を複数の関数で参照や更新ができるということです。また、逆に、変数や配列を特定の関数でのみ使えるようにすることもできます。これらを指定するのが<strong>記憶クラス</strong>と呼ぶものです。</p>
+			<p>変数名や関数名などの名前を識別子と呼んでいますが、記憶クラスは識別子の<strong>有効範囲</strong>と<strong>有効期間</strong>を指定します。</p>
+			<div class="form-exp">
+				<dl>
+					<dt>有効範囲</dt>
+						<dd>識別子のソースプログラム上における使用可能な範囲です。</dd>
+					<dt>有効期間</dt>
+						<dd>識別子が存在している期間（寿命）です。</dd>
+				</dl>
+			</div>
+			<p>記憶クラスは識別子の宣言時に指定します。宣言の方法については後ほど説明します。</p>
+			<section>
+				<h3 id="lbl_scope">10.1.1 有効範囲</h3>
+				<figure class="left-box myphoto">
+					<dl>
+						<dt><img src="../IMAGES/sec10_2.jpg" alt="有効範囲"></dt>
+						<dd>【図１０-２】有効範囲</dd>
+					</dl>
+				</figure>
+				<p>有効範囲には<strong>内部変数</strong>（ローカル変数）と<strong>外部変数</strong>（グローバル変数）の２種類があります。</p>
+				<p>内部変数は関数内やブロック内で宣言し、それらの中だけで使用可能です。従って、使用範囲を限定できますので、他の関数で誤って変数の値を変更してしまったというような不良を防ぐことができます。今までの例題プログラムで使っていた変数や配列は全て内部変数です。</p>
+				<p>一方、外部変数は関数の外側で宣言し、複数の関数で参照・更新が可能です。従って、関数間でデータ共有が簡単に行えます。しかし、このことは誤って変数の値を更新してしまったというような不良が発生しがちですし、不良箇所を見つけ出すのも大変です。</p>
+				<p>このようなことから、基本的には内部変数を使い、どうしても必要な場合のみ外部変数を使うようにした方がよいでしょう。</p>
+			</section>
+			<section>
+				<h3 id="lbl_period">10.1.2 有効期間</h3>
+				<figure class="left-box myphoto">
+					<dl>
+						<dt><img src="../IMAGES/sec10_3.jpg" alt="有効期間"></dt>
+						<dd>【図１０-３】有効期間</dd>
+					</dl>
+				</figure>
+				<p>有効期間には<strong>自動変数</strong>と<strong>静的変数</strong>の２種類があります。</p>
+				<p>自動変数は宣言時にメモリ上に確保され、使用を終了するとメモリ上から破棄されてしまいます。使用終了はブロックや関数の実行が終了した時点です。破棄されたメモリはリサイクルされますので、メモリを有効に使うという点では優れています。今までの例題プログラムで使っていた変数や配列は全て自動変数です。</p>
+				<p>一方、静的変数はプログラム起動時にメモリ上に確保され、プログラム実行中は存続します。また、静的変数は宣言する箇所により<strong>関数内静的変数</strong>と<strong>関数外静的変数</strong>の２種類があります。</p>
+				<p>関数内静的変数は関数の内側で宣言し、有効範囲は関数内のみになります。一方、関数外静的変数は関数の外側で宣言し、有効範囲は宣言した行からソースファイルの最後までになります。</p>
+			</section>
+		</section>
+
+		<section>
+			<h2 id="lbl_dec">10.2 宣言の形式</h2>
+			<section>
+				<h3>10.2.1 形式</h3>
+				<p>変数や配列および、関数の宣言形式についてはすでに説明しましたが、これらの宣言に記憶クラスを指定することができます。</p>
+				<div class="form-exp">
+					※ 変数の宣言<br>
+					記憶クラス指定子 型名 変数名;<br><br>
+
+					※ 配列の宣言<br>
+					記憶クラス指定子 型名 配列名[要素数];<br><br>
+
+					※ 関数プロトタイプ宣言<br>
+					記憶クラス指定子 返り値の型名 関数名(引数の型名１ 引数名１, 引数の型名２ 引数名２, …);
+				</div>
+				<dl>
+					<dt>記憶クラス指定子</dt>
+						<dd>記憶クラスとしては<strong>auto</strong>、<strong>static</strong>、<strong>extern</strong>、register、typedefを指定できますが、ここではauto、static、externについて説明し、typedefについては「<a href="../SECTION12/section12_3.html">12. その他の型（3/4）</a>」で説明します。</dd>
+				</dl>
+				<aside>
+					<h4>補足</h4>
+					<p id="lbl_note_2">registerは整数型の変数をCPUのレジスタと呼ぶ高速に動作するメモリの一種に割り当てることをコンパイラに指示します。従って、プログラムの実行速度の向上が見込めますが、使い方が難しいため、かえって性能低下を招く可能性もあります。最近のコンパイラの最適化技術は進んでいますので、特別な理由がない限りはregisterは指定しないで、コンパイラに任せてしまった方がよいでしょう。</p>
+				</aside>
+			</section>
+			<section>
+				<h3 id="lbl_local">10.2.2 内部変数（ローカル変数）</h3>
+				<p>今までは変数の宣言を関数の先頭で行っていましたが、ブロックの先頭で行うこともできます。もっとも、関数も一つのブロックですので、関数の先頭ということはブロックの先頭ということもできます。今までのように、ブロックの先頭で宣言したものは内部変数です。内部変数の有効範囲はブロック内です。</p>
+				<p>また、初期値を指定しなかった場合の値は<strong>不定</strong>になりますので注意してください。</p>
+				<div class="source-code">
+<pre>int main(void)
+{
+    int    v1; <strong>← （１）</strong>
+    char   v2; <strong>← （１）</strong>
+    /* func関数のプロトタイプ宣言 */
+    int func(int p_v1, char p_v2); <strong>← （２）</strong>
+
+    v1 = func(10, v2); <strong>← （３）</strong>
+
+}
+
+/* func関数の宣言 */
+int func(int arg1, char arg2) <strong>← （４）</strong>
+{
+    int    v3; <strong>← （５）</strong>
+    char   <strong>v2</strong>; <strong>← （５）</strong>
+
+
+    for(<strong>int idx = 0;</strong> idx &lt;= arg1; ++idx) <strong>← （６）</strong>
+    {
+
+
+    }
+
+    if(v3 &lt;= 10)
+    {
+        int    v4 = 0; <strong>← （７）</strong>
+
+
+    }
+}</pre>
+				</div>
+				<dl>
+					<dt>（１）</dt>
+						<dd>main関数の内側で宣言していますので内部変数です。有効範囲はmain関数内のみです。初期値の指定がありませんので値は不定です。</dd>
+					<dt>（２）</dt>
+						<dd>func関数の関数プロトタイプ宣言ですが、これもmain関数の内側で行っていますので、有効範囲はmain関数内のみです。別の関数でfunc関数を呼び出す場合は、そちらの関数でも関数プロトタイプ宣言が必要です。</dd>
+					<dt>（３）</dt>
+						<dd>func関数の呼び出しです。</dd>
+					<dt>（４）</dt>
+						<dd>func関数の定義ですが、ここで宣言している仮引数（arg1とarg2）は内部変数扱いとなります。</dd>
+					<dt>（５）</dt>
+						<dd>func関数の内部変数です。変数v2は同じ名前でmain関数でも宣言していますが、ブロックが異なるため別のものになります。</dd>
+					<dt>（６）</dt>
+						<dd><code>int idx = 0;</code>はfor文のブロックの内側で宣言をしていることになります。従って、変数idxの有効範囲はfor文のブロック内だけです。</dd>
+					<dt>（７）</dt>
+						<dd>変数v4はif文のブロックの内側で宣言をしているため内部変数になります。有効範囲はif文のブロック内だけです。初期値の指定がありますので値は０です。</dd>
+				</dl>
+				<aside>
+					<h4>補足</h4>
+					<p>１つの関数内でも、ブロックが異なれば同じ名前の内部変数を宣言できます。例えば、次の例の場合、if文のブロック内ではブロック内で宣言した変数v3が有効となり、if文以外の所では関数の先頭で宣言した変数v3が有効になります。</p>
+					<div class="source-code">
+<pre>int func(int arg1, char arg2)
+{
+    int    v3;
+
+
+    if(idx &lt;= arg1)
+    {
+        int    v3;
+          ↑
+          ｜ <strong>if文のブロック内で宣言した変数v3の有効範囲です</strong>20
+          ↓
+    }
+}</pre>
+					</div>
+				</aside>
+			</section>
+			<section>
+				<h3 id="lbl_global">10.2.3 外部変数（グローバル変数）</h3>
+				<p>関数の外側で宣言すると外部変数になります。外部変数の有効範囲はソースファイル上の宣言した行からソースファイルの最後までになります。</p>
+				<p>また、初期値を指定しなかった場合の値は<strong>０</strong>になります。（整数型の場合は０、実数型の場合は0.0、文字型の場合はヌル文字（'\0'）になります）</p>
+				<div class="source-code">
+<pre>int    v1 = 0; <strong>← （１）</strong>
+
+int func1(int p_v1, char p_v2); <strong>← （２）</strong>
+int func2(void); <strong>← （２）</strong>
+
+int main(void)
+{
+    int     <strong>v1</strong>; <strong>← （３）</strong>
+    int     v2;
+    char    v3;
+
+    v1 = func1(v2, v3); <strong>← （４）</strong>
+
+    v1 = func2(); <strong>← （５）</strong>
+}
+
+int func1(int arg1, char arg2) <strong>← （６）</strong>
+{
+
+    v1 = func2(); <strong>← （７）</strong>
+
+}
+
+int func2(void) <strong>← （８）</strong>
+{
+
+
+}</pre>
+				</div>
+				<dl>
+					<dt>（１）</dt>
+						<dd>関数の外側で宣言していますので外部変数です。有効範囲はこの行以降です。</dd>
+					<dt>（２）</dt>
+						<dd>このソースファイル内で呼び出す関数の関数プロトタイプ宣言です。有効範囲はこの行以降です。</dd>
+					<dt>（３）</dt>
+						<dd>外部変数v1と同じ名前ですが、関数の内側で宣言していますので、こちらは内部変数です。main関数内ではこちらの変数が有効になります。</dd>
+					<dt>（４）</dt>
+						<dd>func1関数の呼び出しです。</dd>
+					<dt>（５）</dt>
+						<dd>func2関数の呼び出しです。</dd>
+					<dt>（６）</dt>
+						<dd>func1関数の定義です。</dd>
+					<dt>（７）</dt>
+						<dd>func2関数の呼び出しです。関数プロトタイプ宣言は関数の外側でかつ、この行以前に行っていますので、呼び出すことができます。また、ここで使っている変数v1は（１）で宣言している外部変数です。</dd>
+					<dt>（８）</dt>
+						<dd>func2関数の定義です。</dd>
+				</dl>
+				<p id="lbl_extern">外部変数を別のソースファイルに定義した関数でも有効にしたい場合は、そちらのソースファイルで記憶クラス指定子の<strong>extern</strong>を指定して宣言します。externを指定した変数は外部変数として確保してあることをコンパイラに伝えるだけで、メモリ上に領域を確保しません。上記例題の外部変数v1を別のソースファイルでも使いたい場合は次のように指定します。</p>
+				<div class="source-code">
+<pre><strong>extern</strong> int    v1;
+
+int func3(void)
+{
+    int     v4;
+
+    v4 = <strong>v1</strong> + 10; <strong>← 変数v1は外部変数です</strong>
+
+}</pre>
+				</div>
+			</section>
+			<section>
+				<h3 id="lbl_auto">10.2.4 自動変数</h3>
+				<p>ブロックの先頭で、記憶クラス指定子の<strong>auto</strong>または、記憶クラス指定子を指定しない場合は自動変数になります。autoは互換性維持のためにあるようなので通常は指定しませんので、結局、ブロックの先頭で、記憶クラス指定子を指定しないということになります。つまり、宣言は内部変数と同じになりますので、内部変数と自動変数は同じものを着目する性質により呼び分けているだけです。</p>
+				<p>自動変数はブロックの実行が終了すると、メモリ上の領域は解放されてリサイクルされてしまいます。</p>
+				<div class="source-code">
+<pre>int main(void)
+{
+    <strong>auto</strong> int     v1;
+    int          v2;
+
+}</pre>
+				</div>
+			</section>
+			<section>
+				<h3 id="lbl_static">10.2.5 静的変数</h3>
+				<p>記憶クラス指定子の<strong>static</strong>を指定すると静的変数になります。静的変数はプログラム開始時にメモリ上に確保され、プログラム実行中は存続します。</p>
+				<p>静的変数は宣言する箇所により、<strong>関数内静的変数</strong>と<strong>関数外静的変数</strong>の２種類があります。関数内静的変数はブロックの先頭で宣言しますので、有効範囲はブロック内のみです。それに対して関数外静的変数は関数の外側で宣言しますので、有効範囲は宣言した行からソースファイルの最後までになります。</p>
+				<p>外部変数と関数外静的変数は有効範囲が似ていますが、異なる点があります。外部変数は記憶クラス指定子のexternを指定すれば、別のソースファイルでも使うことができますが、関数外静的変数は使うことができません。</p>
+				<div class="source-code">
+<pre>static int v1; <strong>← 関数外静的変数です</strong>
+static int func1(int p_v1, char p_v2);
+ <strong>&nbsp;&nbsp;↑ 関数内静的変数として宣言していますので、このソースファイル以外では呼び出せません</strong>
+int main(void)
+{
+    int     v2;
+
+    v1 = func1(v2, 'a');
+
+}
+
+static int func1(int arg1, char arg2)
+{
+    static int     v3 = 0; <strong>← 関数内静的変数です</strong>
+    int            v4 = 0; <strong>← 自動変数です</strong>
+
+    v3 = arg1 + v4; <strong>← この間数が終了しても、代入された値は保持されます</strong>
+
+}</pre>
+				</div>
+			</section>
+			<section>
+				<h3>10.2.6 例題</h3>
+				<p>半角文字列を逆順にして出力します。StrRev関数は引数で指定した文字列を逆順にした配列を返します。（入力文字は半角で100文字以下とし、スペースやタブ等の空白文字は含みません）</p>
+				<div class="source-code">
+					<div class="c"><ol><li class="li1"><div class="de1"><span class="co2">#include &lt;stdio.h&gt;</span></div></li>
+					<li class="li1"><div class="de1"><span class="co2">#include &lt;string.h&gt;</span></div></li>
+					<li class="li1"><div class="de1"><span class="kw4">int</span> main<span class="br0">&#40;</span><span class="kw4">void</span><span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">char</span> &nbsp; &nbsp;a_buff<span class="br0">&#91;</span><span class="nu0">4096</span><span class="br0">&#93;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">char</span> &nbsp; &nbsp;<span class="sy0">*</span>p_rev<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">int</span> &nbsp; &nbsp; return_code<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="coMULTI">/* StrRev関数のプロトタイプ宣言 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">char</span> <span class="sy0">*</span>StrRev<span class="br0">&#40;</span><span class="kw4">char</span> <span class="sy0">*</span>Rev<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;文字列を入力してください ==&gt; &quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">scanf</span><span class="br0">&#40;</span><span class="st0">&quot;%s&quot;</span><span class="sy0">,</span> a_buff<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">if</span><span class="br0">&#40;</span><span class="kw3">strlen</span><span class="br0">&#40;</span>a_buff<span class="br0">&#41;</span> <span class="sy0">&gt;=</span> <span class="nu0">1</span> <span class="sy0">&amp;&amp;</span> <span class="kw3">strlen</span><span class="br0">&#40;</span>a_buff<span class="br0">&#41;</span> <span class="sy0">&lt;=</span> <span class="nu0">100</span><span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; p_rev <span class="sy0">=</span> StrRev<span class="br0">&#40;</span>a_buff<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;逆順：%s<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> p_rev<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; return_code <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">else</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; return_code <span class="sy0">=</span> <span class="nu0">1</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">return</span> return_code<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1"><span class="coMULTI">/* 引数の文字列を逆順にして返す */</span></div></li>
+					<li class="li1"><div class="de1"><span class="kw4">char</span> <span class="sy0">*</span>StrRev<span class="br0">&#40;</span><span class="kw4">char</span> <span class="sy0">*</span>pRev<span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">static</span> <span class="kw4">char</span> &nbsp; &nbsp; a_rev<span class="br0">&#91;</span><span class="nu0">101</span><span class="br0">&#93;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">char</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="sy0">*</span>p_cur<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">char</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="sy0">*</span>p_rev<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="coMULTI">/* 文字列の最後の文字を探す */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">for</span><span class="br0">&#40;</span>p_cur <span class="sy0">=</span> pRev<span class="sy0">;</span> <span class="sy0">*</span>p_cur<span class="sy0">;</span> <span class="sy0">++</span>p_cur<span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="sy0">--</span>p_cur<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="coMULTI">/* 逆順にコピー */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">for</span><span class="br0">&#40;</span>p_rev <span class="sy0">=</span> a_rev<span class="sy0">;</span> p_cur <span class="sy0">&gt;=</span> pRev<span class="sy0">;</span> <span class="sy0">++</span>p_rev<span class="sy0">,</span> <span class="sy0">--</span>p_cur<span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="sy0">*</span>p_rev <span class="sy0">=</span> <span class="sy0">*</span>p_cur<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="sy0">*</span>p_rev <span class="sy0">=</span> <span class="st0">'<span class="es5">\0</span>'</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">return</span> a_rev<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#125;</span></div></li>
+					</ol></div>
+				</div>
+				<div class="exe-samp">
+<pre><samp>$ <kbd>./ex10_1.prg</kbd>
+文字列を入力してください ==&gt; <kbd>Hello!!.</kbd>
+逆順：.!!olleH
+$</samp></pre>
+				</div>
+				<dl>
+					<dt>2行目</dt>
+						<dd>13行目でライブラリ関数のstrlenを使っていますので、このヘッダーファイルが必要です。strlen関数は配列中の文字数を返します。（ヌル文字は含みません）</dd>
+					<dt>9行目</dt>
+						<dd>StrRev関数のプロトタイプ宣言です。返り値は<strong>char型のポインタ</strong>（char型の配列の先頭アドレス）つまり、文字列です。</dd>
+					<dt>13行目</dt>
+						<dd>入力した文字列の文字数をライブラリ関数の<a href="../SECTION14/s14_02/s14_02_2.html#lbl_strlen">strlen関数</a>でチェックします。</dd>
+					<dt>15行目</dt>
+						<dd>StrRev関数を呼び出して、入力した文字列の逆順文字列を返り値として取得します。返り値は変数p_revに代入しておき、次の行で使っています。</dd>
+					<dt>28行目</dt>
+						<dd>StrRev関数の定義です。返り値はchar型のポインタです。</dd>
+					<dt>30行目</dt>
+						<dd>この配列（a_rev）に逆順文字列を作り、返り値として返します。返り値として返した後（この間数の実行終了後）も、この配列は使われますので、メモリ上に存在しなければならないため、静的変数（関数内静的変数）にします。</dd>
+					<dt>45行目</dt>
+						<dd>逆順文字列を返り値として返します。</dd>
+				</dl>
+			</section>
+		</section>
+	</section>
+
+	<footer>
+		<nav>
+			<ul>
+				<li><a href="../../index.html">ホーム</a></li>
+				<li><a href="../c_langtop.html#lbl_index">目次</a></li>
+				<li><a href="../SECTION09/section09_3.html">前のページ</a></li>
+				<li><a href="../SECTION11/section11_1.html">次のページ</a></li>
+			</ul>
+		</nav>
+		<p id="footer-author">更新日：<time datetime="2018-12-13">2018年12月13日</time> Merry</p>
+	</footer>
+</div>
+</body>
+</html>

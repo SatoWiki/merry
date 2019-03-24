@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initialscale=1.0">
+	<meta name="robots" content="INDEX,FOLLOW">
+	<meta name="keywords" content="列挙型,列挙定数,列挙変数,enum,列挙型名,,">
+	<meta name="description" content="Ｃ言語の列挙型を説明します。">
+	<meta name="author" content="T.Hagiwara">
+	<link rel="stylesheet" href="../../CSS3/seminar.css" type="text/css">
+	<link rel="stylesheet" href="../../CSS3/hl_clang.css" type="text/css">
+	<link rel="prev" href="./section12_1.html">
+	<link rel="next" href="./section12_3.html">
+	<title>Ｃ言語プログラミング入門&nbsp;-&nbsp;その他の型（2/4）</title>
+	<style type="text/css">
+	</style>
+</head>
+<body>
+<div id="container">
+	<header>
+		<p>Linux講座にようこそ。このページは「Ｃ言語プログラミング入門&nbsp;-&nbsp;第12章．その他の型」です。</p>
+		<h1>Ｃ言語プログラミング入門</h1>
+		<nav>
+			<ul>
+				<li><a href="../../index.html">ホーム</a></li>
+				<li><a href="../c_langtop.html#lbl_index">目次</a></li>
+				<li><a href="./section12_1.html">前のページ</a></li>
+				<li><a href="./section12_3.html">次のページ</a></li>
+			</ul>
+		</nav>
+	</header>
+
+	<section class="contents">
+		<h1>12. その他の型（2/4）</h1>
+		<section>
+			<h2>12.3 列挙型</h2>
+			<figure class="left-box myphoto">
+				<dl>
+					<dt><img src="../IMAGES/sec12_2.jpg" alt="列挙型とは"></dt>
+					<dd>【図１２-２】列挙型とは</dd>
+				</dl>
+			</figure>
+			<p>列挙型とは列挙定数と呼ぶ識別子によって定義された整数値の集合を使用するためのものです。</p>
+			<p>例えば、図12-2のint型変数numberに設定できる値は、int型の値であればどのような値も可能です。int型を４バイト長とすると-2147483648〜2147483647の範囲の値となります。</p>
+			<p>これに対して、図12-2の列挙型の例では、列挙定数としてZERO、ONE、TWOの３つの値を宣言しておき、これを利用して、列挙変数numberを宣言しています。この場合の列挙変数numberに設定できる値はZERO、ONE、TWOの<strong>どれか１つ</strong>になります。これ以外の値を設定しようとするとコンパイルエラーになります。</p>
+			<p>この様に、列挙型は列挙定数として宣言した値以外を参照・代入出来ませんので、コーディングミスをコンパイルの段階で発見できますし、列挙定数を理解しやすい適切な名前にしておけば、理解しやすいプログラムになる可能性があります。</p>
+			<p>なお、列挙定数はint型の値ですので、int型の定数として取り扱うことも可能です。</p>
+			<section>
+				<h3 id="lbl_dec">12.3.1 形式</h3>
+				<p>構造体、共用体、列挙型はよく似ていますので、宣言の形式も似ています。相違点は型指定子として<strong>enum</strong>を指定します。</p>
+				<div class="form-exp">
+					※ 列挙型名の宣言<br>
+					enum 列挙型名 {列挙定数１ = 値, 列挙定数２ = 値, …};<br><br>
+
+					※ 列挙変数の宣言<br>
+					enum 列挙型名 列挙変数名 = 列挙定数;<br><br>
+
+					※ 列挙型名の宣言と列挙変数の宣言を同時に行う<br>
+					enum 列挙型名 {列挙定数１ = 値, 列挙定数２ = 値, …} 列挙変数名 = 列挙定数;<br><br>
+
+					※ メンバーの参照・更新<br>
+					列挙変数名 = 列挙定数;
+				</div>
+				<dl>
+					<dt>enum</dt>
+						<dd>列挙型を宣言するための型指定子です。</dd>
+					<dt>列挙型名</dt>
+						<dd>任意の列挙型名を宣言します。列挙型名は自由につけることが出来ます。列挙型名の宣言と列挙型変数の宣言を同時に行う場合は列挙型名は省略できます。</dd>
+					<dt>列挙定数 = 値</dt>
+						<dd>列挙定数を宣言します。値を指定しないと直前に指定した列挙定数に１を加えた値になります。なお、最初の列挙定数に値を指定しないと０を指定したことになります。指定できる値はint型の範囲の整数値です。</dd>
+					<dt>列挙型変数名</dt>
+						<dd>列挙型名を指定して、列挙変数を宣言します。初期値として列挙定数を指定することもできます。</dd>
+				</dl>
+				<aside>
+					<h4>補足</h4>
+					<ul>
+						<li>列挙定数は大文字・小文字どちらでも構いませんが、当講座では定数であることを明確にするために大文字の名前にしています。</li>
+						<li>列挙定数の宣言で値を指定することができますが、指定できる値は連続している必要はありません。（飛び飛びの値でも構いません）次の例ではZEROは0、TWOは2、TENは10、ELEVENは11になります。<br><code>enum enum_type {ZERO, TWO=2, TEN=10, ELEVEN};</code></li>
+					</ul>
+				</aside>
+			</section>
+			<section>
+				<h3>12.3.2 例題</h3>
+				<p>肥満度を計算して正常・異常を判定して結果を出力します。判定結果を表す定数を列挙型で宣言しています。</p>
+				<div class="source-code">
+					<div class="c"><ol><li class="li1"><div class="de1"><span class="co2">#include &lt;stdio.h&gt;</span></div></li>
+					<li class="li1"><div class="de1"><span class="coMULTI">/* 肥満の状態を表すフラグ */</span></div></li>
+					<li class="li1"><div class="de1"><span class="kw2">enum</span> judge_type</div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; BMI_NORMAL<span class="sy0">,</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="coMULTI">/* 正常 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; BMI_UNDER<span class="sy0">,</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* 低い */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; BMI_OVER<span class="sy0">,</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="coMULTI">/* 高い */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; BMI_ERROR &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="coMULTI">/* 判定不可 */</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#125;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1"><span class="coMULTI">/* 肥満度データを格納する構造体 */</span></div></li>
+					<li class="li1"><div class="de1"><span class="kw4">struct</span> bmi_type</div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">int</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; number<span class="sy0">;</span> &nbsp;<span class="coMULTI">/* 番号 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">double</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;weight<span class="sy0">;</span> &nbsp;<span class="coMULTI">/* 体重 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">double</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;height<span class="sy0">;</span> &nbsp;<span class="coMULTI">/* 身長 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">double</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;bmi<span class="sy0">;</span> &nbsp; &nbsp; <span class="coMULTI">/* 肥満度 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw2">enum</span> judge_type &nbsp; &nbsp; judge<span class="sy0">;</span> &nbsp; <span class="coMULTI">/* 肥満状態 */</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#125;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1"><span class="kw4">int</span> main<span class="br0">&#40;</span><span class="kw4">void</span><span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">struct</span> bmi_type &nbsp; &nbsp; bmi_data<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">int</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;return_code <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="coMULTI">/* CalcBmiEx関数のプロトタイプ宣言 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">void</span> CalcBmiEx<span class="br0">&#40;</span><span class="kw4">struct</span> bmi_type <span class="sy0">*</span>Bmi<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;肥満度(BMI)の計算を行います<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;体重(kg)と身長(cm)を入力してください ==&gt; &quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">scanf</span><span class="br0">&#40;</span><span class="st0">&quot;%lf%lf&quot;</span><span class="sy0">,</span> <span class="sy0">&amp;</span>bmi_data.<span class="me1">weight</span><span class="sy0">,</span> <span class="sy0">&amp;</span>bmi_data.<span class="me1">height</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; CalcBmiEx<span class="br0">&#40;</span><span class="sy0">&amp;</span>bmi_data<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;肥満度は%.2fです。&quot;</span><span class="sy0">,</span> bmi_data.<span class="me1">bmi</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">switch</span><span class="br0">&#40;</span>bmi_data.<span class="me1">judge</span><span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">case</span> BMI_NORMAL<span class="sy0">:</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;正常です。<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw2">break</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">case</span> BMI_UNDER<span class="sy0">:</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;低すぎます。<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw2">break</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">case</span> BMI_OVER<span class="sy0">:</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;高すぎます。<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw2">break</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">default</span><span class="sy0">:</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;判定出来ません。<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; return_code <span class="sy0">=</span> <span class="nu0">1</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">return</span> return_code<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1"><span class="coMULTI">/* 体重と身長を元に肥満度(BMI)の計算を行い、正常かどうかの判定を行う*/</span></div></li>
+					<li class="li1"><div class="de1"><span class="kw4">void</span> CalcBmiEx<span class="br0">&#40;</span><span class="kw4">struct</span> bmi_type &nbsp;<span class="sy0">*</span>pBmi<span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">double</span> &nbsp;height<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="coMULTI">/* 体重と身長の値をチェック */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">if</span> <span class="br0">&#40;</span>pBmi<span class="sy0">-&gt;</span>weight <span class="sy0">&gt;</span> <span class="nu16">0.0</span> <span class="sy0">&amp;&amp;</span> pBmi<span class="sy0">-&gt;</span>height <span class="sy0">&gt;</span> <span class="nu16">0.0</span><span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* 身長をセンチメートルからメートルに変換 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; height <span class="sy0">=</span> pBmi<span class="sy0">-&gt;</span>height <span class="sy0">/</span> <span class="nu16">100.0</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* 肥満度(BMI) = 体重(kg) / 身長(m) / 身長(m) */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; pBmi<span class="sy0">-&gt;</span>bmi <span class="sy0">=</span> pBmi<span class="sy0">-&gt;</span>weight <span class="sy0">/</span> height <span class="sy0">/</span> height<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* 肥満度が18.5〜25.5の範囲であれば正常 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">if</span><span class="br0">&#40;</span>pBmi<span class="sy0">-&gt;</span>bmi <span class="sy0">&gt;=</span> <span class="nu16">18.5</span> <span class="sy0">&amp;&amp;</span> pBmi<span class="sy0">-&gt;</span>bmi <span class="sy0">&lt;=</span> <span class="nu16">25.0</span><span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; pBmi<span class="sy0">-&gt;</span>judge <span class="sy0">=</span> BMI_NORMAL<span class="sy0">;</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="coMULTI">/* 正常 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">else</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">if</span><span class="br0">&#40;</span>pBmi<span class="sy0">-&gt;</span>bmi <span class="sy0">&gt;</span> <span class="nu16">25.0</span><span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; pBmi<span class="sy0">-&gt;</span>judge <span class="sy0">=</span> BMI_OVER<span class="sy0">;</span> &nbsp; &nbsp; &nbsp; &nbsp;<span class="coMULTI">/* 高い */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">else</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; pBmi<span class="sy0">-&gt;</span>judge <span class="sy0">=</span> BMI_UNDER<span class="sy0">;</span> &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* 低い */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">else</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; pBmi<span class="sy0">-&gt;</span>bmi <span class="sy0">=</span> <span class="nu16">0.0</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; pBmi<span class="sy0">-&gt;</span>judge <span class="sy0">=</span> BMI_ERROR<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">return</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#125;</span></div></li>
+					</ol></div>
+				</div>
+				<div class="exe-samp">
+<pre><samp>$ <kbd>./ex12_2.prg</kbd>
+肥満度(BMI)の計算を行います
+体重(kg)と身長(cm)を入力してください ==&gt; <kbd>67.5 188</kbd>
+肥満度は19.10です。正常です。
+$
+$ <kbd>./ex12_2.prg</kbd>
+肥満度(BMI)の計算を行います
+体重(kg)と身長(cm)を入力してください ==&gt; <kbd>67.5 159.5</kbd>
+肥満度は26.53です。高すぎます。
+$
+$ <kbd>./ex12_2.prg</kbd>
+肥満度(BMI)の計算を行います
+体重(kg)と身長(cm)を入力してください ==&gt; <kbd>67.5 -159.5</kbd>
+肥満度は0.00です。判定出来ません。
+$</samp></pre>
+				</div>
+				<dl>
+					<dt>3〜9行目</dt>
+						<dd>肥満の状態を表す値を列挙型名judge_typeとして宣言します。列挙定数としてはBMI_NORMAL、BMI_UNDER、BMI_OVER、BMI_ERRORを宣言していますが、値を明示的に指定していませんので、値はそれぞれ、０、１、２、３となります。</dd>
+					<dt>17行目</dt>
+						<dd>bmi_type構造体のメンバーとしてjudge_type型のjudge列挙変数を宣言します。この列挙変数の取りうる値は上記の列挙定数のみです。</dd>
+					<dt>31行目</dt>
+						<dd>CalcBmiEx関数を呼び出します。引数はbmi_data構造体変数のアドレスです。この結果、bmi_data構造体変数にはCalcBmiEx関数で求めた肥満度情報が格納されます。</dd>
+					<dt>35〜37行目</dt>
+						<dd>肥満度が正常の時の処理です。</dd>
+					<dt>38〜40行目</dt>
+						<dd>肥満度が低すぎる時の処理です。</dd>
+					<dt>41〜43行目</dt>
+						<dd>肥満度が高すぎる時の処理です。</dd>
+					<dt>53行目</dt>
+						<dd>以降、CalcBmiEx関数の定義です。引数はbmi_type構造体変数のアドレスで、返り値はありません。</dd>
+					<dt>67行目</dt>
+						<dd>肥満度が正常の時の処理です。</dd>
+					<dt>73行目</dt>
+						<dd>肥満度が高すぎる時の処理です。</dd>
+					<dt>77行目</dt>
+						<dd>肥満度が低すぎる時の処理です。</dd>
+					<dt>84行目</dt>
+						<dd>肥満度の計算が出来なかった時の処理です。</dd>
+				</dl>
+			</section>
+		</section>
+	</section>
+
+	<footer>
+		<nav>
+			<ul>
+				<li><a href="../../index.html">ホーム</a></li>
+				<li><a href="../c_langtop.html#lbl_index">目次</a></li>
+				<li><a href="./section12_1.html">前のページ</a></li>
+				<li><a href="./section12_3.html">次のページ</a></li>
+			</ul>
+		</nav>
+		<p id="footer-author">更新日：<time datetime="2018-12-17">2018年12月17日</time> Merry</p>
+	</footer>
+</div>
+</body>
+</html>

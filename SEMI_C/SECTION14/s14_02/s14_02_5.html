@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initialscale=1.0">
+	<meta name="robots" content="INDEX,FOLLOW">
+	<meta name="keywords" content="文字列処理ライブラリ,関数,strerror,strpbrk,memmove,memset">
+	<meta name="description" content="strerror関数、strpbrk関数、memmove関数、memset関数の使用法を説明します。">
+	<meta name="author" content="T.Hagiwara">
+	<link rel="stylesheet" href="../../../CSS3/seminar.css" type="text/css">
+	<link rel="stylesheet" href="../../../CSS3/hl_clang.css" type="text/css">
+	<link rel="prev" href="./s14_02_4.html">
+	<link rel="next" href="../s14_03/s14_03_1.html">
+	<title>Ｃ言語プログラミング入門&nbsp;-&nbsp;ライブラリ関数&nbsp;-&nbsp;文字列処理ライブラリ（5/5）-</title>
+	<style type="text/css">
+	</style>
+</head>
+<body>
+<div id="container">
+	<header>
+		<p>Linux講座にようこそ。このページは「Ｃ言語プログラミング入門&nbsp;-&nbsp;第14章．ライブラリ関数&nbsp;-&nbsp;文字列処理ライブラリ」です。</p>
+		<h1>Ｃ言語プログラミング入門</h1>
+		<nav>
+			<ul>
+				<li><a href="../../../index.html">ホーム</a></li>
+				<li><a href="../../c_langtop.html#lbl_index">目次</a></li>
+				<li><a href="./s14_02_4.html">前のページ</a></li>
+				<li><a href="../s14_03/s14_03_1.html">次のページ</a></li>
+			</ul>
+		</nav>
+	</header>
+
+	<section class="contents">
+		<h1>14. ライブラリ関数（16/36）&nbsp;-&nbsp;文字列処理ライブラリ（5/5）</h1>
+		<section>
+			<h2 id="lbl_other">14.24 その他の関数</h2>
+			<section>
+				<h3 id="lbl_strerror">14.24.1 strerror関数</h3>
+				<p>strerror関数はエラー番号に対応する説明文を取得します。通常、エラー番号はライブラリ関数でエラーが発生した時に、外部変数errnoに設定される値を指定します。</p>
+				<table>
+					<caption>【表14-2-21】 strerror関数</caption>
+					<tr><th>形式</th><td>#include &lt;string.h&gt;<br>
+										char *strerror(int errno);</td></tr>
+					<tr><th>返り値</th><td>エラー番号に対応する説明文の先頭アドレスを返します。エラー番号に対応する説明文が無い場合は「Unknown error nnn」という説明文を返します。</td></tr>
+					<tr><th>引数</th>
+						<td>
+							<dl>
+								<dt>int errno</dt>
+									<dd>エラー番号を指定します。</dd>
+							</dl>
+						</td></tr>
+				</table>
+			</section>
+			<section>
+				<h3 id="lbl_strpbrk">14.24.2 strpbrk関数</h3>
+				<p>strpbrk関数は指定された文字の組み合わせ（文字セット）から成る文字列を検索します。</p>
+				<table>
+					<caption>【表14-2-22】 strpbrk関数</caption>
+					<tr><th>形式</th><td>#include &lt;string.h&gt;<br>
+										char *strpbrk(const char *str, const char *keyset);</td></tr>
+					<tr><th>返り値</th><td>文字セットに含まれる文字のどれかに一致した文字のアドレスを返します。一致する文字が見つからなかった場合はNULLを返します。</td></tr>
+					<tr><th>引数</th>
+						<td>
+							<dl>
+								<dt>const char *str</dt>
+									<dd>検索対象の文字列を指定します。</dd>
+								<dt>const char *keyset</dt>
+									<dd>文字セットを指定します。</dd>
+							</dl>
+						</td></tr>
+				</table>
+			</section>
+			<section>
+				<h3>14.24.3 例題</h3>
+				<p>テキストファイル中の英字（a〜z、A〜Z、半角スペース）の部分だけを抽出して表示します。（機能的には<a href="./s14_02_4.html#lbl_strspn">strspn関数</a>の例題と同じです）なお、入力ファイル（./DATA/ex14_2_6.dat）が入力出来なかった場合は、標準エラー出力にメッセージを出力します。</p>
+				<div class="source-code">
+					<div class="c"><ol><li class="li1"><div class="de1"><span class="co2">#include &lt;stdio.h&gt;</span></div></li>
+					<li class="li1"><div class="de1"><span class="co2">#include &lt;string.h&gt;</span></div></li>
+					<li class="li1"><div class="de1"><span class="co2">#include &lt;errno.h&gt; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; /* errno定義 */</span></div></li>
+					<li class="li1"><div class="de1"><span class="co2">#define LINE_MAX &nbsp; &nbsp;1024</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1"><span class="kw4">int</span> main<span class="br0">&#40;</span><span class="kw4">void</span><span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">char</span> <span class="sy0">*</span>SubStr<span class="br0">&#40;</span><span class="kw4">char</span> <span class="sy0">*</span>Str<span class="sy0">,</span> <span class="kw4">int</span> Start<span class="sy0">,</span> <span class="kw4">int</span> Length<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; FILE &nbsp; &nbsp;<span class="sy0">*</span>fp<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">char</span> &nbsp; &nbsp;in_file<span class="br0">&#91;</span><span class="br0">&#93;</span> <span class="sy0">=</span> <span class="st0">&quot;./DATA/ex14_2_6.dat&quot;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">char</span> &nbsp; &nbsp;line<span class="br0">&#91;</span>LINE_MAX<span class="br0">&#93;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">char</span> &nbsp; &nbsp;key_set<span class="br0">&#91;</span><span class="br0">&#93;</span> <span class="sy0">=</span><span class="st0">&quot;abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ &quot;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">char</span> &nbsp; &nbsp;<span class="sy0">*</span>p_line<span class="sy0">;</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* キーセット検索開始位置 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">char</span> &nbsp; &nbsp;<span class="sy0">*</span>p_pos<span class="sy0">;</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="coMULTI">/* キーセット検索結果位置 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">int</span> &nbsp; &nbsp; len<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">if</span><span class="br0">&#40;</span><span class="br0">&#40;</span>fp <span class="sy0">=</span> <span class="kw3">fopen</span><span class="br0">&#40;</span>in_file<span class="sy0">,</span> <span class="st0">&quot;r&quot;</span><span class="br0">&#41;</span><span class="br0">&#41;</span> <span class="sy0">!=</span> NULL<span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* EOFでない間、繰り返す */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">while</span><span class="br0">&#40;</span><span class="kw3">fgets</span><span class="br0">&#40;</span>line<span class="sy0">,</span> LINE_MAX<span class="sy0">,</span> fp<span class="br0">&#41;</span> <span class="sy0">!=</span> NULL<span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* 行の最後まで */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">for</span><span class="br0">&#40;</span>p_line <span class="sy0">=</span> line<span class="sy0">;</span> <span class="sy0">*</span>p_line <span class="sy0">!=</span> <span class="st0">'<span class="es5">\0</span>'</span><span class="sy0">;</span> <span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* 英字とスペースのチェック */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">if</span><span class="br0">&#40;</span><span class="br0">&#40;</span>p_pos <span class="sy0">=</span> <span class="kw3">strpbrk</span><span class="br0">&#40;</span>p_line<span class="sy0">,</span> key_set<span class="br0">&#41;</span><span class="br0">&#41;</span> <span class="sy0">!=</span> NULL<span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* 英字とスペースから成る文字列が有った。文字数を取得 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; len <span class="sy0">=</span> <span class="kw3">strspn</span><span class="br0">&#40;</span>p_pos<span class="sy0">,</span> key_set<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* 英字とスペースから成る文字列を表示 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;%s<span class="es1">\t</span>&quot;</span><span class="sy0">,</span> SubStr<span class="br0">&#40;</span>p_pos<span class="sy0">,</span> <span class="nu0">0</span><span class="sy0">,</span> len<span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; p_line <span class="sy0">=</span> p_pos <span class="sy0">+</span> len<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">else</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw2">break</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">if</span><span class="br0">&#40;</span>p_line <span class="sy0">!=</span> line<span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* 英字とスペースから成る文字列が有った */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">fclose</span><span class="br0">&#40;</span>fp<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">else</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">fprintf</span><span class="br0">&#40;</span>stderr<span class="sy0">,</span> <span class="st0">&quot;%s<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> <span class="kw3">strerror</span><span class="br0">&#40;</span>errno<span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">return</span> <span class="nu0">0</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1"><span class="coMULTI">/* 文字列中の指定された位置の文字列を取り出す */</span></div></li>
+					<li class="li1"><div class="de1"><span class="kw4">char</span> <span class="sy0">*</span>SubStr<span class="br0">&#40;</span><span class="kw4">char</span> <span class="sy0">*</span>pStr<span class="sy0">,</span> <span class="kw4">int</span> pStart<span class="sy0">,</span> <span class="kw4">int</span> pLength<span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">static</span> <span class="kw4">char</span> buff<span class="br0">&#91;</span>LINE_MAX<span class="br0">&#93;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">char</span> &nbsp; &nbsp; &nbsp; <span class="sy0">*</span>p_buff <span class="sy0">=</span> buff<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">for</span><span class="br0">&#40;</span>pStr <span class="sy0">+=</span> pStart<span class="sy0">;</span> <span class="sy0">*</span>pStr <span class="sy0">!=</span> <span class="st0">'<span class="es5">\0</span>'</span> <span class="sy0">&amp;&amp;</span> pLength <span class="sy0">&gt;</span> <span class="nu0">0</span><span class="sy0">;</span> <span class="sy0">--</span>pLength<span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="sy0">*</span><span class="br0">&#40;</span>p_buff<span class="sy0">++</span><span class="br0">&#41;</span> <span class="sy0">=</span> <span class="sy0">*</span><span class="br0">&#40;</span>pStr<span class="sy0">++</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="sy0">*</span>p_buff <span class="sy0">=</span> <span class="st0">'<span class="es5">\0</span>'</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">return</span> buff<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#125;</span></div></li>
+					</ol></div>
+				</div>
+				<div class="exe-samp">
+<pre><samp>$ <kbd>./ex14_2_9.prg</kbd>
+Merry Husky     A
+Kuma Mix
+Hana Shiba      AB
+ken Mix
+Taro Bull       A
+$
+$ <kbd>mv ./DATA/ex14_2_6.dat ./DATA/ex14_2_6.txt</kbd><strong> ← ファイル名ex14_2_6.datをex14_2_6.txtに変更します</strong>
+$ <kbd>./ex14_2_9.prg</kbd>
+No such file or directory
+$</samp></pre>
+				</div>
+				<dl>
+					<dt>3行目</dt>
+						<dd>外部変数errnoを使用するため、errno.hファイルを取り込みます。</dd>
+					<dt>27行目</dt>
+						<dd>入力した文字列中から、英字とスペース（文字セット）から成る文字列を検索します。返り値がNULLの場合は、検索失敗です。</dd>
+					<dt>30行目</dt>
+						<dd>英字とスペース（文字セット）から成る文字列の文字数を取得します。</dd>
+					<dt>51行目</dt>
+						<dd>入力ファイルが入力できなかった場合に、標準エラー出力にエラーメッセージを出力します。</dd>
+				</dl>
+			</section>
+			<section>
+				<h3 id="lbl_memmove">14.24.4 memmove関数</h3>
+				<p>memmove関数はメモリ領域を第３引数で指定したバイト数分コピーします。コピー元とコピー先が重なっていてもかまいません。（重なっていない場合はmemcpy関数を使った方が良いでしょう）</p>
+				<table>
+					<caption>【表14-2-23】 memmove関数</caption>
+					<tr><th>形式</th><td>#include &lt;string.h&gt;<br>
+										void *memmove(void *dest, const void *src, size_t n);</td></tr>
+					<tr><th>返り値</th><td>コピー先の領域destへのポインタを返します。</td></tr>
+					<tr><th>引数</th>
+						<td>
+							<dl>
+								<dt>void *dest</dt>
+									<dd>コピー先の領域を指定します。</dd>
+								<dt>const void *src</dt>
+									<dd>コピー元の領域を指定します。</dd>
+								<dt>size_t n</dt>
+									<dd>コピーするバイト数を指定します。</dd>
+							</dl>
+						</td></tr>
+				</table>
+			</section>
+			<section>
+				<h3 id="lbl_memset">14.24.5 memset関数</h3>
+				<p>memset関数はメモリ領域を指定した値（１バイト長）で埋め込みます。</p>
+				<table>
+					<caption>【表14-2-24】 memset関数</caption>
+					<tr><th>形式</th><td>#include &lt;string.h&gt;<br>
+										void *memset(void *dest, int c, size_t n);</td></tr>
+					<tr><th>返り値</th><td>メモリ領域destの先頭アドレスを返します。</td></tr>
+					<tr><th>引数</th>
+						<td>
+							<dl>
+								<dt>void *dest</dt>
+									<dd>メモリ領域を指定します。</dd>
+								<dt>int c</dt>
+									<dd>埋め込む値（１バイト長）を指定します。</dd>
+								<dt>size_t n</dt>
+									<dd>埋め込む長さをバイト単位で指定します。</dd>
+							</dl>
+						</td></tr>
+				</table>
+			</section>
+			<section>
+				<h3>14.24.6 例題</h3>
+				<p>指定した高さの三角形を表示します。</p>
+				<div class="source-code">
+					<div class="c"><ol><li class="li1"><div class="de1"><span class="co2">#include &lt;stdio.h&gt;</span></div></li>
+					<li class="li1"><div class="de1"><span class="co2">#include &lt;string.h&gt;</span></div></li>
+					<li class="li1"><div class="de1"><span class="co2">#define LINE_MAX &nbsp; &nbsp;1024</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1"><span class="kw4">int</span> main<span class="br0">&#40;</span><span class="kw4">void</span><span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">char</span> &nbsp; &nbsp;buff<span class="br0">&#91;</span>LINE_MAX<span class="br0">&#93;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">int</span> &nbsp; &nbsp; height<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">int</span> &nbsp; &nbsp; sp_num<span class="sy0">;</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="coMULTI">/* スペースの数 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">int</span> &nbsp; &nbsp; ast_num<span class="sy0">;</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* *の数 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;三角形の高さを入力してください ==&gt; &quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">scanf</span><span class="br0">&#40;</span><span class="st0">&quot;%d&quot;</span><span class="sy0">,</span> <span class="sy0">&amp;</span>height<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; sp_num <span class="sy0">=</span> height <span class="sy0">-</span> <span class="nu0">1</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; ast_num <span class="sy0">=</span> <span class="nu0">1</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="coMULTI">/* 高さ分だけ繰り返す */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">for</span><span class="br0">&#40;</span> <span class="sy0">;</span> height <span class="sy0">&gt;</span> <span class="nu0">0</span><span class="sy0">;</span> <span class="sy0">--</span>height<span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* １行分の文字列を作る */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">memset</span><span class="br0">&#40;</span>buff<span class="sy0">,</span> <span class="st0">' '</span><span class="sy0">,</span> sp_num<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">memset</span><span class="br0">&#40;</span>buff <span class="sy0">+</span> sp_num<span class="sy0">,</span> <span class="st0">'*'</span><span class="sy0">,</span> ast_num<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="sy0">*</span><span class="br0">&#40;</span>buff <span class="sy0">+</span> sp_num <span class="sy0">+</span> ast_num<span class="br0">&#41;</span> &nbsp;<span class="sy0">=</span> <span class="st0">'<span class="es5">\0</span>'</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* １行表示 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;%s<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> buff<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="sy0">--</span>sp_num<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; ast_num <span class="sy0">+=</span> <span class="nu0">2</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">return</span> <span class="nu0">0</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#125;</span></div></li>
+					</ol></div>
+				</div>
+				<div class="exe-samp">
+<pre><samp>$ <kbd>./ex14_2_10.prg</kbd>
+三角形の高さを入力してください ==&gt; <kbd>8</kbd>
+       *
+      ***
+     *****
+    *******
+   *********
+  ***********
+ *************
+***************
+$</samp></pre>
+				</div>
+				<dl>
+					<dt>22行目</dt>
+						<dd>buffの先頭からsp_num個のスペースを埋め込みます。</dd>
+					<dt>23行目</dt>
+						<dd>上記で埋め込んだスペースの次からast_num個の「*」を埋め込みます。</dd>
+				</dl>
+			</section>
+		</section>
+	</section>
+
+	<footer>
+		<nav>
+			<ul>
+				<li><a href="../../../index.html">ホーム</a></li>
+				<li><a href="../../c_langtop.html#lbl_index">目次</a></li>
+				<li><a href="./s14_02_4.html">前のページ</a></li>
+				<li><a href="../s14_03/s14_03_1.html">次のページ</a></li>
+			</ul>
+		</nav>
+		<p id="footer-author">更新日：<time datetime="2018-12-31">2018年12月31日</time> Merry</p>
+	</footer>
+</div>
+</body>
+</html>

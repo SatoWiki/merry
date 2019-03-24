@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initialscale=1.0">
+	<meta name="robots" content="INDEX,FOLLOW">
+	<meta name="keywords" content="複写,移動,作成,削除,ファイルの検索,cp,mv,rename,mkdir,rmdir,rm,find">
+	<meta name="description" content="一般的に良く使われているディレクトリやファイルを取り扱うコマンドの使い方をご紹介します。">
+	<meta name="author" content="T.Hagiwara">
+	<link rel="stylesheet" href="../../CSS3/seminar.css" type="text/css">
+	<link rel="prev" href="./section4_1.html">
+	<link rel="next" href="./section4_3.html">
+	<title>Linuxの使い方&nbsp;-&nbsp;ファイル操作のコマンド２（2/5）</title>
+	<style type="text/css">
+	</style>
+</head>
+<body>
+<div id="container">
+	<header>
+		<p>Linux講座にようこそ。このページは「Linuxの使い方&nbsp;-&nbsp;第４章&nbsp;ファイル操作のコマンド２」です。</p>
+		<h1>Linuxの使い方</h1>
+		<nav>
+			<ul>
+				<li><a href="../../index.html">ホーム</a></li>
+				<li><a href="../cmdtop.html#lbl_index">目次</a></li>
+				<li><a href="./section4_1.html">前のページ</a></li>
+				<li><a href="./section4_3.html">次のページ</a></li>
+			</ul>
+		</nav>
+	</header>
+
+	<section class="contents">
+		<h1>4. ファイル操作のコマンド２（2/5）</h1>
+		<section>
+			<h2 id="lbl_cmd2">4.3 コマンドのご紹介２（1/4）</h2>
+			<p>ディレクトリやファイルを取り扱うコマンドのうち、ここでは次のコマンドをご紹介します。前にも述べましたが、コマンドの全ての引数をご紹介しているわけではありませんので、詳細内容をお知りになりたい場合はmanコマンドで調べてください。</p>
+			<ul>
+				<li><a href="#cp_mv">ファイルの複写と移動（cpコマンドとmvコマンド）</a></li>
+				<li><a href="#lbl_rename">ファイル名の変更（renameコマンド）</a></li>
+				<li><a href="#mkdir_rmdir">ディレクトリの作成と削除（mkdirコマンドとrmdirコマンド）</a></li>
+				<li><a href="#rm">ファイルの削除（rmコマンド）</a></li>
+				<li><a href="#find">ファイルの検索（findコマンド）</a></li>
+				<li><a href="./section4_3.html#sort">行の並べ替え（sortコマンド）</a></li>
+				<li><a href="./section4_3.html#grep">文字列の検索（grepコマンド）</a></li>
+				<li><a href="./section4_3.html#cut">文字列の切り出し（cutコマンド）</a></li>
+				<li><a href="./section4_3.html#df_du">ファイルシステムとディレクトリの容量表示（dfコマンドとduコマンド）</a></li>
+				<li><a href="./section4_3.html#lbl_backup">ファイルのバックアップ（tarコマンドとcpioコマンド）</a></li>
+				<li><a href="./section4_4.html#lbl_compression">ファイルの圧縮と解凍（gzip、bzip2、zip、unzip、lhaコマンド）</a></li>
+				<li><a href="./section4_4.html#vi">テキストファイルの作成・編集（viエディタ）</a></li>
+				<li><a href="./section4_5.html#other_4">その他、知っておくと便利なコマンド（file、ln、wc、nkf、odコマンド）</a></li>
+			</ul>
+
+			<!-- cpコマンドとmvコマンドの説明 -->
+			<section>
+				<h3 id="cp_mv">4.3.1 ファイルの複写と移動（cpコマンドとmvコマンド）</h3>
+				<p>cpコマンドはファイル及び、ディレクトリの複写を行い、mvコマンドはファイル及び、ディレクトリの移動を行います。移動の場合は<strong>移動元のファイルは消えます</strong>ので注意してください。複写先或は、移動先に同名のファイルがあった場合は標準では上書きされます。また、ファイル名やディレクトリ名を変更したい場合もmvコマンドで行えます。</p>
+				<section>
+					<h4>一般形式</h4>
+					<p>複写元（移動元）ファイル名と複写先（移動先）ファイル名は異なっていても構いません。一度に複数のファイルの複写や移動も出来ますが、その場合は最後に指定したディレクトリの下に、同じ名前のファイルとして複写及び、移動を行います。</p>
+					<div class="form-exp">
+						※ 複写<br>
+						$ cp -ipR 複写元ファイルパス名 複写先ファイルパス名<br>
+						$ cp -ipR 複写元ファイルパス名１ 複写元ファイルパス名２ … 複写先ディレクトリパス名<br><br>
+						※ 移動<br>
+						$ mv -i 移動元ファイルパス名 移動先ファイルパス名<br>
+						$ mv -i 移動元ファイルパス名１ 移動元ファイルパス名２ … 移動先ディレクトリパス名
+					</div>
+					<p>cpコマンドのオプションには、次のようなものがあります。</p>
+					<table class="simple-table">
+						<caption>【表4-5】cpコマンド・オプション</caption>
+						<tr><th>オプション</th><th>意味</th></tr>
+						<tr><td>-i, --interactive</td><td>複写先ファイルが既に存在していた場合、上書きをするかを問い合わせます。</td></tr>
+						<tr><td>-p,<br>--preserve=mode,ownership,timestamps</td><td>複写元ファイルの属性（保護モードや更新日時、等）を引き継ぎます。当オプションを指定しないと、複写先ファイルの更新日時はコマンドを実行した日時になります。</td></tr>
+						<tr><td>-R, -r, --recursive</td><td>ディレクトリの複写を行います。（当該ディレクトリ以下のツリー構造全てを複写します）</td></tr>
+					</table>
+					<p>mvコマンドのオプションには、次のようなものがあります。</p>
+					<table class="simple-table">
+						<caption>【表4-6】mvコマンド・オプション</caption>
+						<tr><th>オプション</th><th>意味</th></tr>
+						<tr><td>-i, --interactive</td><td>移動先ファイルが既に存在していた場合、上書きをするかを問い合わせます。</td></tr>
+					</table>
+				</section>
+				<section>
+					<h4>実行例</h4>
+					<p>カレントディレクトリの下のmeibo1を同じ場所にmeibo2として複写します。</p>
+					<div class="exe-samp">
+<pre><samp>$ <kbd>cp meibo1 meibo2</kbd>
+$
+$ <kbd>cp -i meibo1 meibo2</kbd><strong> ← meibo2は存在しますので、-iオプションを指定します</strong>
+cp: overwrite `meibo2'? n<strong> ← y又はnで応答します</strong>
+$
+</samp></pre>
+					</div>
+					<p>カレントディレクトリの下のMEIBOディレクトリを含めて、以下の全てを/tmpディレクトリの下に複写します。</p>
+					<div class="exe-samp">
+<pre><samp>$ <kbd>cp -R MEIBO /tmp</kbd>
+$
+</samp></pre>
+					</div>
+					<p>カレントディレクトリの下のmeibo2をmeibo.oldに<strong>名称変更</strong>します。</p>
+					<div class="exe-samp">
+<pre><samp>$ <kbd>mv meibo2 meibo.old</kbd>
+$
+</samp></pre>
+					</div>
+				</section>
+			</section>
+			<!-- renameコマンドの説明 -->
+			<section>
+				<h3 id="lbl_rename">4.3.2 ファイル名の変更（renameコマンド）</h3>
+				<p>ファイルやディレクトリの名称変更はmvコマンドで簡単に出来ますが、その場合は１回の実行で１つのファイルの名称変更しか出来ません。名称に規則性がある場合は、renameコマンドで複数ファイルの名称変更ができますので、多くのファイルの名称変更を行う場合はrenameコマンドを使うとよいでしょう。</p>
+				<section>
+					<h4>一般形式</h4>
+					<p>ファイルパス名中の「変更対象文字列」と一致する文字列を「変更文字列」に変更します。ファイルパス名にはワイルドカードも使用出来ます。</p>
+					<div class="form-exp">
+						$ rename 変更対象文字列 変更文字列 ファイルパス名１ ファイルパス名２ …
+					</div>
+					<p>renameコマンドのオプションはありません。</p>
+				</section>
+				<section>
+					<h4>実行例</h4>
+					<p>カレントディレクトリの下のmeibo1、meibo2、meiboAをmeibo_1、meibo_2、meibo_Aに名称変更します。</p>
+					<div class="exe-samp">
+<pre><samp>$ <kbd>ls</kbd>
+data  meibo1  meibo2  meiboA
+$
+$ <kbd>rename meibo meibo_ meibo?</kbd>
+$
+$ <kbd>ls</kbd>
+data  meibo_1  meibo_2  meibo_A
+$
+</samp></pre>
+					</div>
+					<p>カレントディレクトリの下のmeibo_1、meibo_2をmeibo01、meibo02に名称変更します。</p>
+					<div class="exe-samp">
+<pre><samp>$ <kbd>rename meibo_ meibo0 meibo_[12]</kbd>
+$
+$ <kbd>ls</kbd>
+data  meibo01  meibo02  meibo_A
+$
+</samp></pre>
+					</div>
+				</section>
+			</section>
+			<section>
+				<!-- mkdirコマンドとrmdirコマンドの説明 -->
+				<h3 id="mkdir_rmdir">4.3.3 ディレクトリの作成と削除（mkdirコマンドとrmdirコマンド）</h3>
+				<p>mkdirコマンドはディレクトリを作成し、rmdirコマンドはディレクトリを削除します。rmdirコマンドで削除する場合、予めデレクトリは空の状態にしておく必要があります。</p>
+				<p>ファイルやディレクトリの名称については特に規則はありません。長さの制限はファイルシステムの種類などにより異なるかもしれませんが、通常255文字までは大丈夫だと思います。なお、記号の多くはシェルにとって特別な意味がありますので、名前の一部に記号を使うのは避けたほうがよいと思います。名前の一部として使う記号は_（アンダライン）と.（ピリオド）程度にしておいたほうがよいでしょう。</p>
+				<p>また、UNIX系OSの場合、英字の大文字と小文字は別の文字として認識しますので、大文字と小文字は使い分けて下さい。なお、当講座の例題ではディレクトリ名を大文字にしていますが、ファイルと区別をしやすくするためで、それ以上の意味はありません。</p>
+				<section>
+					<h4>一般形式</h4>
+					<p>一度に複数のディレクトリの作成や削除が出来ます。</p>
+					<div class="form-exp">
+						$ mkdir -p ディレクトリパス名１ ディレクトリパス名２ …<br>
+						$ rmdir -p ディレクトリパス名１ ディレクトリパス名２ …
+					</div>
+					<table class="simple-table">
+						<caption>【表4-7】mkdirとrmdirコマンド・オプション</caption>
+						<tr><th>オプション</th><th>意味</th></tr>
+						<tr><td>-p, --parents</td><td>親のディレクトリがない場合、親のディレクトリも作成（mkdir）及び、削除（rmdir）します。</td></tr>
+					</table>
+				</section>
+				<section>
+					<h4>実行例</h4>
+					<p>カレントディレクトリの下にDIRディレクトリを作成し、その下にSUBDIR1とSUBDIR2ディレクトリを作成します。</p>
+					<div class="exe-samp">
+<pre><samp>$ <kbd>mkdir DIR</kbd>
+$
+$ <kbd>mkdir DIR/SUBDIR1 DIR/SUBDIR2</kbd>
+$
+</samp></pre>
+					</div>
+					<p>前の例題と同じ事を-pオプションを使用して行います。</p>
+					<div class="exe-samp">
+<pre><samp>$ <kbd>mkdir -p DIR/SUBDIR1 DIR/SUBDIR2</kbd>
+$
+</samp></pre>
+					</div>
+					<p>前の例題で作成したディレクトリを全て削除します。</p>
+					<div class="exe-samp">
+<pre><samp>$ <kbd>rmdir DIR</kbd>
+rmdir: DIR: ディレクトリは空ではありません<strong> ← エラーメッセージです</strong>
+$
+$ <kbd>rmdir DIR/SUBDIR1 DIR/SUBDIR2</kbd><strong> ← DIRの下を空にします</strong>
+$ <kbd>rmdir DIR</kbd>
+$
+</samp></pre>
+					</div>
+				</section>
+				<aside>
+					<h4>補足</h4>
+					<p>ディレクトリ名やファイル名に半角スペースを含む場合、特殊なパス名指定が必要になりますので注意が必要です。</p>
+					<p>半角スペースはコマンド引数の区切り記号ですので、単に半角スペースを含むパス名を指定すると、その半角スペースは区切り記号として解釈されてしまいます。</p>
+					<div class="exe-samp">
+<pre><samp>$ <kbd>mkdir DIR01; cd DIR01</kbd>
+$ <kbd>mkdir My Documents</kbd><strong> ← 半角スペースを含む名称（My Documents）ディレクトリを作りますが…</strong>
+$
+$ <kbd>ls -l</kbd><strong> ← 確認します</strong>
+合計 8
+drwxr-xr-x 2 merry merry 4096 11月  6 09:06 Documents<strong> ← ２つのディレクトリが出来ました</strong>
+drwxr-xr-x 2 merry merry 4096 11月  6 09:06 My
+$
+</samp></pre>
+					</div>
+					<p>半角スペースを含む場合は、"（引用符）か'（アポストロフィ）で括ります。（詳細は「<a href="../SECTION6/section6_3.html#esc">6.5 文字列のエスケープ</a>」をご覧ください）</p>
+					<div class="exe-samp">
+<pre><samp>$ <kbd>mkdir DIR02; cd DIR02</kbd>
+$ <kbd>mkdir "My Documents"</kbd><strong> ← 半角スペースを含む名称を"（引用符）で括ります</strong>
+$
+$ <kbd>ls -l</kbd><strong> ← 確認します</strong>
+合計 4
+drwxr-xr-x 2 merry merry 4096 11月  6 09:26 'My Documents'
+</samp></pre>
+					</div>
+				</aside>
+			</section>
+			<section>
+				<!-- rmコマンドコマンドの説明 -->
+				<h3 id="rm">4.3.4 ファイルの削除（rmコマンド）</h3>
+				<p>rmコマンドはファイルを削除します。オプションの指定によりディレクトリの削除も出来ます。</p>
+				<section>
+					<h4>一般形式</h4>
+					<p>引数の指定により、一度に複数のファイルやディレクトリの削除も出来ます。</p>
+					<div class="form-exp">
+						$ rm -if ファイルパス名１ ファイルパス名２ …<br>
+						$ rm -ifr ディレクトリパス名１ ディレクトリパス名２ …
+					</div>
+					<table class="simple-table">
+						<caption>【表4-8】rmコマンド・オプション</caption>
+						<tr><th>オプション</th><th>意味</th></tr>
+						<tr><td>-i, --interactive</td><td>削除するか否かを問い合わせます。</td></tr>
+						<tr><td>-f, --force</td><td>削除するか否かを問い合わせません。</td></tr>
+						<tr><td>-r, -R, --recursive</td><td>指定したディレクトリを含め、ツリー構造全てを削除します。</td></tr>
+					</table>
+				</section>
+				<section>
+					<h4>実行例</h4>
+					<p>カレントディレクトリの下のファイルのうち、拡張子が「old」のものを全て削除します。</p>
+					<div class="exe-samp">
+<pre><samp>$ <kbd>rm *.old</kbd><strong> ← ディレクトリは削除しません</strong>
+$
+</samp></pre>
+					</div>
+					<p>書き込み禁止のファイルを削除します。この場合、-iオプションの有無にかかわらず、削除の問い合わせをしてきます。</p>
+					<div class="exe-samp">
+<pre><samp>$ <kbd>ls -l meibo</kbd>
+-r--r--r--  1 merry  users  30 3月 17 10:32 meibo<strong> ← 書き込み禁止ファイルです</strong>
+$
+$ <kbd>rm meibo</kbd>
+rm: remove write-protected file `meibo'? y<strong> ← 削除の問い合わせです。yで削除します</strong>
+$
+</samp></pre>
+					</div>
+					<p>DIRディレクトリの下のファイルとディレクトリを全て削除します。</p>
+					<div class="exe-samp">
+<pre><samp>$ <kbd>rm -r DIR/*</kbd><strong> ← DIRディレクトリは空になります</strong>
+$
+</samp></pre>
+					</div>
+					<aside>
+						<h4>補足</h4>
+						<p>rmdirコマンドの場合はディレクトリが空でないと削除できませんが、rmコマンドの-rオプションは空でなくても削除します。従って、使い方によっては全てのファイルとディレクトリを削除してしまいます。</p>
+						<div class="exe-samp">
+<pre><samp>$ <kbd>tree ./merry</kbd><strong> ← 階層構造を表示します</strong>
+./merry
+├── meibo
+│   ├── data
+│   │   ├── data1
+│   │   └── data2
+│   ├── meibo1
+│   ├── meibo2
+│   └── meiboA
+├── mybin
+└── tel
+
+3 directories, 6 files
+$
+$ <kbd>cd merry</kbd>
+$ <kbd>rm -r *</kbd><strong> ← パス名として任意の文字列を表す「*」を指定して、-rオプションで実行します</strong>
+$
+$ <kbd>tree .</kbd><strong> ← 確認します</strong>
+.<strong> ← 空です</strong>
+
+0 directories, 0 files
+$
+</samp></pre>
+						</div>
+					</aside>
+				</section>
+			</section>
+			<section>
+				<!-- findコマンドの説明 -->
+				<h3 id="find">4.3.5 ファイルの検索（findコマンド）</h3>
+				<p>findコマンドはファイルやディレクトリの検索を行います。オプションにより検索条件を指定します。</p>
+				<section>
+					<h4>一般形式</h4>
+					<p>第１引数（開始ディレクトリパス名）により検索開始ディレクトリを指定し、第２引数以降に検索条件を指定します。	開始ディレクトリパス名に絶対パス名を指定すると、結果も絶対パス名になり、相対パス名を指定すると相対パス名になります。複数の条件を指定するときは<strong>-and</strong>を指定すると論理積（かつ）に、指定しないと論理和（または）になります。</p>
+					<div class="form-exp">
+						$ find 開始ディレクトリパス名 検索条件
+					</div>
+					<p>検索条件としては次のようなオプションがあります。</p>
+					<table class="simple-table">
+						<caption>【表4-9】findコマンド・オプション</caption>
+						<tr><th>オプション</th><th>意味</th></tr>
+						<tr><td>-name 名称</td><td>指定した名称のファイルやディレクトリを検索します。名称にはワイルドカードを指定できますが、シェルのそれと区別するためにアポストロフィ又は、引用符で括ります。</td></tr>
+						<tr><td>-type 種別</td><td>種別にdを指定するとディレクトリを、fを指定するとファイルを検索します。</td></tr>
+						<tr><td>-atime n</td><td>最終アクセスがn×24時間前のファイルやディレクトリを検索します。</td></tr>
+						<tr><td>-mtime n</td><td>最終修正がn×24時間前のファイルやディレクトリを検索します。</td></tr>
+						<tr><td>-exec コマンド</td><td>検索結果を使ってコマンドを実行します。</td></tr>
+					</table>
+				</section>
+				<section>
+					<h4>実行例</h4>
+					<p>/usr/bin/の下から「cat」という名称のファイルを検索します。</p>
+					<div class="exe-samp">
+<pre><samp>$ <kbd>find /usr/bin -name "cat"</kbd>
+/usr/bin/cat<strong> ← 絶対パス名で表示します</strong>
+$
+$ <kbd>find /usr/bin -name "cat*"</kbd><strong> ← ワイルドカード（アステリスク記号）を指定します</strong>
+/usr/bin/catchsegv
+/usr/bin/cat
+/usr/bin/catman
+$
+</samp></pre>
+					</div>
+					<p>カレントディレクトリ以下のファイルを全て検索します。</p>
+					<div class="exe-samp">
+<pre><samp>$ <kbd>find . -type f</kbd>
+./MERRY/meibo/data/data1<strong> ← 相対パス名で表示します</strong>
+./MERRY/meibo/data/data2
+./MERRY/meibo/meibo1
+./MERRY/meibo/meibo2
+./MERRY/meibo/meiboA
+./MERRY/tel
+$
+</samp></pre>
+					</div>
+					<p>カレントディレクトリ以下のファイルで、5日以内に修正がかかったものを検索します。以内は-で、以前は+で指定します。</p>
+					<div class="exe-samp">
+<pre><samp>$ <kbd>find . -type f -and -mtime -5</kbd>
+./MERRY/tel
+$
+</samp></pre>
+					</div>
+					<p>前の例題で検索したファイルの詳細情報を表示します。{}は検索結果を、\;はコマンドの最後を表します。（{}&nbsp;\;は固定パターンですので、このままおぼえてください）</p>
+					<div class="exe-samp">
+<pre><samp>$ <kbd>find . -type f -and -mtime -5 -exec ls -l {} \;</kbd>
+-rw-r--r--  1  merry  users  17 3月 17 21:50 ./MERRY/tel
+$
+</samp></pre>
+					</div>
+				</section>
+				<aside>
+					<h4>補足</h4>
+					<p>ファイルやディレクトリの名称をキーとして検索する場合、シェルのワイルドカードを指定できますが、アポストロフィ又は、引用符で括らなかった場合の例を示します。</p>
+					<p>次の例ではカレントディレクトリの下に「cat*」に該当するファイルが２つあります（「catman」と「catwoman」）ので、シェルがこれを引数に置き換えて、次の様なコマンド形式になりますが、findコマンドにはcatwomanというオプションはありませんのでエラーになります。</p>
+					<div><kbd>find /usr/bin -name catman catwoman</kbd></div>
+					<div class="exe-samp">
+<pre><samp>$ <kbd>ls</kbd><strong> ← カレントディレクトリの下のファイルを表示します</strong>
+DATA  catman  catwoman
+$
+$ <kbd>find /usr/bin -name cat*</kbd><strong> ← アポストロフィ又は、引用符で括っていません</strong>
+find: パス名は評価式の前に置かなければいけません: catwoman<strong> ← エラーです</strong>
+使用法: find [-H] [-L] [-P] [-Olevel] [-D help|tree|search|stat|rates|opt|exec] [path...] [expression]
+$
+</samp></pre>
+					</div>
+					<p>次の例ではカレントディレクトリの下に「cat*」に該当するファイルが１つあります（「catman」）ので、シェルがこれを引数に置き換えて、次の様なコマンド形式になりますので、findコマンドはcatmanというファイルを検索します。</p>
+					<div><kbd>find /usr/bin -name catman</kbd></div>
+					<div class="exe-samp">
+<pre><samp>$ <kbd>ls</kbd><strong> ← カレントディレクトリの下のファイルを表示します</strong>
+DATA  catman
+$
+$ <kbd>find /usr/bin -name cat*</kbd><strong> ← アポストロフィ又は、引用符で括っていません</strong>
+/usr/bin/catman<strong> ← catchsegvやcatは検索できません</strong>
+$
+</samp></pre>
+					</div>
+				</aside>
+			</section>
+		</section>
+	</section>
+
+	<footer>
+		<nav>
+			<ul>
+				<li><a href="../../index.html">ホーム</a></li>
+				<li><a href="../cmdtop.html#lbl_index">目次</a></li>
+				<li><a href="./section4_1.html">前のページ</a></li>
+				<li><a href="./section4_3.html">次のページ</a></li>
+			</ul>
+		</nav>
+		<p id="footer-author">更新日：<time datetime="2017-11-06">2017年11月06日</time> Merry</p>
+	</footer>
+</div>
+</body>
+</html>

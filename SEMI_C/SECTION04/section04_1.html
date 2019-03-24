@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initialscale=1.0">
+	<meta name="robots" content="INDEX,FOLLOW">
+	<meta name="keywords" content="条件分岐,if,switch,else">
+	<meta name="description" content="if文の説明をしています。">
+	<meta name="author" content="T.Hagiwara">
+	<link rel="stylesheet" href="../../CSS3/seminar.css" type="text/css">
+	<link rel="stylesheet" href="../../CSS3/hl_clang.css" type="text/css">
+	<link rel="prev" href="../SECTION03/section03_2.html">
+	<link rel="next" href="./section04_2.html">
+	<title>Ｃ言語プログラミング入門&nbsp;-&nbsp;条件を判定して処理を振り分ける条件分岐（1/2）</title>
+	<style type="text/css">
+	</style>
+</head>
+<body>
+<div id="container">
+	<header>
+		<p>Linux講座にようこそ。このページは「Ｃ言語プログラミング入門&nbsp;-&nbsp;第４章．条件を判定して処理を振り分ける条件分岐」です。</p>
+		<h1>Ｃ言語プログラミング入門</h1>
+		<nav>
+			<ul>
+				<li><a href="../../index.html">ホーム</a></li>
+				<li><a href="../c_langtop.html#lbl_index">目次</a></li>
+				<li><a href="../SECTION03/section03_2.html">前のページ</a></li>
+				<li><a href="./section04_2.html">次のページ</a></li>
+			</ul>
+		</nav>
+	</header>
+
+	<section class="contents">
+		<h1>4. 条件を判定して処理を振り分ける条件分岐（1/2）</h1>
+		<section>
+			<h2>4.1 条件分岐とは</h2>
+			<figure class="left-box myphoto">
+				<dl>
+					<dt><img src="../IMAGES/sec04_1.jpg" alt="条件分岐"></dt>
+					<dd>【図４-１】条件分岐</dd>
+				</dl>
+			</figure>
+			<p>前のページで肥満度（BMI）を算出するプログラムを例題として取り上げましたが、BMIの値が25以上の場合は太り過ぎだといわれています。</p>
+			<p>そこで、算出したBMIの値が25以上の場合に「太りすぎです」のようなメッセージを出力したい場合、「BMIの値は25以上」の条件の真偽により処理を振り分けます。これを条件分岐あるいは、条件判定と呼んでいます。</p>
+			<p>実際は、「BMIの値は25以上」の条件が真の場合のみ「太りすぎです」のメッセージを出力するようにします。</p>
+			<p>条件分岐のための文としては<strong>if</strong>文と<strong>switch</strong>文があります。</p>
+		</section>
+		<section>
+			<h2 id="lbl_if">4.2 if文</h2>
+			<p>if文は【図4-1】のように、条件の真偽により二つ以上の処理に振り分けるときに使用します。</p>
+			<section>
+				<h3>4.2.1 形式</h3>
+				<p>「if (条件)」の次に「条件が成立したときの処理」、「else」の次に「条件が不成立のときの処理」を指定します。</p>
+				<div class="form-exp">
+					if (条件)<br>
+						&nbsp;&nbsp;&nbsp;&nbsp;条件が成立したときの処理;<br>
+					else<br>
+						&nbsp;&nbsp;&nbsp;&nbsp;条件が不成立のときの処理;
+				</div>
+				<dl>
+					<dt>(条件)</dt>
+						<dd>括弧で括って条件式を指定します。条件式は【表4-1】の比較演算子を使って指定します。</dd>
+					<dt>条件が成立したときの処理</dt>
+						<dd>条件が成立（真）したときの処理を指定します。文が複数ある場合は{と}で括ってブロックにします。</dd>
+					<dt>条件が不成立のときの処理</dt>
+						<dd>条件が不成立（偽）のときの処理を指定します。文が複数ある場合は{と}で括ってブロックにします。</dd>
+				</dl>
+				<p>if文の形式として、次のようなこともあります。</p>
+				<ul>
+					<li>条件が不成立のときの処理がない場合は、else以下を省略できます。また、条件が成立したときの処理がない場合は、文の最後を表す;（セミコロン）だけを指定します。</li>
+					<li>条件が成立したときの処理と条件が不成立のときの処理として、if文を指定できます。（if文の中にif文を指定できます）</li>
+					<li>条件が成立したときの処理と条件が不成立のときの処理は、文が複数ある場合はブロックにしますが、１行の場合もブロックにして構いません。後々の保守を考慮した場合、文の追加が考えられますのでブロックにしておくことをお薦めします。</li>
+				</ul>
+				<aside>
+					<h4>補足</h4>
+					<p id="lbl_note_3">if文で３つ以上の処理に振り分けることもできます。その場合、次の形式のように「else if」で条件式を指定します。</p>
+					<div class="form-exp">
+						if (条件１)<br>
+						&nbsp;&nbsp;&nbsp;&nbsp;条件１が成立したときの処理１;<br>
+						else if (条件２)<br>
+						&nbsp;&nbsp;&nbsp;&nbsp;条件２が成立したときの処理２;<br>
+						else if (条件ｎ)<br>
+						&nbsp;&nbsp;&nbsp;&nbsp;条件ｎが成立したときの処理ｎ;<br>
+						else<br>
+						&nbsp;&nbsp;&nbsp;&nbsp;条件１〜ｎが不成立のときの処理;
+					</div>
+				</aside>
+			</section>
+			<section>
+				<h3 id="lbl_comp">4.2.2 比較演算子</h3>
+				<p>通常、条件は下表の比較演算子を使って指定します。比較演算子の<strong>==</strong>は=が２つですので注意してください。</p>
+				<table class="simple-table">
+					<caption>【表4-1】比較演算子一覧</caption>
+					<tr><th>演算子</th><th>意味</th><th>例題</th></tr>
+					<tr><td class="text-center">&gt;</td><td>より大きい</td><td><code>bmi &gt; 25.0</code><br>変数bmiの値が25.0より大きい（25.0は含まない）場合は真になります。</td></tr>
+					<tr><td class="text-center">&gt;=</td><td>以上</td><td><code>bmi &gt;= 25.0</code><br>変数bmiの値が25.0以上（25.0を含む）の場合は真になります。</td></tr>
+					<tr><td class="text-center">&lt;</td><td>未満<br>（より小さい）</td><td><code>bmi &lt; 25.0</code><br>変数bmiの値が25.0より小さい（25.0は含まない）場合は真になります。</td></tr>
+					<tr><td class="text-center">&lt;=</td><td>以下</td><td><code>bmi &lt;= 25.0</code><br>変数bmiの値が25.0以下（25.0を含む）の場合は真になります。</td></tr>
+					<tr><td class="text-center">==</td><td>等しい</td><td><code>bmi == 25.0</code><strong> ← =が２つですので注意してください</strong><br>変数bmiの値が25.0の場合は真になります。</td></tr>
+					<tr><td class="text-center">!=</td><td>等しくない</td><td><code>bmi != 25.0</code><br>変数bmiの値が25.0でない場合は真になります。</td></tr>
+				</table>
+				<p>表中の「以上」は比較する数そのものを<strong>含め、それより大きい値</strong>で、「以下」は比較する数そのものを<strong>含め、それより小さい値</strong>です。また、「未満」は比較する数そのものは<strong>含めず、それより小さい値</strong>です。</p>
+				<aside>
+					<h4>補足</h4>
+					<p>Ｃ言語の場合、条件式の真偽は式の値で決まります。式の値が<strong>０の場合は偽</strong>となり、<strong>０以外の場合は真</strong>となります。次のif文の場合は常に偽になります。</p>
+					<div class="source-code">
+<pre><code>if (atai <strong>=</strong> 0)<strong> ← =は代入演算子ですので、式の値はataiに０を代入した値、つまり０になります</strong>
+{
+    printf("ataiの値は%dです\n", atai);<strong> ← 条件は常に偽になりますので、この文を実行することはありません</strong>
+}</code></pre>
+					</div>
+				</aside>
+			</section>
+			<section>
+				<h3>4.2.3 例題</h3>
+				<p>体重と身長を入力して肥満度を出力するプログラムです。肥満度の計算は次の計算式で行います</p>
+				<p>肥満度（BMI）＝ 体重（キログラム）÷ 身長（メートル）÷ 身長（メートル）</p>
+				<section>
+					<h4>例題１</h4>
+					<p>肥満度（BMI）の値が25.0以上の場合は「太りすぎです」メッセージも出力します。</p>
+					<div class="source-code">
+						<div class="c"><ol><li class="li1"><div class="de1"><span class="co2">#include &lt;stdio.h&gt;</span></div></li>
+						<li class="li1"><div class="de1"><span class="kw4">int</span> main<span class="br0">&#40;</span><span class="br0">&#41;</span></div></li>
+						<li class="li1"><div class="de1"><span class="br0">&#123;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">double</span> &nbsp;taijyu<span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">double</span> &nbsp;sinchyo<span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">double</span> &nbsp;bmi<span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp;</div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;肥満度(BMI)の計算を行います<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;体重(kg)と身長(m)を入力してください ==&gt; &quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">scanf</span><span class="br0">&#40;</span><span class="st0">&quot;%lf%lf&quot;</span><span class="sy0">,</span> <span class="sy0">&amp;</span>taijyu<span class="sy0">,</span> <span class="sy0">&amp;</span>sinchyo<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp;</div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="coMULTI">/* 肥満度(BMI) = 体重(kg) / 身長(m) / 身長(m) */</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; bmi <span class="sy0">=</span> taijyu <span class="sy0">/</span> sinchyo <span class="sy0">/</span> sinchyo<span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;肥満度は%.2fです<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> bmi<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="coMULTI">/* 太りすぎのチェック &nbsp;*/</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">if</span> <span class="br0">&#40;</span>bmi <span class="sy0">&gt;=</span> <span class="nu16">25.0</span><span class="br0">&#41;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;太りすぎです<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp;</div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">return</span> <span class="nu0">0</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1"><span class="br0">&#125;</span></div></li>
+						</ol></div>
+					</div>
+					<div class="exe-samp">
+<pre><samp>$ <kbd>./ex04_1.prg</kbd><strong> ← 上記例題を実行します</strong>
+肥満度(BMI)の計算を行います
+体重(kg)と身長(m)を入力してください ==&gt; 85 1.85
+肥満度は24.84です
+$ <kbd>./ex04_1.prg</kbd>
+肥満度(BMI)の計算を行います
+体重(kg)と身長(m)を入力してください ==&gt; 85 1.75
+肥満度は27.76です
+太りすぎです
+$</samp></pre>
+					</div>
+					<dl>
+						<dt>16行目</dt>
+							<dd>変数bmiの値が25.0以上（25.0を含む）という条件です。</dd>
+						<dt>17〜19行目</dt>
+							<dd>条件が成立（真）したときの処理で、「太りすぎです」メッセージを出力します。1文ですので{と}で括ってブロックにしなくても構いません。</dd>
+					</dl>
+				</section>
+				<section>
+					<h4>例題２</h4>
+					<p>上記例題の場合、太りすぎ（25.0以上）しかチェックしていませんが、やせすぎ（18.5未満）もチェックします。</p>
+					<div class="source-code">
+						<div class="c"><ol><li class="li1"><div class="de1"><span class="co2">#include &lt;stdio.h&gt;</span></div></li>
+						<li class="li1"><div class="de1"><span class="kw4">int</span> main<span class="br0">&#40;</span><span class="br0">&#41;</span></div></li>
+						<li class="li1"><div class="de1"><span class="br0">&#123;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">double</span> &nbsp;taijyu<span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">double</span> &nbsp;sinchyo<span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">double</span> &nbsp;bmi<span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp;</div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;肥満度(BMI)の計算を行います<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;体重(kg)と身長(m)を入力してください ==&gt; &quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">scanf</span><span class="br0">&#40;</span><span class="st0">&quot;%lf%lf&quot;</span><span class="sy0">,</span> <span class="sy0">&amp;</span>taijyu<span class="sy0">,</span> <span class="sy0">&amp;</span>sinchyo<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="coMULTI">/* 肥満度(BMI) = 体重(kg) / 身長(m) / 身長(m) */</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; bmi <span class="sy0">=</span> taijyu <span class="sy0">/</span> sinchyo <span class="sy0">/</span> sinchyo<span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;肥満度は%.2fです<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> bmi<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp;</div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="coMULTI">/* BMIの値をチェック */</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">if</span> <span class="br0">&#40;</span>bmi <span class="sy0">&lt;</span> <span class="nu16">18.5</span><span class="br0">&#41;</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* やせすぎをチェック */</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;やせすぎです<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">else</span> <span class="kw1">if</span> <span class="br0">&#40;</span>bmi <span class="sy0">&gt;=</span> <span class="nu16">25.0</span><span class="br0">&#41;</span> &nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* 太りすぎをチェック */</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;太りすぎです<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">else</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;普通です<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp;</div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">return</span> <span class="nu0">0</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1"><span class="br0">&#125;</span></div></li>
+						</ol></div>
+					</div>
+					<div class="exe-samp">
+<pre><samp>$ <kbd>./ex04_2.prg</kbd>
+肥満度(BMI)の計算を行います
+体重(kg)と身長(m)を入力してください ==&gt; 85.5 1.75
+肥満度は27.92です
+太りすぎです
+$ <kbd>./ex04_2.prg</kbd>
+肥満度(BMI)の計算を行います
+体重(kg)と身長(m)を入力してください ==&gt; 55.5 1.75
+肥満度は18.12です
+やせすぎです
+$ <kbd>./ex04_2.prg</kbd>
+肥満度(BMI)の計算を行います
+体重(kg)と身長(m)を入力してください ==&gt; 85.5 1.85
+肥満度は24.98です
+普通です
+$</samp></pre>
+					</div>
+					<dl>
+						<dt>16行目</dt>
+							<dd>変数bmiの値が18.5未満（18.5は含まない）という条件です。</dd>
+						<dt>20行目</dt>
+							<dd>変数bmiの値が25.0以上（25.0を含む）という条件です。</dd>
+						<dt>24行目</dt>
+							<dd>上記のどちらの条件も成立しない場合、ここの処理を行います。</dd>
+					</dl>
+				</section>
+				<aside>
+					<h4>補足</h4>
+					<p>ブロックの記述形式として、次の形式が一般的のようですが、この形式の場合はブロックの範囲が把握しにくいと思いますので、当講座では例題の形式にしています。</p>
+					<div class="form-exp">
+						if (条件１) <strong>{</strong><br>
+						&nbsp;&nbsp;&nbsp;&nbsp;条件１が成立したときの処理１;<br>
+						}
+					</div>
+				</aside>
+			</section>
+		</section>
+	</section>
+
+	<footer>
+		<nav>
+			<ul>
+				<li><a href="../../index.html">ホーム</a></li>
+				<li><a href="../c_langtop.html#lbl_index">目次</a></li>
+				<li><a href="../SECTION03/section03_2.html">前のページ</a></li>
+				<li><a href="./section04_2.html">次のページ</a></li>
+			</ul>
+		</nav>
+		<p id="footer-author">更新日：<time datetime="2018-05-11">2018年05月11日</time> Merry</p>
+	</footer>
+</div>
+</body>
+</html>

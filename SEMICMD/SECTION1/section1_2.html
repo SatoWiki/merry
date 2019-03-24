@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initialscale=1.0">
+	<meta name="robots" content="INDEX,FOLLOW">
+	<meta name="keywords" content="端末画面をクリア,clear,日時を表示,date,オンライン・マニュアルを表示,man,システムの各種情報を表示,uname">
+	<meta name="description" content="Linuxコマンドとはどういうものかを実感して頂くために、比較的使用頻度が高くて且つ、使い方が簡単な4種類のコマンドをご紹介します。">
+	<meta name="author" content="T.Hagiwara">
+	<link rel="stylesheet" href="../../CSS3/seminar.css" type="text/css">
+	<link rel="prev" href="../cmdtop.html">
+	<link rel="next" href="../SECTION2/section2_1.html">
+	<title>Linuxの使い方&nbsp;-&nbsp;コマンド使用の基礎知識（2/2）</title>
+	<style type="text/css">
+	</style>
+</head>
+<body>
+<div id="container">
+	<header>
+		<p>Linux講座にようこそ。このページは「Linuxの使い方&nbsp;-&nbsp;第１章&nbsp;コマンド使用の基礎知識」です。</p>
+		<h1>Linuxの使い方</h1>
+		<nav>
+			<ul>
+				<li><a href="../../index.html">ホーム</a></li>
+				<li><a href="../cmdtop.html#lbl_index">目次</a></li>
+				<li><a href="./section1_1.html">前のページ</a></li>
+				<li><a href="../SECTION2/section2_1.html">次のページ</a></li>
+			</ul>
+		</nav>
+	</header>
+
+	<section class="contents">
+		<h1>1. コマンド使用の基礎知識（2/2）</h1>
+		<section>
+			<h2 id="lbl_first_cmd">1.2 使用方法が簡単なコマンドのご紹介</h2>
+			<p>ここでは使用方法が簡単で、覚えておくと便利な４種類のコマンドをご紹介します。</p>
+			<!-- clearコマンドの説明 -->
+			<section>
+				<h3 id="clear_cmd">1.2.1 端末画面をクリア（clearコマンド）</h3>
+				<p>clearコマンドは端末画面（ターミナル・エミュレータ）をクリアします。</p>
+				<section>
+					<h4>一般形式</h4>
+					<p>引数はありません。</p>
+					<div class="form-exp">
+						$ clear
+					</div>
+				</section>
+			</section>
+			<!-- dateコマンドの説明 -->
+			<section>
+				<h3 id="date_cmd">1.2.2 日時を表示（dateコマンド）</h3>
+				<p>dateコマンドは日付や時刻を表示します。</p>
+				<section>
+					<h4>一般形式</h4>
+					<p>引数を指定しない場合は現在の日付と時刻を表示します。</p>
+					<div class="form-exp">
+						$ date "+フォーマット"
+					</div>
+					<p>「+フォーマット」オプションは日付や時刻を編集するときの編集形式を指定します。編集形式は次のようなキーワードで指定します。</p>
+					<table class="simple-table">
+						<caption>【表1-2】dateコマンド・フォーマットオプション</caption>
+						<tr><th>キーワード</th><th>意味</th></tr>
+						<tr><td>%H</td><td>時（00 〜 23）を表示します。</td></tr>
+						<tr><td>%M</td><td>分（00 〜 59）を表示します。</td></tr>
+						<tr><td>%S</td><td>秒（00 〜 60）を表示します。</td></tr>
+						<tr><td>%Y</td><td>年（４桁）を表示します。</td></tr>
+						<tr><td>%m</td><td>月（01 〜 12）を表示します。</td></tr>
+						<tr><td>%d</td><td>日（01 〜 31）を表示します。</td></tr>
+						<tr><td>%T</td><td>時刻（hh:mm:ss）を表示します。</td></tr>
+						<tr><td>%X</td><td>ロケールによる時刻（日本語環境ならば「hh時mm分ss秒」）を表示します。</td></tr>
+						<tr><td>%A</td><td>曜日を表示します。</td></tr>
+						<tr><td>%c</td><td>日付と時刻（日本語環境ならば「YYYY年MM月DD日 hh時mm分ss秒」）を表示します。</td></tr>
+						<tr><td>%D</td><td>日付（mm/dd/yy）を表示します。</td></tr>
+					</table>
+				</section>
+				<section>
+					<h4>実行例</h4>
+						<p>今日の日付を編集して表示します。</p>
+						<div class="exe-samp">
+<pre><samp>$ <kbd>date</kbd><strong> ← 引数を指定しないと現在日時を表示します</strong>
+2010年  3月 29日 月曜日 10:08:45 JST
+$
+$ <kbd>date "+今日の日付は%Dです"</kbd>
+今日の日付は03/29/10です
+$
+</samp></pre>
+						</div>
+				</section>
+			</section>
+			<!-- manコマンドの説明 -->
+			<section>
+				<h3 id="man_cmd">1.2.3 オンライン・マニュアルを表示（manコマンド）</h3>
+				<p>manコマンドはオンライン・マニュアルを表示します。</p>
+				<section>
+					<h4>一般形式</h4>
+					<p>引数でオンライン・マニュアルを表示したいコマンド名を指定します。</p>
+					<div class="form-exp">
+						$ man コマンド名
+					</div>
+				</section>
+				<section>
+					<h4>実行例</h4>
+					<p>dateコマンドのオンライン・マニュアルを表示します。</p>
+					<div class="exe-samp">
+<pre><samp>$ <kbd>man date</kbd>
+（以降にマニュアル内容が表示されます）
+</samp></pre>
+					</div>
+					<p>マニュアル内容を１ページ分表示して止まります。次のページを表示するには、１ページスクロールとして半角スペースを入力します。１行スクロールはEnter、終了したい場合はqを入力します。</p>
+				</section>
+				<aside>
+					<h3>補足</h3>
+					<p>次のサイトで日本語マニュアルを検索して表示できます。Webブラウザに表示しますので、読みやすいのでお薦めです。ただし、すべてのコマンドをサポートしているわけではありませんので、検索できなかった場合はmanコマンドを使うことになります。</p>
+					<ul class="link-list">
+						<li><a href="http://linuxjm.osdn.jp/">JM Project (Japanese)</a></li>
+					</ul>
+				</aside>
+			</section>
+			<!-- unameコマンドの説明 -->
+			<section>
+				<h3 id="uname_cmd">1.2.4 システムの各種情報を表示（unameコマンド）</h3>
+				<p>unameコマンドはシステムの各種情報を表示します。</p>
+				<section>
+					<h4>一般形式</h4>
+					<p>引数を指定しない場合はOSの名称を表示します。</p>
+					<div class="form-exp">
+						$ uname -m -n -r -s -a
+					</div>
+					<p>-mnrsaは表示する情報の種類を指定します。なお、表1-3のオプションの説明には--が２つの形式のオプションも紹介しています。</p>
+					<table class="simple-table">
+						<caption>【表1-3】unameコマンド・オプション</caption>
+						<tr><th>オプション</th><th>意味</th></tr>
+						<tr><td>-m, --machine</td><td>マシンタイプを表示します。</td></tr>
+						<tr><td>-n, --nodename</td><td>ホスト名を表示します。</td></tr>
+						<tr><td>-r, --kernel-release</td><td>OS（カーネル）のリリース番号を表示します。</td></tr>
+						<tr><td>-s, --kernel-name</td><td>OSの名称を表示します。</td></tr>
+						<tr><td>-a, --all</td><td>全ての情報を表示します。</td></tr>
+					</table>
+				</section>
+				<section>
+					<h4>実行例</h4>
+					<p>カーネルのリリース番号を表示します。</p>
+					<div class="exe-samp">
+<pre><samp>$ <kbd>uname -r</kbd>
+3.6.7-4.fc16.x86_64
+$
+$ <kbd>uname --kernel-release</kbd><strong> ← -rオプションと意味的には同じです</strong>
+3.6.7-4.fc16.x86_64
+</samp></pre>
+					</div>
+					<p>全ての情報を表示します。</p>
+					<div class="exe-samp">
+<pre><samp>$ <kbd>uname -a</kbd>
+Linux localhost.localdomain 3.6.7-4.fc16.x86_64 #1 SMP Tue Nov 20 20:33:31 UTC 2012 x86_64 x86_64 x86_64 GNU/Linux
+$
+</samp></pre>
+					</div>
+					<p>-rと-sをまとめて指定して、カーネルのリリース番号と名称を表示します。</p>
+					<div class="exe-samp">
+<pre><samp>$ <kbd>uname -rs</kbd>
+Linux 3.6.7-4.fc16.x86_64
+$
+</samp></pre>
+					</div>
+				</section>
+			</section>
+		</section>
+	</section>
+
+	<footer>
+		<nav>
+			<ul>
+				<li><a href="../../index.html">ホーム</a></li>
+				<li><a href="../cmdtop.html#lbl_index">目次</a></li>
+				<li><a href="./section1_1.html">前のページ</a></li>
+				<li><a href="../SECTION2/section2_1.html">次のページ</a></li>
+			</ul>
+		</nav>
+		<p id="footer-author">更新日：<time datetime="2017-11-30">2017年11月30日</time> Merry</p>
+	</footer>
+</div>
+</body>
+</html>

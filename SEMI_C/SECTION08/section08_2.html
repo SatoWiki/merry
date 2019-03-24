@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initialscale=1.0">
+	<meta name="robots" content="INDEX,FOLLOW">
+	<meta name="keywords" content="間接参照演算子,優先順位,ポインタの演算">
+	<meta name="description" content="ポインタによる変数および、配列の操作方法を説明します。">
+	<meta name="author" content="T.Hagiwara">
+	<link rel="stylesheet" href="../../CSS3/seminar.css" type="text/css">
+	<link rel="stylesheet" href="../../CSS3/hl_clang.css" type="text/css">
+	<link rel="prev" href="../SECTION07/section07_3.html">
+	<link rel="next" href="./section08_2.html">
+	<title>Ｃ言語プログラミング入門&nbsp;-&nbsp;データをアドレスで操作するためのポインタ（2/3）</title>
+	<style type="text/css">
+	</style>
+</head>
+<body>
+<div id="container">
+	<header>
+		<p>Linux講座にようこそ。このページは「Ｃ言語プログラミング入門&nbsp;-&nbsp;第８章．データをアドレスで操作するためのポインタ」です。</p>
+		<h1>Ｃ言語プログラミング入門</h1>
+		<nav>
+			<ul>
+				<li><a href="../../index.html">ホーム</a></li>
+				<li><a href="../c_langtop.html#lbl_index">目次</a></li>
+				<li><a href="./section08_1.html">前のページ</a></li>
+				<li><a href="./section08_3.html">次のページ</a></li>
+			</ul>
+		</nav>
+	</header>
+
+	<section class="contents">
+		<h1>8. データをアドレスで操作するためのポインタ（2/3）</h1>
+		<section>
+			<h2>8.3 ポインタによる変数の操作</h2>
+			<p>ポインタ変数を使って、指し示す先の変数の値を操作するには<strong>間接参照演算子</strong>（*）を使用します。間接参照演算子はポインタ変数の前に指定します。間接参照演算子の*はポインタ変数を宣言するときに指定する*とは（使う記号は同じでも）別物ですので注意してください。</p>
+			<section>
+				<h3>8.3.1 形式</h3>
+				<div class="form-exp">
+					※ 変数の値の参照<br>
+					*ポインタ変数名;<br><br>
+
+					※ 変数への値の設定（代入）<br>
+					*ポインタ変数名 = 値;
+				</div>
+				<dl>
+					<dt>*ポインタ変数名</dt>
+						<dd>ポインタ変数の指し示す先の変数の値を示します。</dd>
+					<dt>*ポインタ変数名 = 値</dt>
+						<dd>ポインタ変数の指し示す先の変数に値を代入します。</dd>
+				</dl>
+			</section>
+			<section>
+				<h3>8.3.2 例題</h3>
+				<p>この例題はポインタ変数を使う必然性はないのですが、ポインタ変数の使い方を説明するために使っています。</p>
+				<div class="source-code">
+					<div class="c"><ol><li class="li1"><div class="de1"><span class="co2">#include &lt;stdio.h&gt;</span></div></li>
+					<li class="li1"><div class="de1"><span class="kw4">int</span> main<span class="br0">&#40;</span><span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">short</span> &nbsp; number<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">int</span> &nbsp; &nbsp; age<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">float</span> &nbsp; weight<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">float</span> &nbsp; height<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">double</span> &nbsp;bmi<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">char</span> &nbsp; &nbsp;blood_type<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="coMULTI">/* ポインタ変数の宣言 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">short</span> &nbsp; <span class="sy0">*</span>p_number<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">int</span> &nbsp; &nbsp; <span class="sy0">*</span>p_age<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">float</span> &nbsp; <span class="sy0">*</span>p_weight<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">float</span> &nbsp; <span class="sy0">*</span>p_height<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">double</span> &nbsp;<span class="sy0">*</span>p_bmi<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">char</span> &nbsp; &nbsp;<span class="sy0">*</span>p_blood_type<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="coMULTI">/* ポインタ変数へのアドレスの設定 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; p_number <span class="sy0">=</span> <span class="sy0">&amp;</span>number<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; p_age <span class="sy0">=</span> <span class="sy0">&amp;</span>age<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; p_weight <span class="sy0">=</span> <span class="sy0">&amp;</span>weight<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; p_height <span class="sy0">=</span> <span class="sy0">&amp;</span>height<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; p_bmi <span class="sy0">=</span> <span class="sy0">&amp;</span>bmi<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; p_blood_type <span class="sy0">=</span> <span class="sy0">&amp;</span>blood_type<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="coMULTI">/* ポインタ変数を使って変数へ値の代入 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="sy0">*</span>p_number <span class="sy0">=</span> <span class="nu0">1</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="sy0">*</span>p_age <span class="sy0">=</span> <span class="nu0">20</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="sy0">*</span>p_weight <span class="sy0">=</span> <span class="nu16">65.5</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="sy0">*</span>p_height <span class="sy0">=</span> <span class="nu16">1.735</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="sy0">*</span>p_blood_type <span class="sy0">=</span> <span class="st0">'A'</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="coMULTI">/* 肥満度(BMI) = 体重(kg) / 身長(m) / 身長(m) */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="sy0">*</span>p_bmi <span class="sy0">=</span> <span class="sy0">*</span>p_weight <span class="sy0">/</span> <span class="sy0">*</span>p_height <span class="sy0">/</span> <span class="sy0">*</span>p_height<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="coMULTI">/* 結果の表示 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;・番号：%d<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> <span class="sy0">*</span>p_number<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;・年齢：%d<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> <span class="sy0">*</span>p_age<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;・血液型：%c<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> <span class="sy0">*</span>p_blood_type<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;・肥満度：%.3f<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> <span class="sy0">*</span>p_bmi<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">return</span> <span class="nu0">0</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#125;</span></div></li>
+					</ol></div>
+				</div>
+				<div class="exe-samp">
+<pre><samp>$ <kbd>./ex08_2.prg</kbd>
+・番号：1
+・年齢：20
+・血液型：A
+・肥満度：21.759
+$</samp></pre>
+				</div>
+				<dl>
+					<dt>28〜32行目</dt>
+						<dd>ポインタ変数を使って変数に値を代入します。</dd>
+					<dt>35行目</dt>
+						<dd>ポインタ変数を使って肥満度の計算を行います。</dd>
+					<dt>38〜41行目</dt>
+						<dd>ポインタ変数を使って結果を表示します。</dd>
+				</dl>
+				<aside>
+					<h4>補足</h4>
+					<p>38〜41行目は次のように書いても同じです。</p>
+					<div class="source-code">
+<pre>38.    printf("・番号：%d\n", number);
+39.    printf("・年齢：%d\n", age);
+40.    printf("・血液型：%c\n", blood_type);
+41.    printf("・肥満度：%.3f\n", bmi);</pre>
+					</div>
+				</aside>
+			</section>
+		</section>
+
+		<section>
+			<h2 id="lbl_array">8.4 ポインタによる配列の操作</h2>
+			<figure class="left-box myphoto">
+				<dl>
+					<dt><img src="../IMAGES/sec08_2.jpg" alt="ポインタによる配列の操作"></dt>
+					<dd>【図８-２】ポインタによる配列の操作</dd>
+				</dl>
+			</figure>
+			<p>配列の各要素の値を操作するには、配列名に添字（各要素を識別するための０から始まる番号）を指定することになります。例えば、図8-2の配列bの場合、先頭要素はb[0]、次の要素はb[1]のように指定することにより操作ができます。</p>
+			<p>これと同じことをポインタ変数を使って行うことができます。ポインタ変数を使う場合、まず、ポインタ変数に配列の先頭アドレスを設定する必要があります。図8-2の場合は次の操作により、ポインタ変数pに配列bの先頭アドレスを設定できます。</p>
+			<p><code>p = b;</code></p>
+			<p>次の要素（添字では１）の先頭アドレスは、この値に１を加算することにより得ることができます。さらに、次の要素（添字では２）の先頭アドレスは２を加算することにより得ることができます。このように、<strong>ポインタの演算</strong>により、各要素の先頭アドレスを得ることができます。図8-2の場合は次の演算になります。</p>
+			<p><code>p;</code>または<code>p + 0;</code>、<code>p + 1;</code>、<code>p + 2;</code>、<code>p + 3;</code></p>
+			<p>配列要素の大きさは型名により異なります。コンパイラの種類にもよりますが、一般的にint型は４バイト、double型は８バイトとなります。このため、ポインタの演算で次の要素の先頭アドレスを求める場合、int型の配列では<code>p + 4;</code>、double型の配列では<code>p + 8;</code>と思われるかもしれませんが、Ｃ言語の場合は型名に関係なく、次の要素の先頭アドレスは<code>p + 1;</code>で求めることができます。これはコンパイラが各型名の大きさを認識していますので、わざわざ人間が配慮しなくてもよいようになっているからです。</p>
+			<p>先頭アドレスを取得できれば、間接参照演算子（*）を使って各要素の操作（参照・更新）ができます。図8-2の場合は次の様になりますが、括弧を使ってポインタの演算の方の優先順位を上げなくてはいけませんので注意してください。</p>
+			<p><code>*p;</code>または<code>*(p + 0);</code>、<code>*(p + 1);</code>、<code>*(p + 2);</code>、<code>*(p + 3);</code></p>
+			<p>演算子には優先順位がありますが、間接参照演算子（*）と加算演算子（+）を比べた場合、間接参照演算子のほうが優先順位が高くなっています。従って、<code>*p + 1;</code>の場合、ポインタ変数pの指し示す<strong>配列要素の値に１を加算</strong>することになります。一方、<code>p + 1</code>を括弧で括って優先順位をあげて<code>*(p + 1);</code>にすると、ポインタ変数pの指し示す<strong>配列要素の次の要素の値を参照</strong>することになります。</p>
+			<section>
+				<h3>8.4.1 形式</h3>
+				<p>ポインタの演算は+と-の演算子を使って、加算と減算ができます。（乗算と除算はできません）</p>
+				<p>配列名は配列の先頭アドレスを値として持つ定数と考えられますので、配列名をポインタ変数のように取り扱うことができます。ただし、定数ですので値の変更はできません。例えば、「配列名 + 1;」はできますが「配列名 = 配列名 + 1;」はできません。</p>
+				<p>一方、ポインタ変数は変数ですので値の変更ができますので、「ポインタ変数名 = ポインタ変数名 + 1」は可能です。</p>
+				<div class="form-exp">
+					※ ポインタの演算<br>
+					ポインタ変数名 + n;<br>
+					ポインタ変数名 - n;<br>
+					配列名 + n;<br><br>
+
+					※ 配列要素の参照<br>
+					*(ポインタ変数名 + n);<br>
+					*(ポインタ変数名 - n);<br>
+					*(配列名 + n);<br>
+					*++ポインタ変数名;<br>
+					*--ポインタ変数名;<br>
+				</div>
+				<dl>
+					<dt>ポインタ変数名 + n;</dt>
+						<dd>ポインタ変数の指し示す先の配列要素のn個<strong>先</strong>の要素の先頭アドレスです。</dd>
+					<dt>ポインタ変数名 - n;</dt>
+						<dd>ポインタ変数の指し示す先の配列要素のn個<strong>前</strong>の要素の先頭アドレスです。</dd>
+					<dt>配列名 + n;</dt>
+						<dd>配列のn番目の要素の先頭アドレスです。</dd>
+					<dt>*(ポインタ変数名 + n);</dt>
+						<dd>ポインタ変数の指し示す先の配列要素のn個<strong>先の要素の値</strong>です。</dd>
+					<dt>*(ポインタ変数名 - n);</dt>
+						<dd>ポインタ変数の指し示す先の配列要素のn個<strong>前の要素の値</strong>です。</dd>
+					<dt>*++ポインタ変数名</dt>
+						<dd>ポインタ変数の指し示す先の配列要素の<strong>次の要素の値</strong>です。ポインタ変数の値も次の要素の先頭アドレスになります。</dd>
+					<dt>*--ポインタ変数名</dt>
+						<dd>ポインタ変数の指し示す先の配列要素の<strong>前の要素の値</strong>です。ポインタ変数の値も前の要素の先頭アドレスになります。</dd>
+				</dl>
+			</section>
+			<section>
+				<h3>8.4.2 例題</h3>
+				<section>
+					<h4>例題１</h4>
+					<p>この例題は配列の説明のときに使った文字列の文字数をカウントするもの（<a href="../SECTION07/section07_2.html#lbl_ex07_3">ex07_3</a>）をポインタを使って書き換えたものです。ここでは配列名を使っています。</p>
+					<div class="source-code">
+						<div class="c"><ol><li class="li1"><div class="de1"><span class="co2">#include &lt;stdio.h&gt;</span></div></li>
+						<li class="li1"><div class="de1"><span class="kw4">int</span> main<span class="br0">&#40;</span><span class="br0">&#41;</span></div></li>
+						<li class="li1"><div class="de1"><span class="br0">&#123;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">char</span> &nbsp; &nbsp;mojiretu<span class="br0">&#91;</span><span class="nu0">11</span><span class="br0">&#93;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">int</span> &nbsp; &nbsp; counter<span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp;</div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="coMULTI">/* 文字列の入力 */</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;10文字以下の半角文字列を入力してください ==&gt; &quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">scanf</span><span class="br0">&#40;</span><span class="st0">&quot;%s&quot;</span><span class="sy0">,</span> mojiretu<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp;</div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">for</span><span class="br0">&#40;</span>counter <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">;</span> <span class="sy0">*</span><span class="br0">&#40;</span>mojiretu <span class="sy0">+</span> counter<span class="br0">&#41;</span> <span class="sy0">!=</span> <span class="st0">'<span class="es5">\0</span>'</span><span class="sy0">;</span> <span class="sy0">++</span>counter<span class="br0">&#41;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp;</div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="coMULTI">/* 入力文字数の出力 */</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;「%s」の文字数は%dです<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> mojiretu<span class="sy0">,</span> counter<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp;</div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">return</span> <span class="nu0">0</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1"><span class="br0">&#125;</span></div></li>
+						</ol></div>
+					</div>
+					<div class="exe-samp">
+<pre><samp>$ <kbd>./ex08_3.prg</kbd>
+10文字以下の半角文字列を入力してください ==&gt; <kbd>Hello</kbd>
+「Hello」の文字数は5です
+$</samp></pre>
+					</div>
+					<dl>
+						<dt>11行目</dt>
+							<dd>前処理でint型変数counterに０を設定し、繰り返しの条件判定で配列mojiretuのcounter番目の要素の値がヌル文字かどうかをチェックします。後処理でcounterの値を更新します。</dd>
+					</dl>
+				</section>
+				<section>
+					<h4>例題２</h4>
+					<p>上記例題と機能は同じですがポインタの演算を使っています。</p>
+					<div class="source-code">
+						<div class="c"><ol><li class="li1"><div class="de1"><span class="co2">#include &lt;stdio.h&gt;</span></div></li>
+						<li class="li1"><div class="de1"><span class="kw4">int</span> main<span class="br0">&#40;</span><span class="br0">&#41;</span></div></li>
+						<li class="li1"><div class="de1"><span class="br0">&#123;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">char</span> &nbsp; &nbsp;mojiretu<span class="br0">&#91;</span><span class="nu0">11</span><span class="br0">&#93;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">int</span> &nbsp; &nbsp; counter<span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">char</span> &nbsp; &nbsp;<span class="sy0">*</span>p_mojiretu<span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp;</div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="coMULTI">/* 文字列の入力 */</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;10文字以下の半角文字列を入力してください ==&gt; &quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">scanf</span><span class="br0">&#40;</span><span class="st0">&quot;%s&quot;</span><span class="sy0">,</span> mojiretu<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp;</div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; counter <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">for</span><span class="br0">&#40;</span>p_mojiretu <span class="sy0">=</span> mojiretu<span class="sy0">;</span> <span class="sy0">*</span>p_mojiretu <span class="sy0">!=</span> <span class="st0">'<span class="es5">\0</span>'</span><span class="sy0">;</span> <span class="sy0">++</span>p_mojiretu<span class="br0">&#41;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="sy0">++</span>counter<span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp;</div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="coMULTI">/* 入力文字数の出力 */</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;「%s」の文字数は%dです<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> mojiretu<span class="sy0">,</span> counter<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp;</div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">return</span> <span class="nu0">0</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1"><span class="br0">&#125;</span></div></li>
+						</ol></div>
+					</div>
+					<dl>
+						<dt>6行目</dt>
+							<dd>配列mojiretu用のポインタ変数p_mojiretuの宣言です。配列mojiretuの型名はchar型ですので、このポインタ変数の型名もchar型になります。</dd>
+						<dt>13行目</dt>
+							<dd>前処理でポインタ変数p_mojiretuに配列mojiretuの先頭アドレスを設定し、繰り返しの条件判定でポインタ変数p_mojiretuが指し示す配列要素の値がヌル文字かどうかをチェックします。後処理でポインタ変数p_mojiretuの値を次の配列要素の先頭アドレスに更新します。なお、「<code>*p_mojiretu != '\0'</code>」は「<code>*p_mojiretu</code>」としても同じです。（Ｃ言語の場合、式の値が０は論理値として偽となり、０以外は真となります） </dd>
+					</dl>
+				</section>
+			</section>
+		</section>
+	</section>
+
+	<footer>
+		<nav>
+			<ul>
+				<li><a href="../../index.html">ホーム</a></li>
+				<li><a href="../c_langtop.html#lbl_index">目次</a></li>
+				<li><a href="./section08_1.html">前のページ</a></li>
+				<li><a href="./section08_3.html">次のページ</a></li>
+			</ul>
+		</nav>
+		<p id="footer-author">更新日：<time datetime="2018-12-09">2018年12月09日</time> Merry</p>
+	</footer>
+</div>
+</body>
+</html>

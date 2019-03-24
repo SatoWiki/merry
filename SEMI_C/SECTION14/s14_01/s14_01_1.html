@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initialscale=1.0">
+	<meta name="robots" content="INDEX,FOLLOW">
+	<meta name="keywords" content="入出力ライブラリ,関数,オープン,クローズ,入出力,ファイルポインタ,FILE,stdio.h,stdin,stdout,stderr,標準入出力">
+	<meta name="description" content="入出力ライブラリの使い方を説明します。">
+	<meta name="author" content="T.Hagiwara">
+	<link rel="stylesheet" href="../../../CSS3/seminar.css" type="text/css">
+	<link rel="prev" href="../section14_1.html">
+	<link rel="next" href="./s14_01_2.html">
+	<title>Ｃ言語プログラミング入門&nbsp;-&nbsp;ライブラリ関数&nbsp;-&nbsp;入出力ライブラリ（1/10）-</title>
+	<style type="text/css">
+	</style>
+</head>
+<body>
+<div id="container">
+	<header>
+		<p>Linux講座にようこそ。このページは「Ｃ言語プログラミング入門&nbsp;-&nbsp;第14章．ライブラリ関数&nbsp;-&nbsp;入出力ライブラリ」です。</p>
+		<h1>Ｃ言語プログラミング入門</h1>
+		<nav>
+			<ul>
+				<li><a href="../../../index.html">ホーム</a></li>
+				<li><a href="../../c_langtop.html#lbl_index">目次</a></li>
+				<li><a href="../section14_1.html">前のページ</a></li>
+				<li><a href="./s14_01_2.html">次のページ</a></li>
+			</ul>
+		</nav>
+	</header>
+
+	<section class="contents">
+		<h1 id="lbl_in-out">14. ライブラリ関数（2/36）&nbsp;-&nbsp;入出力ライブラリ（1/10）</h1>
+		<p>Ｃ言語ではファイルの入出力のための文はありませんので、入出力はライブラリ関数を使用します。通常、ファイルを取り扱う場合は、次の手順で操作します。</p>
+		<div class="form-exp">
+			ファイルのオープン<strong> ← ファイルポインタと呼ぶファイル操作のためのデータを取得します</strong><br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;↓<br>
+			入力または出力<strong> ← ファイルポインタを使って、入出力を行います</strong><br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;↓<br>
+			ファイルのクローズ<strong> ← ファイルポインタを開放します</strong>
+		</div>
+		<p><strong>ファイルポインタ</strong>はファイルを操作するのに必要なデータを、一括して管理する構造体変数のポインタです。この構造体はtypedefにより、ヘッダーファイルのstdio.h中で<strong>FILE</strong>という型名で宣言されています。（stdio.h中で取り込んでいるヘッダファイルで宣言している場合もあります）従って、ファイルポインタの宣言は次のように行ないます。</p>
+		<div class="form-exp">
+			FILE&nbsp;&nbsp;&nbsp;&nbsp;*fp;<strong> ← fpという名前のファイルポインタを宣言します</strong>
+		</div>
+		<p>なお、標準入出力の場合は、予め次の名前のファイルポインタが用意されており、これらを使って入出力が可能です。なお、これらを使う場合は、オープンとクローズは不要です。</p>
+		<dl id="lbl_stdio">
+			<dt>stdin</dt>
+				<dd>標準入力用のファイルポインタです。</dd>
+			<dt>stdout</dt>
+				<dd>標準出力用のファイルポインタです。</dd>
+			<dt>stderr</dt>
+				<dd>標準エラー出力用のファイルポインタです。</dd>
+		</dl>
+		<p>ここで説明する関数は次の通りです。なお、ヘッダファイルとしては<strong>stdio.h</strong>が必要です。</p>
+		<table class="simple-table">
+			<caption>【表14-1-1】 入出力ライブラリ関数一覧</caption>
+			<tr><th>区分</th><th>関数名</th><th>機能概要</th></tr>
+			<tr><td rowspan="4"><a href="./s14_01_2.html">ファイル操作</a></td><td><a href="./s14_01_2.html#lbl_fopen">fopen()</a></td><td>ファイルをオープンします。返り値としてファイルポインタが返ります。</td></tr>
+			<tr><td><a href="./s14_01_2.html#lbl_fclose">fclose()</a></td><td>ファイルをクローズします。</td></tr>
+			<tr><td><a href="./s14_01_2.html#lbl_fflush">fflush()</a></td><td>バッファの内容をファイルに出力します。</td></tr>
+			<tr><td><a href="./s14_01_2.html#lbl_freopen">freopen()</a></td><td>ファイルのクローズとオープンを行います。</td></tr>
+			<tr><td rowspan="4"><a href="./s14_01_3.html">文字の入力</a></td><td><a href="./s14_01_3.html#lbl_fgetc">fgetc()</a></td><td>ファイルから１文字入力します。</td></tr>
+			<tr><td><a href="./s14_01_3.html#lbl_fgetc">getc()</a></td><td>ファイルから１文字入力します。</td></tr>
+			<tr><td><a href="./s14_01_3.html#lbl_getchar">getchar()</a></td><td>標準入力から１文字入力します。</td></tr>
+			<tr><td><a href="./s14_01_3.html#lbl_ungetc">ungetc()</a></td><td>入力ストリームに１文字戻します。</td></tr>
+			<tr><td rowspan="3"><a href="./s14_01_3.html#lbl_charputfunc">文字の出力</a></td><td><a href="./s14_01_3.html#lbl_fputc">fputc()</a></td><td>ファイルに１文字出力します。</td></tr>
+			<tr><td><a href="./s14_01_3.html#lbl_fputc">putc()</a></td><td>ファイルに１文字出力します。</td></tr>
+			<tr><td><a href="./s14_01_3.html#lbl_putchar">putchar()</a></td><td>標準出力に１文字出力します。</td></tr>
+			<tr><td rowspan="2"><a href="./s14_01_3.html#lbl_lineinputfunc">行の入力</a></td><td><a href="./s14_01_3.html#lbl_fgets">fgets()</a></td><td>ファイルから行単位に入力します。</td></tr>
+			<tr><td><a href="./s14_01_3.html#lbl_gets">gets()</a></td><td>標準入力から行単位に入力します。</td></tr>
+			<tr><td rowspan="2"><a href="./s14_01_3.html#lbl_lineoutputfunc">行の出力</a></td><td><a href="./s14_01_3.html#lbl_fputs">fputs()</a></td><td>ファイルに行単位に出力します。</td></tr>
+			<tr><td><a href="./s14_01_3.html#lbl_puts">puts()</a></td><td>標準出力に行単位に出力します。</td></tr>
+			<tr><td rowspan="3"><a href="./s14_01_4.html">書式入力</a></td><td><a href="./s14_01_4.html#lbl_fscanf">fscanf()</a></td><td>ファイルから書式制御文字列に従い型変換して入力します。</td></tr>
+			<tr><td><a href="./s14_01_4.html#lbl_scanf">scanf()</a></td><td>標準入力から書式制御文字列に従い型変換して入力します。</td></tr>
+			<tr><td><a href="./s14_01_4.html#lbl_sscanf">sscanf()</a></td><td>文字列を書式制御文字列に従い型変換して、引数に指定した変数に設定します。</td></tr>
+			<tr><td rowspan="3"><a href="./s14_01_5.html">書式出力</a></td><td><a href="./s14_01_5.html#lbl_fprintf">fprintf()</a></td><td>ファイルに書式制御文字列に従い編集した文字列を出力します。</td></tr>
+			<tr><td><a href="./s14_01_5.html#lbl_printf">printf()</a></td><td>標準出力に書式制御文字列に従い編集した文字列を出力します。</td></tr>
+			<tr><td><a href="./s14_01_5.html#lbl_sprintf">sprintf()</a></td><td>書式制御文字列に従い編集した文字列を、引数に指定したchar型の配列（文字列）に設定します。</td></tr>
+			<tr><td rowspan="3"><a href="./s14_01_6.html">ファイルの終端<br>および、エラーの検出</a></td><td><a href="./s14_01_6.html#lbl_feof">feof()</a></td><td>ファイルのEOF（end of file）の状態を調べます。</td></tr>
+			<tr><td><a href="./s14_01_6.html#lbl_ferror">ferror()</a></td><td>ファイルのエラー状態を調べます。</td></tr>
+			<tr><td><a href="./s14_01_6.html#lbl_clearerr">clearerr()</a></td><td>ファイルのEOFとエラー状態をクリアします。</td></tr>
+			<tr><td rowspan="2"><a href="./s14_01_6.html#lbl_binio">バイナリファイルの入出力</a></td><td><a href="./s14_01_6.html#lbl_fread">fread()</a></td><td>ファイルからレコード単位に入力します。</td></tr>
+			<tr><td><a href="./s14_01_6.html#lbl_fwrite">fwrite()</a></td><td>ファイルにレコード単位に出力します。</td></tr>
+			<tr><td rowspan="5"><a href="./s14_01_7.html">ファイル内の位置操作</a></td><td><a href="./s14_01_7.html#lbl_fseek">fseek()</a></td><td>ファイルの入出力位置を設定します。</td></tr>
+			<tr><td><a href="./s14_01_7.html#lbl_ftell">ftell()</a></td><td>現在の入出力位置を取得します。</td></tr>
+			<tr><td><a href="./s14_01_7.html#lbl_rewind">rewind()</a></td><td>入出力位置をファイルの先頭に設定します。</td></tr>
+			<tr><td><a href="./s14_01_7.html#lbl_fgetpos">fgetpos()</a></td><td>現在の入出力位置を取得します。</td></tr>
+			<tr><td><a href="./s14_01_7.html#lbl_fsetpos">fsetpos()</a></td><td>入出力位置を設定します。</td></tr>
+			<tr><td rowspan="2"><a href="./s14_01_8.html">バッファ操作</a></td><td><a href="./s14_01_8.html#lbl_setvbuf">setvbuf()</a></td><td>バッファリング・モードとバッファ領域を設定します。</td></tr>
+			<tr><td><a href="./s14_01_8.html#lbl_setbuf">setbuf()</a></td><td>バッファ領域を設定します。</td></tr>
+			<tr><td rowspan="3"><a href="./s14_01_9.html">書式出力<br>（可変個引数）</a></td><td><a href="./s14_01_9.html#lbl_vfprintf">vfprintf()</a></td><td>ファイルに書式制御文字列に従い編集した文字列を出力します。</td></tr>
+			<tr><td><a href="./s14_01_9.html#lbl_vprintf">vprintf()</a></td><td>標準出力に書式制御文字列に従い編集した文字列を出力します。</td></tr>
+			<tr><td><a href="./s14_01_9.html#lbl_vsprintf">vsprintf()</a></td><td>書式制御文字列に従い編集した文字列を、引数に指定したchar型の配列（文字列）に設定します。</td></tr>
+			<tr><td rowspan="2"><a href="./s14_01_A.html">ファイル削除<br>および、名称変更</a></td><td><a href="./s14_01_A.html#lbl_remove">remove()</a></td><td>ファイルやフォルダを削除します。</td></tr>
+			<tr><td><a href="./s14_01_A.html#lbl_rename">rename()</a></td><td>ファイルやフォルダの名称（パス名）を変更します。</td></tr>
+			<tr><td rowspan="2"><a href="./s14_01_A.html#lbl_tmp">一時ファイルの操作</a></td><td><a href="./s14_01_A.html#lbl_tmpfile">tmpfile()</a></td><td>ユニークな名称（パス名）の一時ファイルを作成します。</td></tr>
+			<tr><td><a href="./s14_01_A.html#lbl_tmpnam">tmpnam()</a></td><td>一時ファイルの名前（パス名）を生成します。</td></tr>
+		</table>
+	</section>
+
+	<footer>
+		<nav>
+			<ul>
+				<li><a href="../../../index.html">ホーム</a></li>
+				<li><a href="../../c_langtop.html#lbl_index">目次</a></li>
+				<li><a href="../section14_1.html">前のページ</a></li>
+				<li><a href="./s14_01_2.html">次のページ</a></li>
+			</ul>
+		</nav>
+		<p id="footer-author">更新日：<time datetime="2018-12-19">2018年12月19日</time> Merry</p>
+	</footer>
+</div>
+</body>
+</html>

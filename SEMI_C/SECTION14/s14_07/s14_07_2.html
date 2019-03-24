@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initialscale=1.0">
+	<meta name="robots" content="INDEX,FOLLOW">
+	<meta name="keywords" content="一般ユーティリティライブラリ,関数,abort,exit,atexit,プロセス,return,EXIT_SUCCESS,EXIT_FAILURE">
+	<meta name="description" content="abort関数、exit関数、atexit関数の使用法を説明します。">
+	<meta name="author" content="T.Hagiwara">
+	<link rel="stylesheet" href="../../../CSS3/seminar.css" type="text/css">
+	<link rel="stylesheet" href="../../../CSS3/hl_clang.css" type="text/css">
+	<link rel="prev" href="./s14_07_1.html">
+	<link rel="next" href="./s14_07_3.html">
+	<title>Ｃ言語プログラミング入門&nbsp;-&nbsp;ライブラリ関数&nbsp;-&nbsp;ユーティリティライブラリ（2/5）-</title>
+	<style type="text/css">
+	</style>
+</head>
+<body>
+<div id="container">
+	<header>
+		<p>Linux講座にようこそ。このページは「Ｃ言語プログラミング入門&nbsp;-&nbsp;第14章．ライブラリ関数&nbsp;-&nbsp;一般ユーティリティライブラリ」です。</p>
+		<h1>Ｃ言語プログラミング入門</h1>
+		<nav>
+			<ul>
+				<li><a href="../../../index.html">ホーム</a></li>
+				<li><a href="../../c_langtop.html#lbl_index">目次</a></li>
+				<li><a href="./s14_07_1.html">前のページ</a></li>
+				<li><a href="./s14_07_3.html">次のページ</a></li>
+			</ul>
+		</nav>
+	</header>
+
+	<section class="contents">
+		<h1>14. ライブラリ関数（29/36）&nbsp;-&nbsp;ユーティリティライブラリ（2/5）</h1>
+		<section>
+			<h2 id="lbl_proc">14.41 プロセスの終了関数</h2>
+			<section>
+				<h3 id="lbl_abort">14.41.1 abort関数</h3>
+				<p>abort関数はプロセスを異常終了します。ファイルのオープンが出来なかったような場合で、プロセスの実行を緊急に終了させたいような場合に使うと良いでしょう。</p>
+				<table>
+					<caption>【表14-7-2】 abort関数</caption>
+					<tr><th>形式</th><td>#include &lt;stdlib.h&gt;<br>
+										void abort(void);</td></tr>
+					<tr><th>返り値</th><td>ありません。</td></tr>
+					<tr><th>引数</th>
+						<td>ありません。</td></tr>
+				</table>
+			</section>
+			<section>
+				<h3 id="lbl_exit">14.41.2 exit関数</h3>
+				<p>exit関数はプロセスを正常終了します。main関数の場合はreturn文で帰るのと同じです。</p>
+				<p>exit関数の引数用にEXIT_SUCCESS（正常終了）とEXIT_FAILURE（異常終了）の２つの定数が用意されています。移植性を考慮しなければならないような場合は使用すると良いでしょう。（return文の引数として使うことも出来ます）</p>
+				<table>
+					<caption>【表14-7-3】 exit関数</caption>
+					<tr><th>形式</th><td>#include &lt;stdlib.h&gt;<br>
+										void exit(int status);</td></tr>
+					<tr><th>返り値</th><td>ありません。</td></tr>
+					<tr><th>引数</th>
+						<td>
+							<dl>
+								<dt>int status</dt>
+									<dd>親プロセスへ返す値を指定します。指定できる値は0〜255までの値です。</dd>
+							</dl>
+						</td></tr>
+				</table>
+				<aside>
+					<h4>補足</h4>
+					<p>exit関数は次のような処理を行い、プロセスを終了します。</p>
+					<ol>
+						<li>オープン中のストリームを全てフラッシュしてクローズします。</li>
+						<li>tmpfile関数で作成した一時的なファイルを全て削除します。 </li>
+						<li>atexit関数で登録した関数を順番に呼び出して実行します。</li>
+						<li>引数で指定した値を0377でANDをとり（<code>status &amp; 0377</code>）、親プロセスへ返り値として返します。</li>
+					</ol>
+					<p>abort関数の場合はSIGABRTシグナル・ハンドラーが登録されていればそれを実行して、オープン中のストリームを全てフラッシュしてクローズします。（処理系により異なります）</p>
+				</aside>
+			</section>
+			<section>
+				<h3 id="lbl_atexit">14.41.3 atexit関数</h3>
+				<p>atexit関数はプロセスが正常終了した場合に実行する関数を登録します。登録した関数はmain関数からreturn文で帰る場合や、exit関数が実行された場合に呼び出され実行します。</p>
+				<p>atexit関数を複数回実行して複数の関数を登録することも出来ますし、同じ関数を複数回登録することもできます。なお、複数登録した場合は登録した順番とは逆の順番で呼び出されます。</p>
+				<table>
+					<caption>【表14-7-4】 atexit関数</caption>
+					<tr><th>形式</th><td>#include &lt;stdlib.h&gt;<br>
+										int atexit(void (*function)(void));</td></tr>
+					<tr><th>返り値</th><td>関数登録が成功した場合は０を返します。エラーの場合は０以外を返します。</td></tr>
+					<tr><th>引数</th>
+						<td>
+							<dl>
+								<dt>void (*function)(void)</dt>
+									<dd>登録する関数を指定します。登録した関数に引数は指定できません。</dd>
+							</dl>
+						</td></tr>
+				</table>
+			</section>
+			<section>
+				<h3>14.41.4 例題</h3>
+				<p>実行時引数で指定したファイルの内容を標準出力に出力します。ファイルのオープンやクローズが出来なかった場合はabort関数で異常終了します。</p>
+				<div class="source-code">	<!-- ex14_7_1.c -->
+					<div class="c"><ol><li class="li1"><div class="de1"><span class="co2">#include &lt;stdio.h&gt;</span></div></li>
+					<li class="li1"><div class="de1"><span class="co2">#include &lt;stdlib.h&gt;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1"><span class="kw4">int</span> main<span class="br0">&#40;</span><span class="kw4">int</span> argc<span class="sy0">,</span> <span class="kw4">char</span> <span class="sy0">**</span>argv<span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; FILE &nbsp; &nbsp;<span class="sy0">*</span>fp<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">int</span> &nbsp; &nbsp; one_char<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">if</span><span class="br0">&#40;</span>argc <span class="sy0">==</span> <span class="nu0">2</span><span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">if</span><span class="br0">&#40;</span><span class="br0">&#40;</span>fp <span class="sy0">=</span> <span class="kw3">fopen</span><span class="br0">&#40;</span><span class="sy0">*</span><span class="br0">&#40;</span>argv <span class="sy0">+</span> <span class="nu0">1</span><span class="br0">&#41;</span><span class="sy0">,</span> <span class="st0">&quot;r&quot;</span><span class="br0">&#41;</span><span class="br0">&#41;</span> <span class="sy0">!=</span> NULL<span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* オープン成功。ファイルから１文字ずつ入力 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">while</span><span class="br0">&#40;</span><span class="br0">&#40;</span>one_char <span class="sy0">=</span> <span class="kw3">fgetc</span><span class="br0">&#40;</span>fp<span class="br0">&#41;</span><span class="br0">&#41;</span> <span class="sy0">!=</span> EOF<span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;%c&quot;</span><span class="sy0">,</span> <span class="br0">&#40;</span><span class="kw4">char</span><span class="br0">&#41;</span>one_char<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">if</span><span class="br0">&#40;</span><span class="kw3">fclose</span><span class="br0">&#40;</span>fp<span class="br0">&#41;</span> <span class="sy0">!=</span> <span class="nu0">0</span><span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* クローズ失敗 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">abort</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">else</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* オープン失敗 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">abort</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">else</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;実行時引数が不当です。<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">exit</span><span class="br0">&#40;</span>EXIT_FAILURE<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">return</span> EXIT_SUCCESS<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#125;</span></div></li>
+					</ol></div>
+				</div>
+				<div class="exe-samp">
+<pre><samp>$ <kbd>./ex14_7_1.prg /etc/issue</kbd>
+Fedora release 10 (Cambridge)
+Kernel \r on an \m (\l)
+
+$ <kbd>echo $?</kbd><strong> ← 直前に実行したプログラムの返り値を表示します</strong>
+0
+$
+$ <kbd>./ex14_7_1.prg /etc/issue_1</kbd>
+アボートしました <strong>← abort関数で出力したメッセージですが処理系により変わります</strong>
+$ <kbd>echo $?</kbd>
+134
+$
+$ <kbd>./ex14_7_1.prg /etc/issue /etc/issue_1</kbd>
+実行時引数が不当です。
+$ <kbd>echo $?</kbd>
+1
+$</samp></pre>
+				</div>
+				<dl>
+					<dt>2行目</dt>
+						<dd>プロセスの終了関数を使いますのでstdlib.hを取り込みます。</dd>
+					<dt>22行目</dt>
+						<dd>ファイルのクローズが出来なかったためabort関数で異常終了します。</dd>
+					<dt>28行目</dt>
+						<dd>ファイルのオープンが出来なかったためabort関数で異常終了します。</dd>
+					<dt>34行目</dt>
+						<dd>実行時引数が不当なため引数にEXIT_FAILUREを指定したexitt関数で終了します。（<code>return EXIT_FAILURE;</code>でも同じです）</dd>
+					<dt>37行目</dt>
+						<dd>返り値にEXIT_SUCCESSを指定して、return文で終了します。（<code>exit(EXIT_SUCCESS);</code>でも同じです）</dd>
+				</dl>
+			</section>
+		</section>
+	</section>
+
+	<footer>
+		<nav>
+			<ul>
+				<li><a href="../../../index.html">ホーム</a></li>
+				<li><a href="../../c_langtop.html#lbl_index">目次</a></li>
+				<li><a href="./s14_07_1.html">前のページ</a></li>
+				<li><a href="./s14_07_3.html">次のページ</a></li>
+			</ul>
+		</nav>
+		<p id="footer-author">更新日：<time datetime="2019-01-12">2019年01月12日</time> Merry</p>
+	</footer>
+</div>
+</body>
+</html>

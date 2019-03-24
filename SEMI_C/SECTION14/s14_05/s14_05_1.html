@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initialscale=1.0">
+	<meta name="robots" content="INDEX,FOLLOW">
+	<meta name="keywords" content="日付および時間ライブラリ,関数">
+	<meta name="description" content="日付および時間ライブラリをご紹介します。">
+	<meta name="author" content="T.Hagiwara">
+	<link rel="stylesheet" href="../../../CSS3/seminar.css" type="text/css">
+	<link rel="stylesheet" href="../../../CSS3/hl_clang.css" type="text/css">
+	<link rel="prev" href="../s14_04/s14_04_3.html">
+	<link rel="next" href="./s14_05_2.html">
+	<title>Ｃ言語プログラミング入門&nbsp;-&nbsp;ライブラリ関数&nbsp;-&nbsp;日付および時間ライブラリ（1/3）-</title>
+	<style type="text/css">
+	</style>
+</head>
+<body>
+<div id="container">
+	<header>
+		<p>Linux講座にようこそ。このページは「Ｃ言語プログラミング入門&nbsp;-&nbsp;第14章．ライブラリ関数&nbsp;-&nbsp;日付および時間ライブラリ」です。</p>
+		<h1>Ｃ言語プログラミング入門</h1>
+		<nav>
+			<ul>
+				<li><a href="../../../index.html">ホーム</a></li>
+				<li><a href="../../c_langtop.html#lbl_index">目次</a></li>
+				<li><a href="../s14_04/s14_04_3.html">前のページ</a></li>
+				<li><a href="./s14_05_2.html">次のページ</a></li>
+			</ul>
+		</nav>
+	</header>
+
+	<section class="contents">
+		<h1>14. ライブラリ関数（23/36）&nbsp;-&nbsp;日付および時間ライブラリ（1/3）</h1>
+		<p>日付および時間ライブラリで取り扱う基本となる日時情報には、次の２種類があります。</p>
+		<ul>
+			<li>紀元（1970年1月1日00:00:00 UTC）からの経過時間を秒単位で表したもので、ここでは「紀元からの経過秒数」と呼ぶことにします。</li>
+			<li>紀元からの経過秒数を具体的な日時情報としてtm構造体に変換したもので、ここでは「日時構造体」と呼ぶことにします。</li>
+		</ul>
+		<p>ここで説明する関数は次の通りです。なお、ヘッダファイルとしては<strong>time.h</strong>が必要です。</p>
+		<table class="simple-table">
+			<caption>【表14-5-1】 日付および時間関数一覧</caption>
+			<thead>
+			<tr><th>区分</th><th>関数名</th><th>機能概要</th></tr>
+			</thead>
+			<tbody>
+			<tr><td rowspan="4"><a href="./s14_05_2.html#lbl_getdate">日時の取得・変換</a></td><td><a href="./s14_05_2.html#lbl_time">time()</a></td><td>紀元からの経過秒数を取得します。</td></tr>
+			<tr><td><a href="./s14_05_2.html#lbl_localtime">localtime()</a></td><td>紀元からの経過秒数を日時構造体に変換します。日時はローカル標準時になります。</td></tr>
+			<tr><td><a href="./s14_05_2.html#lbl_gmtime">gmtime()</a></td><td>紀元からの経過秒数を日時構造体に変換します。日時は協定世界時（UTC）になります。</td></tr>
+			<tr><td><a href="./s14_05_2.html#lbl_mktime">mktime()</a></td><td>日時構造体を紀元からの経過秒数に変換します。</td></tr>
+			<tr><td rowspan="3"><a href="./s14_05_3.html#lbl_edit">日時を文字形式に変換</a></td><td><a href="./s14_05_3.html#lbl_ctime">ctime()</a></td><td>紀元からの経過秒数を文字形式の日時に変換します。</td></tr>
+			<tr><td><a href="./s14_05_3.html#lbl_asctime">asctime()</a></td><td>日時構造体から文字形式の日時に変換します。</td></tr>
+			<tr><td><a href="./s14_05_3.html#lbl_strftime">strftime()</a></td><td>日時構造体を書式に従い編集します。</td></tr>
+			<tr><td rowspan="2"><a href="./s14_05_3.html#lbl_other">その他</a></td><td><a href="./s14_05_3.html#lbl_clock">clock()</a></td><td>CPU使用時間の近似値を取得します。</td></tr>
+			<tr><td><a href="./s14_05_3.html#lbl_difftime">difftime()</a></td><td>２つの時刻から経過時間を算出します。</td></tr>
+			</tbody>
+		</table>
+	</section>
+
+	<footer>
+		<nav>
+			<ul>
+				<li><a href="../../../index.html">ホーム</a></li>
+				<li><a href="../../c_langtop.html#lbl_index">目次</a></li>
+				<li><a href="../s14_04/s14_04_3.html">前のページ</a></li>
+				<li><a href="./s14_05_2.html">次のページ</a></li>
+			</ul>
+		</nav>
+		<p id="footer-author">更新日：<time datetime="2012-05-20">2012年05月20日</time> Merry</p>
+	</footer>
+</div>
+</body>
+</html>

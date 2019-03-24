@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initialscale=1.0">
+	<meta name="robots" content="INDEX,FOLLOW">
+	<meta name="keywords" content="入出力ライブラリ,関数,fseek関数,ftell関数,rewind関数,fgetpos関数,fsetpos関数">
+	<meta name="description" content="fseek関数、ftell関数、rewind関数、fgetpos関数、fsetpos関数の使い方を説明します。">
+	<meta name="author" content="T.Hagiwara">
+	<link rel="stylesheet" href="../../../CSS3/seminar.css" type="text/css">
+	<link rel="stylesheet" href="../../../CSS3/hl_clang.css" type="text/css">
+	<link rel="prev" href="./s14_01_6.html">
+	<link rel="next" href="./s14_01_8.html">
+	<title>Ｃ言語プログラミング入門&nbsp;-&nbsp;ライブラリ関数&nbsp;-&nbsp;入出力ライブラリ（7/10） -</title>
+	<style type="text/css">
+	</style>
+</head>
+<body>
+<div id="container">
+	<header>
+		<p>Linux講座にようこそ。このページは「Ｃ言語プログラミング入門&nbsp;-&nbsp;第14章．ライブラリ関数&nbsp;-&nbsp;入出力ライブラリ」です。</p>
+		<h1>Ｃ言語プログラミング入門</h1>
+		<nav>
+			<ul>
+				<li><a href="../../../index.html">ホーム</a></li>
+				<li><a href="../../c_langtop.html#lbl_index">目次</a></li>
+				<li><a href="./s14_01_6.html">前のページ</a></li>
+				<li><a href="./s14_01_8.html">次のページ</a></li>
+			</ul>
+		</nav>
+	</header>
+
+	<section class="contents">
+		<h1>14. ライブラリ関数（8/36）&nbsp;-&nbsp;入出力ライブラリ（7/10）</h1>
+			<section>
+				<h2>14.11 ファイル内の位置操作関数</h2>
+				<p>入力関数でファイルから入力すると、通常はファイルの先頭のデータから順番に入力します。これは自動的に行われるため、入力関数を呼び出す度に次のデータを読むことができます。通常はこれで問題は無いと思いますが、ファイルの先頭からではなく、途中のデータを直接入出力したいような場合もあります。そのような場合は、ここで紹介する関数を使うとよいでしょう。</p>
+				<section>
+					<h3 id="lbl_fseek">14.11.1 fseek関数</h3>
+					<p>fseek関数はファイルポインタに対応したファイルの入出力位置（ファイルオフセット）を設定します。</p>
+					<table>
+						<caption>【表14-1-30】 fseek関数</caption>
+						<tr><th>形式</th><td>#include &lt;stdio.h&gt;<br>
+											int fseek(FILE *fp, long offset, int whence);</td></tr>
+						<tr><th>返り値</th><td>正常に処理ができた場合は０を返します。エラーの場合は-1を返します。</td></tr>
+						<tr><th>引数</th>
+							<td>
+								<dl>
+									<dt>FILE *fp</dt>
+										<dd>入出力位置を設定するファイルのファイルポインタを指定します。</dd>
+									<dt>long offset</dt>
+										<dd>新たに設定する入出力位置をバイト単位で指定します。位置の指定方法は第３引数のwhenceにより異なります。</dd>
+									<dt>int whence</dt>
+										<dd>第２引数のoffsetの値が何処を起点としたものかを指定します。SEEK_SETはファイルの先頭を、SEEK_CURは現在の位置を、SEEK_ENDはファイルの末尾を起点とする事を表します。
+										</dd>
+								</dl>
+							</td></tr>
+						<tr><th>使用法、<br>他</th>
+							<td>正常に処理ができた場合は入出力位置に位置付いていますので、引き続き入出力関数により入出力を行います。</td></tr>
+					</table>
+				</section>
+				<section>
+					<h3 id="lbl_ftell">14.11.2 ftell関数</h3>
+					<p>ftell関数はファイルポインタに対応したファイルの現在の入出力位置を取得します。</p>
+					<table>
+						<caption>【表14-1-31】 fftell関数</caption>
+						<tr><th>形式</th><td>#include &lt;stdio.h&gt;<br>
+											long ftell(FILE *fp);</td></tr>
+						<tr><th>返り値</th><td>正常に処理ができた場合は、現在の入出力位置を返します。エラーの場合は-1を返します。</td></tr>
+						<tr><th>引数</th>
+							<td>
+								<dl>
+									<dt>FILE *fp</dt>
+										<dd>入出力位置を取得するファイルのファイルポインタを指定します。</dd>
+								</dl>
+							</td></tr>
+					</table>
+				</section>
+				<section>
+					<h3 id="lbl_rewind">14.11.3 rewind関数</h3>
+					<p>rewind関数はファイルポインタに対応したファイルの入出力位置をファイルの先頭に設定します。</p>
+					<table>
+						<caption>【表14-1-32】 rewind関数</caption>
+						<tr><th>形式</th><td>#include &lt;stdio.h&gt;<br>
+											void rewind(FILE *fp);</td></tr>
+						<tr><th>返り値</th><td>ありません。</td></tr>
+						<tr><th>引数</th>
+							<td>
+								<dl>
+									<dt>FILE *fp</dt>
+										<dd>入出力位置をファイルの先頭に設定するファイルのファイルポインタを指定します。</dd>
+								</dl>
+							</td></tr>
+						<tr><th>使用法、<br>他</th>
+							<td>
+							この関数の実行後は入出力位置がファイルの先頭になっていますので、入出力関数を実行するとファイルの先頭から処理を行います。
+							</td></tr>
+					</table>
+				</section>
+				<section>
+					<h3>14.11.4 例題</h3>
+					<p>前ページの例題（ex14_1_9.prg）で作成したバイナリファイル（ex14_1_9_out.dat）のレコード番号を入力して、そのレコードの内容を標準出力に編集出力します。</p>
+					<div class="source-code">
+						<div class="c"><ol><li class="li1"><div class="de1"><span class="co2">#include &lt;stdio.h&gt;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp;</div></li>
+						<li class="li1"><div class="de1"><span class="coMULTI">/* 個人情報構造体 */</span></div></li>
+						<li class="li1"><div class="de1"><span class="kw4">struct</span> person_info <span class="br0">&#123;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">int</span> &nbsp; &nbsp; number<span class="sy0">;</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="coMULTI">/* 番号 */</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">double</span> &nbsp;weight<span class="sy0">;</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="coMULTI">/* 体重 */</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">double</span> &nbsp;height<span class="sy0">;</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="coMULTI">/* 身長 */</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">char</span> &nbsp; &nbsp;blood<span class="br0">&#91;</span><span class="nu0">4</span><span class="br0">&#93;</span><span class="sy0">;</span> &nbsp; &nbsp; &nbsp; &nbsp;<span class="coMULTI">/* 血液型 */</span></div></li>
+						<li class="li1"><div class="de1"><span class="br0">&#125;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp;</div></li>
+						<li class="li1"><div class="de1"><span class="kw4">int</span> main<span class="br0">&#40;</span><span class="kw4">void</span><span class="br0">&#41;</span></div></li>
+						<li class="li1"><div class="de1"><span class="br0">&#123;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; FILE &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="sy0">*</span>fp_in<span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">char</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;in_file<span class="br0">&#91;</span><span class="br0">&#93;</span> <span class="sy0">=</span> <span class="st0">&quot;./DATA/ex14_1_9_out.dat&quot;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">struct</span> person_info &nbsp;person<span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">char</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;ans<span class="br0">&#91;</span><span class="nu0">10</span><span class="br0">&#93;</span> <span class="sy0">=</span> <span class="st0">&quot;y&quot;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">int</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; number<span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">long</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;offset<span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">int</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; return_code <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp;</div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">if</span><span class="br0">&#40;</span><span class="br0">&#40;</span>fp_in <span class="sy0">=</span> <span class="kw3">fopen</span><span class="br0">&#40;</span>in_file<span class="sy0">,</span> <span class="st0">&quot;r&quot;</span><span class="br0">&#41;</span><span class="br0">&#41;</span> <span class="sy0">!=</span> NULL<span class="br0">&#41;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">while</span><span class="br0">&#40;</span>ans<span class="br0">&#91;</span><span class="nu0">0</span><span class="br0">&#93;</span> <span class="sy0">==</span> <span class="st0">'y'</span> <span class="sy0">||</span> ans<span class="br0">&#91;</span><span class="nu0">0</span><span class="br0">&#93;</span> <span class="sy0">==</span> <span class="st0">'Y'</span><span class="br0">&#41;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;番号を入力してください ==&gt; &quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">scanf</span><span class="br0">&#40;</span><span class="st0">&quot;%d&quot;</span><span class="sy0">,</span> <span class="sy0">&amp;</span>number<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp;</div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* 指定されたレコード位置の設定 */</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; offset <span class="sy0">=</span> <span class="kw4">sizeof</span><span class="br0">&#40;</span>person<span class="br0">&#41;</span> <span class="sy0">*</span> <span class="br0">&#40;</span>number <span class="sy0">-</span> <span class="nu0">1</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">if</span><span class="br0">&#40;</span><span class="kw3">fseek</span><span class="br0">&#40;</span>fp_in<span class="sy0">,</span> offset<span class="sy0">,</span> SEEK_SET<span class="br0">&#41;</span> <span class="sy0">==</span> <span class="nu0">0</span><span class="br0">&#41;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* &nbsp;レコードを入力 */</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">if</span><span class="br0">&#40;</span><span class="kw3">fread</span><span class="br0">&#40;</span><span class="sy0">&amp;</span>person<span class="sy0">,</span> <span class="kw4">sizeof</span><span class="br0">&#40;</span>person<span class="br0">&#41;</span><span class="sy0">,</span> <span class="nu0">1</span><span class="sy0">,</span> fp_in<span class="br0">&#41;</span> <span class="sy0">==</span> <span class="nu0">1</span><span class="br0">&#41;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* レコードの内容を出力 */</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;%-4s &nbsp;%-8s %-8s %s<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> <span class="st0">&quot;番号&quot;</span><span class="sy0">,</span> <span class="st0">&quot;体重&quot;</span><span class="sy0">,</span> <span class="st0">&quot;身長&quot;</span><span class="sy0">,</span> <span class="st0">&quot;血液型&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot; %03d %6.1f %6.1f &nbsp;%s<span class="es1">\n</span>&quot;</span><span class="sy0">,</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; person.<span class="me1">number</span><span class="sy0">,</span> person.<span class="me1">weight</span><span class="sy0">,</span> person.<span class="me1">height</span><span class="sy0">,</span> person.<span class="me1">blood</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">else</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;指定された番号のレコードはありません。<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">else</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;入力位置の設定が出来ませんでした。<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp;</div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;処理を続けますか（y/n） ==&gt; &quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">scanf</span><span class="br0">&#40;</span><span class="st0">&quot;%s&quot;</span><span class="sy0">,</span> ans<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">fclose</span><span class="br0">&#40;</span>fp_in<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">else</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;%sがオープン出来ませんでした。<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> in_file<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; return_code <span class="sy0">=</span> <span class="nu0">1</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp;</div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">return</span> return_code<span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1"><span class="br0">&#125;</span></div></li>
+						</ol></div>
+					</div>
+					<div class="exe-samp">
+<pre><samp>$ <kbd>./ex14_1_10.prg</kbd>
+番号を入力してください ==&gt; <kbd>3</kbd>
+番号  体重   身長   血液型
+ 003   43.2  156.5  AB
+処理を続けますか（y/n） ==&gt; <kbd>y</kbd>
+番号を入力してください ==&gt; <kbd>5</kbd>
+番号  体重   身長   血液型
+ 005   75.7  166.5  A
+処理を続けますか（y/n） ==&gt; <kbd>y</kbd>
+番号を入力してください ==&gt; <kbd>1</kbd>
+番号  体重   身長   血液型
+ 001   67.0  188.0  A
+処理を続けますか（y/n） ==&gt; <kbd>y</kbd>
+番号を入力してください ==&gt; <kbd>0</kbd>
+入力位置の設定が出来ませんでした。
+処理を続けますか（y/n） ==&gt; <kbd>y</kbd>
+番号を入力してください ==&gt; <kbd>6</kbd>
+指定された番号のレコードはありません。
+処理を続けますか（y/n） ==&gt; <kbd>y</kbd>
+番号を入力してください ==&gt; <kbd>-3</kbd>
+入力位置の設定が出来ませんでした。
+処理を続けますか（y/n） ==&gt; <kbd>n</kbd></samp></pre>
+					</div>
+					<dl>
+						<dt>30行目</dt>
+							<dd>ファイルの先頭を起点として、指定されたレコード位置に位置付けます。先頭からの距離は前の行で変数offsetに求めています。</dd>
+						<dt>33行目</dt>
+							<dd>30行目のfseek関数で入力位置に位置付いていますので、ここで１レコード入力します。</dd>
+					</dl>
+				</section>
+				<section>
+					<h3 id="lbl_fgetpos">14.11.5 fgetpos関数</h3>
+					<p>fgetpos関数はftell関数と同じく、ファイルポインタに対応したファイルの現在の入出力位置（ファイルの先頭を起点とする）を取得します。ftell関数との相違は、ftell関数は入出力位置をlong&nbsp;int型で返すため、ファイルの大きさは約２GBまで（long&nbsp;int型が４バイト長の場合）となります。これに対して、fgetpos関数は入出力位置を専用の構造体で管理することにより、２GB以上のファイルも取り扱えるようになっています。</p>
+					<table>
+						<caption>【表14-1-33】 fgetpos関数</caption>
+						<tr><th>形式</th><td>#include &lt;stdio.h&gt;<br>
+											int fgetpos(FILE fp, fpos_t *pos);</td></tr>
+						<tr><th>返り値</th><td>正常に処理ができた場合は０を返します。エラーの場合は-1を返します。</td></tr>
+						<tr><th>引数</th>
+							<td>
+								<dl>
+									<dt>FILE *fp</dt>
+										<dd>入出力位置を取得するファイルのファイルポインタを指定します。</dd>
+									<dt>fpos_t *pos</dt>
+										<dd>入出力位置を格納するfpos_t構造体変数を指定します。</dd>
+								</dl>
+							</td></tr>
+					</table>
+				</section>
+				<section>
+					<h3 id="lbl_fsetpos">14.11.6 fsetpos関数</h3>
+					<p>fsetpos関数はfseek関数と同じく、ファイルポインタに対応したファイルの入出力位置を設定します。fseek関数との相違は、２GB以上のファイルも取り扱えるようになっていることです。</p>
+					<table>
+						<caption>【表14-1-34】 fsetpos関数</caption>
+						<tr><th>形式</th><td>#include &lt;stdio.h&gt;<br>
+											int fsetpos(FILE fp, fpos_t *pos);</td></tr>
+						<tr><th>返り値</th><td>正常に処理ができた場合は０を返します。エラーの場合は-1を返します。</td></tr>
+						<tr><th>引数</th>
+							<td>
+								<dl>
+									<dt>FILE *fp</dt>
+										<dd>入出力位置を設定するファイルのファイルポインタを指定します。</dd>
+									<dt>fpos_t *pos</dt>
+										<dd>新たに設定する入出力位置が格納されているfpos_t構造体変数を指定します。</dd>
+								</dl>
+							</td></tr>
+					</table>
+					<aside>
+						<h4>補足</h4>
+						<ul>
+							<li>ここでは「fpos_t構造体」と書きましたが、処理系によっては構造体ではないことが有る様です。確認はしていませんが、VCではfpos_t型の変数に対して、整数型の演算を行えるようです。（gccでは出来ません）</li>
+							<li>基本的には、fgetpos関数で入出力位置を取得しておき、再度、この場所のデータにアクセスしたい場合にfsetpos関数で入出力位置の設定を行う、というような使い方になります。</li>
+						</ul>
+					</aside>
+				</section>
+			</section>
+	</section>
+
+	<footer>
+		<nav>
+			<ul>
+				<li><a href="../../../index.html">ホーム</a></li>
+				<li><a href="../../c_langtop.html#lbl_index">目次</a></li>
+				<li><a href="./s14_01_6.html">前のページ</a></li>
+				<li><a href="./s14_01_8.html">次のページ</a></li>
+			</ul>
+		</nav>
+		<p id="footer-author">更新日：<time datetime="2018-12-23">2018年12月23日</time> Merry</p>
+	</footer>
+</div>
+</body>
+</html>

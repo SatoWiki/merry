@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initialscale=1.0">
+	<meta name="robots" content="INDEX,FOLLOW">
+	<meta name="keywords" content="Linux,コマンド,使い方,使用法,講座">
+	<meta name="description" content="「Linuxの使い方」のご案内と目次です。">
+	<meta name="author" content="T.Hagiwara">
+	<link rel="stylesheet" href="../CSS3/seminar.css" type="text/css">
+	<link rel="prev" href="../index.html">
+	<link rel="next" href="./SECTION1/section1_1.html">
+	<title>Linuxの使い方</title>
+	<style type="text/css">
+	</style>
+</head>
+<body>
+<div id="container">
+	<header>
+		<p>Linux講座にようこそ。このページは「Linuxの使い方」です。</p>
+		<h1>Linuxの使い方</h1>
+		<nav>
+			<ul>
+				<li><a href="../index.html">ホーム</a></li>
+				<li>はじめに</li>
+				<li><a href="./SECTION1/section1_1.html">次のページ</a></li>
+			</ul>
+		</nav>
+	</header>
+
+	<section class="contents">
+		<h1>はじめに</h1>
+		<section>
+			<h2>当講座のご案内</h2>
+			<p>Linuxはサーバー及び、デスクトップ用OSとして使用するのが一般的と思われますが、最近は組み込み用OSとしても使われています。スマートフォンやタブレット用OSとして有名なAndroidのカーネルはLinuxです。</p>
+			<p>この講座ではデスクトップ用OSとして使用することを前提として説明します。なお、デスクトップ環境はKDEとします。</p>
+			<p>サーバー環境で使うのであれば、ほとんどの操作はコマンドを使用して行うことになると思いますので、コマンドに関する知識は必須だと思います。一方、デスクトップ環境の場合はほとんどの作業がGUI（Graphical User Interface）で出来るようになって来たため、コマンドを使うことは少なくなって来ました。しかし、次のような場合にはまだまだコマンドを使うことが多いと思います。</p>
+			<ul>
+				<li>トラブル発生時の原因究明や対応策の実施</li>
+				<li>より効率的な作業の実施</li>
+				<li>システムのチューニングやカーネルの再構築</li>
+			</ul>
+			<p>この講座ではLinuxで標準的に使えるコマンドの使い方に付いて、次の条件で説明します。</p>
+			<div class="form-exp">
+				<ul>
+					<li>コマンドと、そのオプションはよく使うと思われるものだけをピックアップします。全てのオプションに付いて知りたい場合はオンライン・マニュアル等で調べて下さい。</li>
+					<li>ディストリビューションやコマンドのバージョンにより、使い方が異なる場合があります。ここではFedoraを基準とします。</li>
+				</ul>
+			</div>
+			<p>なお、文章中の記号の読みは基本的にはJISに従っていますので、一般的な読みと異なることがあります。（あまりにも一般的でないものや、分かりにくいものに付いては一般的な読みにしています）また、コマンド入力中に&nbsp;\（バックスラッシュ）が必要な場合がありますが、Webブラウザ上では円記号で表示される場合があります。当講座の説明中で、円記号が出て来ましたらバックスラッシュ記号に読み替えて下さい。</p>
+		</section>
+		<section>
+			<h2 id="lbl_index">目次</h2>
+			<p>当講座は次のような内容になっています。また、コマンド名による<a href="./cmd_index.html">索引ページ</a>も用意してありますので、コマンド名が明確な場合はそちらからお入りいただくこともできます。</p>
+			<ol>
+				<li><a href="./SECTION1/section1_1.html">コマンド使用の基礎知識</a>
+				<ul>
+					<li><a href="./SECTION1/section1_1.html#kiso">コマンドを使う前に</a>
+					<ul>
+						<li><a href="./SECTION1/section1_1.html#lbl_login">ログインとログアウト</a></li>
+						<li><a href="./SECTION1/section1_1.html#lbl_konsole">ターミナル・エミュレータ（konsole）</a></li>
+						<li><a href="./SECTION1/section1_1.html#lbl_cmd">コマンドの一般形式</a></li>
+						<li><a href="./SECTION1/section1_1.html#lbl_example">コマンド実行例</a></li>
+					</ul>
+					</li>
+					<li><a href="./SECTION1/section1_2.html#lbl_first_cmd">使用方法が簡単なコマンドのご紹介</a>
+					<ul>
+						<li><a href="./SECTION1/section1_2.html#clear_cmd">端末画面をクリア（clearコマンド）</a></li>
+						<li><a href="./SECTION1/section1_2.html#date_cmd">日時を表示（dateコマンド）</a></li>
+						<li><a href="./SECTION1/section1_2.html#man_cmd">オンライン・マニュアルを表示（manコマンド）</a></li>
+						<li><a href="./SECTION1/section1_2.html#uname_cmd">システムの各種情報を表示（unameコマンド）</a></li>
+					</ul>
+					</li>
+				</ul>
+				</li>
+				<li><a href="./SECTION2/section2_1.html">シェルの基本機能</a>
+				<ul>
+					<li><a href="./SECTION2/section2_1.html">概要</a></li>
+					<li><a href="./SECTION2/section2_2.html#redirect">リダイレクション（入出力の切替え）</a></li>
+					<li><a href="./SECTION2/section2_2.html#pipeline">パイプライン</a></li>
+					<li><a href="./SECTION2/section2_2.html#lbl_other">その他の知っておくと便利な機能</a></li>
+				</ul>
+				</li>
+				<li><a href="./SECTION3/section3_1.html">ファイル操作のコマンド１</a>
+				<ul>
+					<li><a href="./SECTION3/section3_1.html">ファイル操作の基本</a></li>
+					<li><a href="./SECTION3/section3_2.html#lbl_cmd1">コマンドのご紹介１</a>
+					<ul>
+						<li><a href="./SECTION3/section3_2.html#cd_pwd">カレントディレクトリの変更と表示（cdコマンドとpwdコマンド）</a></li>
+						<li><a href="./SECTION3/section3_2.html#ls">ディレクトリとファイルの情報表示（lsコマンド）</a></li>
+						<li><a href="./SECTION3/section3_2.html#lbl_tree">ディレクトリとファイルの木構造表示（treeコマンド）</a></li>
+						<li><a href="./SECTION3/section3_2.html#cat">テキストファイルの連結（catコマンド）</a></li>
+						<li><a href="./SECTION3/section3_2.html#more_less">テキストファイルの内容表示（moreコマンドとlessコマンド）</a></li>
+						<li><a href="./SECTION3/section3_2.html#head_tail">テキストファイルの行数指定表示（headコマンドとtailコマンド）</a></li>
+					</ul>
+					</li>
+				</ul>
+				</li>
+				<li><a href="./SECTION4/section4_1.html">ファイル操作のコマンド２</a>
+				<ul>
+					<li><a href="./SECTION4/section4_1.html#wild_card">ファイルやディレクトリをまとめて指定するワイルドカード</a></li>
+					<li><a href="./SECTION4/section4_1.html#permission">ファイルやディレクトリの保護</a></li>
+					<li><a href="./SECTION4/section4_2.html#lbl_cmd2">コマンドのご紹介２</a>
+					<ul>
+						<li><a href="./SECTION4/section4_2.html#cp_mv">ファイルの複写と移動（cpコマンドとmvコマンド）</a></li>
+						<li><a href="./SECTION4/section4_2.html#lbl_rename">ファイル名の変更（renameコマンド）</a></li>
+						<li><a href="./SECTION4/section4_2.html#mkdir_rmdir">ディレクトリの作成と削除（mkdirコマンドとrmdirコマンド）</a></li>
+						<li><a href="./SECTION4/section4_2.html#rm">ファイルの削除（rmコマンド）</a></li>
+						<li><a href="./SECTION4/section4_2.html#find">ファイルの検索（findコマンド）</a></li>
+						<li><a href="./SECTION4/section4_3.html#sort">行の並べ替え（sortコマンド）</a></li>
+						<li><a href="./SECTION4/section4_3.html#grep">文字列の検索（grepコマンド）</a></li>
+						<li><a href="./SECTION4/section4_3.html#cut">文字列の切り出し（cutコマンド）</a></li>
+						<li><a href="./SECTION4/section4_3.html#df_du">ファイルシステムとディレクトリの容量表示（dfコマンドとduコマンド）</a></li>
+						<li><a href="./SECTION4/section4_3.html#lbl_backup">ファイルのバックアップ（tarコマンドとcpioコマンド）</a></li>
+						<li><a href="./SECTION4/section4_4.html#lbl_compression">ファイルの圧縮と解凍（gzip、bzip2、zip、unzip、lhaコマンド）</a></li>
+						<li><a href="./SECTION4/section4_4.html#vi">テキストファイルの作成・編集（viエディタ）</a></li>
+						<li><a href="./SECTION4/section4_5.html#other_4">その他、知っておくと便利なコマンド（file、ln、wc、nkf、od、cmpコマンド）</a></li>
+					</ul>
+					</li>
+				</ul>
+				</li>
+				<li><a href="./SECTION5/section5_1.html">より高度なシェルの使い方</a>
+				<ul>
+					<li><a href="./SECTION5/section5_1.html#ctrl">コントロールキーの使い方</a></li>
+					<li><a href="./SECTION5/section5_1.html#history">ヒストリ機能（コマンドライン編集）の使い方</a></li>
+					<li><a href="./SECTION5/section5_1.html#alias">コマンドラインに名前をつけるエイリアス機能の使い方</a></li>
+					<li><a href="./SECTION5/section5_1.html#lbl_cmd_rep">コマンド置換機能の使い方</a></li>
+					<li><a href="./SECTION5/section5_2.html#environ">ユーザ環境の設定</a></li>
+					<li><a href="./SECTION5/section5_2.html#proc">プロセスの操作</a></li>
+				</ul>
+				</li>
+				<li><a href="./SECTION6/section6_1.html">シェルスクリプトの作り方</a>
+				<ul>
+					<li><a href="./SECTION6/section6_1.html">概要</a></li>
+					<li><a href="./SECTION6/section6_1.html#exec">実行方法とよく使うコマンド</a></li>
+					<li><a href="./SECTION6/section6_2.html#var">シェル変数と文字列演算</a></li>
+					<li><a href="./SECTION6/section6_3.html#param">位置パラメータ（引数の取り扱い）</a></li>
+					<li><a href="./SECTION6/section6_3.html#esc">文字列のエスケープ</a></li>
+					<li><a href="./SECTION6/section6_4.html#comp">四則演算</a></li>
+					<li><a href="./SECTION6/section6_5.html">制御演算</a>
+					<ul>
+						<li><a href="./SECTION6/section6_5.html#lbl_cmp">比較演算子</a></li>
+						<li><a href="./SECTION6/section6_5.html#if">ifコマンド</a></li>
+						<li><a href="./SECTION6/section6_5.html#case">caseコマンド</a></li>
+						<li><a href="./SECTION6/section6_6.html#for">forコマンド</a></li>
+						<li><a href="./SECTION6/section6_6.html#while">whileとuntilコマンド</a></li>
+					</ul>
+					</li>
+					<li><a href="./SECTION6/section6_7.html">関数</a>
+					<ul>
+						<li><a href="./SECTION6/section6_7.html#val">変数の宣言と有効範囲</a></li>
+						<li><a href="./SECTION6/section6_8.html#func_def">関数宣言</a></li>
+						<li><a href="./SECTION6/section6_8.html#func_load">関数宣言の分離</a></li>
+					</ul>
+					</li>
+				</ul>
+				</li>
+				<li><a href="./SECTION7/section7_1.html">システム管理</a>
+				<ul>
+					<!-- <li><a href="./SECTION7/section7_1.html#inst">インストールの注意点</a></li>
+					<li><a href="./SECTION7/section7_1.html#filesys">ファイルシステム</a></li> -->
+					<li><a href="./SECTION7/section7_1.html#lbl_user">ユーザ管理</a></li>
+					<li><a href="./SECTION7/section7_2.html#lbl_proc">プロセス（サービス）管理</a>
+					<ul>
+						<li><a href="./SECTION7/section7_2.html#lbl_systemctl">OS起動による自動実行（systemctlコマンド）</a></li>
+						<li><a href="./SECTION7/section7_2.html#lbl_cron">cronによる自動実行</a></li>
+					</ul>
+					</li>
+					<li><a href="./SECTION7/section7_3.html">パッケージ管理</a></li>
+				</ul>
+				</li>
+				<li><a href="./APPENDIX/apnd01.html">付録</a>
+				<ul>
+					<li><a href="./APPENDIX/apnd01.html">SysVinitによるサービスの制御（chkconfigとserviceコマンド）</a></li>
+					<li><a href="./APPENDIX/apnd02.html">パッケージ管理（rpmとyumコマンド）</a></li>
+					<li><a href="./APPENDIX/apnd03.html">インストールの基本事項</a></li>
+				</ul>
+				<li><a href="./cmd_index.html">コマンド索引</a></li>
+			</ol>
+		</section>
+	</section>
+
+	<footer>
+		<nav>
+			<ul>
+				<li><a href="../index.html">ホーム</a></li>
+				<li>目次</li>
+				<li><a href="./SECTION1/section1_1.html">次のページ</a></li>
+			</ul>
+		</nav>
+		<p id="footer-author">更新日：<time datetime="2018-03-19">2018年03月19日</time> Merry</p>
+	</footer>
+</div>
+</body>
+</html>

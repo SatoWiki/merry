@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initialscale=1.0">
+	<meta name="robots" content="INDEX,FOLLOW">
+	<meta name="keywords" content="文字処理ライブラリ,関数,pow,sqrt,log,log10,exp,fmod,frexp,ldexp,modf">
+	<meta name="description" content="pow関数、sqrt関数、log関数、log10関数、exp関数、fmod関数、frexp関数、ldexp関数、modf関数の使用法を説明します。">
+	<meta name="author" content="T.Hagiwara">
+	<link rel="stylesheet" href="../../../CSS3/seminar.css" type="text/css">
+	<link rel="stylesheet" href="../../../CSS3/hl_clang.css" type="text/css">
+	<link rel="prev" href="./s14_04_2.html">
+	<link rel="next" href="../s14_05/s14_05_1.html">
+	<title>Ｃ言語プログラミング入門&nbsp;-&nbsp;ライブラリ関数&nbsp;-&nbsp;数学ライブラリ（3/3）-</title>
+	<style type="text/css">
+	</style>
+</head>
+<body>
+<div id="container">
+	<header>
+		<p>Linux講座にようこそ。このページは「Ｃ言語プログラミング入門&nbsp;-&nbsp;第14章．ライブラリ関数&nbsp;-&nbsp;数学ライブラリ」です。</p>
+		<h1>Ｃ言語プログラミング入門</h1>
+		<nav>
+			<ul>
+				<li><a href="../../../index.html">ホーム</a></li>
+				<li><a href="../../c_langtop.html#lbl_index">目次</a></li>
+				<li><a href="./s14_04_2.html">前のページ</a></li>
+				<li><a href="../s14_05/s14_05_1.html">次のページ</a></li>
+			</ul>
+		</nav>
+	</header>
+
+	<section class="contents">
+		<h1>14. ライブラリ関数（22/36）&nbsp;-&nbsp;数学ライブラリ（3/3）</h1>
+		<section>
+			<h2 id="lbl_powsqrt">14.34 累乗・平方根関数</h2>
+			<section>
+				<h3 id="lbl_pow">14.34.1 pow関数</h3>
+				<p>pow関数は引数で指定した、xのn乗（x<sup>n</sup>）の値を返します。Ｃ言語には累乗（べき乗）の演算子はありませんので、累乗の計算が必要な場合はこの関数を使うとよいでしょう。</p>
+				<table>
+					<caption>【表14-4-6】 pow関数</caption>
+					<tr><th>形式</th><td>#include &lt;math.h&gt;<br>
+										double pow(double x, double n);</td></tr>
+					<tr><th>返り値</th><td>xのn乗の値を返します。</td></tr>
+					<tr><th>引数</th>
+						<td>
+							<dl>
+								<dt>double x</dt>
+									<dd>累乗x<sup>n</sup>に対する底xの値を指定します。</dd>
+								<dt>double n</dt>
+									<dd>累乗x<sup>n</sup>に対する指数nの値を指定します。</dd>
+							</dl>
+						</td></tr>
+				</table>
+			</section>
+			<section>
+				<h3 id="lbl_sqrt">14.34.2 sqrt関数</h3>
+				<p>sqrt関数は引数で指定した、xの平方根のうち負でない方の値を返します。</p>
+				<table>
+					<caption>【表14-4-7】 sqrt関数</caption>
+					<tr><th>形式</th><td>#include &lt;math.h&gt;<br>
+										double sqrt(double x);</td></tr>
+					<tr><th>返り値</th><td>xの平方根の値を返します。</td></tr>
+					<tr><th>引数</th>
+						<td>
+							<dl>
+								<dt>double x</dt>
+									<dd>平方根を求める値を指定します。</dd>
+							</dl>
+						</td></tr>
+				</table>
+			</section>
+			<section>
+				<h3>14.34.3 例題</h3>
+				<p>2<sup>0</sup>から2<sup>10</sup>までの値を表示します。</p>
+				<div class="source-code">
+					<div class="c"><ol><li class="li1"><div class="de1"><span class="co2">#include &lt;stdio.h&gt;</span></div></li>
+					<li class="li1"><div class="de1"><span class="co2">#include &lt;math.h&gt;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1"><span class="kw4">int</span> main<span class="br0">&#40;</span><span class="kw4">void</span><span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">double</span> &nbsp;y<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">for</span><span class="br0">&#40;</span>y <span class="sy0">=</span> <span class="nu16">0.0</span><span class="sy0">;</span> y <span class="sy0">&lt;=</span> <span class="nu16">10.0</span><span class="sy0">;</span> y <span class="sy0">=</span> y <span class="sy0">+</span> <span class="nu16">1.0</span><span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;2 ** %d = %d<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> <span class="br0">&#40;</span><span class="kw4">int</span><span class="br0">&#41;</span>y<span class="sy0">,</span> <span class="br0">&#40;</span><span class="kw4">int</span><span class="br0">&#41;</span><span class="kw3">pow</span><span class="br0">&#40;</span><span class="nu16">2.0</span><span class="sy0">,</span> y<span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">return</span> <span class="nu0">0</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#125;</span></div></li>
+					</ol></div>
+				</div>
+				<div class="exe-samp">
+<pre><samp>$ <kbd>./ex14_4_2.prg</kbd>
+2 ** 0 = 1
+2 ** 1 = 2
+2 ** 2 = 4
+2 ** 3 = 8
+2 ** 4 = 16
+2 ** 5 = 32
+2 ** 6 = 64
+2 ** 7 = 128
+2 ** 8 = 256
+2 ** 9 = 512
+2 ** 10 = 1024
+$</samp></pre>
+				</div>
+				<dl>
+					<dt>10行目</dt>
+						<dd>2<sup>y</sup>の値をpow関数で求めます。</dd>
+				</dl>
+			</section>
+		</section>
+
+		<section>
+			<h2 id="lbl_log">14.35 対数関数</h2>
+			<section>
+				<h3>14.35.1 log関数、log10関数</h3>
+				<ul>
+					<li>log関数はxの自然対数の値を返します。</li>
+					<li>log10関数はxの底が10の対数（常用対数）の値を返します。</li>
+				</ul>
+				<table>
+					<caption>【表14-4-8】 log関数、log10関数</caption>
+					<tr><th>形式</th><td>#include &lt;math.h&gt;<br>
+										double log(double x);<br>
+										double log10(double x);</td></tr>
+					<tr><th>返り値</th><td>それぞれの対数の値を返します。</td></tr>
+					<tr><th>引数</th>
+						<td>
+							<dl>
+								<dt>double x</dt>
+									<dd>log<sub>a</sub>xに対する真数の値xを指定します。</dd>
+							</dl>
+						</td></tr>
+				</table>
+			</section>
+		</section>
+
+		<section>
+			<h2 id="lbl_other">14.36 その他の関数</h2>
+			<section>
+				<h3 id="lbl_exp">14.36.1 exp関数</h3>
+				<p>exp関数は自然対数の底がeのx乗の値を返します。</p>
+				<table>
+					<caption>【表14-4-9】 exp関数</caption>
+					<tr><th>形式</th><td>#include &lt;math.h&gt;<br>
+										double exp(double x);</td></tr>
+					<tr><th>返り値</th><td>eのx乗の値を返します。</td></tr>
+					<tr><th>引数</th>
+						<td>
+							<dl>
+								<dt>double x</dt>
+									<dd>累乗e<sup>x</sup>に対する指数xの値を指定します。</dd>
+							</dl>
+						</td></tr>
+				</table>
+			</section>
+			<section>
+				<h3 id="lbl_fmod">14.36.2 fmod関数</h3>
+				<p>fmod関数は浮動小数点数除算の余りの値を返します。</p>
+				<table>
+					<caption>【表14-4-10】 fmod関数</caption>
+					<tr><th>形式</th><td>#include &lt;math.h&gt;<br>
+										double fmod(double x, double y);</td></tr>
+					<tr><th>返り値</th><td>余りの値を返します。</td></tr>
+					<tr><th>引数</th>
+						<td>
+							<dl>
+								<dt>double x</dt>
+									<dd>被除数（割られる方の値）を指定します。</dd>
+								<dt>double y</dt>
+									<dd>除数（割る方の値）を指定します。</dd>
+							</dl>
+						</td></tr>
+				</table>
+			</section>
+			<section>
+				<h3 id="lbl_frexp">14.36.3 frexp関数</h3>
+				<p>frexp関数は浮動小数点数を小数成分と整数成分に分解し、それぞれの値を返します。小数成分は浮動小数点数xに２の累乗を乗じたもので、絶対値は常に0.5以上１未満になります。</p>
+				<table>
+					<caption>【表14-4-11】 frexp関数</caption>
+					<tr><th>形式</th><td>#include &lt;math.h&gt;<br>
+										double frexp(double x, int *exp);</td></tr>
+					<tr><th>返り値</th><td>小数成分の値を返します。</td></tr>
+					<tr><th>引数</th>
+						<td>
+							<dl>
+								<dt>double x</dt>
+									<dd>元になる値を指定します。</dd>
+								<dt>int *exp</dt>
+									<dd>整数成分の値が返ります。</dd>
+							</dl>
+						</td></tr>
+				</table>
+			</section>
+			<section>
+				<h3 id="lbl_ldexp">14.36.4 ldexp関数</h3>
+				<p>ldexp関数は浮動小数点数と２の整数乗との積の値を返します。</p>
+				<table>
+					<caption>【表14-4-12】 ldexp関数</caption>
+					<tr><th>形式</th><td>#include &lt;math.h&gt;<br>
+										double ldexp(double x, int exp);</td></tr>
+					<tr><th>返り値</th><td>２の整数乗との積の値を返します。</td></tr>
+					<tr><th>引数</th>
+						<td>
+							<dl>
+								<dt>double x</dt>
+									<dd>元になる値を指定します。</dd>
+								<dt>int exp</dt>
+									<dd>累乗2<sup>exp</sup>に対する指数expの値を指定します。</dd>
+							</dl>
+						</td></tr>
+				</table>
+			</section>
+			<section>
+				<h3 id="lbl_modf">14.36.5 modf関数</h3>
+				<p>modf関数は浮動小数点数を整数部分と小数部分に分解し、それぞれの値を返します。</p>
+				<table>
+					<caption>【表14-4-13】 modf関数</caption>
+					<tr><th>形式</th><td>#include &lt;math.h&gt;<br>
+										double modf(double x, double *iptr);</td></tr>
+					<tr><th>返り値</th><td>小数部分の値を返します。</td></tr>
+					<tr><th>引数</th>
+						<td>
+							<dl>
+								<dt>double x</dt>
+									<dd>元になる値を指定します。</dd>
+								<dt>double *iptr</dt>
+									<dd>整数部分の値が返ります。</dd>
+							</dl>
+						</td></tr>
+				</table>
+			</section>
+		</section>
+	</section>
+
+	<footer>
+		<nav>
+			<ul>
+				<li><a href="../../../index.html">ホーム</a></li>
+				<li><a href="../../c_langtop.html#lbl_index">目次</a></li>
+				<li><a href="./s14_04_2.html">前のページ</a></li>
+				<li><a href="../s14_05/s14_05_1.html">次のページ</a></li>
+			</ul>
+		</nav>
+		<p id="footer-author">更新日：<time datetime="2019-01-10">2019年01月10日</time> Merry</p>
+	</footer>
+</div>
+</body>
+</html>

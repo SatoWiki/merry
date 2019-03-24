@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initialscale=1.0">
+	<meta name="robots" content="INDEX,FOLLOW">
+	<meta name="keywords" content="メモリ操作ライブラリ,関数">
+	<meta name="description" content="メモリ操作ライブラリをご紹介します。">
+	<meta name="author" content="T.Hagiwara">
+	<link rel="stylesheet" href="../../../CSS3/seminar.css" type="text/css">
+	<link rel="stylesheet" href="../../../CSS3/hl_clang.css" type="text/css">
+	<link rel="prev" href="../s14_05/s14_05_3.html">
+	<link rel="next" href="./s14_06_2.html">
+	<title>Ｃ言語プログラミング入門&nbsp;-&nbsp;ライブラリ関数&nbsp;-&nbsp;メモリ操作ライブラリ（1/2）-</title>
+	<style type="text/css">
+	</style>
+</head>
+<body>
+<div id="container">
+	<header>
+		<p>Linux講座にようこそ。このページは「Ｃ言語プログラミング入門&nbsp;-&nbsp;第14章．ライブラリ関数&nbsp;-&nbsp;メモリ操作ライブラリ」です。</p>
+		<h1>Ｃ言語プログラミング入門</h1>
+		<nav>
+			<ul>
+				<li><a href="../../../index.html">ホーム</a></li>
+				<li><a href="../../c_langtop.html#lbl_index">目次</a></li>
+				<li><a href="../s14_05/s14_05_3.html">前のページ</a></li>
+				<li><a href="./s14_06_2.html">次のページ</a></li>
+			</ul>
+		</nav>
+	</header>
+
+	<section class="contents">
+		<h1>14. ライブラリ関数（26/36）&nbsp;-&nbsp;メモリ操作ライブラリ（1/2）</h1>
+		<p>Ｃ言語では変数（配列や構造体を含む）を使う場合は必ず宣言が必要です。宣言によりメモリ上に必要な領域が確保されます。領域の大きさは変数の型名や配列の要素数により決まります。例えば、int型で要素数が５の配列の場合は、領域の大きさは20バイト（４バイト×５要素）になります。</p>
+		<p>初期値が無い配列の宣言をする場合、要素数を省略することは出来ませんが要素数が未定の場合が多々あります。例えば、入力データを配列に格納するような場合、一般に、入力データの数は未定です。この様な場合、要素数を多めに指定しておくというような逃げ方が有りますが、これは不良の原因になります。そこで、必要に応じてメモリ領域を確保したり、拡張したりする機能（動的なメモリ操作）が必要となります。</p>
+		<p>動的なメモリ操作を行いたい場合は、ここで紹介する関数を使うと良いでしょう。なお、メモリを操作するということで、ポインタの知識は必須です。ポインタに付いては「<a href="../../SECTION08/section08_1.html">８. データをアドレスで操作するためのポインタ</a>」をご覧ください。</p>
+		<p>ここで説明する関数は次の通りです。なお、ヘッダファイルとしては<strong>stdlib.h</strong>が必要です。</p>
+		<table class="simple-table">
+			<caption>【表14-6-1】 メモリ操作関数一覧</caption>
+			<tr><th>区分</th><th>関数名</th><th>機能概要</th></tr>
+			<tr><td rowspan="4"><a href="./s14_06_2.html#lbl_memory">動的なメモリ操作</a></td><td><a href="./s14_06_2.html#lbl_malloc">malloc()</a></td><td>指定した大きさのメモリ領域を確保します。</td></tr>
+			<tr><td><a href="./s14_06_2.html#lbl_calloc">calloc()</a></td><td>指定した大きさのメモリ領域を確保します。確保した領域は０（全ビット０）でクリアします。</td></tr>
+			<tr><td><a href="./s14_06_2.html#lbl_realloc">realloc()</a></td><td>確保したメモリ領域を拡張・縮小します。</td></tr>
+			<tr><td><a href="./s14_06_2.html#lbl_free">free()</a></td><td>確保したメモリ領域を開放します。</td></tr>
+		</table>
+	</section>
+
+	<footer>
+		<nav>
+			<ul>
+				<li><a href="../../../index.html">ホーム</a></li>
+				<li><a href="../../c_langtop.html#lbl_index">目次</a></li>
+				<li><a href="../s14_05/s14_05_3.html">前のページ</a></li>
+				<li><a href="./s14_06_2.html">次のページ</a></li>
+			</ul>
+		</nav>
+		<p id="footer-author">更新日：<time datetime="2012-05-20">2012年05月20日</time> Merry</p>
+	</footer>
+</div>
+</body>
+</html>

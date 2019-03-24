@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initialscale=1.0">
+	<meta name="robots" content="INDEX,FOLLOW">
+	<meta name="keywords" content="配列,配列名,要素,添字,要素数,メートル,インチ,フィート,ヤード,尺,寸">
+	<meta name="description" content="配列の取扱い方を説明します。">
+	<meta name="author" content="T.Hagiwara">
+	<link rel="stylesheet" href="../../CSS3/seminar.css" type="text/css">
+	<link rel="stylesheet" href="../../CSS3/hl_clang.css" type="text/css">
+	<link rel="prev" href="../SECTION06/section06_2.html">
+	<link rel="next" href="./section07_2.html">
+	<title>Ｃ言語プログラミング入門&nbsp;-&nbsp;たくさんのデータを処理するための配列（1/3）</title>
+	<style type="text/css">
+	</style>
+</head>
+<body>
+<div id="container">
+	<header>
+		<p>Linux講座にようこそ。このページは「Ｃ言語プログラミング入門&nbsp;-&nbsp;第７章．たくさんのデータを処理するための配列」です。</p>
+		<h1>Ｃ言語プログラミング入門</h1>
+		<nav>
+			<ul>
+				<li><a href="../../index.html">ホーム</a></li>
+				<li><a href="../c_langtop.html#lbl_index">目次</a></li>
+				<li><a href="../SECTION06/section06_2.html">前のページ</a></li>
+				<li><a href="./section07_2.html">次のページ</a></li>
+			</ul>
+		</nav>
+	</header>
+
+	<section class="contents">
+		<h1>7. たくさんのデータを処理するための配列（1/3）</h1>
+		<section>
+			<h2>7.1 配列とは</h2>
+			<figure class="left-box myphoto">
+				<dl>
+					<dt><img src="../IMAGES/sec07_1.jpg" alt="配列とは"></dt>
+					<dd>【図７-１】配列とは</dd>
+				</dl>
+			</figure>
+			<p>前の章で、肥満度（BMI）の計算をして結果を表示するという例題プログラムを紹介しましたが、この場合は入力したデータや計算結果は表示後捨てていました。この例題プログラムを改造して、最後にまとめて肥満度の値が異常値のもののみ入力データと肥満度の値を表示するようにしたい場合、入力データと肥満度の値は保存しておく必要があります。</p>
+			<p>データを保存するには変数を使えばよいのですが、保存するデータの個数が多い場合、変数名を考えて宣言を記述するだけでも大変です。また、データをどの変数に格納したのかも覚えておかなければなりません。</p>
+			<p>Ｃ言語には沢山の同じ種類のデータを取り扱うのに便利な<strong>配列</strong>と呼ぶデータ構造があります。配列は複数のデータをグループとして扱い、個々のデータはグループ名と番号で示します。配列ではグループ名に相当するものを<strong>配列名</strong>、個々のデータを<strong>要素</strong>、番号に相当するものを<strong>添字</strong>と呼んでいます。</p>
+			<p>配列を使うことにより、大量のデータを簡単に、効率よく取り扱うことができます。</p>
+		</section>
+
+		<section>
+			<h2 id="lbl_array">7.2 配列の宣言と参照</h2>
+			<p>配列を使う場合も、変数と同じように宣言が必要です。基本的には変数の宣言と同じく、型名と配列名を指定しますが、配列は複数のデータを取り扱うためのものですので、要素の個数も指定します。</p>
+			<section>
+				<h3>7.2.1 形式</h3>
+				<p>配列の条件として「取り扱うデータの型は全て同じ」ということがあります。従って、型名は配列に格納するデータの型名を指定します。つまり、int型のデータを格納する配列の型名はint型、char型のデータを格納する配列の型名はchar型となります。</p>
+				<p>配列のデータを参照するには何番目のデータかを指定するための添字を指定します。添字は<strong>０</strong>から始まります。</p>
+				<div class="form-exp">
+					※ 宣言時に初期値を指定しない場合<br>
+					型名 配列名[要素数];<br><br>
+
+					※ 宣言時に初期値を指定する場合<br>
+					型名 配列名[要素数] = {初期値１, 初期値２ …};<br><br>
+
+					※ 参照<br>
+					配列名[添字];
+				</div>
+				<dl>
+					<dt>型名</dt>
+						<dd>配列に格納するデータの型名を指定します。配列特有な型名はありません。</dd>
+					<dt>配列名</dt>
+						<dd>配列名を指定します。命名規則は変数と同じです。（先頭１文字は英字またはアンダラインで、２文字目以降は英数字とアンダラインの組み合わせです）</dd>
+					<dt>[要素数]</dt>
+						<dd>配列に格納するデータの個数を指定します。この個数を<strong>要素数</strong>と呼んでいます。要素数は<strong>[</strong>（左大括弧）と<strong>]</strong>（右大括弧）で括ります。</dd>
+					<dt>{初期値１, 初期値２ …}</dt>
+						<dd>配列にあらかじめ設定しておきたい値が有れば、それを指定します。初期値は省略可能で、省略した場合の値は不定です。また、初期値を指定した場合は要素数は省略可能（[]は必要）で、要素数は初期値の数になります。初期値は{（左中括弧）と}（右中括弧）で括ります。</dd>
+					<dt>[添字]</dt>
+						<dd>配列の何番目のデータを参照するかを示す番号を指定します。添字は０から始まりますので、最初のデータの添字は０となり、最後のデータの添字は「<strong>要素数 - 1</strong>」となります。なお、添字は[（左大括弧）と]（右大括弧）で括ります。</dd>
+				</dl>
+				<aside>
+					<h4>補足</h4>
+					<ul>
+						<li>要素数は格納するデータの個数ですので、例えば、100個のデータを格納したいのであれば要素数として「100」を指定します。要素数や添字の数え方は言語により異なりますので注意してください。</li>
+						<li>通常の変数を複数宣言した場合、それらの変数がメモリ上に連続して確保される保証はありません。それに対して、配列の場合の各要素はメモリ上の連続領域に確保されます。このことにより、配列の各要素は配列の先頭からの相対アドレスで操作ができます。（詳細についてはポインタの所で説明します）</li>
+					</ul>
+				</aside>
+			</section>
+			<section>
+				<h3>7.2.2 例題</h3>
+				<section>
+					<h4>例題１</h4>
+					<p>１メートルに対するインチ、フィート、ヤード、尺、寸の長さを表示します。このプログラムは配列を使う必要性はないのですが、配列の使い方を説明するために使っています。</p>
+					<div class="source-code">
+						<div class="c"><ol><li class="li1"><div class="de1"><span class="co2">#include &lt;stdio.h&gt;</span></div></li>
+						<li class="li1"><div class="de1"><span class="kw4">int</span> main<span class="br0">&#40;</span><span class="br0">&#41;</span></div></li>
+						<li class="li1"><div class="de1"><span class="br0">&#123;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">double</span> &nbsp;keisu<span class="br0">&#91;</span><span class="nu0">5</span><span class="br0">&#93;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp;</div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="coMULTI">/* 変換のための係数を代入 */</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; keisu<span class="br0">&#91;</span><span class="nu0">0</span><span class="br0">&#93;</span> <span class="sy0">=</span> <span class="nu16">39.370</span><span class="sy0">;</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* インチ */</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; keisu<span class="br0">&#91;</span><span class="nu0">1</span><span class="br0">&#93;</span> <span class="sy0">=</span> <span class="nu16">3.280</span><span class="sy0">;</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="coMULTI">/* フィート */</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; keisu<span class="br0">&#91;</span><span class="nu0">2</span><span class="br0">&#93;</span> <span class="sy0">=</span> <span class="nu16">1.093</span><span class="sy0">;</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="coMULTI">/* ヤード */</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; keisu<span class="br0">&#91;</span><span class="nu0">3</span><span class="br0">&#93;</span> <span class="sy0">=</span> <span class="nu16">3.300</span><span class="sy0">;</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="coMULTI">/* 尺 */</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; keisu<span class="br0">&#91;</span><span class="nu0">4</span><span class="br0">&#93;</span> <span class="sy0">=</span> <span class="nu16">33.000</span><span class="sy0">;</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* 寸 */</span></div></li>
+						<li class="li1"><div class="de1">&nbsp;</div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;1メートルは%.3fインチです<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> keisu<span class="br0">&#91;</span><span class="nu0">0</span><span class="br0">&#93;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;1メートルは%.3fフィートです<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> keisu<span class="br0">&#91;</span><span class="nu0">1</span><span class="br0">&#93;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;1メートルは%.3fヤードです<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> keisu<span class="br0">&#91;</span><span class="nu0">2</span><span class="br0">&#93;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;1メートルは%.3f尺です<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> keisu<span class="br0">&#91;</span><span class="nu0">3</span><span class="br0">&#93;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;1メートルは%.3f寸です<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> keisu<span class="br0">&#91;</span><span class="nu0">4</span><span class="br0">&#93;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp;</div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">return</span> <span class="nu0">0</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1"><span class="br0">&#125;</span></div></li>
+						</ol></div>
+					</div>
+					<div class="exe-samp">
+<pre><samp>$ <kbd>./ex07_1.prg</kbd>
+1メートルは39.370インチです
+1メートルは3.280フィートです
+1メートルは1.093ヤードです
+1メートルは3.300尺です
+1メートルは33.000寸です
+$</samp></pre>
+					</div>
+					<dl>
+						<dt>4行目</dt>
+							<dd>double型の配列keisuを宣言します。この配列には５個のデータを格納するので、要素数として５を指定します。</dd>
+						<dt>7〜11行目</dt>
+							<dd>配列keisuの各要素に値を代入します。最初の要素の添字は０で、最後の要素の添字は４です。</dd>
+						<dt>13〜17行目</dt>
+							<dd>配列keisuの値を出力します。</dd>
+					</dl>
+					<aside>
+						<h5>補足</h5>
+						<ul>
+							<li>この例題では配列の各要素に値を代入していますが、初期値として設定することもできます。また、初期値を指定した場合は要素数を省略することができます。（下記の例では要素数は５になります。）<br>例：<code>double  keisu[] = {39.370, 3.280, 1.093, 3.300, 33.000};</code></li>
+							<li>この例題では要素数５の配列を用意していますが、この配列に６個以上のデータを格納しても、コンパイルエラーにはなりませんので注意してください。配列のオーバーフローはプログラマーの責任になります。</li>
+							<li>配列の各要素に値を代入することはできますが、配列を配列に代入（コピー）することは出来ません。
+							<div class="source-code"><pre><code>
+double  keisu[] = {39.370, 3.280, 1.093, 3.300, 33.000};
+double  dest[5];
+
+    …
+
+dest = keisu; <strong>← 出来ません。コンパイルエラーになります</strong></code></pre>
+							</div></li>
+						</ul>
+					</aside>
+				</section>
+				<section>
+					<h4>例題２</h4>
+					<p>上記例題と機能は同じですが、添字にint型の変数を使用しています。</p>
+					<div class="source-code">
+						<div class="c"><ol><li class="li1"><div class="de1"><span class="co2">#include &lt;stdio.h&gt;</span></div></li>
+						<li class="li1"><div class="de1"><span class="kw4">int</span> main<span class="br0">&#40;</span><span class="br0">&#41;</span></div></li>
+						<li class="li1"><div class="de1"><span class="br0">&#123;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">double</span> &nbsp;keisu<span class="br0">&#91;</span><span class="nu0">5</span><span class="br0">&#93;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">int</span> &nbsp; &nbsp; soeji<span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp;</div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="coMULTI">/* 添字のための変数の初期化 */</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; soeji <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; keisu<span class="br0">&#91;</span>soeji<span class="sy0">++</span><span class="br0">&#93;</span> <span class="sy0">=</span> <span class="nu16">39.370</span><span class="sy0">;</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* インチ */</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; keisu<span class="br0">&#91;</span>soeji<span class="sy0">++</span><span class="br0">&#93;</span> <span class="sy0">=</span> <span class="nu16">3.280</span><span class="sy0">;</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="coMULTI">/* フィート */</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; keisu<span class="br0">&#91;</span>soeji<span class="sy0">++</span><span class="br0">&#93;</span> <span class="sy0">=</span> <span class="nu16">1.093</span><span class="sy0">;</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="coMULTI">/* ヤード */</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; keisu<span class="br0">&#91;</span>soeji<span class="sy0">++</span><span class="br0">&#93;</span> <span class="sy0">=</span> <span class="nu16">3.300</span><span class="sy0">;</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="coMULTI">/* 尺 */</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; keisu<span class="br0">&#91;</span>soeji<span class="br0">&#93;</span> <span class="sy0">=</span> <span class="nu16">33.000</span><span class="sy0">;</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* 寸 */</span></div></li>
+						<li class="li1"><div class="de1">&nbsp;</div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; soeji <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;1メートルは%.3fインチです<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> keisu<span class="br0">&#91;</span>soeji<span class="sy0">++</span><span class="br0">&#93;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;1メートルは%.3fフィートです<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> keisu<span class="br0">&#91;</span>soeji<span class="sy0">++</span><span class="br0">&#93;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;1メートルは%.3fヤードです<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> keisu<span class="br0">&#91;</span>soeji<span class="sy0">++</span><span class="br0">&#93;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;1メートルは%.3f尺です<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> keisu<span class="br0">&#91;</span>soeji<span class="sy0">++</span><span class="br0">&#93;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;1メートルは%.3f寸です<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> keisu<span class="br0">&#91;</span>soeji<span class="br0">&#93;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp;</div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">return</span> <span class="nu0">0</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1"><span class="br0">&#125;</span></div></li>
+						</ol></div>
+					</div>
+					<dl>
+						<dt>5行目</dt>
+							<dd>添字用の変数を宣言します。添字は整数ですので、通常はint型の変数を使用します。</dd>
+						<dt>8行目</dt>
+							<dd>添字は０から始まりますので、０で初期化します。</dd>
+						<dt>9〜13行目</dt>
+							<dd>添字としてsoeji変数を使用します。ここでは++演算子を使ってsoeji変数に１を加算していますが、++を変数名の後ろに付けてていますので、式の値は現在のsoejiの内容となり、soejiの内容は１加算されます。</dd>
+						<dt>15〜20行目</dt>
+							<dd>8〜13行目と同じく、添字に変数soejiを使用します。</dd>
+					</dl>
+				</section>
+			</section>
+		</section>
+	</section>
+
+	<footer>
+		<nav>
+			<ul>
+				<li><a href="../../index.html">ホーム</a></li>
+				<li><a href="../c_langtop.html#lbl_index">目次</a></li>
+				<li><a href="../SECTION06/section06_2.html">前のページ</a></li>
+				<li><a href="./section07_2.html">次のページ</a></li>
+			</ul>
+		</nav>
+		<p id="footer-author">更新日：<time datetime="2018-05-18">2018年05月18日</time> Merry</p>
+	</footer>
+</div>
+</body>
+</html>

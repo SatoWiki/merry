@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initialscale=1.0">
+	<meta name="robots" content="INDEX,FOLLOW">
+	<meta name="keywords" content="一般ユーティリティライブラリ,関数,bsearch,qsort,検索,整列,サーチ,ソート,昇順,降順">
+	<meta name="description" content="bsearch関数、qsort関数の使用法を説明します。">
+	<meta name="author" content="T.Hagiwara">
+	<link rel="stylesheet" href="../../../CSS3/seminar.css" type="text/css">
+	<link rel="stylesheet" href="../../../CSS3/hl_clang.css" type="text/css">
+	<link rel="prev" href="./s14_07_3.html">
+	<link rel="next" href="./s14_07_5.html">
+	<title>Ｃ言語プログラミング入門&nbsp;-&nbsp;ライブラリ関数&nbsp;-&nbsp;ユーティリティライブラリ（4/5）-</title>
+	<style type="text/css">
+	</style>
+</head>
+<body>
+<div id="container">
+	<header>
+		<p>Linux講座にようこそ。このページは「Ｃ言語プログラミング入門&nbsp;-&nbsp;第14章．ライブラリ関数&nbsp;-&nbsp;一般ユーティリティライブラリ」です。</p>
+		<h1>Ｃ言語プログラミング入門</h1>
+		<nav>
+			<ul>
+				<li><a href="../../../index.html">ホーム</a></li>
+				<li><a href="../../c_langtop.html#lbl_index">目次</a></li>
+				<li><a href="./s14_07_3.html">前のページ</a></li>
+				<li><a href="./s14_07_5.html">次のページ</a></li>
+			</ul>
+		</nav>
+	</header>
+
+	<section class="contents">
+		<h1>14. ライブラリ関数（31/36）&nbsp;-&nbsp;ユーティリティライブラリ（4/5）</h1>
+		<section>
+			<h2 id="lbl_ss">14.43 検索と整列の関数</h2>
+			<section>
+				<h3 id="lbl_bsearch">14.43.1 bsearch関数</h3>
+				<p>bsearch（binary search）関数は配列中から該当する要素を検索（サーチ）します。前提条件として、配列の内容は昇順に整列（ソート）されていなければなりません。</p>
+				<table>
+					<caption>【表14-7-8】 bsearch関数</caption>
+					<tr><th>形式</th><td>#include &lt;stdlib.h&gt;<br>
+										void *bsearch(const void *key, const void *base, size_t nmemb, size_t size,<br>
+											&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int (*compar)(const void *, const void *));</td></tr>
+					<tr><th>返り値</th><td>検索出来た場合は該当する要素のポインタを返し、検索出来なかった場合はNULLを返します。該当する要素が複数あった場合はどの要素のポインタが返るかは不定です。</td></tr>
+					<tr><th>引数</th>
+						<td>
+							<dl>
+								<dt>const void *key</dt>
+									<dd>検索キーを指定します。</dd>
+								<dt>const void *base</dt>
+									<dd>検索する配列を指定します。</dd>
+								<dt>size_t nmemb</dt>
+									<dd>検索する配列の要素数を指定します。</dd>
+								<dt>size_t size</dt>
+									<dd>検索する配列の要素の大きさをバイト単位で指定します。</dd>
+								<dt>int (*compar)(const void *, const void *)</dt>
+									<dd>検索キー（第１引数）と検索する配列の要素（第２引数）の値を比較する関数を指定します。</dd>
+							</dl>
+						</td></tr>
+				</table>
+				<p>第５引数に指定したは関数はbsearch関数から呼び出されます。その時、第１引数は検索キーで、第２引数は検索キーと比較する配列要素が渡ってきますので、それを比較して次のような値を返すようにします。</p>
+				<ul>
+					<li>検索キーが検索する配列の要素の値より小さい場合は負の整数を返します。</li>
+					<li>検索キーと検索する配列の要素の値が等しい場合は０を返します。</li>
+					<li>検索キーが検索する配列の要素の値より大きい場合は正の整数を返します。</li>
+				</ul>
+			</section>
+			<section>
+				<h3 id="lbl_qsort">14.43.2 qsort関数</h3>
+				<p>qsort関数は配列要素を昇順（小から大）または、降順（大から小）に整列（ソート）します。</p>
+				<table>
+					<caption>【表14-7-9】 qsort関数</caption>
+					<tr><th>形式</th><td>#include &lt;stdlib.h&gt;<br>
+										void qsort(void *base, size_t nmemb, size_t size,<br>
+										&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int(*compar)(const void *, const void *));</td></tr>
+					<tr><th>返り値</th><td>ありません。</td></tr>
+					<tr><th>引数</th>
+						<td>
+							<dl>
+								<dt>void *base</dt>
+									<dd>整列する配列を指定します。</dd>
+								<dt>size_t nmemb</dt>
+									<dd>整列する配列の要素数を指定します。</dd>
+								<dt>size_t size</dt>
+									<dd>整列する配列の要素の大きさをバイト単位で指定します。</dd>
+								<dt>int(*compar)(const void *, const void *)</dt>
+									<dd>整列する配列の要素の値を比較する関数を指定します。</dd>
+							</dl>
+						</td></tr>
+				</table>
+				<p>第４引数に指定したは関数はqsort関数から呼び出されます。その時、引数には比較する配列要素が渡ってきますので、それを比較して次のような値を返すようにします。（降順の場合は小さい場合と大きい場合を逆にします）</p>
+				<ul>
+					<li>第１引数が第２引数の値より小さい場合は負の整数を返します。</li>
+					<li>第１引数と第２引数の値が等しい場合は０を返します。</li>
+					<li>第１引数が第２引数の値より大きい場合は正の整数を返します。</li>
+				</ul>
+			</section>
+			<section>
+				<h4>14.43.3 例題</h4>
+				<p>郵便番号と住所を記入したファイルを入力して、指定された郵便番号に対する住所を表示します。郵便番号として「end」を入力したら終了します。</p>
+				<div class="source-code">	<!-- ex14_7_3.c -->
+					<div class="c"><ol><li class="li1"><div class="de1"><span class="co2">#include &lt;stdio.h&gt;</span></div></li>
+					<li class="li1"><div class="de1"><span class="co2">#include &lt;stdlib.h&gt;</span></div></li>
+					<li class="li1"><div class="de1"><span class="co2">#include &lt;string.h&gt;</span></div></li>
+					<li class="li1"><div class="de1"><span class="co2">#include &lt;errno.h&gt;</span></div></li>
+					<li class="li1"><div class="de1"><span class="co2">#define DATAMAX &nbsp; &nbsp;20</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1"><span class="coMULTI">/* 住所データ構造体 */</span></div></li>
+					<li class="li1"><div class="de1"><span class="kw4">typedef</span> <span class="kw4">struct</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">char</span> &nbsp; &nbsp;ad_jip_code<span class="br0">&#91;</span><span class="nu0">8</span><span class="br0">&#93;</span><span class="sy0">;</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="coMULTI">/* 郵便番号 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">char</span> &nbsp; &nbsp;ad_address<span class="br0">&#91;</span><span class="nu0">80</span><span class="br0">&#93;</span><span class="sy0">;</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="coMULTI">/* 住所 */</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#125;</span> type_address<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1"><span class="coMULTI">/* 関数プロトタイプ宣言 */</span></div></li>
+					<li class="li1"><div class="de1"><span class="kw4">int</span> sort_comp<span class="br0">&#40;</span><span class="kw4">const</span> <span class="kw4">void</span> <span class="sy0">*</span>AdressRec1<span class="sy0">,</span> <span class="kw4">const</span> <span class="kw4">void</span> <span class="sy0">*</span>AdressRec2<span class="br0">&#41;</span><span class="sy0">;</span> &nbsp; &nbsp;<span class="coMULTI">/* ソート用比較関数 */</span></div></li>
+					<li class="li1"><div class="de1"><span class="kw4">int</span> search_comp<span class="br0">&#40;</span><span class="kw4">const</span> <span class="kw4">void</span> <span class="sy0">*</span>JipCode<span class="sy0">,</span> <span class="kw4">const</span> <span class="kw4">void</span> <span class="sy0">*</span>AdressRec<span class="br0">&#41;</span><span class="sy0">;</span> &nbsp; &nbsp; &nbsp;<span class="coMULTI">/* 検索用比較関数 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1"><span class="kw4">int</span> main<span class="br0">&#40;</span><span class="kw4">void</span><span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; FILE &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="sy0">*</span>fp<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">char</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="sy0">*</span>address_path <span class="sy0">=</span> <span class="st0">&quot;./DATA/ex14_7_3_jip.dat&quot;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; type_address &nbsp; &nbsp;address_data<span class="br0">&#91;</span>DATAMAX<span class="br0">&#93;</span><span class="sy0">;</span> &nbsp; &nbsp;<span class="coMULTI">/* 住所データ */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; type_address &nbsp; &nbsp;<span class="sy0">*</span>p_address<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">int</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; idx_cnt<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">char</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;jip_code<span class="br0">&#91;</span><span class="nu0">20</span><span class="br0">&#93;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="coMULTI">/* 住所データを入力 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">if</span><span class="br0">&#40;</span><span class="br0">&#40;</span>fp <span class="sy0">=</span> <span class="kw3">fopen</span><span class="br0">&#40;</span>address_path<span class="sy0">,</span> <span class="st0">&quot;r&quot;</span><span class="br0">&#41;</span><span class="br0">&#41;</span> <span class="sy0">!=</span> NULL<span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; idx_cnt <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">while</span><span class="br0">&#40;</span><span class="kw3">fscanf</span><span class="br0">&#40;</span>fp<span class="sy0">,</span> <span class="st0">&quot;%7s,%s&quot;</span><span class="sy0">,</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; address_data<span class="br0">&#91;</span>idx_cnt<span class="br0">&#93;</span>.<span class="me1">ad_jip_code</span><span class="sy0">,</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; address_data<span class="br0">&#91;</span>idx_cnt<span class="br0">&#93;</span>.<span class="me1">ad_address</span><span class="br0">&#41;</span> <span class="sy0">!=</span> EOF<span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="sy0">++</span>idx_cnt<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">fclose</span><span class="br0">&#40;</span>fp<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">else</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">fprintf</span><span class="br0">&#40;</span>stderr<span class="sy0">,</span> <span class="st0">&quot;%s<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> <span class="kw3">strerror</span><span class="br0">&#40;</span>errno<span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">exit</span><span class="br0">&#40;</span>EXIT_FAILURE<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="coMULTI">/* 入力した住所データをソート */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">qsort</span><span class="br0">&#40;</span>address_data<span class="sy0">,</span> idx_cnt<span class="sy0">,</span> <span class="kw4">sizeof</span><span class="br0">&#40;</span>type_address<span class="br0">&#41;</span><span class="sy0">,</span> sort_comp<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="coMULTI">/* 検索 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">while</span><span class="br0">&#40;</span><span class="nu0">1</span><span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;郵便番号を入力してください ==&gt; &quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">scanf</span><span class="br0">&#40;</span><span class="st0">&quot;%s&quot;</span><span class="sy0">,</span> jip_code<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">if</span> <span class="br0">&#40;</span><span class="kw3">strncmp</span><span class="br0">&#40;</span>jip_code<span class="sy0">,</span> <span class="st0">&quot;end&quot;</span><span class="sy0">,</span> <span class="nu0">3</span><span class="br0">&#41;</span> <span class="sy0">!=</span> <span class="nu0">0</span><span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* 入力した郵便番号をキーとして、住所データを検索 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">if</span> <span class="br0">&#40;</span><span class="br0">&#40;</span>p_address <span class="sy0">=</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">bsearch</span><span class="br0">&#40;</span>jip_code<span class="sy0">,</span> address_data<span class="sy0">,</span> idx_cnt<span class="sy0">,</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw4">sizeof</span><span class="br0">&#40;</span>type_address<span class="br0">&#41;</span><span class="sy0">,</span> search_comp<span class="br0">&#41;</span><span class="br0">&#41;</span> <span class="sy0">!=</span> NULL<span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;%s<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> p_address<span class="sy0">-&gt;</span>ad_address<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">else</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;検索できませんでした。<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">else</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw2">break</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">return</span> EXIT_SUCCESS<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1"><span class="coMULTI">/* ソート用比較関数 */</span></div></li>
+					<li class="li1"><div class="de1"><span class="kw4">int</span> sort_comp<span class="br0">&#40;</span><span class="kw4">const</span> <span class="kw4">void</span> <span class="sy0">*</span>pRec1<span class="sy0">,</span> <span class="kw4">const</span> <span class="kw4">void</span> <span class="sy0">*</span>pRec2<span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">return</span> <span class="kw3">strcmp</span><span class="br0">&#40;</span><span class="br0">&#40;</span><span class="br0">&#40;</span>type_address <span class="sy0">*</span><span class="br0">&#41;</span>pRec1<span class="br0">&#41;</span><span class="sy0">-&gt;</span>ad_jip_code<span class="sy0">,</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#40;</span><span class="br0">&#40;</span>type_address <span class="sy0">*</span><span class="br0">&#41;</span>pRec2<span class="br0">&#41;</span><span class="sy0">-&gt;</span>ad_jip_code<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1"><span class="coMULTI">/* 検索用比較関数 */</span></div></li>
+					<li class="li1"><div class="de1"><span class="kw4">int</span> search_comp<span class="br0">&#40;</span><span class="kw4">const</span> <span class="kw4">void</span> <span class="sy0">*</span>pJipCode<span class="sy0">,</span> <span class="kw4">const</span> <span class="kw4">void</span> <span class="sy0">*</span>pRec<span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">return</span> <span class="kw3">strcmp</span><span class="br0">&#40;</span><span class="br0">&#40;</span><span class="kw4">char</span> <span class="sy0">*</span><span class="br0">&#41;</span>pJipCode<span class="sy0">,</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#40;</span><span class="br0">&#40;</span>type_address <span class="sy0">*</span><span class="br0">&#41;</span>pRec<span class="br0">&#41;</span><span class="sy0">-&gt;</span>ad_jip_code<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#125;</span></div></li>
+					</ol></div>
+				</div>
+				<div class="exe-samp">
+<pre><samp>$ <kbd>cat ./DATA/ex14_7_3_jip.dat</kbd>
+2430035,神奈川県厚木市愛甲
+2430038,神奈川県厚木市愛名
+2430126,神奈川県厚木市岡津古久
+2430125,神奈川県厚木市小野
+2430032,神奈川県厚木市恩名
+2430031,神奈川県厚木市戸室
+2430121,神奈川県厚木市七沢
+2430033,神奈川県厚木市温水
+2430039,神奈川県厚木市温水西
+2430036,神奈川県厚木市長谷
+2430034,神奈川県厚木市船子
+2430037,神奈川県厚木市毛利台
+2430122,神奈川県厚木市森の里
+2430123,神奈川県厚木市森の里青山
+2430124,神奈川県厚木市森の里若宮
+$
+$ <kbd>./ex14_7_3.prg</kbd>
+郵便番号を入力してください ==&gt; <kbd>2430124</kbd>
+神奈川県厚木市森の里若宮
+郵便番号を入力してください ==&gt; <kbd>2430031</kbd>
+神奈川県厚木市戸室
+郵便番号を入力してください ==&gt; <kbd>2430126</kbd>
+神奈川県厚木市岡津古久
+郵便番号を入力してください ==&gt; <kbd>2430000</kbd>
+検索できませんでした。
+郵便番号を入力してください ==&gt; <kbd>end</kbd>
+$</samp></pre>
+				</div>
+				<dl>
+					<dt>31行目</dt>
+						<dd>住所ファイル（ex14_7_3_jip.dat）を住所データ配列（address_data）に入力します。</dd>
+					<dt>46行目</dt>
+						<dd>住所データ配列を郵便番号をキーとしてqsort関数でソートします。</dd>
+					<dt>57行目</dt>
+						<dd>住所データ配列から入力した郵便番号をbsearch関数で検索します。</dd>
+					<dt>80行目</dt>
+						<dd>仮引数として渡された住所データの２つの要素の郵便番号をstrcmp関数で比較して、結果を返り値として返します。</dd>
+					<dt>87行目</dt>
+						<dd>仮引数として渡された郵便番号と住所データの郵便番号をstrcmp関数で比較して、結果を返り値として返します。</dd>
+				</dl>
+			</section>
+		</section>
+	</section>
+
+	<footer>
+		<nav>
+			<ul>
+				<li><a href="../../../index.html">ホーム</a></li>
+				<li><a href="../../c_langtop.html#lbl_index">目次</a></li>
+				<li><a href="./s14_07_3.html">前のページ</a></li>
+				<li><a href="./s14_07_5.html">次のページ</a></li>
+			</ul>
+		</nav>
+		<p id="footer-author">更新日：<time datetime="2019-01-12">2019年01月12日</time> Merry</p>
+	</footer>
+</div>
+</body>
+</html>

@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initialscale=1.0">
+	<meta name="robots" content="INDEX,FOLLOW">
+	<meta name="keywords" content="Ｃ言語,プログラミング,講座,Linux,ANSI,gcc,コンパイル,実行">
+	<meta name="description" content="Ｃ言語の文法を初心者から中級者向けに易しく解説しています。">
+	<meta name="author" content="T.Hagiwara">
+	<link rel="stylesheet" href="../CSS3/seminar.css" type="text/css">
+	<link rel="prev" href="../index.html">
+	<link rel="next" href="./SECTION01/section01_1.html">
+	<title>Ｃ言語プログラミング入門</title>
+	<style type="text/css">
+	</style>
+</head>
+<body>
+<div id="container">
+	<header>
+		<p>このページは「Ｃ言語プログラミング入門」です。</p>
+		<h1>Ｃ言語プログラミング入門</h1>
+		<nav>
+			<ul>
+				<li><a href="../index.html">ホーム</a></li>
+				<li>はじめに</li>
+				<li><a href="./SECTION01/section01_1.html">次のページ</a></li>
+			</ul>
+		</nav>
+	</header>
+
+	<section class="contents">
+		<h1>はじめに</h1>
+		<section>
+			<h2>当講座のご案内</h2>
+			<p>本屋さんのコンピュータ言語書籍売場に行くと、いまだに「Ｃ言語」関連の書籍が一番多いように思います。いまだにと書いたのはVBやJava、PHP、Ruby、等たくさんの言語が有るにもかかわらずに多いということです。これはどういうことかというと、JavaやPHPはＣ言語をお手本にして開発された言語なので、Ｃ言語を知っていれば、それらの言語をマスターし易いということだと思います。</p>
+			<p>また、もともとＣ言語はUNIXオペレーティングシステムを記述することを目的に開発された言語ですので、UNIXをお手本に開発されたLinuxもＣ言語で記述されています。従って、Linuxをより深く理解しようと思うと、Ｃ言語に関する知識が必要になってきます。</p>
+			<p>この講座では初心者から中級者向けに、易しく説明していきます。また、説明は次の条件で行います。</p>
+			<div class="form-exp">
+				<ul>
+					<li>文法についてはANSI（American National Standards Institute）規格に基づいています。</li>
+					<li>例題のプログラムはgcc（GNU project C Compiler）を用いてコンパイルして、Linuxのターミナルエミュレータ上で実行します。LinuxディストリビューションはFedoraを利用します。</li>
+					<li>本文や例題中にLinuxに関する基本的な用語やコマンドが出てきますので、Linuxの基本的な知識が必要です。</li>
+				</ul>
+				<p>なお、文章中の記号の読みは基本的にはJISに従っていますので、一般的な読みと異なることがあります。（あまりにも一般的でないものや、分かりにくいものに付いては一般的な読みにしています）</p>
+			</div>
+		</section>
+		<section>
+			<h2 id="lbl_index">目次</h2>
+			<p>当講座は次のような内容になっています。初心者の方は初めから順に読み進めていくことをお薦めします。</p>
+			<div class="left-box">
+				<ol start=1>
+					<li><a href="./SECTION01/section01_1.html">Ｃ言語の基礎知識</a>
+						<ul>
+							<li><a href="./SECTION01/section01_1.html">Ｃ言語の基本構造</a></li>
+							<li><a href="./SECTION01/section01_1.html#lbl_compile">コンパイルと実行</a></li>
+						</ul>
+					</li>
+					<li><a href="./SECTION02/section02_1.html">データを格納するための変数</a>
+						<ul>
+							<li><a href="./SECTION02/section02_1.html">変数の宣言</a></li>
+							<li><a href="./SECTION02/section02_2.html">基本的な入出力方法</a></li>
+						</ul>
+					</li>
+					<li><a href="./SECTION03/section03_1.html">四則演算をするための演算子</a>
+						<ul>
+							<li><a href="./SECTION03/section03_1.html">代入演算子</a></li>
+							<li><a href="./SECTION03/section03_1.html#lbl_plus_minus">加減算</a></li>
+							<li><a href="./SECTION03/section03_2.html">乗除算</a></li>
+							<li><a href="./SECTION03/section03_2.html#lbl_other">その他の演算子および、関連事項</a></li>
+						</ul>
+					</li>
+					<li><a href="./SECTION04/section04_1.html">条件を判定して処理を振り分ける条件分岐</a>
+						<ul>
+							<li><a href="./SECTION04/section04_1.html">条件分岐とは</a></li>
+							<li><a href="./SECTION04/section04_1.html#lbl_if">if文</a></li>
+							<li><a href="./SECTION04/section04_2.html">switch文</a></li>
+						</ul>
+					</li>
+					<li><a href="./SECTION05/section05_1.html">いろいろな演算子</a>
+						<ul>
+							<li><a href="./SECTION05/section05_1.html#lbl_logic">論理演算子</a></li>
+							<li><a href="./SECTION05/section05_1.html#lbl_cond">条件演算子</a></li>
+							<li><a href="./SECTION05/section05_2.html">その他の演算子</a></li>
+						</ul>
+					</li>
+					<li><a href="./SECTION06/section06_1.html">繰り返し処理の制御</a>
+						<ul>
+							<li><a href="./SECTION06/section06_1.html">繰り返し処理とは</a></li>
+							<li><a href="./SECTION06/section06_1.html#lbl_while_do">while文とdo文</a></li>
+							<li><a href="./SECTION06/section06_2.html">for文</a></li>
+							<li><a href="./SECTION06/section06_2.html#lbl_other">その他の文</a></li>
+						</ul>
+					</li>
+					<li><a href="./SECTION07/section07_1.html">たくさんのデータを処理するための配列</a>
+						<ul>
+							<li><a href="./SECTION07/section07_1.html">配列とは</a></li>
+							<li><a href="./SECTION07/section07_1.html#lbl_array">配列の宣言と参照</a></li>
+							<li><a href="./SECTION07/section07_2.html">文字列の取扱い</a></li>
+							<li><a href="./SECTION07/section07_3.html">２次元配列</a></li>
+						</ul>
+					</li>
+					<li><a href="./SECTION08/section08_1.html">データをアドレスで操作するためのポインタ</a>
+						<ul>
+							<li><a href="./SECTION08/section08_1.html">ポインタとは</a></li>
+							<li><a href="./SECTION08/section08_1.html#lbl_dec">ポインタ変数の宣言</a></li>
+							<li><a href="./SECTION08/section08_2.html">ポインタによる変数の操作</a></li>
+							<li><a href="./SECTION08/section08_2.html#lbl_array">ポインタによる配列の操作</a></li>
+							<li><a href="./SECTION08/section08_3.html">ポインタによる文字列の操作</a></li>
+						</ul>
+					</li>
+					<li><a href="./SECTION09/section09_1.html">プログラムの部品化のための関数</a>
+						<ul>
+							<li><a href="./SECTION09/section09_1.html">関数とは</a></li>
+							<li><a href="./SECTION09/section09_1.html#lbl_dec">関数の宣言</a></li>
+							<li><a href="./SECTION09/section09_2.html">関数間のデータの受け渡し</a></li>
+							<li><a href="./SECTION09/section09_3.html">実行時引数の受け取り方</a></li>
+						</ul>
+					</li>
+				</ol>
+			</div>
+			<div class="left-box">
+				<ol start=10>
+					<li><a href="./SECTION10/section10_1.html">データの有効範囲と寿命を規定する記憶クラス</a>
+						<ul>
+							<li><a href="./SECTION10/section10_1.html">記憶クラスとは</a></li>
+							<li><a href="./SECTION10/section10_1.html#lbl_dec">宣言の形式</a></li>
+						</ul>
+					</li>
+					<li><a href="./SECTION11/section11_1.html">異なる型名データをまとめて取り扱う構造体</a>
+						<ul>
+							<li><a href="./SECTION11/section11_1.html">構造体とは</a></li>
+							<li><a href="./SECTION11/section11_1.html#lbl_dec">構造体の宣言</a></li>
+							<li><a href="./SECTION11/section11_2.html">構造体の配列</a></li>
+						</ul>
+					</li>
+					<li><a href="./SECTION12/section12_1.html">その他の型</a>
+						<ul>
+							<li><a href="./SECTION12/section12_1.html">型の種類</a></li>
+							<li><a href="./SECTION12/section12_1.html#lbl_union">共用体型</a></li>
+							<li><a href="./SECTION12/section12_2.html">列挙型</a></li>
+							<li><a href="./SECTION12/section12_3.html">typedef</a></li>
+							<li><a href="./SECTION12/section12_4.html">定数の取扱い</a></li>
+						</ul>
+					</li>
+					<li><a href="./SECTION13/section13_1.html">プリプロセッサ</a>
+						<ul>
+							<li><a href="./SECTION13/section13_1.html">プリプロセッサとは</a></li>
+							<li><a href="./SECTION13/section13_1.html#lbl_include">ファイルの取り込み</a></li>
+							<li><a href="./SECTION13/section13_2.html">マクロ定義</a></li>
+						</ul>
+					</li>
+					<li><a href="./SECTION14/section14_1.html">ライブラリ関数</a>
+						<ul>
+							<li><a href="./SECTION14/section14_1.html">ライブラリ関数とは</a></li>
+							<li><a href="./SECTION14/s14_01/s14_01_1.html">入出力ライブラリ</a></li>
+							<li><a href="./SECTION14/s14_02/s14_02_1.html">文字列処理ライブラリ</a></li>
+							<li><a href="./SECTION14/s14_03/s14_03_1.html">文字処理ライブラリ</a></li>
+							<li><a href="./SECTION14/s14_04/s14_04_1.html">数学ライブラリ</a></li>
+							<li><a href="./SECTION14/s14_05/s14_05_1.html">日付および時間ライブラリ</a></li>
+							<li><a href="./SECTION14/s14_06/s14_06_1.html">メモリ操作ライブラリ</a></li>
+							<li><a href="./SECTION14/s14_07/s14_07_1.html">ユーティリティライブラリ</a></li>
+							<li><a href="./SECTION14/s14_08/s14_08_1.html">その他のライブラリ</a></li>
+						</ul>
+					</li>
+					<li>付録
+						<ul>
+							<li><a href="./APPENDIX/apnd01.html">ASCIIコード表</a></li>
+							<li><a href="./APPENDIX/apnd02.html">演算子の優先順位</a></li>
+						</ul>
+					</li>
+					<li>索引
+						<ul>
+							<li><a href="./term_index.html">用語索引</a></li>
+							<li><a href="./func_index.html">ライブラリ関数索引</a></li>
+						</ul>
+					</li>
+				</ol>
+			</div>
+		</section>
+	</section>
+
+	<footer>
+		<nav>
+			<ul>
+				<li><a href="../index.html">ホーム</a></li>
+				<li>目次</li>
+				<li><a href="./SECTION01/section01_1.html">次のページ</a></li>
+			</ul>
+		</nav>
+		<p id="footer-author">更新日：<time datetime="2019-01-04">2019年01月04日</time> Merry</p>
+	</footer>
+</div>
+</body>
+</html>

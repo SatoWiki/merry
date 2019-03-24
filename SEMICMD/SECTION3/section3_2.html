@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initialscale=1.0">
+	<meta name="robots" content="INDEX,FOLLOW">
+	<meta name="keywords" content="cd,pwd,ls,tree,cat,more,less,head,tail">
+	<meta name="description" content="ディレクトリやファイルを取り扱う基本的なコマンドをご紹介します。">
+	<meta name="author" content="T.Hagiwara">
+	<link rel="stylesheet" href="../../CSS3/seminar.css" type="text/css">
+	<link rel="stylesheet" href="../../CSS3/hl_html.css" type="text/css">
+	<link rel="prev" href="./section3_1.html">
+	<link rel="next" href="../SECTION4/section4_1.html">
+	<title>Linuxの使い方&nbsp;-&nbsp;ファイル操作のコマンド１（2/2）</title>
+	<style type="text/css">
+	</style>
+</head>
+<body>
+<div id="container">
+	<header>
+		<p>Linux講座にようこそ。このページは「Linuxの使い方&nbsp;-&nbsp;第３章&nbsp;ファイル操作のコマンド１」です。</p>
+		<h1>Linuxの使い方</h1>
+		<nav>
+			<ul>
+				<li><a href="../../index.html">ホーム</a></li>
+				<li><a href="../cmdtop.html#lbl_index">目次</a></li>
+				<li><a href="./section3_1.html">前のページ</a></li>
+				<li><a href="../SECTION4/section4_1.html">次のページ</a></li>
+			</ul>
+		</nav>
+	</header>
+
+	<section class="contents">
+		<h1>3. ファイル操作のコマンド１（2/2）</h1>
+		<section>
+			<h2 id="lbl_cmd1">3.2 コマンドのご紹介１</h2>
+			<p>ディレクトリやファイルを取り扱うコマンドのうち、ここでは次のコマンドをご紹介します。前にも述べましたが、コマンドの全ての引数をご紹介しているわけではありませんので、詳細内容をお知りになりたい場合はmanコマンドで調べてください。</p>
+			<ul>
+				<li><a href="#cd_pwd">カレントディレクトリの変更と表示（cdコマンドとpwdコマンド）</a></li>
+				<li><a href="#ls">ディレクトリとファイルの情報表示（lsコマンド）</a></li>
+				<li><a href="#lbl_tree"> ディレクトリとファイルの木構造表示（treeコマンド）</a></li>
+				<li><a href="#cat">テキストファイルの連結（catコマンド）</a></li>
+				<li><a href="#more_less">テキストファイルの内容表示（moreコマンドとlessコマンド）</a></li>
+				<li><a href="#head_tail">テキストファイルの行数指定表示（headコマンドとtailコマンド）</a></li>
+			</ul>
+			<!-- cd & pwdコマンドの説明 -->
+			<section>
+				<h3 id="cd_pwd">3.2.1 カレントディレクトリの変更と表示（cdコマンドとpwdコマンド）</h3>
+				<figure class="left-box myphoto">
+				<dl>
+					<dt><img src="../IMAGES/sec03_2.jpg" alt="ホームディレクトリとカレントディレクトリ"></dt>
+					<dd>【図３-２】ホームディレクトリとカレントディレクトリ</dd>
+					<dd>ユーザー名merryのホームディレクトリは/home/merry/です</dd>
+				</dl>
+				</figure>
+				<p>図3-2でユーザー名merryのホームディレクトリを/home/merry/とすると、ログイン時には、ここがカレントディレクトリになっていますのでパス名指定は非常に簡単です。しかし、ホームディレクトリ以外のディレクトリの下のファイルを取り扱う場合は、パス名が長くなってしまいキータッチが多くなりますので作業がしにくくなります。</p>
+				<p>例えば、data1ファイルの相対パス名は<samp>data1</samp>または<samp>./data1</samp>のように簡単に指定できますが、etcディレクトリの下のファイルは次のようになります。</p>
+				<p><samp>../../etc/fstab</samp></p>
+				<p>このような場合は、カレントディレクトリを変更したほうがパス名が短くなり作業がしやすくなります。</p>
+				<p>cdコマンドはカレントディレクトリの変更を行い、pwdコマンドはカレントディレクトリの<strong>絶対パス名</strong>を標準出力に出力します。</p>
+				<section>
+					<h4>一般形式</h4>
+					<p>cdコマンドは引数に指定したディレクトリにカレントディレクトリを変更します。引数を省略した場合はカレントディレクトリを<strong>ホームディレクトリに変更</strong>します。</p>
+					<div class="form-exp">
+						$ cd ディレクトリパス名<br>
+						$ pwd
+					</div>
+				</section>
+				<section>
+					<h4>実行例</h4>
+					<p>図3-2の/home/merry/がカレントディレクトリとして設定してあるものとして、mybinディレクトリにカレントディレクトリを変更します。</p>
+					<div class="exe-samp">
+<pre><samp>$ <kbd>pwd</kbd><strong> ← カレントディレクトリを表示します</strong>
+/home/merry<strong> ← pwdコマンドの実行結果です。カレントディレクトリは/home/merry/です</strong>
+$
+$ <kbd>cd mybin</kbd><strong> ← mybinディレクトリに変更します。<kbd>cd ./mybin</kbd>でも同じです</strong>
+$ <kbd>pwd</kbd>
+/home/merry/mybin<strong> ← 変更後のカレントディレクトリです</strong>
+$
+</samp></pre>
+					</div>
+					<p>mybinディレクトリから/etc/ディレクトリにカレントディレクトリを変更します。</p>
+					<div class="exe-samp">
+<pre><samp>$ <kbd>cd ../../../etc</kbd><strong> ← 相対パス名での指定です</strong>
+  または
+$ <kbd>cd /etc</kbd><strong> ← 絶対パス名での指定です</strong>
+$
+</samp></pre>
+					</div>
+					<p>/etc/ディレクトリからホームディレクトリ（/home/merry/）にカレントディレクトリを変更します。</p>
+					<div class="exe-samp">
+<pre><samp>$ <kbd>cd ; pwd</kbd><strong> ← 引数無しのcdコマンドとpwdコマンドの連続実行です</strong>
+/home/merry<strong> ← pwdコマンドの実行結果です</strong>
+$
+</samp></pre>
+					</div>
+				</section>
+			</section>
+			<!-- lsコマンドの説明 -->
+			<section>
+				<h3 id="ls">3.2.2 ディレクトリとファイルの情報表示（lsコマンド）</h3>
+				<figure class="left-box myphoto">
+				<dl>
+					<dt><img src="../IMAGES/sec03_3.jpg" alt="ユーザーmerryのホームディレクトリ"></dt>
+					<dd>【図３-３】ユーザーmerryのホームディレクトリ</dd>
+					<dd>ホームディレクトリのパス名は/home/merry/です</dd>
+				</dl>
+				</figure>
+				<p>ファイルシステム上のディレクトリやファイルの名前や作成日等を調べたいことが多々あります。例えば、図3-3のmeiboディレクトリの下のファイルの名前を調べたい、というような場合です。</p>
+				<p>lsコマンドはファイルやディレクトリの名前や属性（更新日付や容量等）を標準出力に出力します。</p>
+				<section>
+					<h4>一般形式</h4>
+					<p>引数にディレクトリパス名を指定した場合は、その下のファイルやディレクトリを標準出力に出力し、省略した場合はカレントディレクトリを仮定します。ファイルパス名を指定した場合は、そのファイルがあればファイル名を出力します。</p>
+					<div class="form-exp">
+						$ ls -FRadlx1 ディレクトリパス名１ ディレクトリパス名２ …<br>
+						$ ls ファイルパス名１ ファイルパス名２ …
+					</div>
+					<table class="simple-table">
+						<caption>【表3-1】lsコマンド・オプション</caption>
+						<tr><th>オプション</th><th>意味</th></tr>
+						<tr><td>-F, --classify</td><td>ディレクトリには/記号を、実行可能ファイルには*記号を付加します。</td></tr>
+						<tr><td>-R, --recursive</td><td>指定したディレクトリ以下を全て出力します。</td></tr>
+						<tr><td>-a, --all</td><td>先頭が.（ピリオド）記号のファイルやディレクトリも出力します。</td></tr>
+						<tr><td>-d, --directory</td><td>ディレクトリ自身の名前や詳細情報（-lと併用）を出力します。</td></tr>
+						<tr><td>-l</td><td>名前の他に詳細情報（更新日時や容量等）も出力します。</td></tr>
+						<tr><td>-x</td><td>１行に複数出力します。（ターミナルに出力するときの標準です）</td></tr>
+						<tr><td>-1</td><td>１行に１個のみ出力します。（パイプラインで使用するときの標準です）</td></tr>
+					</table>
+					<aside>
+						<h4>補足</h4>
+						<ul>
+							<li>実行可能ファイルとは、Linux上で実行できる形式のプログラムが格納されているファイルや、コマンドが記述されているファイル（シェルスクリプト）のことです。</li>
+							<li>先頭が.（ピリオド）記号のファイルやディレクトリは、アプリケーション・ソフトウェアの設定情報等が格納されているファイルで、通常、ユーザー登録時やアプリケーション実行時に自動作成されます。一般ユーザーが内容を変更することはあまりないため通常は表示しません。「隠しファイル」と呼ぶことも有ります 。</li>
+						</ul>
+					</aside>
+				</section>
+				<section>
+					<h4>実行例</h4>
+					<p>図3-3でmeiboディレクトリがカレントディレクトリに設定してあるものとして、カレントディレクトリの直下のみのファイルやディレクトリを出力します。</p>
+					<div class="exe-samp">
+<pre><samp>$ <kbd>pwd</kbd>
+/home/merry/meibo <strong> ← 現在のカレントディレクトリです</strong>
+$
+$ <kbd>ls meibo</kbd><strong> ← カレントディレクトリ名を指定します</strong>
+ls: meibo にアクセスできません: そのようなファイルやディレクトリはありません <strong> ← エラーメッセージです</strong>
+$
+$ <kbd>ls</kbd><strong> ← パス名を省略します</strong>
+data      meibo1    meibo2    meiboA<strong> ← 実行結果です（-xオプションが指定されたとみなしますので、１行に複数表示します）</strong>
+$
+$ <kbd>ls .</kbd><strong> ← パス名として.（カレントディレクトリ）を指定します</strong>
+data      meibo1    meibo2    meiboA
+$
+</samp></pre>
+					</div>
+					<p>dataディレクトリの直下のみのファイルやディレクトリの詳細情報を出力します。</p>
+					<div class="exe-samp">
+<pre><samp>$ <kbd>ls -l data</kbd><strong> ← <kbd>ls -l ./data</kbd>でも同じです</strong>
+合計 8
+-rw-r--r-- 1 merry users 1310  8月  1 09:45 data1
+-rw-r--r-- 1 merry users  843  9月  1 00:01 data2
+                               <strong>↑ 更新日時</strong>
+　　　　　　　　　　　　　 <strong>↑ 容量（バイト）</strong>
+$
+</samp></pre>
+					</div>
+					<p>カレントディレクトリ以下の全てのファイルやディレクトリを出力します。</p>
+					<div class="exe-samp">
+<pre><samp>$ <kbd>ls -R</kbd><strong> ← <kbd>ls -R .</kbd>でも同じです</strong>
+.:
+data      meibo1    meibo2    meiboA<strong> ← カレントディレクトリの下です</strong>
+
+./data:
+data1     data2<strong> ← dataディレクトリの下です</strong>
+
+$
+</samp></pre>
+					</div>
+					<p>dataディレクトリ自身の詳細情報を出力します。</p>
+					<div class="exe-samp">
+<pre><samp>$ <kbd>ls -dl data</kbd><strong> ← -dと-lを指定します</strong>
+drwxr-xr-x 2 merry users 4096 12月 22 16:07 data
+$
+</samp></pre>
+					</div>
+					<p>/etc/issueと/etc/myfileが存在するかを調べます。</p>
+					<div class="exe-samp">
+<pre><samp>$ <kbd>ls /etc/issue /etc/myfile</kbd>
+ls: cannot access /etc/myfile: そのようなファイルやディレクトリはありません<strong> ← 存在しなかったことを示すメッセージです</strong>
+/etc/issue<strong> ← 存在したことを示すメッセージです</strong>
+$
+</samp></pre>
+					</div>
+					<p>先頭が.（ピリオド）記号のファイルやディレクトリも表示します。</p>
+					<div class="exe-samp">
+<pre><samp>$ <kbd> cd ; pwd</kbd><strong> ← カレントディレクトリをホームディレクトリに戻します</strong>
+/home/merry
+$
+$ <kbd>ls -a</kbd>
+                                       .gftp            .mysql_history
+                                       .gimp-2.6        .orc
+.DCOPserver_localhost.localdomain_:0   .gnome2          .pki
+.DCOPserver_localhost.localdomain__0   .gnome2_private  .pulse
+.ICEauthority                          .grip            .pulse-cookie
+（以下省略）
+$
+</samp></pre>
+					</div>
+				</section>
+			</section>
+			<!-- treeコマンドの説明 -->
+			<section>
+				<h3 id="lbl_tree">3.2.3 ディレクトリとファイルの木構造表示（treeコマンド）</h3>
+				<p>lsコマンドでディレクトリ以下の全てのファイルやディレクトリを調べる場合は、-R又は--recursiveオプションを指定すれば表示することができます。しかし、この表示結果から木（ツリー）構造をイメージすることは難しいと思います。そこで、ディレクトリ以下の木構造を視覚的に表示したい、というような場合はtreeコマンドを使うと良いでしょう。また、結果をHTML形式で出力することもできますので、木構造をWebブラウザに表示することもできます。</p>
+				<section>
+					<h4>一般形式</h4>
+					<p>引数にディレクトリパス名を指定した場合は、その下のファイルやディレクトリを標準出力に出力し、省略した場合はカレントディレクトリを仮定します。</p>
+					<div class="form-exp">
+						$ tree -DFadph -H ベースHREF -T HTMLタイトル -o 出力ファイルパス名 ディレクトリパス名１ ディレクトリパス名２ …
+					</div>
+					<table class="simple-table">
+						<caption>【表3-2】treeコマンド・オプション</caption>
+						<tr><th>オプション</th><th>意味</th></tr>
+						<tr><td>-D</td><td>更新日時も出力します。</td></tr>
+						<tr><td>-F</td><td>ディレクトリには/記号を、実行可能ファイルには*記号を付加します。</td></tr>
+						<tr><td>-a</td><td>先頭が.（ピリオド）記号のファイルやディレクトリも出力します。</td></tr>
+						<tr><td>-d</td><td>ディレクトリのみを出力します。</td></tr>
+						<tr><td>-p</td><td>保護モード（パーミッション）も出力します。（保護モードに付いては次章で説明します）</td></tr>
+						<tr><td>-h</td><td>ファイルの容量も出力します。</td></tr>
+						<tr><td>-H ベースHREF</td><td>HTML形式で出力する場合の、ファイルやディレクトリのベースとなるパス名を指定します。</td></tr>
+						<tr><td>-T HTMLタイトル</td><td>HTML形式で出力する場合の、titleタグとh1タグに指定する文字列を指定します。</td></tr>
+						<tr><td>-o 出力ファイルパス名</td><td>結果を指定したファイルに出力します。</td></tr>
+					</table>
+					<aside>
+						<h4>補足</h4>
+						<p>-Hオプションには相対パス名でも指定出来ますが、そうするとHTMLファイルを作った時のカレントディレクトリとWebブラウザに表示した時のカレントディレクトリが異なってしまい、正しく表示できない（リンクをクリックするとエラーになる）ことがあります。従って、-Hオプションには絶対パス名で指定したほうがよいでしょう。ちなみに、Webブラウザに表示した時のカレントディレクトリはHTMLファイルの置いてあるディレクトリです。</p>
+					</aside>
+				</section>
+				<section>
+					<h4>実行例</h4>
+					<p>図3-3でmerryディレクトリがカレントディレクトリに設定してあるものとして、カレントディレクトリ以下のファイルやディレクトリの木構造を出力します。</p>
+					<div class="exe-samp">
+<pre><samp><kbd>$ ls -R</kbd><strong> ← lsコマンドを使います</strong>
+.:
+meibo  mybin  tel
+
+./meibo:
+data  meibo1  meibo2  meiboA
+
+./meibo/data:
+data1  data2
+
+./mybin:
+$
+$ <kbd>tree</kbd><strong> ← treeコマンドを使います</strong>
+.
+├── meibo
+│   ├── data
+│   │   ├── data1
+│   │   └── data2
+│   ├── meibo1
+│   ├── meibo2
+│   └── meiboA
+├── mybin
+└── tel
+
+3 directories, 6 files
+$
+$ <kbd>tree -ph</kbd><strong> ← 保護モードとファイル容量も出力します</strong>
+.
+├── [drwxr-xr-x 4.0K]  meibo
+│   ├── [drwxr-xr-x 4.0K]  data
+│   │   ├── [-rw-r--r--  222]  data1
+│   │   └── [-rw-r--r--  573]  data2
+│   ├── [-rw-r--r--   70]  meibo1
+│   ├── [-rw-r--r--   91]  meibo2
+│   └── [-rw-r--r--  116]  meiboA
+├── [drwxr-xr-x 4.0K]  mybin
+└── [-rw-r--r--   70]  tel
+
+3 directories, 6 files
+$
+</samp></pre>
+					</div>
+					<p>meiboディレクトリ以下の全てのファイルやディレクトリの木構造をファイルに出力します。</p>
+					<div class="exe-samp">
+<pre><samp>$ <kbd>tree -o /tmp/tree.txt ./meibo</kbd>
+$
+$ <kbd>cat /tmp/tree.txt</kbd><strong> ← 結果を確認します</strong>
+./meibo
+├── data
+│   ├── data1
+│   └── data2
+├── meibo1
+├── meibo2
+└── meiboA
+
+1 directory, 5 files
+$
+</samp></pre>
+					</div>
+					<p>meiboディレクトリ以下の全てのファイルやディレクトリの木構造をHTML形式でファイルに出力します。</p>
+					<div class="exe-samp">
+<pre><samp>$ <kbd>tree -H /home/merry/meibo -T "meiboディレクトリ" -o /tmp/meibo_tree.html ./meibo</kbd>
+$
+</samp></pre>
+					</div>
+					<p>上記実行例の結果の/tmp/meibo_tree.htmlの内容です。</p>
+					<div class="exe-samp">
+						<div class="html4strict"><span class="sc0">&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.01//EN&quot; &quot;http://www.w3.org/TR/html4/strict.dtd&quot;&gt;</span><br />
+						<span class="sc2">&lt;<span class="kw2">html</span>&gt;</span><br />
+						<span class="sc2">&lt;<span class="kw2">head</span>&gt;</span><br />
+						&nbsp;<span class="sc2">&lt;<span class="kw2">meta</span> <span class="kw3">http-equiv</span><span class="sy0">=</span><span class="st0">&quot;Content-Type&quot;</span> <span class="kw3">content</span><span class="sy0">=</span><span class="st0">&quot;text/html; charset=UTF-8&quot;</span>&gt;</span><br />
+						&nbsp;<span class="sc2">&lt;<span class="kw2">meta</span> <span class="kw3">name</span><span class="sy0">=</span><span class="st0">&quot;viewport&quot;</span> <span class="kw3">content</span><span class="sy0">=</span><span class="st0">&quot;width=device-width,initialscale=1.0&quot;</span>&gt;</span><br />
+						&nbsp;<span class="sc2">&lt;<span class="kw2">meta</span> <span class="kw3">name</span><span class="sy0">=</span><span class="st0">&quot;Author&quot;</span> <span class="kw3">content</span><span class="sy0">=</span><span class="st0">&quot;Made by 'tree'&quot;</span>&gt;</span><br />
+						&nbsp;<span class="sc2">&lt;<span class="kw2">meta</span> <span class="kw3">name</span><span class="sy0">=</span><span class="st0">&quot;GENERATOR&quot;</span> <span class="kw3">content</span><span class="sy0">=</span><span class="st0">&quot;$Version: $ tree v1.6.0 (c) 1996 - 2011 by Steve Baker, Thomas Moore, Francesc Rocher, Kyosuke Tokoro $&quot;</span>&gt;</span><br />
+						&nbsp;<span class="sc2">&lt;<span class="kw2">title</span>&gt;</span>meiboディレクトリ<span class="sc2">&lt;<span class="sy0">/</span><span class="kw2">title</span>&gt;</span><br />
+						&nbsp;<span class="sc2">&lt;<span class="kw2">style</span> <span class="kw3">type</span><span class="sy0">=</span><span class="st0">&quot;text/css&quot;</span>&gt;</span><br />
+						&nbsp; <span class="sc-1">&lt;!--</span><br />
+						<span class="sc-1"> &nbsp;BODY { font-family : ariel, monospace, sans-serif; }</span><br />
+						<span class="sc-1"> &nbsp;P { font-weight: normal; font-family : ariel, monospace, sans-serif; color: black; background-color: transparent;}</span><br />
+						<span class="sc-1"> &nbsp;B { font-weight: normal; color: black; background-color: transparent;}</span><br />
+						<span class="sc-1"> &nbsp;A:visited { font-weight : normal; text-decoration : none; background-color : transparent; margin : 0px 0px 0px 0px; padding : 0px 0px 0px 0px; display: inline; }</span><br />
+						<span class="sc-1"> &nbsp;A:link &nbsp; &nbsp;{ font-weight : normal; text-decoration : none; margin : 0px 0px 0px 0px; padding : 0px 0px 0px 0px; display: inline; }</span><br />
+						<span class="sc-1"> &nbsp;A:hover &nbsp; { color : #000000; font-weight : normal; text-decoration : underline; background-color : yellow; margin : 0px 0px 0px 0px; padding : 0px 0px 0px 0px; display: inline; }</span><br />
+						<span class="sc-1"> &nbsp;A:active &nbsp;{ color : #000000; font-weight: normal; background-color : transparent; margin : 0px 0px 0px 0px; padding : 0px 0px 0px 0px; display: inline; }</span><br />
+						<span class="sc-1"> &nbsp;.VERSION { font-size: small; font-family : arial, sans-serif; }</span><br />
+						<span class="sc-1"> &nbsp;.NORM &nbsp;{ color: black; &nbsp;background-color: transparent;}</span><br />
+						<span class="sc-1"> &nbsp;.FIFO &nbsp;{ color: purple; background-color: transparent;}</span><br />
+						<span class="sc-1"> &nbsp;.CHAR &nbsp;{ color: yellow; background-color: transparent;}</span><br />
+						<span class="sc-1"> &nbsp;.DIR &nbsp; { color: blue; &nbsp; background-color: transparent;}</span><br />
+						<span class="sc-1"> &nbsp;.BLOCK { color: yellow; background-color: transparent;}</span><br />
+						<span class="sc-1"> &nbsp;.LINK &nbsp;{ color: aqua; &nbsp; background-color: transparent;}</span><br />
+						<span class="sc-1"> &nbsp;.SOCK &nbsp;{ color: fuchsia;background-color: transparent;}</span><br />
+						<span class="sc-1"> &nbsp;.EXEC &nbsp;{ color: green; &nbsp;background-color: transparent;}</span><br />
+						<span class="sc-1"> &nbsp;--&gt;</span><br />
+						&nbsp;<span class="sc2">&lt;<span class="sy0">/</span><span class="kw2">style</span>&gt;</span><br />
+						<span class="sc2">&lt;<span class="sy0">/</span><span class="kw2">head</span>&gt;</span><br />
+						<span class="sc2">&lt;<span class="kw2">body</span>&gt;</span><br />
+						&nbsp; &nbsp; <span class="sc2">&lt;<span class="kw2">h1</span>&gt;</span>meiboディレクトリ<span class="sc2">&lt;<span class="sy0">/</span><span class="kw2">h1</span>&gt;&lt;<span class="kw2">p</span>&gt;</span><br />
+						&nbsp; &nbsp; <span class="sc2">&lt;<span class="kw2">a</span> <span class="kw3">href</span><span class="sy0">=</span><span class="st0">&quot;../../error_mess.html&quot;</span>&gt;</span>/home/merry/meibo<span class="sc2">&lt;<span class="sy0">/</span><span class="kw2">a</span>&gt;&lt;<span class="kw2">br</span>&gt;</span><br />
+						&nbsp; &nbsp; ├── <span class="sc2">&lt;<span class="kw2">a</span> <span class="kw3">href</span><span class="sy0">=</span><span class="st0">&quot;../../error_mess.html&quot;</span>&gt;</span>data<span class="sc2">&lt;<span class="sy0">/</span><span class="kw2">a</span>&gt;&lt;<span class="kw2">br</span>&gt;</span><br />
+						&nbsp; &nbsp; │   ├── <span class="sc2">&lt;<span class="kw2">a</span> <span class="kw3">href</span><span class="sy0">=</span><span class="st0">&quot;../../error_mess.html&quot;</span>&gt;</span>data1<span class="sc2">&lt;<span class="sy0">/</span><span class="kw2">a</span>&gt;&lt;<span class="kw2">br</span>&gt;</span><br />
+						&nbsp; &nbsp; │   └── <span class="sc2">&lt;<span class="kw2">a</span> <span class="kw3">href</span><span class="sy0">=</span><span class="st0">&quot;../../error_mess.html&quot;</span>&gt;</span>data2<span class="sc2">&lt;<span class="sy0">/</span><span class="kw2">a</span>&gt;&lt;<span class="kw2">br</span>&gt;</span><br />
+						&nbsp; &nbsp; ├── <span class="sc2">&lt;<span class="kw2">a</span> <span class="kw3">href</span><span class="sy0">=</span><span class="st0">&quot;../../error_mess.html&quot;</span>&gt;</span>meibo1<span class="sc2">&lt;<span class="sy0">/</span><span class="kw2">a</span>&gt;&lt;<span class="kw2">br</span>&gt;</span><br />
+						&nbsp; &nbsp; ├── <span class="sc2">&lt;<span class="kw2">a</span> <span class="kw3">href</span><span class="sy0">=</span><span class="st0">&quot;../../error_mess.html&quot;</span>&gt;</span>meibo2<span class="sc2">&lt;<span class="sy0">/</span><span class="kw2">a</span>&gt;&lt;<span class="kw2">br</span>&gt;</span><br />
+						&nbsp; &nbsp; └── <span class="sc2">&lt;<span class="kw2">a</span> <span class="kw3">href</span><span class="sy0">=</span><span class="st0">&quot;../../error_mess.html&quot;</span>&gt;</span>meiboA<span class="sc2">&lt;<span class="sy0">/</span><span class="kw2">a</span>&gt;&lt;<span class="kw2">br</span>&gt;</span><br />
+						&nbsp; &nbsp; <span class="sc2">&lt;<span class="kw2">br</span>&gt;&lt;<span class="kw2">br</span>&gt;</span><br />
+						&nbsp; &nbsp; <span class="sc2">&lt;<span class="sy0">/</span><span class="kw2">p</span>&gt;</span><br />
+						&nbsp; &nbsp; <span class="sc2">&lt;<span class="kw2">p</span>&gt;</span><br />
+						<br />
+						1 directory, 5 files<br />
+						&nbsp; &nbsp; <span class="sc2">&lt;<span class="kw2">br</span>&gt;&lt;<span class="kw2">br</span>&gt;</span><br />
+						&nbsp; &nbsp; <span class="sc2">&lt;<span class="sy0">/</span><span class="kw2">p</span>&gt;</span><br />
+						&nbsp; &nbsp; <span class="sc2">&lt;<span class="kw2">hr</span>&gt;</span><br />
+						&nbsp; &nbsp; <span class="sc2">&lt;<span class="kw2">p</span> <span class="kw3">class</span><span class="sy0">=</span><span class="st0">&quot;VERSION&quot;</span>&gt;</span><br />
+						&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;tree v1.6.0 © 1996 - 2011 by Steve Baker and Thomas Moore <span class="sc2">&lt;<span class="kw2">br</span>&gt;</span><br />
+						&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;HTML output hacked and copyleft © 1998 by Francesc Rocher <span class="sc2">&lt;<span class="kw2">br</span>&gt;</span><br />
+						&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Charsets / OS/2 support © 2001 by Kyosuke Tokoro<br />
+						&nbsp; &nbsp; <span class="sc2">&lt;<span class="sy0">/</span><span class="kw2">p</span>&gt;</span><br />
+						<span class="sc2">&lt;<span class="sy0">/</span><span class="kw2">body</span>&gt;</span><br />
+						<span class="sc2">&lt;<span class="sy0">/</span><span class="kw2">html</span>&gt;</span></div>					
+					</div>
+					<p>Webブラウザに表示した結果は<a href="./meibo_tree.html">meibo_tree.html</a>をご覧ください。ただし、例題のファイルやディレクトリは用意してありませんので、リンクをクリックするとエラーになります。</p>
+				</section>
+			</section>
+			<!-- catコマンドの説明 -->
+			<section>
+				<h3 id="cat">3.2.4 テキストファイルの連結（catコマンド）</h3>
+				<p>catコマンドは複数のファイルを連結して標準出力に出力します。標準出力は出力先を変えない限りターミナルに割り当ててありますので、ファイルの内容はターミナルに出力されます。catという名前がおぼえやすいと言うこともあって、小さなテキストファイルの内容を見たいときによく使用します。</p>
+				<section>
+					<h4>一般形式</h4>
+					<p>引数には複数のファイルパス名を指定できます。ファイルパス名の指定が無い場合は標準入力（通常はキーボード）からの入力となります。また、ファイルパス名として<strong>-</strong>（負記号）記号を指定すると標準入力から入力します。</p>
+					<div class="form-exp">
+						$ cat -Tn ファイルパス名１ ファイルパス名２ …
+					</div>
+					<table class="simple-table">
+						<caption>【表3-3】catコマンド・オプション</caption>
+						<tr><th>オプション</th><th>意味</th></tr>
+						<tr><td>-T, --show-tabs</td><td>タブ文字を<code>^T</code>で出力します。（タブ文字を見えるように表示します）</td></tr>
+						<tr><td>-n, --number</td><td>行番号を付加して出力します。</td></tr>
+					</table>
+				</section>
+				<section>
+					<h4>実行例</h4>
+					<p>図3-3でmeiboディレクトリがカレントディレクトリに設定してあるものとして、meibo1とmeibo2を連結してmeibo_newを作成します。</p>
+					<div class="exe-samp">
+<pre><samp>$ <kbd>cat meibo1 meibo2 &gt; meibo_new</kbd>
+$
+</samp></pre>
+					</div>
+					<p>/etc/issueファイルの内容に行番号を付加してターミナルに出力します。</p>
+					<div class="exe-samp">
+<pre><samp>$ <kbd>cat -n /etc/issue</kbd>
+     1  Fedora Core release 2 (Tettnang)<strong> ← ここから/etc/issueの内容です</strong>
+     2  Kernel \r on an \m
+     3
+$
+</samp></pre>
+					</div>
+					<p>dateコマンドの結果と/etc/issueファイルの内容を連結して出力します。dateコマンドの結果は標準入力でcatコマンドに渡します。</p>
+					<div class="exe-samp">
+<pre><samp>$ <kbd>date "+%c" | cat <strong>-</strong> /etc/issue &gt; file1.txt</kbd>
+$
+$ <kbd>cat file1.txt</kbd>
+2004年07月30日 17時02分25秒
+Fedora Core release 2 (Tettnang)
+Kernel \r on an \m
+
+$
+</samp></pre>
+					</div>
+				</section>
+			</section>
+			<!-- more & lessコマンドの説明 -->
+			<section>
+				<h3 id="more_less">3.2.5 テキストファイルの内容表示（moreコマンドとlessコマンド）</h3>
+				<p>moreコマンドとlessコマンドはページャーと呼ばれているものの一種で、ターミナルの最終行の前まで出力した状態でサブコマンド入力待ちになります。例えば、catコマンドで少し大きめのファイルの内容を表示するとターミナルから溢れてしまいますが、このような場合はmoreコマンド或は、lessコマンドを使用すると便利です。機能は両方ともほとんど同じです。</p>
+				<section>
+					<h4>一般形式</h4>
+					<p>引数には複数のファイルパス名を指定できます。</p>
+					<div class="form-exp">
+						$ more ファイルパス名１ ファイルパス名２ …<br>
+						$ less ファイルパス名１ ファイルパス名２ …
+					</div>
+					<p>ターミナルの最終行はサブコマンド入力行で、スクロールの指示などを行います。</p>
+					<p>moreコマンドには次のようなサブコマンドがあります。</p>
+					<table class="simple-table">
+						<caption>【表3-4】moreコマンドのサブコマンド</caption>
+						<tr><th>サブコマンド</th><th>意味</th></tr>
+						<tr><td>hまたは?</td><td>サブコマンドの説明を表示します。</td></tr>
+						<tr><td>Enter</td><td>１行スクロールします。</td></tr>
+						<tr><td>スペース</td><td>１画面分スクロールします。</td></tr>
+						<tr><td>qまたはQ</td><td>終了します。</td></tr>
+						<tr><td>b</td><td>１画面分戻ります。</td></tr>
+						<tr><td>:n</td><td>引数でファイルを複数指定した場合、次のファイルを表示します。</td></tr>
+					</table>
+					<p>lessコマンドには次のようなサブコマンドがあります。</p>
+					<table class="simple-table">
+						<caption>【表3-5】lessコマンド・オプション</caption>
+						<tr><th>サブコマンド</th><th>意味</th></tr>
+						<tr><td>hまたはH</td><td>サブコマンドの説明を表示します。</td></tr>
+						<tr><td>Enter</td><td>１画面分スクロールします。（moreコマンドとキーの割当が異なります）</td></tr>
+						<tr><td>スペース</td><td>１行スクロールします。（moreコマンドとキーの割当が異なります）</td></tr>
+						<tr><td>qまたはQ</td><td>終了します。</td></tr>
+						<tr><td>b</td><td>１画面分戻ります。</td></tr>
+						<tr><td>d</td><td>半画面分スクロールします。</td></tr>
+						<tr><td>y</td><td>半画面分戻ります。</td></tr>
+						<tr><td>:n</td><td>引数でファイルを複数指定した場合、次のファイルを表示します。</td></tr>
+					</table>
+				</section>
+				<section>
+					<h4>実行例</h4>
+					<p>図3-3でmeiboディレクトリがカレントディレクトリに設定してあるものとして、meibo1とmeibo2の内容を表示します。</p>
+					<div class="exe-samp">
+<pre><samp>$ <kbd>more meibo1 meibo2</kbd>
+（meibo1ファイルの内容表示）<strong> ← :nサブコマンドで次のファイルを表示します</strong>
+（meibo2ファイルの内容表示）
+$
+$ <kbd>less meibo1 meibo2</kbd>
+（meibo1ファイルの内容表示）<strong> ← :nサブコマンドで次のファイルを表示します</strong>
+（meibo2ファイルの内容表示）
+$
+</samp></pre>
+					</div>
+					<p>lsコマンドの実行結果をパイプラインでmoreコマンドに送ります。</p>
+					<div class="exe-samp">
+<pre><samp>$ <kbd>ls -x /usr/bin | more</kbd><strong> ← lsコマンドの-xは１行に複数表示するための指定です</strong>
+（/usr/binの下のファイルを表示）
+$
+$ <kbd>ls /usr/bin | more</kbd><strong> ← lsコマンドのオプション指定がないため、-1が仮定されますので１行に１パス名を表示します</strong>
+（/usr/binの下のファイルを表示）
+$</samp></pre>
+					</div>
+				</section>
+			</section>
+			<!-- head & tailコマンドの説明 -->
+			<section>
+				<h3 id="head_tail">3.2.6 テキストファイルの行数指定表示（headコマンドとtailコマンド）</h3>
+				<p>ファイルの全体ではなく一部分だけを見たい場合が有ります。例えばログファイルの先頭或は、最後の数行だけを見たいというようなことです。このような場合はheadコマンド或は、tailコマンドを使用します。</p>
+				<section>
+					<h4>一般形式</h4>
+					<p>出力行数を省略した場合は、headコマンドはファイルの先頭からの10行を、tailコマンドはファイルの最後の10行を標準出力に出力します。ファイルを指定しない場合は標準入力から入力します。</p>
+					<div class="form-exp">
+						$ head -n 行数 ファイルパス名１ ファイルパス名２ …<br>
+						$ tail -n 行数 ファイルパス名１ ファイルパス名２ …
+					</div>
+					<table class="simple-table">
+						<caption>【表3-6】headコマンドとtailコマンド・オプション</caption>
+						<tr><th>オプション</th><th>意味</th></tr>
+						<tr><td>-n 行数, --lines 行数</td><td>表示する行数を指定します。省略した場合は10行を仮定します。</td></tr>
+					</table>
+				</section>
+				<section>
+					<h4>実行例</h4>
+					<p>/var/log/boot.logファイルの先頭10行を表示します。</p>
+					<div class="exe-samp">
+<pre><samp>$ <kbd>head /var/log/boot.log</kbd>
+[  OK  ] Started Show Plymouth Boot Screen.
+[  OK  ] Reached target Paths.
+[  OK  ] Reached target Basic System.
+[  OK  ] Found device SAMSUNG_HD253GJ.
+[  OK  ] Found device SAMSUNG_HD253GJ.
+[  OK  ] Started dracut initqueue hook.
+         Mounting /sysroot...
+[  OK  ] Mounted /sysroot.
+[  OK  ] Reached target Initrd Root File System.
+         Starting Reload Configuration from the Real Root...
+$
+</samp></pre>
+					</div>
+					<p>/var/log/boot.logファイルの最後の5行を表示します。</p>
+					<div class="exe-samp">
+<pre><samp>$ <kbd>tail -n 5 /var/log/boot.log</kbd>
+         Starting Authorization Manager...
+[  OK  ] Started firewalld - dynamic firewall daemon.
+         Starting Network Manager...
+[  OK  ] Started Authorization Manager.
+[  OK  ] Started Accounts Service.
+$
+</samp></pre>
+					</div>
+				</section>
+			</section>
+		</section>
+	</section>
+
+	<footer>
+		<nav>
+			<ul>
+				<li><a href="../../index.html">ホーム</a></li>
+				<li><a href="../cmdtop.html#lbl_index">目次</a></li>
+				<li><a href="./section3_1.html">前のページ</a></li>
+				<li><a href="../SECTION4/section4_1.html">次のページ</a></li>
+			</ul>
+		</nav>
+		<p id="footer-author">更新日：<time datetime="2015-09-13">2015年09月13日</time> Merry</p>
+	</footer>
+</div>
+</body>
+</html>

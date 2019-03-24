@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initialscale=1.0">
+	<meta name="robots" content="INDEX,FOLLOW">
+	<meta name="keywords" content="ワイルドカード,メタキャラクタ,保護モード,アクセス権或,パーミッション,chmod,シンボリック形式,八進数形式">
+	<meta name="description" content="ワイルドカードと保護モードについて説明します。">
+	<meta name="author" content="T.Hagiwara">
+	<link rel="stylesheet" href="../../CSS3/seminar.css" type="text/css">
+	<link rel="prev" href="../SECTION3/section3_2.html">
+	<link rel="next" href="./section4_2.html">
+	<title>Linuxの使い方&nbsp;-&nbsp;ファイル操作のコマンド２（1/5）</title>
+	<style type="text/css">
+	</style>
+</head>
+<body>
+<div id="container">
+	<header>
+		<p>Linux講座にようこそ。このページは「Linuxの使い方&nbsp;-&nbsp;第４章&nbsp;ファイル操作のコマンド２」です。</p>
+		<h1>Linuxの使い方</h1>
+		<nav>
+			<ul>
+				<li><a href="../../index.html">ホーム</a></li>
+				<li><a href="../cmdtop.html#lbl_index">目次</a></li>
+				<li><a href="../SECTION3/section3_2.html">前のページ</a></li>
+				<li><a href="./section4_2.html">次のページ</a></li>
+			</ul>
+		</nav>
+	</header>
+
+	<section class="contents">
+		<h1>4. ファイル操作のコマンド２（1/5）</h1>
+		<p>ここでは「ファイル操作のコマンド１」に引続き、ファイルやディレクトリを取り扱うコマンドをご紹介しますが、コマンドを使うにあたり知っておいたほうがよいことがいくつかありますので、それらに付いても説明します。内容は次の通りです。</p>
+		<ul>
+			<li><a href="#wild_card">ファイルやディレクトリをまとめて指定するワイルドカード</a></li>
+			<li><a href="#permission">ファイルやディレクトリの保護</a></li>
+			<li><a href="./section4_2.html#lbl_cmd2">コマンドのご紹介２</a></li>
+		</ul>
+		<!-- ワイルドカードの説明 -->
+		<section>
+			<h2 id="wild_card">4.1 ファイルやディレクトリをまとめて指定するワイルドカード</h2>
+			<p>コマンド引数にファイルやディレクトリを複数指定する場合、キータッチが増えますので操作性が悪くなります。指定するパス名に規則性がある場合は、<strong>ワイルドカード</strong>或は、メタキャラクタと呼ばれている特殊記号を使うと複数のパス名をまとめて指定することができます。ワイルドカードには次の３種類があります。</p>
+			<div class="form-exp">
+				<dl>
+					<dt>?</dt>
+						<dd>任意の１文字を表します。</dd>
+					<dt>*</dt>
+						<dd>任意の文字列を表します。（長さ０を含みます）</dd>
+					<dt>[文字列]</dt>
+						<dd>文字列中の任意の１文字を表します。</dd>
+				</dl>
+			</div>
+			<p>文字列とは複数文字の並びで、代表的な文字列としては人名や地名などがあります。なお、上記ワイルドカードを単なる文字として扱いたい場合は、\（バックスラッシュ）を付加します。（\?、\*、\[、\]のように指定します）</p>
+			<p>ワイルドカードはシェルが処理しますので全てのコマンドに使用できます。例えば、次のlsコマンドの場合、シェルがDATAディレクトリの下の先頭から４桁が「data」で、５桁目が任意の１文字で、次からの４文字が「.txt」に該当するファイルやディレクトリを探し出して、lsコマンドの<strong>引数にセットして実行</strong>します。つまり、キーボードから入力したパス名がシェルによって変更された後に、lsコマンドを実行するということです。</p>
+			<div class="form-exp">
+				$ ls DATA/data?.txt
+			</div>
+			<section>
+				<h3>4.1.1 実行例</h3>
+				<figure class="left-box myphoto">
+					<dl>
+						<dt><img src="../IMAGES/sec04_1.jpg" alt="ユーザmerryのホームディレクトリ"></dt>
+						<dd>【図４-１】ユーザmerryのホームディレクトリ</dd>
+						<dd>merryディレクトリがホームディレクトリで、ログイン直後はここがカレントディレクトリになります</dd>
+					</dl>
+				</figure>
+				<p>図4-1のファイルシステム例で説明します。カレントディレクトリに注目して下さい。</p>
+				<p style="clear: left;">カレントディレクトリはmerryとします。meiboディレクトリの下の先頭から５文字が「meibo」で、最後の１文字が任意のファイルやディレクトリをlsコマンドで表示します。</p>
+				<div class="exe-samp">
+<pre><samp>$ <kbd>ls meibo/meibo?</kbd>
+meibo1  meibo2  meiboA
+$
+</samp></pre>
+				</div>
+				<p>カレントディレクトリはmeiboとします。カレントディレクトリの下の先頭から５文字が「meibo」で、最後の１文字が「1」から「5」までのどれか１文字のファイルやディレクトリをlsコマンドで表示します。</p>
+				<div class="exe-samp">
+<pre><samp>$ <kbd>ls meibo[12345]</kbd><strong> ← meibo[1-5]でも同じです</strong>
+meibo1  meibo2
+$
+</samp></pre>
+				</div>
+				<p>カレントディレクトリはmeiboとします。dataディレクトリの下の<strong>全て</strong>のファイルの内容をcatコマンドで表示します。</p>
+				<div class="exe-samp">
+<pre><samp>$ <kbd>cat data/＊</kbd>
+（data1の内容）
+（data2の内容）
+$
+</samp></pre>
+				</div>
+				<p>カレントディレクトリはmeiboとします。merryディレクトリの下の先頭１文字が「m」で、２文字目以降が任意のファイルやディレクトリをlsコマンドで表示します。</p>
+				<div class="exe-samp">
+<pre><samp>$ <kbd>ls ../m＊</kbd>
+meibo  mybin
+$
+</samp></pre>
+				</div>
+			</section>
+		</section>
+		<!-- 機密保護の説明 -->
+		<section>
+			<h2 id="permission">4.2 ファイルやディレクトリの保護</h2>
+			<p>UNIX系OSはマルチユーザのシステムですので、１つのファイルシステムを複数の人が共有することになります。自分の所有しているファイルの中には他の人に見られたら困るものもありますし、逆に、他の人にファイルの内容を公開したいものもあります。このようなときにはファイルやディレクトリに<strong>保護モード</strong>（アクセス権或は、パーミッションとも言っています）を設定します。保護モードを設定するときには、次の２点に付いて考慮する必要があります。</p>
+			<div class="form-exp">
+				<ul>
+					<li>誰のアクセスから保護するのか。（<strong>ユーザの種類</strong>）</li>
+					<li>どのようなアクセスから保護するのか。（<strong>アクセスの種類</strong>）</li>
+				</ul>
+			</div>
+			<p>ユーザの種類とアクセスの種類に付いては、それぞれ次の３種類があります。</p>
+			<table class="simple-table">
+				<caption>【表4-1】ユーザの種類一覧</caption>
+				<tr><th>ユーザの種類</th><th>指定方法/表示</th></tr>
+				<tr><td>ファイルやディレクトリの所有者（user）</td><td>u</td></tr>
+				<tr><td>所有者と同じグループに属する人（group）</td><td>g</td></tr>
+				<tr><td>上記以外の他人（other）</td><td>o</td></tr>
+			</table>
+			<table class="simple-table">
+				<caption>【表4-2】ファイルアクセスの種類一覧</caption>
+				<tr><th>ファイルアクセスの種類</th><th>指定方法/表示</th></tr>
+				<tr><td>読み込み（read）の可否</td><td>rが許可で-が禁止</td></tr>
+				<tr><td>書き出し（write）の可否（更新や削除の可否）</td><td>wが許可で-が禁止</td></tr>
+				<tr><td>実行（execute）の可否（実行可能ファイルやシェルスクリプトの実行可否）</td><td>xが許可で-が禁止</td></tr>
+			</table>
+			<p>実行可能なプログラムが入っているファイルでも、実行許可の保護モードになっていないと実行できません。また、後ほど説明するシェルスクリプトも実行許可の保護モードが必要です。</p>
+			<table class="simple-table">
+				<caption>【表4-3】ディレクトリアクセスの種類一覧</caption>
+				<tr><th>ディレクトリアクセスの種類</th><th>指定方法/表示</th></tr>
+				<tr><td>読み込み（read）の可否（lsコマンドやfindコマンドでの表示の可否）</td><td>rが許可で-が禁止</td></tr>
+				<tr><td>書き出し（write）の可否（新規作成／更新／削除の可否）</td><td>wが許可で-が禁止</td></tr>
+				<tr><td>実行（execute）の可否（カレントディレクトリの設定の可否）</td><td>xが許可で-が禁止</td></tr>
+			</table>
+			<p>ディレクトリにはディレクトリが管理しているファイルやディレクトリの情報が入っていますので、それが読み込めるということは管理対象のファイルやディレクトリ情報を取得できることになります。従って、lsコマンドやfindコマンドで管理対象のファイルやディレクトリ情報を表示できます。また、書き出せるということは管理対象のファイルやディレクトリ情報を追加／変更／削除できるということになります。従って、管理対象のファイルやディレクトリも追加／変更／削除できるということになります。</p>
+			<p>保護モードはlsコマンドの<strong>-l</strong>（詳細情報表示）オプションの指定で表示ができます。例えば、data1ファイルの詳細情報を表示すると、次のような内容になります。</p>
+			<div class="exe-samp">
+<pre><samp>$ <kbd>ls -l data/data1</kbd><strong> ← dataディレクトリの下のdata1ファイルの詳細情報の表示です</strong>
+-rw-r--r-- 1 merry users 7  7月 24 15:17 data/data1
+$
+$ <kbd>ls -l data</kbd><strong> ← dataディレクトリの下の全てのファイルやディレクトリの詳細情報の表示です</strong>
+合計 8
+-rw-r--r-- 1 merry users  7  7月 24 15:17 data1
+-rw-r--r-- 1 merry users 20  7月 24 15:20 data2
+$
+$ <kbd>ls -ld data</kbd><strong> ← ディレクトリの情報表示は-dオプションです</strong>
+drwxr-xr-x 2 merry users 4096  7月 24 15:20 data<strong> ← dataディレクトリの詳細情報です</strong>
+$</samp></pre>
+			</div>
+			<p>この例のdata1ファイルの保護モードは「<strong>rw-r--r--</strong>」で、所有者はmerryで、merryの所属するグループはusersです。</p>
+			<p>保護モードの最初の「rw-」は所有者に対して「読み込み（read）」と「書き出し（write）」を許可して、「実行（execute）」を禁止することを表し、２番目と３番目の「r--」 は同一グループに属する人と、他人に対して「読み込み（read）」だけを許可することを表しています。</p>
+			<p>次の例の/rootディレクトリはシステム管理者（root）が所有していますが、システム管理者以外（他人）については読み/書き/実行が禁止されています。従って、このディレクトリを一般ユーザが使用しようとしても出来ません。</p>
+			<div class="exe-samp">
+<pre><samp>$ <kbd>ls -ld /root</kbd><strong> ← /rootの詳細情報を表示します</strong>
+dr-xr-x---. 17 root root 4096 10月 28 11:12 /root<strong> ← 他人に対する保護モードは---です</strong>
+$ 
+$ <kbd>ls -l /root</kbd>
+ls: ディレクトリ '/root' を開くことが出来ません: Permission denied<strong> ← エラーメッセージ</strong>
+$
+$ <kbd>cd /root</kbd>
+bash: cd: /root: Permission denied<strong> ← エラーメッセージ</strong>
+$</samp></pre>
+			</div>
+			<p>保護モードの変更はchmodコマンドで行いますが、変更出来るのは自分が所有しているもののみです。（システム管理者rootは全てのファイルやディレクトリの変更が出来ます）</p>
+			<section>
+				<h3 id="chmod">4.2.1 一般形式（chmodコマンド）</h3>
+				<p>ファイルやディレクトリを作成すると標準の保護モードが設定されますので、標準の保護モードでは都合が悪いときのみchmodコマンドで保護モードの変更を行います。ちなみに、ファイルの標準の保護モードは「rw-r--r--」ですが、ディストリビューションやバージョンにより異なる場合がありますので注意して下さい。</p>
+				<p>chmodコマンドでの保護モードの指定の方法には<strong>シンボリック形式</strong>と<strong>八進数形式</strong>があります。シンボリック形式の場合は変更する部分だけを指定し、八進数形式の場合は変更後の値を指定します。</p>
+				<div class="form-exp">
+					※ シンボリック形式<br>
+					$ chmod -R <strong>ugo+-rwx</strong> ファイルパス名または、ディレクトリパス名<br><br>
+					※ 八進数形式<br>
+					$ chmod -R <strong>八進数３桁</strong> ファイルパス名または、ディレクトリパス名
+				</div>
+				<table class="simple-table">
+					<caption>【表4-4】chmodコマンド・オプション</caption>
+					<tr><th>オプション</th><th>意味</th></tr>
+					<tr><td>-R, --recursive</td><td>ディレクトリパス名以下の全てを変更対象とします。</td></tr>
+					<tr><td>u、g、o</td><td>uは所有者、gは同一グループに属する人、oは他人を表します。</td></tr>
+					<tr><td>+、-</td><td>+は許可、-は禁止を表します。</td></tr>
+					<tr><td>r、w、x</td><td>rは読み込み（read）、wは書き出し（write）、xは実行（execute）を表します。</td></tr>
+					<tr><td>八進数３桁</td><td>３桁目は所有者、２桁目は同一グループに属する人、１桁目は他人を表し、更に、それぞれの桁の３ビットは左から順にrwxを表します。</td></tr>
+				</table>
+			</section>
+			<section>
+				<h3>4.2.2 実行例</h3>
+				<p>カレントディレクトリの下のfile1の保護モードを「rw-r--r--」から「rw-------」に変更します。八進数形式の場合、許可するところを「1」、禁止するところを「0」としますと、（110000000）となります。これを３桁ずつ区切れば八進数になります。</p>
+				<div class="exe-samp">
+<pre><samp>$ <kbd>chmod go-r file1</kbd><strong> ← シンボリック形式です</strong>
+$ <kbd>chmod 600 file1</kbd><strong> ← 八進数形式です。２進数で表すと（110000000）です</strong>
+</samp></pre>
+				</div>
+				<p>カレントディレクトリの下のprog1の保護モードを「rw-r--r--」から「rwxr-xr-x」に変更します。</p>
+				<div class="exe-samp">
+<pre><samp>$ <kbd>chmod ugo+x prog1</kbd><strong> ← シンボリック形式です</strong>
+$ <kbd>chmod 755 prog1</kbd><strong> ← 八進数形式です。２進数で表すと（111101101）です</strong>
+</samp></pre>
+				</div>
+				<p>カレントディレクトリの下のmybinディレクトリのファイルで、拡張子が.shのものに実行許可を与えます。</p>
+				<div class="exe-samp">
+<pre><samp>$ <kbd>chmod ugo+x mybin/*.sh</kbd><strong> ← シンボリック形式です</strong>
+$ <kbd>chmod 755 mybin/*.sh</kbd><strong> ← 八進数形式です。２進数で表すと（111101101）です</strong>
+</samp></pre>
+				</div>
+				<aside>
+					<h4>補足</h4>
+					<ul>
+						<li>「rw-------」を設定すると所有者以外のユーザは使用（詳細情報の表示や内容の表示など）出来なくなります。ただし、所有者以外の人が所有者のユーザ名でログインした場合は（不正行為ですが）使用出来ます。機密保護の観点からは保護モードの設定だけでは不十分ですので、ユーザ名にパスワードの設定を行ってください。パスワードの設定に付いては後程説明します。</li>
+						<li>「---------」を設定すると所有者自身も使用できなくなりますので、誤って削除してしまうことや内容を変更してしまうことを防ぐことができます。機密性が高い重要なファイルはこのモードに設定しておくとよいでしょう。</li>
+					</ul>
+				</aside>
+			</section>
+		</section>
+	</section>
+
+	<footer>
+		<nav>
+			<ul>
+				<li><a href="../../index.html">ホーム</a></li>
+				<li><a href="../cmdtop.html#lbl_index">目次</a></li>
+				<li><a href="../SECTION3/section3_2.html">前のページ</a></li>
+				<li><a href="./section4_2.html">次のページ</a></li>
+			</ul>
+		</nav>
+		<p id="footer-author">更新日：<time datetime="2017-11-02">2017年11月02日</time> Merry</p>
+	</footer>
+</div>
+</body>
+</html>

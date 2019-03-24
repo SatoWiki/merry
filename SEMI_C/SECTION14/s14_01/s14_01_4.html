@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initialscale=1.0">
+	<meta name="robots" content="INDEX,FOLLOW">
+	<meta name="keywords" content="入出力ライブラリ,関数,書式,fscanf,代入抑止フラグ,最大文字幅,サイズ指定子,変換指定子,scanf,sscanf">
+	<meta name="description" content="fscanf関数、scanf関数、sscanf関数の使い方を説明します。">
+	<meta name="author" content="T.Hagiwara">
+	<link rel="stylesheet" href="../../../CSS3/seminar.css" type="text/css">
+	<link rel="stylesheet" href="../../../CSS3/hl_clang.css" type="text/css">
+	<link rel="prev" href="./s14_01_3.html">
+	<link rel="next" href="./s14_01_5.html">
+	<title>Ｃ言語プログラミング入門&nbsp;-&nbsp;ライブラリ関数&nbsp;-&nbsp;入出力ライブラリ（4/10）-</title>
+	<style type="text/css">
+	</style>
+</head>
+<body>
+<div id="container">
+	<header>
+		<p>Linux講座にようこそ。このページは「Ｃ言語プログラミング入門&nbsp;-&nbsp;第14章．ライブラリ関数&nbsp;-&nbsp;入出力ライブラリ」です。</p>
+		<h1>Ｃ言語プログラミング入門</h1>
+		<nav>
+			<ul>
+				<li><a href="../../../index.html">ホーム</a></li>
+				<li><a href="../../c_langtop.html#lbl_index">目次</a></li>
+				<li><a href="./s14_01_3.html">前のページ</a></li>
+				<li><a href="./s14_01_5.html">次のページ</a></li>
+			</ul>
+		</nav>
+	</header>
+
+	<section class="contents">
+		<h1>14. ライブラリ関数（5/36）&nbsp;-&nbsp;入出力ライブラリ（4/10）</h1>
+		<section>
+			<h2>14.7 書式入力関数</h2>
+			<p>ここで紹介する入力関数は文字列を入力しますが、入力した文字列を<strong>書式制御文字列</strong>に従い型変換して、直接int型やdoubl型などの変数に格納します。格納する変数は引数で指定しますので、関数側から引数で指定した領域に値を設定することになります。従って、引数の受け渡しは「<strong>参照渡し</strong>」になります。参照渡しについては「<a href="../../SECTION09/section09_2.html">9. プログラムの部品化のための関数（2/3）</a>」をご覧下さい。</p>
+			<section>
+				<h3 id="lbl_fscanf">14.7.1 fscanf関数</h3>
+				<p>fscanf関数はファイルポインタに対応したファイルから入力た文字列を、書式制御文字列に従い型変換して、引数に指定した変数に設定します。</p>
+				<table>
+					<caption>【表14-1-16】 fscanf関数</caption>
+					<tr><th>形式</th><td>#include &lt;stdio.h&gt;<br>
+										int fscanf(FILE *fp, const char *format, ...);</td></tr>
+					<tr><th>返り値</th><td>入力できた場合は入力したデータの数を返します。ファイルの終端やエラーを検出した場合は<strong>EOF</strong>を返します。また、入力したデータが型変換できない場合（英字をint型に変換、等）は、その時点で入力を終了します。</td></tr>
+					<tr><th>引数</th>
+						<td>
+							<dl>
+								<dt>FILE *fp</dt>
+									<dd>入力するファイルのファイルポインタを指定します。</dd>
+								<dt>const char *format</dt>
+									<dd>書式制御文字列を指定します。</dd>
+								<dt>...</dt>
+									<dd>入力したデータを格納する変数を指定します。参照渡しになりますので変数のアドレス（ポインタ）を指定します。</dd>
+							</dl>
+						</td></tr>
+					<tr><th>使用法、<br>他</th>
+						<td>
+						返り値がEOF以外の場合は入力出来ましたが、期待したデータが全て入力できたかどうかは返り値をチェックする必要が有ります。
+						</td></tr>
+				</table>
+				<p id="lbl_format">第２引数のformat（書式制御文字列）は「%（パーセント）」で始まり、「代入抑止フラグ」、「最大文字幅」、「サイズ指定子」、「変換指定子」が続きます。%と変換指定子以外は省略可能です。なお、これら以外の文字を指定した場合は、入力ストリーム中に一致した文字が現れると、それをスキップします。</p>
+				<dl>
+					<dt>代入抑止フラグ</dt>
+						<dd>*（アステリスク）で指定します。データは入力しますが捨ててしまいます。第３引数以降に指定した変数に値を設定しませんので、引数（格納変数）を指定する必要は有りません。</dd>
+					<dt>最大文字幅</dt>
+						<dd>文字列入力の場合の最大入力文字数を指定します。最大文字幅より長い文字列を入力しても最大文字幅以降のデータは読み飛ばされます。</dd>
+					<dt>サイズ指定子</dt>
+						<dd>short型を表す「h」、longやdoubleを表す「l」（小文字のL）及び、long&nbsp;double型を表す「L」を指定できます。これらは数値データを入力したい場合に指定できます。</dd>
+					<dt>変換指定子</dt>
+						<dd>入力したデータを、どのような型に変換するかを「【表14-1-17】 変換指定子一覧」に示す変換指定子で指定します。数値に変換する場合にはサイズ指定子と組み合わせることができます。</dd>
+				</dl>
+				<table class="simple-table">
+					<caption>【表14-1-17】 変換指定子一覧</caption>
+					<tr><th>変換指定子</th><th>型</th><th>説明</th></tr>
+					<tr><td>d</td><td>int</td><td>十進整数値に変換します。</td></tr>
+					<tr><td>i</td><td>int</td><td>0xまたは、0Xで始まる場合は十六進数、０で始まる場合は八進数、その他の場合は十進数値として変換します。</td></tr>
+					<tr><td>o</td><td>unsigned&nbsp;int</td><td>八進数値に変換します。</td></tr>
+					<tr><td>u</td><td>unsigned&nbsp;int</td><td>十進数値に変換します。</td></tr>
+					<tr><td>xまたは、X</td><td>unsigned&nbsp;int</td><td>十六進数値に変換します。</td></tr>
+					<tr><td>f</td><td>float</td><td>浮動小数点数に変換します。（e、E、gも同じです）</td></tr>
+					<tr><td>s</td><td>char型の配列</td><td>文字列に変換します。終端にはヌル文字（'\0'）が追加されます。なお、入力ストリーム中に、空白（スペースやタブ）が現れるか、最大文字幅に達した場合は文字列の入力は終了します。</td></tr>
+					<tr><td>c</td><td>char</td><td>通常は１文字に変換します。ただし、最大文字幅を指定すれば指定した分の文字に変換します。なお、入力ストリーム中の空白は入力します。入力したくない場合は、書式制御文字列中に明示的にスペースを指定します。</td></tr>
+					<tr><td>[文字列]</td><td>char型の配列</td><td>[文字列]中の文字に一致した文字または、不一致の文字を入力します。[文字列]の先頭に^（アクサンシルコンフレックス）を付けると、不一致を意味します。また、連続した文字の中の１文字は-（負記号）で指定ができます。（例えば、英大文字ならば[A-Z]の様に指定できます）</td></tr>
+					<tr><td>p</td><td>voidへのポインタ</td><td>ポインタ値に変換します。</td></tr>
+					<tr><td>n</td><td>int</td><td>ここまでに入力された文字数を取得します。</td></tr>
+				</table>
+				<p>浮動小数点数の入力は、float型として入力する場合の書式は「<strong>%f</strong>」ですが、double型として入力する場合は、サイズ指定子の「l」を付加して「<strong>%lf</strong>」になりますので注意して下さい。</p>
+			</section>
+			<section>
+				<h3 id="lbl_scanf">14.7.2 scanf関数</h3>
+				<p>scanf関数は標準入力から入力した文字列を書式制御文字列に従い型変換して、引数に指定した変数に設定します。fscanf関数との相違は入力が標準入力に限定されていることだけです。</p>
+				<table>
+					<caption>【表14-1-18】 scanf関数</caption>
+					<tr><th>形式</th><td>#include &lt;stdio.h&gt;<br>
+										int scanf(const char *format, ...);</td></tr>
+					<tr><th>返り値</th><td>fscanf関数と同じです。</td></tr>
+					<tr><th>引数</th>
+						<td>
+							<dl>
+								<dt>const char *format</dt>
+									<dd>書式制御文字列を指定します。内容はfscanf関数と同じです。</dd>
+								<dt>...</dt>
+									<dd>入力したデータを格納する変数を指定します。参照渡しになりますので変数のアドレス（ポインタ）を指定します。</dd>
+							</dl>
+						</td></tr>
+				</table>
+			</section>
+			<section>
+				<h3 id="lbl_sscanf">14.7.3 sscanf関数</h3>
+				<p>sscanf関数は文字列を書式制御文字列に従い型変換して、引数に指定した変数に設定します。fscanf関数との相違は入力がファイルではないことだけです。</p>
+				<table>
+					<caption>【表14-1-19】 sscanf関数</caption>
+					<tr><th>形式</th><td>#include &lt;stdio.h&gt;<br>
+										int sscanf(const char *str, const char *format, ...);</td></tr>
+					<tr><th>返り値</th><td>fscanf関数と同じです。</td></tr>
+					<tr><th>引数</th>
+						<td>
+							<dl>
+								<dt>const char *str</dt>
+									<dd>変換する文字列を指定します。</dd>
+								<dt>const char *format</dt>
+									<dd>書式制御文字列を指定します。内容はfscanf関数と同じです。</dd>
+								<dt>...</dt>
+									<dd>変換したしたデータを格納する変数を指定します。参照渡しになりますので変数のアドレス（ポインタ）を指定します。</dd>
+							</dl>
+						</td></tr>
+				</table>
+			</section>
+			<section>
+				<h3>14.7.4 例題</h3>
+				<p>下記のような,（コンマ）で区切って、番号・体重・身長・血液型のデータが登録されているex14_1_6.datファイルを入力して標準出力に出力します。ただし、血液型は出力しませんのでスキップします。</p>
+				<div class="source-code">
+					1,67,188,A<br>
+					2,98,176.5,O<br>
+					3,43.2,156.5,AB<br>
+					4,55.5,167.5,B<br>
+					5,75.7,166.5,A
+				</div>
+				<div class="source-code">
+					<div class="c"><ol><li class="li1"><div class="de1"><span class="co2">#include &lt;stdio.h&gt;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1"><span class="kw4">int</span> main<span class="br0">&#40;</span><span class="kw4">void</span><span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; FILE &nbsp; &nbsp; &nbsp; &nbsp;<span class="sy0">*</span>fp<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">char</span> &nbsp; &nbsp; &nbsp; &nbsp;in_file<span class="br0">&#91;</span><span class="br0">&#93;</span> <span class="sy0">=</span> <span class="st0">&quot;./DATA/ex14_1_6.dat&quot;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">short</span> <span class="kw4">int</span> &nbsp; number<span class="sy0">;</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="coMULTI">/* 番号 &nbsp;*/</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">float</span> &nbsp; &nbsp; &nbsp; weight<span class="sy0">;</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="coMULTI">/* 体重 &nbsp;*/</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">double</span> &nbsp; &nbsp; &nbsp;height<span class="sy0">;</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="coMULTI">/* 身長 &nbsp;*/</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">int</span> &nbsp; &nbsp; &nbsp; &nbsp; return_code <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">if</span><span class="br0">&#40;</span><span class="br0">&#40;</span>fp <span class="sy0">=</span> <span class="kw3">fopen</span><span class="br0">&#40;</span>in_file<span class="sy0">,</span> <span class="st0">&quot;r&quot;</span><span class="br0">&#41;</span><span class="br0">&#41;</span> <span class="sy0">!=</span> NULL<span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;番号<span class="es1">\t</span>体重<span class="es1">\t</span>身長<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* &nbsp;番号、体重、身長を入力 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">while</span><span class="br0">&#40;</span><span class="kw3">fscanf</span><span class="br0">&#40;</span>fp<span class="sy0">,</span> <span class="st0">&quot;%hd,%f,%lf,%*s&quot;</span><span class="sy0">,</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="sy0">&amp;</span>number<span class="sy0">,</span> <span class="sy0">&amp;</span>weight<span class="sy0">,</span> <span class="sy0">&amp;</span>height<span class="br0">&#41;</span> <span class="sy0">!=</span> EOF<span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;%d<span class="es1">\t</span>%.2f<span class="es1">\t</span>%.2f<span class="es1">\n</span>&quot;</span><span class="sy0">,</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; number<span class="sy0">,</span> weight<span class="sy0">,</span> height<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">fclose</span><span class="br0">&#40;</span>fp<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">else</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;%sがオープン出来ませんでした。&quot;</span><span class="sy0">,</span> in_file<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; return_code <span class="sy0">=</span> <span class="nu0">1</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">return</span> return_code<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#125;</span></div></li>
+					</ol></div>
+				</div>
+				<div class="exe-samp">
+<pre><samp>$ <kbd>./ex14_1_6.prg</kbd>
+番号    体重    身長
+1       67.00   188.00
+2       98.00   176.50
+3       43.20   156.50
+4       55.50   167.50
+5       75.70   166.50</samp></pre>
+				</div>
+				<dl>
+					<dt>16行目</dt>
+						<dd>fscanf関数で番号・体重・身長データを入力します。番号を入力する変数numberはshort&nbsp;int型ですので、書式制御文字列はサイズ指定子の「h」を付加して「%hd」です。体重を入力する変数weightはfloat型ですので、書式制御文字列は「%f」です。身長を入力する変数heightはdouble型ですので、書式制御文字列はサイズ指定子の「l」を付加して「%lf」です。また、血液型は入力しませんので、書式制御文字列は「%*s」（文字列をスキップ）を指定しますが、入力する変数は指定しません。各項目の区切りはコンマですので、書式制御文字列中にコンマを含めます。</dd>
+					<dt>19行目</dt>
+						<dd>printf関数で入力したデータを出力します。fscanf関数の書式制御文字列と多少異なります。</dd>
+				</dl>
+			</section>
+		</section>
+	</section>
+
+	<footer>
+		<nav>
+			<ul>
+				<li><a href="../../../index.html">ホーム</a></li>
+				<li><a href="../../c_langtop.html#lbl_index">目次</a></li>
+				<li><a href="./s14_01_3.html">前のページ</a></li>
+				<li><a href="./s14_01_5.html">次のページ</a></li>
+			</ul>
+		</nav>
+		<p id="footer-author">更新日：<time datetime="2018-12-22">2018年12月22日</time> Merry</p>
+	</footer>
+</div>
+</body>
+</html>

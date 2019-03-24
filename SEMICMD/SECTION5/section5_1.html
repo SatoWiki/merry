@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initialscale=1.0">
+	<meta name="robots" content="INDEX,FOLLOW">
+	<meta name="keywords" content="コントロールキー,ヒストリ,コマンドライン,エイリアス,ユーザ環境,プロセス,フォアグラウンド,コマンド実行結果の置換,stty,alias,unalias">
+	<meta name="description" content="シェルのより高度な使い方をご紹介します。">
+	<meta name="author" content="T.Hagiwara">
+	<link rel="stylesheet" href="../../CSS3/seminar.css" type="text/css">
+	<link rel="prev" href="../SECTION4/section4_5.html">
+	<link rel="next" href="./section5_2.html">
+	<title>Linuxの使い方&nbsp;-&nbsp;より高度なシェルの使い方（1/2）</title>
+	<style type="text/css">
+	</style>
+</head>
+<body>
+<div id="container">
+	<header>
+		<p>Linux講座にようこそ。このページは「Linuxの使い方&nbsp;-&nbsp;第５章&nbsp;より高度なシェルの使い方」です。</p>
+		<h1>Linuxの使い方</h1>
+		<nav>
+			<ul>
+				<li><a href="../../index.html">ホーム</a></li>
+				<li><a href="../cmdtop.html#lbl_index">目次</a></li>
+				<li><a href="../SECTION4/section4_5.html">前のページ</a></li>
+				<li><a href="./section5_2.html">次のページ</a></li>
+			</ul>
+		</nav>
+	</header>
+
+	<section class="contents">
+		<h1>5. より高度なシェルの使い方（1/2）</h1>
+		<p>ここでは「シェルの基本操作」で説明した内容をベースにして、シェルのより高度な使い方を説明します。なお、シェルスクリプトに付いては別途説明します。</p>
+		<ul>
+			<li><a href="#ctrl">コントロールキーの使い方</a></li>
+			<li><a href="#history">ヒストリ機能（コマンドライン編集）の使い方</a></li>
+			<li><a href="#alias">コマンドラインに名前をつけるエイリアス機能の使い方</a></li>
+			<li><a href="#lbl_cmd_rep">コマンド置換機能の使い方</a></li>
+			<li><a href="./section5_2.html#environ">ユーザ環境の設定</a></li>
+			<li><a href="./section5_2.html#proc">プロセスの操作</a></li>
+		</ul>
+		<section>
+			<h2 id="ctrl">5.1 コントロールキーの使い方</h2>
+			<p>コントロールキー（Ctrlキー）と別のキーを同時に押すことにより、次のような操作が行えます。この表の<code>+</code>は同時に押すことを表しています。</p>
+			<table class="simple-table">
+				<caption>【表5-1】 コントロールキー操作一覧</caption>
+				<tr><th>キー操作</th><th>stty名</th><th>機能</th></tr>
+				<tr><td>Ctrl + C</td><td>intr</td><td>フォアグラウンドプロセスを強制終了します。</td></tr>
+				<tr><td>Ctrl + D</td><td>eof</td><td>入力を終了（End of file）します。（実行例は<a href="../SECTION2/section2_2.html#lbl_eof">こちら</a>をご覧ください）</td></tr>
+				<tr><td>Ctrl + \</td><td>quit</td><td>フォアグラウンドプロセスを強制終了します。<code>Ctrl+C</code>よりも強力です。</td></tr>
+				<tr><td>Ctrl + U</td><td>kill</td><td>入力中コマンドを削除します。</td></tr>
+				<tr><td>Ctrl + Z</td><td>susp</td><td>フォアグラウンドプロセスを一時停止します。（実行例は<a href="../SECTION5/section5_2.html#proc_ex">5.6.2 実行例</a>をご覧ください）</td></tr>
+			</table>
+			<p>コマンドが永久ループしてしまって、プロンプトが返って来ない様な時は<code>Ctrl+C</code>で強制終了することが出来ます。これはよく使うと思いますので、憶えておくとよいでしょう。</p>
+			<p>コントロールキーの設定はディストリビューションによって、多少異なるかもしれませんので注意してください。キーの割当表示と変更はsttyコマンドで行います。</p>
+			<section>
+				<h3 id="ctrl_ex">5.1.1 実行例</h3>
+				<p>現在設定してあるキーの割当を全て表示します。（^はコントロールキーを表します。従って、<code>^C</code>は<code>Ctrl+C</code>です）</p>
+				<div class="exe-samp">
+<pre><samp>$ <kbd>stty -a</kbd>
+speed 38400 baud; rows 49; columns 80; line = 0;
+intr = ^C; quit = ^\; erase = ^?; kill = ^U; eof = ^D; eol = M-^?; eol2 = M-^?;
+start = ^Q; stop = ^S; susp = ^Z; rprnt = ^R; werase = ^W; lnext = ^V;
+flush = ^O; min = 1; time = 0;
+-parenb -parodd cs8 hupcl -cstopb cread -clocal -crtscts
+-ignbrk brkint -ignpar -parmrk -inpck -istrip -inlcr -igncr icrnl ixon -ixoff
+-iuclc ixany imaxbel
+opost -olcuc -ocrnl onlcr -onocr -onlret -ofill -ofdel nl0 cr0 tab0 bs0 vt0 ff0
+isig icanon iexten echo echoe echok -echonl -noflsh -xcase -tostop -echoprt
+echoctl echoke
+$
+</samp></pre>
+				</div>
+				<p>xclockをフォアグラウンドプロセスで実行して強制終了します。</p>
+				<div class="exe-samp">
+<pre><samp>$ <kbd>xclock</kbd><strong> ← xclockをフォアグラウンドプロセスで実行します</strong>
+^C<strong> ← <code>Ctrl+C</code>を入力します</strong>
+$ </samp>
+<samp>$ <kbd>xclock</kbd>
+^\Quit (コアダンプ)<strong> ← <code>Ctrl+\</code>を入力します</strong>
+$ 
+</samp></pre>
+				</div>
+			</section>
+		</section>
+		<section>
+			<h2 id="history">5.2 ヒストリ機能（コマンドライン編集）の使い方</h2>
+			<p>キーボードから入力したコマンドは自動的にファイルに保存（標準は$HOME/.bash_history）されていますので、過去に実行したコマンドを呼び出して実行することが出来ます。このとき、入力したままの状態でも実行できますし、編集して実行することも出来ます。編集はEmacsとviの２つのモードがありますが、ここでは標準のEmacsモードの編集方法を説明します。ちなみに、保存してあるコマンドは引数無しのhistoryコマンドで表示できます。</p>
+			<section>
+				<h3>5.2.1 操作方法</h3>
+				<p>過去に実行したコマンドを呼び出すには次のキーを使用します。呼び出したコマンドをそのまま実行したいのであれば、Enterキーを押すだけです。</p>
+				<table class="simple-table">
+					<caption>【表5-2】 コマンド呼び出し操作一覧</caption>
+					<tr><th>キー操作</th><th>内容</th></tr>
+					<tr><td>↑キーまたは、Ctrl + P</td><td>前のコマンドをコマンドラインに表示します。</td></tr>
+					<tr><td>↓キーまたは、Ctrl + N </td><td>後ろのコマンドをコマンドラインに表示します。</td></tr>
+				</table>
+				<p>呼び出したコマンドを編集して実行する場合は、次のキーを使用します。コマンドラインの途中に文字列を追加したい場合は、→キーや←キーでカーソルを目的の位置に移動して、追加したい文字をキーボードから入力します。</p>
+				<table class="simple-table">
+					<caption>【表5-3】 コマンド編集操作一覧</caption>
+					<tr><th>キー操作</th><th>内容</th></tr>
+					<tr><td>←キーまたは、Ctrl + B</td><td>カーソルを左に１文字分移動します。</td></tr>
+					<tr><td>→キーまたは、Ctrl + F</td><td>カーソルを右に１文字分移動します。</td></tr>
+					<tr><td>BackSpace</td><td>カーソルの左の１文字を削除します。</td></tr>
+					<tr><td>Deleteまたは、Ctrl + D</td><td>カーソルの１文字を削除します。</td></tr>
+					<tr><td>Ctrl + A</td><td>カーソルを行頭に移動します。</td></tr>
+					<tr><td>Ctrl + E</td><td>カーソルを行末に移動します。</td></tr>
+					<tr><td>Ctrl + K</td><td>カーソルの位置から行末までを削除します。</td></tr>
+				</table>
+				<p>さらに、文字の補完機能が有ります。これはコマンド名やファイル名の途中まで入力すると、残りの部分を補完してくれる機能です。この機能は<strong>Tabキー</strong>を押すことにより使うことが出来ます。</p>
+				<div class="exe-samp">
+<pre><samp>$ <kbd>ls</kbd>
+comment1.gif    moji.jpg      renge1.jpg    rengegenga.jpg
+comment1.xcf    renge.xcf     renge1.xcf
+$ <kbd>ls -l m</kbd><strong> ← ここまで入力して、Tabキーを押すとmoji.jpgが補完されます</strong>
+-rw-r--r--   1  merry   users    2308  4月 23 22:53 moji.jpg
+$
+$ <kbd>ls -l c</kbd><strong> ← ここまで入力して、Tabキーを押すとcomment1.が補完されます</strong>
+<strong> ← さらに、Tabを2回押すと補完候補を表示します</strong>
+comment1.gif     comment1.xcf<strong> ← 補完候補です</strong>
+$ <kbd>ls -l comment1.</kbd><strong> ← 再度コマンドラインを表示して来るのでgまたはxを入力してTabを押すと、コマンドラインが完成します</strong>
+-rw-r--r--   1  merry   users   77740  4月 23 22:53 comment1.xcf
+</samp></pre>
+				</div>
+			</section>
+		</section>
+		<section>
+			<h2 id="alias">5.3 コマンドラインに名前をつけるエイリアス機能の使い方</h2>
+			<p>コマンド名やオプションの引数は憶えにくいものがありますし、よく使うコマンドは簡単に使えるようにしたいということがあります。このようなときはエイリアス機能により、コマンドラインに自分の好みの名前をつけて、登録しておくことが出来ます。エイリアス機能を使うにはaliasコマンドで登録と表示を、unaliasコマンドで取り消しを行います。</p>
+			<p>aliasコマンドで登録したものはログアウト時に自動的に取り消されてしまいます。登録したものを常に使いたい場合は、後程説明するユーザプロファイルでaliasコマンドを自動実行するように設定します。なお、ディストリビューションにより異なると思いますが、システムによりaliasコマンドで設定されているコマンドが幾つかあります。</p>
+			<section>
+				<h3>5.3.1 一般形式</h3>
+				<p>aliasコマンドとunaliasコマンドの形式は次の通りです。</p>
+				<div class="form-exp">
+					$ alias 名前='コマンドライン'<br>
+					$ unalias -a 名前 …
+				</div>
+				<p>aliasコマンドのオプションには次のものがあります。なお、引数を指定しなかった（コマンド・オプション無し）場合は、現在登録されている内容を全て表示します。</p>
+				<table class="simple-table">
+					<caption>【表5-4】 aliasコマンド・オプション</caption>
+					<tr><th>オプション</th><th>意味</th></tr>
+					<tr><td>名前</td><td>名前だけを指定した場合は、その名前の登録内容のみを表示します。コマンドラインを指定した場合は、コマンドラインを登録します。この場合、<code>=</code>の前後に空白を入れてはいけませんし、コマンドラインは<code>'</code>（アポストロフィ）または、<code>"</code>（引用符）で括ります。</td></tr>
+				</table>
+				<p>unaliasコマンドのオプションには次のものがあります。-aオプションを指定すると全て取り消されてしまいますので注意してください。</p>
+				<table class="simple-table">
+					<caption>【表5-5】 unaliasコマンド・オプション</caption>
+					<tr><th>オプション</th><th>意味</th></tr>
+					<tr><td>-a</td><td>現在登録されている内容を全て取り消します。</td></tr>
+					<tr><td>名前</td><td>名前に対する登録内容を取り消します。複数指定することができます。</td></tr>
+				</table>
+			</section>
+			<section>
+				<h3>5.3.2 実行例</h3>
+				<p>設定済みのコマンドを表示します。（システムにより設定済みのもの）</p>
+				<div class="exe-samp">
+<pre><samp>$ <kbd>alias</kbd>
+alias l.='ls -d .* --color=auto'
+alias ll='ls -l --color=auto'
+alias ls='ls --color=auto'
+alias which='alias | /usr/bin/which --tty-only --read-alias --show-dot --show-tilde'
+$
+$ <kbd>ll</kbd><strong> ← llコマンドを実行します</strong>
+-rw-r--r--    1  merry    users    4084  4月 20 22:05  comment1.gif
+-rw-r--r--    1  merry    users    7740  2月 20 23:50  comment1.xcf
+-rw-r--r--    1  merry    users    2308  4月 18 23:11  moji.jpg
+$
+</samp></pre>
+				</div>
+				<p>'cd; pwd'の連続実行をmyhomeコマンドとして登録します。</p>
+				<div class="exe-samp">
+<pre><samp>$ <kbd>alias myhome='cd ; pwd'</kbd>
+$ <kbd>myhome</kbd><strong> ← myhomeコマンドを実行します</strong>
+/home/merry<strong> ← ホームディレクトリを表示しました</strong>
+$
+</samp></pre>
+				</div>
+				<p>登録したものを取り消します。</p>
+				<div class="exe-samp">
+<pre><samp>$ <kbd>alias myhome</kbd><strong> ← myhomeコマンドの登録内容を表示します</strong>
+alias myhome='cd; pwd'
+$
+$ <kbd>unalias myhome</kbd><strong> ← myhomeだけを取り消します</strong>
+$ <kbd>alias myhome</kbd><strong> ← 取り消しを確認します</strong>
+bash: alias: myhome: not found
+$
+</samp></pre>
+				</div>
+			</section>
+		</section>
+		<section>
+			<h2 id="lbl_cmd_rep">5.4 コマンド置換機能の使い方</h2>
+			<p>コマンド置換とはコマンドの実行結果をコマンドの引数に置き換えることです。これを使うと、コマンドの引数を動的に変えることが出来ます。</p>
+			<section>
+				<h3>5.4.1 一般形式</h3>
+				<p>コマンド置換は次の形式でコマンドを指定します。コマンドリストには単体のコマンドはもちろん、連続実行やパイプラインも指定できます。</p>
+				<div class="form-exp">
+					$(コマンドリスト)
+				</div>
+			</section>
+			<section>
+				<h3>5.4.2 実行例</h3>
+				<p>ex60.confファイルに記述されているディレクトリパスのディレクトリが存在しているか否かを確認します。</p>
+				<div class="exe-samp">
+<pre><samp>$ <kbd>cat ex60.conf</kbd><strong> ← ex60.confファイルの内容を表示します</strong>
+/home/merry/TMP/WORK
+/home/merry/TMP/DUMMY
+/home/merry/TMP/EUC
+/home/ken/TMP/PHOTO
+$
+$ <kbd>ls -ld $(cat ex60.conf)</kbd><strong> ← catコマンドでex60.confの内容を標準出力に出力して、それをlsコマンドの引数に置き換えます</strong>
+ls: /home/merry/TMP/DUMMY にアクセスできません: そのようなファイルやディレクトリはありません
+ls: /home/ken/TMP/PHOTO にアクセスできません: そのようなファイルやディレクトリはありません
+drwxr-xr-x 2 merry merry 4096 10月 26 09:30 /home/merry/TMP/EUC
+drwxr-xr-x 7 merry merry 4096 11月 10 08:51 /home/merry/TMP/WORK
+$
+</samp></pre>
+				</div>
+				<p>ユーザー登録簿（/etc/passwd）に記述されているホームディレクトリのパス名により、ユーザー名「merry」のホームディレクトリの詳細情報を表示します。</p>
+				<div class="exe-samp">
+<pre><samp>$ <kbd>grep "^merry" /etc/passwd</kbd><strong> ← 行の先頭がmerryの行を検索します</strong>
+merry:x:1000:1000:Merry:/home/merry:/bin/bash
+$ <kbd>grep "^merry" /etc/passwd | cut -f 6 -d :</kbd><strong> ← 検索結果の６フィールド目（ホームディレクトリ）を表示します</strong>
+/home/merry
+$ <kbd>ls -ld /home/merry</kbd><strong> ← merryユーザーのホームディレクトリの詳細情報を表示します</strong>
+drwxr-xr-x 40 merry merry 4096 2010-09-15 08:58 /home/merry
+$
+$ <kbd>ls -ld $(grep "^merry" /etc/passwd | cut -f 6 -d :)</kbd><strong> ← コマンド置換機能を使います</strong>
+drwxr-xr-x 40 merry merry 4096 2010-09-15 08:58 /home/merry
+$
+</samp></pre>
+				</div>
+			</section>
+		</section>
+	</section>
+
+	<footer>
+		<nav>
+			<ul>
+				<li><a href="../../index.html">ホーム</a></li>
+				<li><a href="../cmdtop.html#lbl_index">目次</a></li>
+				<li><a href="../SECTION4/section4_5.html">前のページ</a></li>
+				<li><a href="./section5_2.html">次のページ</a></li>
+			</ul>
+		</nav>
+		<p id="footer-author">更新日：<time datetime="2017-11-24">2017年11月24日</time> Merry</p>
+	</footer>
+</div>
+</body>
+</html>

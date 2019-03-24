@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initialscale=1.0">
+	<meta name="robots" content="INDEX,FOLLOW">
+	<meta name="keywords" content="構造体,struct,構造体の配列,構造体型名,配列,ポインタ,添字,メンバー名">
+	<meta name="description" content="構造体の配列の宣言と使い方を説明します。">
+	<meta name="author" content="T.Hagiwara">
+	<link rel="stylesheet" href="../../CSS3/seminar.css" type="text/css">
+	<link rel="stylesheet" href="../../CSS3/hl_clang.css" type="text/css">
+	<link rel="prev" href="./section11_1.html">
+	<link rel="next" href="../SECTION12/section12_1.html">
+	<title>Ｃ言語プログラミング入門&nbsp;-&nbsp;異なる型名データをまとめて取り扱う構造体（2/2）</title>
+	<style type="text/css">
+	</style>
+</head>
+<body>
+<div id="container">
+	<header>
+		<p>Linux講座にようこそ。このページは「Ｃ言語プログラミング入門&nbsp;-&nbsp;第11章．異なる型名データをまとめて取り扱う構造体」です。</p>
+		<h1>Ｃ言語プログラミング入門</h1>
+		<nav>
+			<ul>
+				<li><a href="../../index.html">ホーム</a></li>
+				<li><a href="../c_langtop.html#lbl_index">目次</a></li>
+				<li><a href="./section11_1.html">前のページ</a></li>
+				<li><a href="../SECTION12/section12_1.html">次のページ</a></li>
+			</ul>
+		</nav>
+	</header>
+
+	<section class="contents">
+		<h1>11. 異なる型名データをまとめて取り扱う構造体（2/2）</h1>
+		<section>
+			<h2>11.3 構造体の配列</h2>
+			<figure class="left-box myphoto">
+				<dl>
+					<dt><img src="../IMAGES/sec11_2.jpg" alt="構造体の配列"></dt>
+					<dd>【図１１-２】構造体の配列</dd>
+				</dl>
+			</figure>
+			<p>図11-2のように構造体変数を要素として配列を作ることができます。この配列のことを当講座では「<strong>構造体の配列</strong>」と呼ぶことにします。</p>
+			<p>構造体の配列を宣言する場合も、予め、構造体型名を宣言しておく必要があります。宣言の仕方は通常の構造体の場合と同じです。</p>
+			<p>要素を操作するには添字を指定しますが、それだけですと１つの構造体（１要素）だけを指定することになりますので、構造体のメンバ一名も指定する必要があります。つまり、配列名と添字および、メンバ一名を指定することになります。</p>
+			<p>また、ポインタ変数を使って操作することもできますが、その場合もメンバ一名を指定します。</p>
+			<section>
+				<h3>11.3.1 形式</h3>
+				<p>ここでは、構造体型名の宣言は既に行われているものとします。</p>
+				<div class="form-exp">
+					※ 構造体の配列の宣言<br>
+					struct 構造体型名 構造体配列名[要素数];<br><br>
+
+					※ メンバーの参照・更新<br>
+					構造体配列名[添字].メンバー名;<br>
+					構造体配列名[添字].メンバー名 = 値;<br>
+					ポインタ変数名-&gt;メンバー名;<br>
+					ポインタ変数名-&gt;メンバー名 = 値;
+				</div>
+				<p>要素数や添字の指定は通常の配列と同じ要領で指定します。</p>
+				<aside>
+					<h4>補足</h4>
+					<p>構造体の配列に初期値を設定することはあまりないと思いますが、初期値を指定する場合は要素単位に中括弧（{と}）で括り、全体も中括弧で括ります。</p>
+					<div class="source-code">
+<pre>struct sample
+{
+    int     age;
+    double  weight;
+};
+struct sample a_sample[3] = {{20, 56.5}, {18, 65.5}, {21, 67.5}};</pre>
+					</div>
+				</aside>
+			</section>
+			<section>
+				<h3>11.3.2 例題</h3>
+				<p>５人の方の肥満度を計算して正常・異常を判定して結果を出力すると共に、異常の人のみの値を最後に出力します。肥満度の計算とチェックを行うCalcBmiEx関数は１つのソースファイルとして作っています。</p>
+				<div class="source-code">
+					<div class="c"><ol><li class="li1"><div class="de1"><span class="coMULTI">/* ソースファイル名：ex11_3_1.c */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1"><span class="co2">#include &lt;stdio.h&gt;</span></div></li>
+					<li class="li1"><div class="de1"><span class="coMULTI">/* 肥満度データを格納する構造体 */</span></div></li>
+					<li class="li1"><div class="de1"><span class="kw4">struct</span> bmi_type</div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">int</span> &nbsp; &nbsp; number<span class="sy0">;</span> &nbsp; &nbsp;<span class="coMULTI">/* 番号 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">double</span> &nbsp;weight<span class="sy0">;</span> &nbsp; &nbsp;<span class="coMULTI">/* 体重 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">double</span> &nbsp;height<span class="sy0">;</span> &nbsp; &nbsp;<span class="coMULTI">/* 身長 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">double</span> &nbsp;bmi<span class="sy0">;</span> &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* 肥満度 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">char</span> &nbsp; &nbsp;judge<span class="sy0">;</span> &nbsp; &nbsp; <span class="coMULTI">/* 肥満状態（正常 … 'n'、低 … 'l'、高 … 'h'） */</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#125;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1"><span class="kw4">int</span> main<span class="br0">&#40;</span><span class="kw4">void</span><span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">struct</span> bmi_type &nbsp; &nbsp;a_bmi<span class="br0">&#91;</span><span class="nu0">5</span><span class="br0">&#93;</span><span class="sy0">;</span> &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* 肥満度構造体の配列 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">int</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;index<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">int</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;abnormal_cnt<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">int</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;return_code<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="coMULTI">/* CalcBmiEx関数のプロトタイプ宣言 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">int</span> CalcBmiEx<span class="br0">&#40;</span><span class="kw4">struct</span> bmi_type <span class="sy0">*</span>Bmi<span class="sy0">,</span> <span class="kw4">int</span> RecordNumber<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;肥満度(BMI)の計算を行います<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">for</span><span class="br0">&#40;</span>index <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">;</span> index <span class="sy0">&lt;</span> <span class="nu0">5</span><span class="sy0">;</span> <span class="sy0">++</span>index<span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; a_bmi<span class="br0">&#91;</span>index<span class="br0">&#93;</span>.<span class="me1">number</span> <span class="sy0">=</span> index <span class="sy0">+</span> <span class="nu0">1</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;%d. 体重(kg)と身長(cm)を入力してください ==&gt; &quot;</span><span class="sy0">,</span> index <span class="sy0">+</span> <span class="nu0">1</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">scanf</span><span class="br0">&#40;</span><span class="st0">&quot;%lf%lf&quot;</span><span class="sy0">,</span> <span class="sy0">&amp;</span>a_bmi<span class="br0">&#91;</span>index<span class="br0">&#93;</span>.<span class="me1">weight</span><span class="sy0">,</span> <span class="sy0">&amp;</span>a_bmi<span class="br0">&#91;</span>index<span class="br0">&#93;</span>.<span class="me1">height</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">if</span><span class="br0">&#40;</span>CalcBmiEx<span class="br0">&#40;</span>a_bmi<span class="sy0">,</span> index<span class="br0">&#41;</span><span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">for</span><span class="br0">&#40;</span>index <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">;</span> index <span class="sy0">&lt;</span> <span class="nu0">5</span><span class="sy0">;</span> <span class="sy0">++</span>index<span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">if</span><span class="br0">&#40;</span>a_bmi<span class="br0">&#91;</span>index<span class="br0">&#93;</span>.<span class="me1">bmi</span> <span class="sy0">&gt;</span> <span class="nu16">0.0</span><span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;<span class="es1">\t</span>%d番の方の肥満度は%.2fです。&quot;</span><span class="sy0">,</span> a_bmi<span class="br0">&#91;</span>index<span class="br0">&#93;</span>.<span class="me1">number</span><span class="sy0">,</span> a_bmi<span class="br0">&#91;</span>index<span class="br0">&#93;</span>.<span class="me1">bmi</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">switch</span><span class="br0">&#40;</span>a_bmi<span class="br0">&#91;</span>index<span class="br0">&#93;</span>.<span class="me1">judge</span><span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">case</span> <span class="st0">'n'</span><span class="sy0">:</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;正常です。<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw2">break</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">case</span> <span class="st0">'l'</span><span class="sy0">:</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;低すぎます。<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw2">break</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">case</span> <span class="st0">'h'</span><span class="sy0">:</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;高すぎます。<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw2">break</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">default</span><span class="sy0">:</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">else</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;<span class="es1">\t</span>%d番の方の肥満度は計算できませんでした<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> a_bmi<span class="br0">&#91;</span>index<span class="br0">&#93;</span>.<span class="me1">number</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;<span class="es1">\n</span>肥満度が異常な方<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;番号<span class="es1">\t</span>体重<span class="es1">\t</span>身長<span class="es1">\t</span>肥満度<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; abnormal_cnt <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">for</span><span class="br0">&#40;</span>index <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">;</span> index <span class="sy0">&lt;</span> <span class="nu0">5</span><span class="sy0">;</span> <span class="sy0">++</span>index<span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">if</span><span class="br0">&#40;</span>a_bmi<span class="br0">&#91;</span>index<span class="br0">&#93;</span>.<span class="me1">judge</span> <span class="sy0">!=</span> <span class="st0">'n'</span><span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;%d<span class="es1">\t</span>%.2f<span class="es1">\t</span>%.2f<span class="es1">\t</span>%.2f<span class="es1">\n</span>&quot;</span><span class="sy0">,</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; a_bmi<span class="br0">&#91;</span>index<span class="br0">&#93;</span>.<span class="me1">number</span><span class="sy0">,</span> &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* 受付番号 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; a_bmi<span class="br0">&#91;</span>index<span class="br0">&#93;</span>.<span class="me1">weight</span><span class="sy0">,</span> &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* 体重 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; a_bmi<span class="br0">&#91;</span>index<span class="br0">&#93;</span>.<span class="me1">height</span><span class="sy0">,</span> &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* 身長 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; a_bmi<span class="br0">&#91;</span>index<span class="br0">&#93;</span>.<span class="me1">bmi</span><span class="br0">&#41;</span><span class="sy0">;</span> &nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* 肥満度 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="sy0">++</span>abnormal_cnt<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">if</span><span class="br0">&#40;</span>abnormal_cnt <span class="sy0">&gt;</span> <span class="nu0">0</span><span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;<span class="es1">\n</span>肥満度が異常な方は%d人でした<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> abnormal_cnt<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">else</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;<span class="es1">\n</span>肥満度が異常な方はいませんでした<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; return_code <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">else</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;肥満度の計算が出来ませんでした<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; return_code <span class="sy0">=</span> <span class="nu0">1</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">return</span> return_code<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#125;</span></div></li>
+					</ol></div>				
+				</div>
+				<div class="source-code">
+						<div class="c"><ol><li class="li1"><div class="de1"><span class="coMULTI">/* ソースファイル名：ex11_3_2.c */</span></div></li>
+						<li class="li1"><div class="de1">&nbsp;</div></li>
+						<li class="li1"><div class="de1"><span class="coMULTI">/* 肥満度データを格納する構造体 */</span></div></li>
+						<li class="li1"><div class="de1"><span class="kw4">struct</span> bmi_type</div></li>
+						<li class="li1"><div class="de1"><span class="br0">&#123;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">int</span> &nbsp; &nbsp; number<span class="sy0">;</span> &nbsp; &nbsp;<span class="coMULTI">/* 番号 */</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">double</span> &nbsp;weight<span class="sy0">;</span> &nbsp; &nbsp;<span class="coMULTI">/* 体重 */</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">double</span> &nbsp;height<span class="sy0">;</span> &nbsp; &nbsp;<span class="coMULTI">/* 身長 */</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">double</span> &nbsp;bmi<span class="sy0">;</span> &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* 肥満度 */</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">char</span> &nbsp; &nbsp;judge<span class="sy0">;</span> &nbsp; &nbsp; <span class="coMULTI">/* 肥満状態（正常 … 'n'、低 … 'l'、高 … 'h'） */</span></div></li>
+						<li class="li1"><div class="de1"><span class="br0">&#125;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp;</div></li>
+						<li class="li1"><div class="de1"><span class="kw4">int</span> CalcBmiEx<span class="br0">&#40;</span><span class="kw4">struct</span> bmi_type &nbsp;<span class="sy0">*</span>pBmi<span class="sy0">,</span> <span class="kw4">int</span> pRecordNumber<span class="br0">&#41;</span></div></li>
+						<li class="li1"><div class="de1"><span class="br0">&#123;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">struct</span> bmi_type &nbsp; &nbsp;<span class="sy0">*</span>p_bmi<span class="sy0">;</span> &nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* 肥満度構造体配列の要素の先頭アドレス */</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">int</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;calc_cnt<span class="sy0">;</span> &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* 肥満度が算出できた要素の数 */</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">int</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;record_cnt<span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">double</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; height<span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp;</div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; p_bmi <span class="sy0">=</span> pBmi<span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; calc_cnt <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">for</span><span class="br0">&#40;</span>record_cnt <span class="sy0">=</span> <span class="nu0">1</span><span class="sy0">;</span> record_cnt <span class="sy0">&lt;=</span> pRecordNumber<span class="sy0">;</span> <span class="sy0">++</span>record_cnt<span class="br0">&#41;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* 体重と身長の値をチェック */</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">if</span> <span class="br0">&#40;</span>p_bmi<span class="sy0">-&gt;</span>weight <span class="sy0">&gt;</span> <span class="nu16">0.0</span> <span class="sy0">&amp;&amp;</span> p_bmi<span class="sy0">-&gt;</span>height <span class="sy0">&gt;</span> <span class="nu16">0.0</span><span class="br0">&#41;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* 身長をセンチメートルからメートルに変換 */</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; height <span class="sy0">=</span> p_bmi<span class="sy0">-&gt;</span>height <span class="sy0">/</span> <span class="nu16">100.0</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* 肥満度(BMI) = 体重(kg) / 身長(m) / 身長(m) */</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; p_bmi<span class="sy0">-&gt;</span>bmi <span class="sy0">=</span> p_bmi<span class="sy0">-&gt;</span>weight <span class="sy0">/</span> height <span class="sy0">/</span> height<span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* 肥満度が18.5〜25.5の範囲であれば正常 */</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">if</span><span class="br0">&#40;</span>p_bmi<span class="sy0">-&gt;</span>bmi <span class="sy0">&gt;=</span> <span class="nu16">18.5</span> <span class="sy0">&amp;&amp;</span> p_bmi<span class="sy0">-&gt;</span>bmi <span class="sy0">&lt;=</span> <span class="nu16">25.0</span><span class="br0">&#41;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; p_bmi<span class="sy0">-&gt;</span>judge <span class="sy0">=</span> <span class="st0">'n'</span><span class="sy0">;</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="coMULTI">/* 正常 */</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">else</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">if</span><span class="br0">&#40;</span>p_bmi<span class="sy0">-&gt;</span>bmi <span class="sy0">&gt;</span> <span class="nu16">25.0</span><span class="br0">&#41;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; p_bmi<span class="sy0">-&gt;</span>judge <span class="sy0">=</span> <span class="st0">'h'</span><span class="sy0">;</span> &nbsp; &nbsp; &nbsp; &nbsp;<span class="coMULTI">/* 高い */</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">else</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; p_bmi<span class="sy0">-&gt;</span>judge <span class="sy0">=</span> <span class="st0">'l'</span><span class="sy0">;</span> &nbsp; &nbsp; &nbsp; &nbsp;<span class="coMULTI">/* 低い */</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp;</div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="sy0">++</span>calc_cnt<span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">else</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; p_bmi<span class="sy0">-&gt;</span>bmi <span class="sy0">=</span> <span class="nu16">0.0</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; p_bmi<span class="sy0">-&gt;</span>judge <span class="sy0">=</span> <span class="st0">' '</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp;</div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="sy0">++</span>p_bmi<span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp;</div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">return</span> calc_cnt<span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1"><span class="br0">&#125;</span></div></li>
+						</ol></div>
+					</div>
+				<div class="exe-samp">
+<pre><samp>$ <kbd>./ex11_3.prg</kbd>
+肥満度(BMI)の計算を行います
+1. 体重(kg)と身長(cm)を入力してください ==&gt; <kbd>67 188</kbd>
+2. 体重(kg)と身長(cm)を入力してください ==&gt; <kbd>98 176.5</kbd>
+3. 体重(kg)と身長(cm)を入力してください ==&gt; <kbd>43.2 156.5</kbd>
+4. 体重(kg)と身長(cm)を入力してください ==&gt; <kbd>55.5 167.5</kbd>
+5. 体重(kg)と身長(cm)を入力してください ==&gt; <kbd>75.7 166.5</kbd>
+        1番の方の肥満度は18.96です。正常です。
+        2番の方の肥満度は31.46です。高すぎます。
+        3番の方の肥満度は17.64です。低すぎます。
+        4番の方の肥満度は19.78です。正常です。
+        5番の方の肥満度は27.31です。高すぎます。
+
+肥満度が異常な方
+番号    体重    身長    肥満度
+2       98.00   176.50  31.46
+3       43.20   156.50  17.64
+5       75.70   166.50  27.31
+
+肥満度が異常な方は3人でした
+$</samp></pre>
+				</div>
+				<dl>
+					<dt>16行目</dt>
+						<dd>要素数５のbmi_type構造体型名の配列（a_bmi）を宣言します。</dd>
+					<dt>21行目</dt>
+						<dd>CalcBmiEx関数の関数プロトタイプ宣言です。返り値はint型で、計算が出来たレコード（要素）数を返します。第１引数は肥満度構造体の配列で、第２引数はそのレコード（要素）数です。</dd>
+					<dt>26行目</dt>
+						<dd>肥満度構造体の配列（a_bmi）にデータを設定します。a_bmi[index].numberで、肥満度構造体の配列のindex番目の要素のnumberメンバ一の参照です。</dd>
+					<dt>31行目</dt>
+						<dd>CalcBmiEx関数を呼び出します。第１引数は肥満度構造体の配列名を指定していますので、配列の先頭アドレスを指定していることになります。なお、返り値は計算が出来たレコード数ですので、全レコードエラーの場合は０が返って来ますが、これは論理値では偽になります。</dd>
+				</dl>
+			</section>
+		</section>
+	</section>
+
+	<footer>
+		<nav>
+			<ul>
+				<li><a href="../../index.html">ホーム</a></li>
+				<li><a href="../c_langtop.html#lbl_index">目次</a></li>
+				<li><a href="./section11_1.html">前のページ</a></li>
+				<li><a href="../SECTION12/section12_1.html">次のページ</a></li>
+			</ul>
+		</nav>
+		<p id="footer-author">更新日：<time datetime="2018-12-14">2018年12月14日</time> Merry</p>
+	</footer>
+</div>
+</body>
+</html>

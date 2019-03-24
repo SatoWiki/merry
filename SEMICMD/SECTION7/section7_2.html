@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initialscale=1.0">
+	<meta name="robots" content="INDEX,FOLLOW">
+	<meta name="keywords" content="ps,top,kill,実行レベル,ランレベル,プロセス,サービス,ps,top,kill,inittab,/etc/rc.d/init.d,system-config-services,chkconfig,service,cron,crontab">
+	<meta name="description" content="システム管理のうち、プロセス（サービス）管理に付いてご説明します。">
+	<meta name="author" content="T.Hagiwara">
+	<link rel="stylesheet" href="../../CSS3/seminar.css" type="text/css">
+	<link rel="prev" href="./section7_1.html">
+	<link rel="next" href="./section7_3.html">
+	<title>Linuxの使い方 - システム管理（2/3）</title>
+	<style type="text/css">
+	</style>
+</head>
+<body>
+<div id="container">
+	<header>
+		<p>Linux講座にようこそ。このページは「Linuxの使い方&nbsp;-&nbsp;第７章&nbsp;システム管理」です。</p>
+		<h1>Linuxの使い方</h1>
+		<nav>
+			<ul>
+				<li><a href="../../index.html">ホーム</a></li>
+				<li><a href="../cmdtop.html#lbl_index">目次</a></li>
+				<li><a href="./section7_1.html">前のページ</a></li>
+				<li><a href="./section7_3.html">次のページ</a></li>
+			</ul>
+		</nav>
+	</header>
+
+	<section class="contents">
+		<h1>7. システム管理（2/3）</h1>
+		<section>
+			<!-- プロセス管理 -->
+			<h2 id="lbl_proc">7.2 プロセス管理（サービス）</h2>
+			<p>UNIX系OSはマルチプロセスのOSですので、常に複数のプロセスが動いていて、それら個々のプロセスの動きの総体がOSの機能となります。つまり、実行しているプロセスの種類により、デスクトップPCになったり、サーバになったりするわけです。これらのプロセスは、デーモンプロセス或は、単にデーモンと呼ばれているものが多いのですが、これらは用が無いときは何もしないで、必要になったときに起動して作業をします。なお、最近は<strong>サービス</strong>という呼び方の方が一般的なようですので、この講座でもサービスと呼ぶことにします。</p>
+			<p>現在起動しているプロセスの表示と終了は、次のようなコマンドで行います。</p>
+			<div class="form-exp">
+				※ 全プロセスの表示<br>
+				$ ps -e<br>
+				※ CPU消費の多いプロセスから順に表示<br>
+				$ top<br>
+				※ プロセスの終了<br>
+				$ kill -SIGTERM プロセス番号
+			</div>
+			<p>topコマンドは５秒（標準）間隔で状態を調べなおして、最新情報を表示することをくり返します。topコマンドを終了させるには<strong>q</strong>サブコマンドを実行します。</p>
+			<p>killコマンドのSIGTERMはシグナルと呼ばれているもので、プロセスに送る信号です。プロセスを終了するときのシグナルのデフォルトはSIGTERMです。SIGTERMで終了できない場合はSIGKILL（強制終了）を試みるとよいでしょう。なお、シグナルの種類は<strong>-l</strong>オプションで表示できます。また、シグナルは数値でも指定できます。例えば、SIGTERMは15、SIGKILLは９になります。</p>
+			<p>プロセスの起動は明示的なもの（コマンドの実行やアイコンのクリックによる）と、暗黙的なもの（自動実行）が有ります。自動実行には次の２つが有ります。</p>
+			<ul>
+				<li><a href="#lbl_systemctl">OS起動による自動実行（systemctlコマンド）</a></li>
+				<li><a href="#lbl_cron">cronによる自動実行</a></li>
+			</ul>
+			<section>
+				<!-- OS起動による自動実行 -->
+				<h3 id="lbl_systemctl">7.2.1 OS起動による自動実行（systemctlコマンド）</h3>
+				<p>OS起動時に自動的に起動するサービスの制御方法はディストリビューションにより異なります。従来は「SysVinit」によるサービスの制御方法が広く使われていましたが、Fedora&nbsp;15からはsystemdと呼ぶシステムおよびサービスマネージャーに変更されました。systemdにはいろいろな機能があるのですが、ここではサービス管理についてのみ説明します。なお、SysVinitによるサービスの制御方法については【<a href="../APPENDIX/apnd01.html">付録１. SysVinitによるサービスの制御（chkconfigとserviceコマンド）</a>】をご覧ください。</p>
+				<p>systemdではソフトウェアパッケージにユニットファイルと呼ぶファイルが含まれており、このファイルに管理情報が記述されています。サービスに関するユニットファイルの拡張子は.serviceと決まっています。</p>
+				<p>httpd（Apache）等のサーバーソフトを追加インストールした場合、そのサービスは無効な状態になっていますので自動実行しません。自動実行したい場合は、サービス管理のためのGUIツールやsystemctlコマンドを使ってサービスを有効にします。また、サービスが無効な状態で起動することができますが、この場合はシステムを再起動しても自動実行はしません。</p>
+				<figure class="left-box myphoto">
+					<dl>
+						<dt><img src="../IMAGES/sec07_2.jpg" alt="Systemd - KDEシステム設定"></dt>
+						<dd>【図７-２】</dd>
+						<dd>Systemd - KDEシステム設定</dd>
+					</dl>
+				</figure>
+				<p>デスクトップ環境の場合はGUIのサービス管理ツールがありますので、それらを使うこともできます。図７-２はKDEシステム設定ツールですが、このツールにサービス管理機能が含まれています。</p>
+				<p style="clear:both;">systemctlコマンドにより、サービスの有効・無効・起動・停止・再起動・ステータスの表示等が行なえます。なお、ユニットファイル名の拡張子の.serviceは省略可能です。また、ステータスの表示やサービスの一覧表示等は一般ユーザの権限で実行できますが、サービスの有効・無効・起動・停止等のシステムの状態を変更するような作業を行う場合は管理者（rootユーザ）権限が必要です。</p>
+				<div class="form-exp">
+					※ 有効・無効<br>
+					# systemctl enable ユニットファイル名<strong> ← 自動実行を有効にします</strong><br>
+					# systemctl disable ユニットファイル名<strong> ← 自動実行を無効にします</strong><br><br>
+					※ 起動・停止・再起動<br>
+					# systemctl start ユニットファイル名<strong> ← サービスを起動します</strong><br>
+					# systemctl stop ユニットファイル名<strong> ← サービスを停止します</strong><br>
+					# systemctl restart ユニットファイル名<strong> ← サービスを再起動します</strong><br>
+					# systemctl try-restart ユニットファイル名<strong> ← サービスが実行中のみ再起動します</strong><br><br>
+					※ ステータスの表示<br>
+					$ systemctl status ユニットファイル名<br><br>
+					※ 全サービスの一覧表示<br>
+					$ systemctl list-unit-files --type service
+				</div>
+				<p>systemctlコマンドの実行例を示します。httpdとmariadbのステータスを表示します。</p>
+				<div class="exe-samp">
+<pre><samp>$ <kbd>systemctl status httpd.service</kbd><strong> ← httpdのステータスを表示します</strong>
+● httpd.service - The Apache HTTP Server
+   Loaded: loaded (/usr/lib/systemd/system/httpd.service; <strong>disabled</strong>; vendor pr<strong> ← 自動実行は無効です</strong>
+   Active: inactive (dead)
+     Docs: man:httpd.service(8)
+lines 1-4/4 (END)<strong> ← ここで、一時停止します。qを入力すると終了し、この行は消えます</strong>
+$
+$ <kbd>systemctl status mariadb.service</kbd><strong> ← mariadbのステータスを表示します</strong>
+● mariadb.service - MariaDB 10.1 database server
+   Loaded: loaded (/usr/lib/systemd/system/mariadb.service; <strong>disabled</strong>; vendor<strong> ← 自動実行は無効です</strong>
+   Active: inactive (dead)
+lines 1-3/3 (END)
+$</samp></pre>
+				</div>
+				<p>mariadbの起動とhttpdの有効化を行い、そのステータスを表示します。起動や有効化を行うには管理者権限が必要です。</p>
+				<div class="exe-samp">
+<pre><samp># <kbd>systemctl start mariadb.service</kbd><strong> ← mariadbを起動します</strong>
+#
+# <kbd>systemctl status mariadb.service</kbd><strong> ← mariadbのステータスを表示します</strong>
+● mariadb.service - MariaDB 10.1 database server
+   Loaded: loaded (/usr/lib/systemd/system/mariadb.service; disabled; vendor 
+   Active: active (running) since Thu 2017-07-27 09:04:28 JST; 13s ago
+  Process: 2751 ExecStartPost=/usr/libexec/mysql-check-upgrade (code=exited, 
+  Process: 2688 ExecStartPre=/usr/libexec/mysql-prepare-db-dir mariadb.servic
+  Process: 2666 ExecStartPre=/usr/libexec/mysql-check-socket (code=exited, st
+ Main PID: 2723 (mysqld)
+   Status: "Taking your SQL requests now..."
+    Tasks: 26 (limit: 4915)
+   CGroup: /system.slice/mariadb.service
+           └─2723 /usr/libexec/mysqld --basedir=/usr
+
+ 7月 27 09:04:27 localhost.localdomain mysql-prepare-db-dir[2688]: Database M
+ 7月 27 09:04:27 localhost.localdomain mysql-prepare-db-dir[2688]: If this is
+ 7月 27 09:04:27 localhost.localdomain mysqld[2723]: 2017-07-27  9:04:27 1405
+ 7月 27 09:04:28 localhost.localdomain mysql-check-upgrade[2751]: The datadir
+ 7月 27 09:04:28 localhost.localdomain mysql-check-upgrade[2751]:   1. Back-u
+ 7月 27 09:04:28 localhost.localdomain mysql-check-upgrade[2751]:   2. Start 
+ 7月 27 09:04:28 localhost.localdomain mysql-check-upgrade[2751]:   3. Run 'm
+ 7月 27 09:04:28 localhost.localdomain mysql-check-upgrade[2751]: Read more a
+ 7月 27 09:04:28 localhost.localdomain mysql-check-upgrade[2751]: https://mar
+ 7月 27 09:04:28 localhost.localdomain systemd[1]: Started MariaDB 10.1 datab
+#
+# <kbd>systemctl enable httpd.service</kbd><strong> ← httpdの自動実行を有効にします</strong>
+Created symlink /etc/systemd/system/multi-user.target.wants/httpd.service → /usr/lib/systemd/system/httpd.service.
+#
+# <kbd>systemctl status httpd.service</kbd><strong> ← httpdのステータスを表示します</strong>
+● httpd.service - The Apache HTTP Server
+   Loaded: loaded (/usr/lib/systemd/system/httpd.service; <strong>enabled</strong>; vendor pre<strong> ← 自動実行は有効です</strong>
+   Active: inactive (dead)
+     Docs: man:httpd.service(8)
+#</samp></pre>
+				</div>
+				<aside>
+					<h4>補足</h4>
+					<ul>
+						<li>SysVinitによるサービスの制御に使用するchkconfigとserviceコマンドも使えますが、これらは互換性維持ために用意されているだけですので使用しないほうがよいと思います。（将来的には削除されるかもしれません）</li>
+					</ul>
+				</aside>
+			</section>
+			<section>
+				<!-- cronによる自動実行 -->
+				<h3 id="lbl_cron">7.2.2 cronによる自動実行</h3>
+				<p>システムにより、定期的に実行するように設定されているコマンドがあります。Fedoraの場合はanacronというサービスで行なっており、実際に実行されるコマンドは次のディレクトリに登録されているシェルスクリプトです。</p>
+				<dl>
+					<dt>/etc/cron.daily/</dt>
+						<dd>毎<strong>日</strong>定期的に実行するコマンドを登録します。</dd>
+					<dt>/etc/cron.hourly/</dt>
+						<dd>毎<strong>時</strong>定期的に実行するコマンドを登録します。</dd>
+					<dt>/etc/cron.monthly/</dt>
+						<dd>毎<strong>月</strong>定期的に実行するコマンドを登録します。</dd>
+					<dt>/etc/cron.weekly/</dt>
+						<dd>毎<strong>週</strong>定期的に実行するコマンドを登録します。</dd>
+				</dl>
+				<p>定期的に実行したい独自のコマンドがあった場合、上記ディレクトリにシェルスクリプトを追加しておくとよいでしょう。これが一番簡単なのですが、この方法では不都合な場合（一般ユーザが実行したい、等）はcronにより自動実行できます。cronはユーザー単位に実行するコマンド（ジョブ）を登録できます。</p>
+				<p>cronを使うにはcrontabコマンドで実行するジョブを登録します。crontabの形式は次の通りです。</p>
+				<div class="form-exp">
+					$ crontab ファイルパス名<strong> ← 実行するコマンドが記述されているファイルを指定します</strong><br>
+					$ crontab -rle<strong> ← -rはジョブの削除、-lはジョブの表示、-eはジョブの編集です</strong>
+				</div>
+				<p>実行するコマンドは次の形式で指定します。コマンドの数が多いときや、型式が複雑な時はファイルに記述しておき、crontabコマンドでファイルの内容を登録することが出来ます。また、コマンドの数が少いような時はcrontabコマンドに「-e」オプションをつけるとviエディタを起動しますので、それで入力することもできます。その場合はファイル名の指定などは必要有りません。</p>
+				<div class="form-exp">
+					分 時 日 月 曜日 コマンド
+				</div>
+				<dl>
+					<dt>分</dt>
+						<dd>実行する時刻の<strong>分</strong>を指定します。</dd>
+					<dt>時</dt>
+						<dd>実行する時刻の<strong>時</strong>を指定します。</dd>
+					<dt>日</dt>
+						<dd>実行<strong>日</strong>を指定します。</dd>
+					<dt>月</dt>
+						<dd>実行<strong>月</strong>を指定します。</dd>
+					<dt>曜日</dt>
+						<dd>実行する<strong>曜日</strong>を指定します。日曜日は０、月曜日が１、・・・土曜日が６です。</dd>
+					<dt>コマンド</dt>
+						<dd>実行するコマンドを指定します。</dd>
+				</dl>
+				<p>日時には範囲を指定するための<strong>-</strong>（負記号）や、複数指定するための<strong>,</strong>（コンマ）や、全ての意味の<strong>*</strong>（アステリスク）などが記述できます。なお、コマンド実行時の環境変数は最小限のものしか設定されていないため注意が必要です。特に、シェルはBシェル（/bin/sh）ですし、PATHは「/usr/bin;/bin」のみです。これらを変更したい場合は先頭で設定しておきます。</p>
+				<p>ジョブの例を示しますが、この内容がcronfileファイルに記述してあるものとします。</p>
+				<div class="exe-samp">
+<pre><samp>PATH=/bin;/usr/bin;/sbin
+1 12 * * 0 find /home/merry -name core -exec ls -ld {} &gt; /tmp/core.log 2&gt;&amp;1 \;<strong> ← 毎週日曜日の12時1分にfindコマンドを実行します</strong>
+2 12 * * 0 cp -R $HOME/DEVEL $HOME/BKUP<strong> ← 毎週日曜日の12時2分にcpコマンドを実行します</strong>
+</samp></pre>
+				</div>
+				<div class="exe-samp">
+<pre><samp>$ <kbd>crontab cronfile</kbd><strong> ← ジョブを登録します</strong>
+$
+$ <kbd>crontab -l</kbd><strong> ← 登録ジョブを表示します</strong>
+# DO NOT EDIT THIS FILE - edit the master and reinstall.
+# (/tmp/crontab.2279 installed on Mon Jan 14 22:49:44 2002)
+# (Cron version -- $Id: crontab.c,v 2.13 1994/01/17 03:20:37 vixie Exp $)
+PATH=/bin;/usr/bin;/sbin
+1 12 * * 0 find /home/merry -name core -exec ls -ld {} &gt; /tmp/core.log 2&gt;&amp;1 \;
+2 12 * * 0 cp -R $HOME/DEVEL $HOME/BKUP
+$
+$ <kbd>crontab -r</kbd><strong> ← ジョブを削除します</strong>
+$</samp></pre>
+				</div>
+				<aside>
+					<h4>補足</h4>
+					<p>crontabコマンドで登録したジョブは登録したユーザの権限で実行します。従って、登録したユーザー以外の所有しているファイルの更新や削除はできません。（保護モードの設定によります）</p>
+				</aside>
+			</section>
+		</section>
+	</section>
+
+	<footer>
+		<nav>
+			<ul>
+				<li><a href="../../index.html">ホーム</a></li>
+				<li><a href="../cmdtop.html#lbl_index">目次</a></li>
+				<li><a href="./section7_1.html">前のページ</a></li>
+				<li><a href="./section7_3.html">次のページ</a></li>
+			</ul>
+		</nav>
+		<p id="footer-author">更新日：<time datetime="2018-03-06">2018年03月06日</time> Merry</p>
+	</footer>
+</div>
+</body>
+</html>

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initialscale=1.0">
+	<meta name="robots" content="INDEX,FOLLOW">
+	<meta name="keywords" content="ASCII,コード,表,制御文字,コントロールコード">
+	<meta name="description" content="ASCIIコード表です。">
+	<meta name="author" content="T.Hagiwara">
+	<link rel="stylesheet" href="../../CSS3/seminar.css" type="text/css">
+	<link rel="prev" href="../c_langtop.html">
+	<title>Ｃ言語プログラミング入門&nbsp;-&nbsp;付録１．ASCIIコード表</title>
+	<style type="text/css">
+	table td	{
+		width: 10%;
+		text-align: center;
+		}
+	</style>
+</head>
+<body>
+<div id="container">
+	<header>
+		<p>Linux講座にようこそ。このページは「Ｃ言語プログラミング入門&nbsp;-&nbsp;付録１．ASCIIコード表」です。</p>
+		<h1>Ｃ言語プログラミング入門</h1>
+		<nav>
+			<ul>
+				<li><a href="../../index.html">ホーム</a></li>
+				<li><a href="../c_langtop.html#lbl_index">目次</a></li>
+			</ul>
+		</nav>
+	</header>
+
+	<section class="contents">
+		<h1>付録１．ASCIIコード表</h1>
+		<p>Ｃ言語ではASCIIコードの１文字を８ビット（char型）で取り扱いますが、ASCIIコード自体は７ビットで１文字を表します。下表は数値を十六進数で表していますので、上位は３ビット（0x0〜0x7）で、下位は４ビット（0x0〜0xF）です。</p>
+		<p>下表により、文字に対応づけられているASCIIコードが分かります。例えば、'A'は上位が４で、下位が１の交点にありますので、十六進数の41（十進数では65）であることが分かります。</p>
+		<table>
+			<caption>付録１．ASCIIコード表</caption>
+			<tr><th style="font-size: small;">上位→</th><th rowspan="2">0</th><th rowspan="2">1</th><th rowspan="2">2</th><th rowspan="2">3</th><th rowspan="2">4</th><th rowspan="2">5</th><th rowspan="2">6</th><th rowspan="2">7</th></tr>
+			<tr><th style="font-size: small;">下位↓</th></tr>
+			<tr><th>0</th><td>NUL</td><td>DLE</td><td>スペース</td><td>0</td><td>@</td><td>P</td><td>`</td><td>p</td></tr>
+			<tr><th>1</th><td>SOH</td><td>DC1</td><td>!</td><td>1</td><td><strong>A</strong></td><td>Q</td><td>a</td><td>q</td></tr>
+			<tr><th>2</th><td>STX</td><td>DC2</td><td>"</td><td>2</td><td>B</td><td>R</td><td>b</td><td>r</td></tr>
+			<tr><th>3</th><td>ETX</td><td>DC3</td><td>#</td><td>3</td><td>C</td><td>S</td><td>c</td><td>s</td></tr>
+			<tr><th>4</th><td>EOT</td><td>DC4</td><td>$</td><td>4</td><td>D</td><td>T</td><td>d</td><td>t</td></tr>
+			<tr><th>5</th><td>ENQ</td><td>NAK</td><td>%</td><td>5</td><td>E</td><td>U</td><td>e</td><td>u</td></tr>
+			<tr><th>6</th><td>ACK</td><td>SYN</td><td>&amp;</td><td>6</td><td>F</td><td>V</td><td>f</td><td>v</td></tr>
+			<tr><th>7</th><td>BEL</td><td>ETB</td><td>'</td><td>7</td><td>G</td><td>W</td><td>g</td><td>w</td></tr>
+			<tr><th>8</th><td>BS</td><td>CAN</td><td>(</td><td>8</td><td>H</td><td>X</td><td>h</td><td>x</td></tr>
+			<tr><th>9</th><td>HT</td><td>EM</td><td>)</td><td>9</td><td>I</td><td>Y</td><td>i</td><td>y</td></tr>
+			<tr><th>A</th><td>LF/NL</td><td>SUB</td><td>*</td><td>:</td><td>J</td><td>Z</td><td>j</td><td>z</td></tr>
+			<tr><th>B</th><td>VT</td><td>ESC</td><td>+</td><td>;</td><td>K</td><td>[</td><td>k</td><td>{</td></tr>
+			<tr><th>C</th><td>FF</td><td>FS</td><td>,</td><td>&lt;</td><td>L</td><td><code>\</code></td><td>l</td><td>|</td></tr>
+			<tr><th>D</th><td>CR</td><td>GS</td><td>-</td><td>=</td><td>M</td><td>]</td><td>m</td><td>}</td></tr>
+			<tr><th>E</th><td>SO</td><td>RS</td><td>.</td><td>&gt;</td><td>N</td><td>^</td><td>n</td><td>~</td></tr>
+			<tr><th>F</th><td>SI</td><td>US</td><td>/</td><td>?</td><td>O</td><td>_</td><td>o</td><td>DEL</td></tr>
+		</table>
+		<p>0x00〜0x1Fと0x7Fは制御文字（コントロールコード）と呼ばれるもので、主に文字を表示したり、送信したりするときの制御に使用します。それぞれの意味は次の通りです。</p>
+		<div class="left-box">
+			<ul>
+				<li>NUL … ヌル（空）文字</li>
+				<li>SOH … ヘッダ開始</li>
+				<li>STX … テキスト開始</li>
+				<li>ETX … テキスト終了</li>
+				<li>EOT … 伝送終了</li>
+				<li>ENQ … 問い合わせ</li>
+				<li>ACK … 肯定応答</li>
+				<li>BEL … ベル</li>
+				<li>BS … バックスペース</li>
+				<li>HT … 水平タブ</li>
+				<li>LF/NL … 復帰/改行</li>
+				<li>VT … 垂直タブ</li>
+				<li>FF … 改ページ</li>
+				<li>CR … 復帰</li>
+				<li>SO … シフトアウト</li>
+				<li>SI … シフトイン</li>
+			</ul>
+		</div>
+		<div class="left-box">
+			<ul>
+				<li>DLE … データリンクでの拡張</li>
+				<li>DC1 … 制御装置１</li>
+				<li>DC2 … 制御装置２</li>
+				<li>DC3 … 制御装置３</li>
+				<li>DC4 … 制御装置４</li>
+				<li>NAK … 否定応答</li>
+				<li>SYN … 同期</li>
+				<li>ETB … 伝送ブロック終了</li>
+				<li>CAN … 取消</li>
+				<li>EM … 媒体終端</li>
+				<li>SUB … 置換</li>
+				<li>ESC … エスケープ</li>
+				<li>FS … フォーム区切り</li>
+				<li>GS … グループ区切り</li>
+				<li>RS … レコード区切り</li>
+				<li>US … ユニット区切り</li>
+				<li>DEL … 削除</li>
+			</ul>
+		</div>
+	</section>
+
+	<footer>
+		<nav>
+			<ul>
+				<li><a href="../../index.html">ホーム</a></li>
+				<li><a href="../c_langtop.html#lbl_index">目次</a></li>
+			</ul>
+		</nav>
+		<p id="footer-author">更新日：<time datetime="2012-05-20">2012年05月20日</time> Merry</p>
+	</footer>
+</div>
+</body>
+</html>

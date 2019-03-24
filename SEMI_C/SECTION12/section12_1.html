@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initialscale=1.0">
+	<meta name="robots" content="INDEX,FOLLOW">
+	<meta name="keywords" content="符号付整数型,char,signed char,short,short int,signed short,signed short int,int,signed int,signed,long,long int,signed long,signed long int,符号なし整数型,unsigned char,unsigned short,unsigned short int,unsigned int,unsigned,unsigned long,unsigned long int,実数型,float,double,long double,配列型,ポインタ型,関数型,構造体型,void型,共用体型,列挙型,typedef">
+	<meta name="description" content="Ｃ言語の型名と共用体を説明します。">
+	<meta name="author" content="T.Hagiwara">
+	<link rel="stylesheet" href="../../CSS3/seminar.css" type="text/css">
+	<link rel="stylesheet" href="../../CSS3/hl_clang.css" type="text/css">
+	<link rel="prev" href="../SECTION11/section11_2.html">
+	<link rel="next" href="./section12_2.html">
+	<title>Ｃ言語プログラミング入門&nbsp;-&nbsp;その他の型（1/4）</title>
+	<style type="text/css">
+	</style>
+</head>
+<body>
+<div id="container">
+	<header>
+		<p>Linux講座にようこそ。このページは「Ｃ言語プログラミング入門&nbsp;-&nbsp;第12章．その他の型」です。</p>
+		<h1>Ｃ言語プログラミング入門</h1>
+		<nav>
+			<ul>
+				<li><a href="../../index.html">ホーム</a></li>
+				<li><a href="../c_langtop.html#lbl_index">目次</a></li>
+				<li><a href="../SECTION11/section11_2.html">前のページ</a></li>
+				<li><a href="./section12_2.html">次のページ</a></li>
+			</ul>
+		</nav>
+	</header>
+
+	<section class="contents">
+		<h1>12. その他の型（1/4）</h1>
+		<section>
+			<h2 id="lbl_type_list">12.1 型の種類</h2>
+			<p>Ｃ言語の型名の一部については「<a href="../SECTION02/section02_1.html#lbl_type_list">【表2-1】 型名一覧（代表的なもの）</a>」で紹介しましたが、それらも含めて、一覧表で示します。</p>
+			<table class="simple-table">
+				<caption>【表12-1】 Ｃ言語の型名一覧</caption>
+				<tr><th>区分</th><th>型名、その他</th></tr>
+				<tr><td>符号付整数型</td><td>char、signed char<br>short、short int、signed short、signed short int<br>int、signed int、signed<br>long、long int、signed long int、signed long<br>long long、long long int、signed long long int、signed long long<br>（領域長（バイト）はshort≦int≦long≦long longの関係です）</td></tr>
+				<tr><td style="white-space: nowrap;">符号なし整数型</td><td>unsigned char<br>unsigned short、unsigned short int<br>unsigned int、unsigned<br>unsigned long、unsigned long int<br>unsigned long long、unsigned long long int</td></tr>
+				<tr><td>浮動小数点数型</td><td>float、double、long double<br>（領域長（バイト）はdouble≦long doubleの関係です）</td></tr>
+				<tr><td>配列型</td><td>void型以外は配列型として宣言して使うことができます。配列の取扱いについては「<a href="../SECTION07/section07_1.html">７．たくさんのデータを処理するための配列</a>」を参照してください。</td></tr>
+				<tr><td>ポインタ型</td><td>すべての型はポインタ型として宣言して使うことができます。ポインタの取扱いについては「<a href="../SECTION08/section08_1.html">８．データをアドレスで操作するためのポインタ</a>」を参照してください。</td></tr>
+				<tr><td>関数型</td><td>ある型名の値を返す関数は関数型です。関数の取扱いについては「<a href="../SECTION09/section09_1.html">９．プログラムの部品化のための関数</a>」を参照してください。</td></tr>
+				<tr><td>構造体型</td><td>異なる型名のデータをまとめて取り扱いたい場合は構造体型として宣言して使うことができます。構造体の取扱いについては「<a href="../SECTION11/section11_1.html">11．異なる型名データをまとめて取り扱う構造体</a>」を参照してください。</td></tr>
+				<tr><td>void型</td><td>型を持たないという特殊な型名です。返り値を持たない関数の型名などに使用します。</td></tr>
+				<tr><td>共用体型</td><td>メモリ領域を複数の型名データで供用するためのものです。以降で説明します。</td></tr>
+				<tr><td>列挙型</td><td>列挙定数と呼ぶ識別子によって定義された整数値の集合を使用するためのものです。以降で説明します。</td></tr>
+			</table>
+			<p>ここでは<strong>共用体型</strong>、<strong>列挙型</strong>および、ユーザ固有の型を定義するための<strong>typedef</strong>について説明します。</p>
+			<aside>
+				<h3>補足</h3>
+				<ul>
+					<li>ここではcharとsigned charは１バイト長の符号付整数型で、unsigned charは１バイト長の符号なし整数型としていますが、char型はANSI規格では符号付か、符号無しかが明確に定義されていません。明確に符号付を使いたい場合はsigned charとした方が良いでしょう。通常、char型は文字を扱うときに使用しますが、その場合は符号の有り無しは関係ありませんので、char型でかまいません。</li>
+					<li>符号付整数型はsignedとintは省略可能です。従って、charとsigned charは同じ型ですし、shortとshort intも同じ型です。また、符号なし整数型もintは省略可能ですので、unsigned shortとunsigned short intは同じ型です。</li>
+					<li>void型の使用例として、メモリ領域を動的に確保する<a href="../SECTION14/s14_06/s14_06_2.html#lbl_malloc">malloc関数</a>があります。この関数の返り値は確保したメモリの先頭アドレスになりますが、確保したメモリにどういう型のデータを格納するかはmalloc関数には分かりませんので、返り値として返すアドレスはvoid型のポインタになっています。</li>
+				</ul>
+			</aside>
+		</section>
+		<section>
+			<h2 id="lbl_union">12.2 共用体型</h2>
+			<figure class="left-box myphoto">
+				<dl>
+					<dt><img src="../IMAGES/sec12_1.jpg" alt="共用体とは"></dt>
+					<dd>【図１２-１】共用体とは</dd>
+				</dl>
+			</figure>
+			<p>構造体の場合の各メンバ一はメモリ上に<strong>順番に配置</strong>されます。例えば、図12-1の構造体ではint型のデータ（４バイト長）、double型のデータ（８バイト長）、char型のデータ（１バイト長）ですので、この構造体は13バイトの領域となります。（コンピュータの種類やOSにより異なります。これはあくまでも一例です）また、この構造体には３種類のデータを格納することができます。</p>
+			<p>一方、共用体の場合の各メンバ一はメモリ上の<strong>同じ領域に配置</strong>されます。例えば、図12-1の共用体ではint型のデータ（４バイト長）、double型のデータ（８バイト長）、char型のデータ（１バイト長）が同じ領域に配置されます。この共用体の大きさはメンバ一の中で一番大きなdouble型のデータの大きさの８バイトになります。</p>
+			<p>なお、共用体は同じ領域を共有することから、１種類のデータしか格納できませんので注意してください。例えば、図12-1の共用体にint型のデータを格納した後にdouble型のデータを格納するとdouble型のデータで上書きされます。</p>
+			<p>共用体は条件により、取り扱うデータの型が異なるデータを格納する領域を確保するような場合に便利です。構造体を使うよりもメモリ使用量を減らせる可能性があります。</p>
+			<section>
+				<h3 id="lbl_dec">12.2.1 形式</h3>
+				<p>構造体と共用体はよく似ていますので、使い方もほとんど同じです。相違点は型指定子としてstructの代わりに<strong>union</strong>を指定します。</p>
+				<div class="form-exp">
+					※ 共用体型名の宣言<br>
+					union 共用体型名 {型名 メンバー名１; 型名 メンバー名２; …};<br><br>
+
+					※ 共用体変数の宣言<br>
+					union 共用体型名 共用体変数名 = {初期値};<br><br>
+
+					※ 共用体型名の宣言と共用体変数の宣言を同時に行う<br>
+					union 共用体型名 {型名 メンバー名１; 型名 メンバー名２; …} 共用体変数名 = {初期値};<br><br>
+
+					※ メンバーの参照・更新<br>
+					共用体変数名.メンバー名;<br>
+					共用体変数名.メンバー名 = 値;<br>
+					ポインタ変数名-&gt;メンバー名;<br>
+					ポインタ変数名-&gt;メンバー名 = 値;
+				</div>
+				<dl>
+					<dt>union</dt>
+						<dd>共用体を宣言するための型指定子です。</dd>
+					<dt>共用体型名</dt>
+						<dd>任意の共用体型名を宣言します。共用体型名は自由につけることが出来ます。共用体型名の宣言と共用体変数の宣言を同時に行う場合は共用体型名は省略できます。</dd>
+					<dt>型名 メンバー名</dt>
+						<dd>メンバーの型名とメンバー名を指定します。配列の指定も出来ます。</dd>
+					<dt>共用体変数名</dt>
+						<dd>共用体型名を宣言しただけではメモリ上に実体は確保されていませんので、共用体変数名を宣言することにより変数としてメモリ上に実体を確保します。</dd>
+					<dt>.</dt>
+						<dd>共用体変数名を使ってメンバーを参照・更新する場合はドット演算子（.）を使用します。</dd>
+					<dt>-&gt;</dt>
+						<dd>予め、ポインタ変数に共用体変数の先頭アドレスを設定しておき、そのポインタ変数を使ってメンバーを参照・更新する場合はアロー演算子（-&gt;）を使用します。</dd>
+				</dl>
+				<aside>
+					<h4>補足</h4>
+					<p>あまり無いと思いますが、初期値を指定することもできます。その場合、指定する初期値の型は最初のメンバ一の型に合わせます。図12-1の共用体の場合は最初のメンバ一はint型ですので、初期値はint型の値を指定します。</p>
+				</aside>
+			</section>
+			<section>
+				<h3>12.2.2 例題</h3>
+				<p>四角形、三角形および、円の面積を計算します。面積を計算するためのデータ（長さや高さ）は図形毎に用意した構造体に格納しますが、それらは同時に使うことはないため、共用体として再定義して使用します。</p>
+				<div class="source-code">
+					<div class="c"><ol><li class="li1"><div class="de1"><span class="co2">#include &lt;stdio.h&gt;</span></div></li>
+					<li class="li1"><div class="de1"><span class="coMULTI">/* 四角形の縦と横の長さを格納する構造体 */</span></div></li>
+					<li class="li1"><div class="de1"><span class="kw4">struct</span> rectangle_type</div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">double</span> &nbsp;width<span class="sy0">;</span> &nbsp; &nbsp; <span class="coMULTI">/* 横の長さ */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">double</span> &nbsp;height<span class="sy0">;</span> &nbsp; &nbsp;<span class="coMULTI">/* 縦の長さ */</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#125;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1"><span class="coMULTI">/* 三角形の底辺と高さを格納する構造体 */</span></div></li>
+					<li class="li1"><div class="de1"><span class="kw4">struct</span> triangle_type</div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">double</span> &nbsp;base<span class="sy0">;</span> &nbsp; &nbsp; &nbsp;<span class="coMULTI">/* 底辺の長さ */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">double</span> &nbsp;altitude<span class="sy0">;</span> &nbsp;<span class="coMULTI">/* 高さ */</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#125;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1"><span class="coMULTI">/* 円の半径を格納する構造体 */</span></div></li>
+					<li class="li1"><div class="de1"><span class="kw4">struct</span> circle_type</div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">double</span> &nbsp;radius<span class="sy0">;</span> &nbsp; &nbsp;<span class="coMULTI">/* 半径の長さ */</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#125;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1"><span class="coMULTI">/* 面積データを格納する構造体 */</span></div></li>
+					<li class="li1"><div class="de1"><span class="kw4">struct</span> area_type</div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">int</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; figure_kind<span class="sy0">;</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* 図形の種類(四角形 … 1、三角形 … 2、円 … 3) */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">double</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;area<span class="sy0">;</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="coMULTI">/* 面積 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">union</span> length_type</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw4">struct</span> rectangle_type &nbsp; rectangle_length<span class="sy0">;</span> &nbsp; &nbsp; &nbsp;<span class="coMULTI">/* 四角形の縦と横の長さ */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw4">struct</span> triangle_type &nbsp; &nbsp;triangle_length<span class="sy0">;</span> &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* 三角形の底辺と高さ */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw4">struct</span> circle_type &nbsp; &nbsp; &nbsp;circle_length<span class="sy0">;</span> &nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* 円の半径 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; length<span class="sy0">;</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="coMULTI">/* 面積を求めるためのデータ */</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#125;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1"><span class="kw4">int</span> main<span class="br0">&#40;</span><span class="kw4">void</span><span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">struct</span> area_type &nbsp; &nbsp;area_data<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">int</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; return_code<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="coMULTI">/* CalcArea関数のプロトタイプ宣言 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">int</span> CalcArea<span class="br0">&#40;</span><span class="kw4">struct</span> area_type <span class="sy0">*</span>Area<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;図形の面積を計算します<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;四角形 --- 1<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;三角形 --- 2<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;円 ------- 3<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;図形の種類を番号で指定してください ==&gt; &quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">scanf</span><span class="br0">&#40;</span><span class="st0">&quot;%d&quot;</span><span class="sy0">,</span> <span class="sy0">&amp;</span>area_data.<span class="me1">figure_kind</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">if</span><span class="br0">&#40;</span>area_data.<span class="me1">figure_kind</span> <span class="sy0">&gt;=</span> <span class="nu0">1</span> <span class="sy0">&amp;&amp;</span> area_data.<span class="me1">figure_kind</span> <span class="sy0">&lt;=</span> <span class="nu0">3</span><span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">switch</span><span class="br0">&#40;</span>area_data.<span class="me1">figure_kind</span><span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">case</span> <span class="nu0">1</span><span class="sy0">:</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;縦と横の長さを入力してください ==&gt; &quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">scanf</span><span class="br0">&#40;</span><span class="st0">&quot;%lf%lf&quot;</span><span class="sy0">,</span> <span class="sy0">&amp;</span>area_data.<span class="me1">length</span>.<span class="me1">rectangle_length</span>.<span class="me1">width</span><span class="sy0">,</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="sy0">&amp;</span>area_data.<span class="me1">length</span>.<span class="me1">rectangle_length</span>.<span class="me1">height</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw2">break</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">case</span> <span class="nu0">2</span><span class="sy0">:</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;底辺と高さを入力してください ==&gt; &quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">scanf</span><span class="br0">&#40;</span><span class="st0">&quot;%lf%lf&quot;</span><span class="sy0">,</span> <span class="sy0">&amp;</span>area_data.<span class="me1">length</span>.<span class="me1">triangle_length</span>.<span class="me1">base</span><span class="sy0">,</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="sy0">&amp;</span>area_data.<span class="me1">length</span>.<span class="me1">triangle_length</span>.<span class="me1">altitude</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw2">break</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">case</span> <span class="nu0">3</span><span class="sy0">:</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;半径を入力してください ==&gt; &quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">scanf</span><span class="br0">&#40;</span><span class="st0">&quot;%lf&quot;</span><span class="sy0">,</span> <span class="sy0">&amp;</span>area_data.<span class="me1">length</span>.<span class="me1">circle_length</span>.<span class="me1">radius</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw2">break</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; return_code <span class="sy0">=</span> CalcArea<span class="br0">&#40;</span><span class="sy0">&amp;</span>area_data<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">if</span><span class="br0">&#40;</span>return_code <span class="sy0">==</span> <span class="nu0">0</span><span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;面積は%.2fです<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> area_data.<span class="me1">area</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">else</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;面積の計算が出来ませんでした<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">else</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;番号が不当です<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; return_code <span class="sy0">=</span> <span class="nu0">1</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">return</span> return_code<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1"><span class="coMULTI">/* 面積の計算を行う */</span></div></li>
+					<li class="li1"><div class="de1"><span class="kw4">int</span> CalcArea<span class="br0">&#40;</span><span class="kw4">struct</span> area_type <span class="sy0">*</span>pArea<span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">int</span> return_code <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">switch</span><span class="br0">&#40;</span>pArea<span class="sy0">-&gt;</span>figure_kind<span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">case</span> <span class="nu0">1</span><span class="sy0">:</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* 四角形の面積の計算を行う */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">if</span><span class="br0">&#40;</span>pArea<span class="sy0">-&gt;</span>length.<span class="me1">rectangle_length</span>.<span class="me1">width</span> <span class="sy0">&gt;</span> <span class="nu16">0.0</span> <span class="sy0">&amp;&amp;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; pArea<span class="sy0">-&gt;</span>length.<span class="me1">rectangle_length</span>.<span class="me1">height</span> <span class="sy0">&gt;</span> <span class="nu16">0.0</span><span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; pArea<span class="sy0">-&gt;</span>area <span class="sy0">=</span> pArea<span class="sy0">-&gt;</span>length.<span class="me1">rectangle_length</span>.<span class="me1">width</span> <span class="sy0">*</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; pArea<span class="sy0">-&gt;</span>length.<span class="me1">rectangle_length</span>.<span class="me1">height</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">else</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; return_code <span class="sy0">=</span> <span class="nu0">1</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw2">break</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">case</span> <span class="nu0">2</span><span class="sy0">:</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* 三角形の面積の計算を行う */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">if</span><span class="br0">&#40;</span>pArea<span class="sy0">-&gt;</span>length.<span class="me1">triangle_length</span>.<span class="me1">base</span> <span class="sy0">&gt;</span> <span class="nu16">0.0</span> <span class="sy0">&amp;&amp;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; pArea<span class="sy0">-&gt;</span>length.<span class="me1">triangle_length</span>.<span class="me1">altitude</span> <span class="sy0">&gt;</span> <span class="nu16">0.0</span><span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; pArea<span class="sy0">-&gt;</span>area <span class="sy0">=</span> pArea<span class="sy0">-&gt;</span>length.<span class="me1">triangle_length</span>.<span class="me1">base</span> <span class="sy0">*</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; pArea<span class="sy0">-&gt;</span>length.<span class="me1">triangle_length</span>.<span class="me1">altitude</span> <span class="sy0">/</span> <span class="nu16">2.0</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">else</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; return_code <span class="sy0">=</span> <span class="nu0">1</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw2">break</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">case</span> <span class="nu0">3</span><span class="sy0">:</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* 円の面積の計算を行う */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">if</span><span class="br0">&#40;</span>pArea<span class="sy0">-&gt;</span>length.<span class="me1">circle_length</span>.<span class="me1">radius</span> <span class="sy0">&gt;</span> <span class="nu16">0.0</span><span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; pArea<span class="sy0">-&gt;</span>area <span class="sy0">=</span> pArea<span class="sy0">-&gt;</span>length.<span class="me1">circle_length</span>.<span class="me1">radius</span> <span class="sy0">*</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; pArea<span class="sy0">-&gt;</span>length.<span class="me1">circle_length</span>.<span class="me1">radius</span> <span class="sy0">*</span> <span class="nu16">3.14</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">else</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; return_code <span class="sy0">=</span> <span class="nu0">1</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw2">break</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">return</span> return_code<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#125;</span></div></li>
+					</ol></div>
+				</div>
+				<div class="exe-samp">
+<pre><samp>$ <kbd>./ex12_1.prg</kbd>
+図形の面積を計算します
+四角形 --- 1
+三角形 --- 2
+円 ------- 3
+図形の種類を番号で指定してください ==&gt; <kbd>1</kbd>
+縦と横の長さを入力してください ==&gt; <kbd>2.5 3.5</kbd>
+面積は8.75です
+$
+$ <kbd>./ex12_1.prg</kbd>
+図形の面積を計算します
+四角形 --- 1
+三角形 --- 2
+円 ------- 3
+図形の種類を番号で指定してください ==&gt; <kbd>2</kbd>
+底辺と高さを入力してください ==&gt; <kbd>2.5 3.5</kbd>
+面積は4.38です
+$
+$ <kbd>./ex12_1.prg</kbd>
+図形の面積を計算します
+四角形 --- 1
+三角形 --- 2
+円 ------- 3
+図形の種類を番号で指定してください ==&gt; <kbd>3</kbd>
+半径を入力してください ==&gt; <kbd>2.5</kbd>
+面積は19.62です
+$
+$ <kbd>./ex12_1.prg</kbd>
+図形の面積を計算します
+四角形 --- 1
+三角形 --- 2
+円 ------- 3
+図形の種類を番号で指定してください ==&gt; <kbd>4</kbd>
+番号が不当です
+$</samp></pre>
+				</div>
+				<dl>
+					<dt>3〜7行目</dt>
+						<dd>四角形の縦と横の長さを格納するための構造体型名（rectangle_type）を宣言します。</dd>
+					<dt>9〜13行目</dt>
+						<dd>三角形の底辺と高さを格納するための構造体型名（triangle_type）を宣言します。</dd>
+					<dt>15〜18行目</dt>
+						<dd>円の半径を格納するための構造体型名（circle_type）を宣言します。</dd>
+					<dt>20〜30行目</dt>
+						<dd>面積を計算するのに必要なデータを格納するための構造体型名（area_type）を宣言します。上記３つの構造体を共用体として組み込みます。</dd>
+					<dt>34行目</dt>
+						<dd>上記構造体型名（area_type）を使用して構造体変数（area_data）を宣言します。</dd>
+					<dt>37行目</dt>
+						<dd>面積の計算を行うCalcArea関数の関数プロトタイプ宣言です。返り値はint型で計算が出来たときは０を、出来なかったときは１を返します。引数は計算を行うためのデータが格納されている構造体（area_data）の先頭アドレスを指定します。</dd>
+					<dt>44行目</dt>
+						<dd>図形の種類を整数値でarea_dataのfigure_kindメンバ一に入力します。</dd>
+					<dt>52〜53行目</dt>
+						<dd>四角形の縦と横の長さをarea_dataのlength.rectangle_length.widthメンバ一と、area_dataのlength.rectangle_length.heightメンバ一に入力します。</dd>
+					<dt>57〜58行目</dt>
+						<dd>三角形の底辺と高さをarea_dataのlength.triangle_length.baseメンバ一と、area_dataのlength.triangle_length.altitudeメンバ一に入力します。</dd>
+					<dt>62行目</dt>
+						<dd>円の半径をarea_dataのlength.circle_length.radiusメンバ一に入力します。</dd>
+					<dt>66行目</dt>
+						<dd>面積の計算を行うCalcArea関数を呼び出します。引数はarea_dataのアドレスです。</dd>
+					<dt>69行目</dt>
+						<dd>CalcArea関数で求めた面積の値を出力します。</dd>
+					<dt>86行目</dt>
+						<dd>CalcArea関数の定義です。</dd>
+					<dt>90行目</dt>
+						<dd>図形の種類により、処理を振り分けるために、area_dataのfigure_kindメンバ一を参照します。area_dataのアドレスが引数で渡ってきていますので、それを使って参照するにはアロー演算子（-&gt;）を使います</dd>
+					<dt>97〜98行目</dt>
+						<dd>四角形の面積の計算を行います。横の長さはpArea-&gt;lengthメンバ一の中のrectangle_length.widthメンバ一で、縦の長さはpArea-&gt;lengthメンバ一の中のrectangle_length.heightメンバ一です。lengthメンバ一の中のメンバ一を参照するにはドット演算子を使いますので注意して下さい。</dd>
+					<dt>110〜111行目</dt>
+						<dd>三角形の面積の計算を行います。底辺の長さはpArea-&gt;lengthメンバ一の中のtriangle_length.baseメンバ一で、高さはpArea-&gt;lengthメンバ一の中のtriangle_length.altitudeメンバ一です。</dd>
+					<dt>122〜123行目</dt>
+						<dd>円の面積の計算を行います。半径はpArea-&gt;lengthメンバ一の中のcircle_length.radiusメンバ一です。</dd>
+					<dt>132行目</dt>
+						<dd>面積の計算が出来たときは返り値として０を、出来なかったときは１を返します。</dd>
+				</dl>
+			</section>
+		</section>
+	</section>
+
+	<footer>
+		<nav>
+			<ul>
+				<li><a href="../../index.html">ホーム</a></li>
+				<li><a href="../c_langtop.html#lbl_index">目次</a></li>
+				<li><a href="../SECTION11/section11_2.html">前のページ</a></li>
+				<li><a href="./section12_2.html">次のページ</a></li>
+			</ul>
+		</nav>
+		<p id="footer-author">更新日：<time datetime="2018-12-15">2018年12月15日</time> Merry</p>
+	</footer>
+</div>
+</body>
+</html>

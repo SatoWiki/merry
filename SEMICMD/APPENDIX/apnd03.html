@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initialscale=1.0">
+	<meta name="robots" content="INDEX,FOLLOW">
+	<meta name="keywords" content="インストール,ファイルシステム,パーティション,ルートファイルシステム,スワップ,QTParted,基本領域,拡張領域,論理領域,Ext4,fstab">
+	<meta name="description" content="システムをインストールする前に知っておいたほうがよいと思われる事項をご説明します。">
+	<meta name="author" content="T.Hagiwara">
+	<link rel="stylesheet" href="../../CSS3/seminar.css" type="text/css">
+	<link rel="prev" href="../../index.html">
+	<title>Linuxの使い方 - 付録３. インストールの基本事項</title>
+	<style type="text/css">
+	</style>
+</head>
+<body>
+<div id="container">
+	<header>
+		<p>Linux講座にようこそ。このページは「Linuxの使い方&nbsp;-&nbsp;付録３&nbsp;インストールの基本事項」です。</p>
+		<h1>Linuxの使い方</h1>
+		<nav>
+			<ul>
+				<li><a href="../../index.html">ホーム</a></li>
+				<li><a href="../cmdtop.html#lbl_index">目次</a></li>
+			</ul>
+		</nav>
+	</header>
+
+	<section class="contents">
+		<h1>付録</h1>
+		<section>
+			<h2 id="lbl_inst_base">付録３. インストールの基本事項</h2>
+			<p>ここでは、Fedoraを例として、システムをインストールする前に知っておいたほうがよいと思われる事項について、次の内容について説明します。</p>
+			<ul>
+				<li><a href="#lbl_inst">インストールの準備</a></li>
+				<li><a href="#lbl_file_sys">ファイルシステム</a></li>
+				<li><a href="#lbl_mount">ファイルシステムのマウント</a></li>
+			</ul>
+
+			<section>
+				<h3 id="lbl_inst">付録3.1 インストールの準備</h3>
+				<p>Fedoreの場合、インストール作業は独自のGUIツール（インストーラ）で行います。インストールツールはCDやDVD装置から起動しますので、それらからブートできる必要があります。また、USBブートができる機種ならば、USBメモリーにインストールツールを用意することもできます。（Fedoreプロジェクトで提供している特別なツールが必要です）</p>
+				<p>また、ライブCD（１CD&nbsp;Linux）からシステムを起動して、インストールツールを１つのアプリケーションとして実行してインストールする事もできますので、こちらの方法も検討するとよいでしょう。</p>
+				<p>インストーラやライブCDはISOファイル（IMGファイル）として提供されていますので、Fedoraの公式サイトからダウンロードできます。</p>
+				<ul class="link-list">
+					<li><a href="https://getfedora.org/">Get Fedora: download our Linux-based OS for developer desktops, running containers, and more</a></li>
+				</ul>
+				<p>ISOファイルを入手したら、DVDに書き込む（焼く）ことになりますが、Windows&nbsp;7以降は書き込み機能が標準で用意されていますので、特別なツールは必要ありません。Linuxの場合は、K3b等のライティングソフトウェアで書き込みます。</p>
+				<p>インストール方法に付いては、ネットで検索するとたくさんの情報を得ることが出来ますので、それらを参考にするとよいでしょう。取り敢えず、Fedoraの公式サイトの文書を紹介します。（英文です）
+				</p>
+				<ul class="link-list">
+					<li><a href="http://docs.fedoraproject.org/ja-JP/index.html">Fedora に関する文書</a></li>
+				</ul>
+			</section>
+
+			<h3 id="lbl_file_sys">付録3.2 ファイルシステム</h3>
+			<section>
+				<p>１台のハードディスクを複数の領域に区切って使用することができます。この領域を<strong>パーティション</strong>と呼んでおり、各々のパーティションをあたかも１台のハードディスクのように使用できます。つまり、１台のハードディスクを複数のハードディスクのように使えるということです。</p>
+				<p>ファイルシステムはパーティションに作ります。ファイルシステムは<strong>ルートファイルシステム</strong>（/）用が必要で、最低でも10Gバイト程度、スワップは実（物理）メモリーの１〜２倍程度の容量が必要です。ユーザデータ（/home）はルートファイルシステムでもよいのですが、別のファイルシステムにしたほうがデータの管理が楽になります。（スワップは無くても構いませんが、できるだけ用意したほうがよいでしょう）</p>
+				<p>メーカ製のDOS/Vパソコンの場合、通常、Windowsがインストールされており、HDD全体を１つ或は、２つのパーテション（Cドライブ、Dドライブ）としてファイルシステムが作られています。Windowsが不必要な場合はWindowsを消して、新たにパーティションを作ってしまえばよいのですが、Windowsを残したい場合が多いと思います。その場合はWindowsのファイルシステムを縮小して、Linuxのファイルシステム用のパーティションを作る領域を確保します。</p>
+				<p id="lbl_qtparted">パーティションの縮小はインストーラでも出来ますが、予め、パーティションを作る場合は<strong>QTParted</strong>の使用をお推めします。QTPartedはNTFSにも対応していますので、WindowsマシンをLinuxとのデュアルブートにするときにも使えます。</p>
+				<p>QTPartedはCDやDVD装置から直接起動するライブCD（１CD&nbsp;Linux）から使用することになります。ライブCDとしてはPuppy&nbsp;Linuxが良いと思います。作業手順は次のようになります。</p>
+				<div class="form-exp">
+				<ul>
+					<li>Windowsパーティションを整理して、空きスペースを確保します。
+						<ul>
+							<li>不要なファイルを削除します。</li>
+							<li>デフラグを実行して、領域を整理します。</li>
+						</ul></li>
+					<li>Puppy&nbsp;Linuxを起動します。</li>
+					<li>アプリケーションランチャーから<code>qtparted</code>を実行します。</li>
+					<li>QTPartedの画面から、Windowsのパーティションを選んで新しいサイズを指定します。</li>
+				</ul>
+				</div>
+				<p>HDDに空き領域ができたら、そこにパーティションを作成しますが、１台のHDDに作成できるパーティションの数には制限があります。</p>
+				<figure class="left-box myphoto">
+					<dl>
+						<dt><img src="../IMAGES/apnd03_1.jpg" alt="パーティションの構成例"></dt>
+						<dd>【付図３-１】</dd>
+						<dd>パーティションの構成例</dd>
+					</dl>
+				</figure>
+				<p>付図３-１はHDDのパーティション構成例です。１台のHDDには最大４つの<strong>基本領域</strong>を作成できます。そのうちの１つは基本領域の特殊な形態である<strong>拡張領域</strong>にできます。そして、拡張領域には複数の<strong>論理領域</strong>を確保できます。基本領域と論理領域をパーティションとして使えますので、１台のHDDには概ね16〜60程度のパーティションを作成できます。（作成できるパーティションの数はOSにより異なります）</p>
+				<p>パーティションをフォーマッティングすればファイルシステムを作れますが、インストーラで簡単にできます。但し、Linuxにはいくつかのファイルシステムがあり、Fedoraの標準は<strong>Ext4</strong>（Fedora 11以降）というファイルシステムが標準です。</p>
+				<p>Ext４ファイルシステムはジャーナリングという機能を持っていますので、ファイルシステムに変更が起きたときにジャーナルを取っておき、障害が発生したときにはジャーナルからファイルシステムを回復します。この機能を使うことにより、障害発生時の修復が短時間にかつ、確実に行えます。</p>
+				<aside>
+					<h4>補足（ご参考）</h4>
+					<p>私のPCのパーティションの構成は次のようにしています。（WindowsとLinuxのデュアルブートシステムです）</p>
+					<table class="simple-table">
+						<caption>【付表3-1】パーティション構成例（ご参考）</caption>
+						<tr><th>領域区分</th><th>デバイス名</th><th>容量（Gバイト）</th><th>タイプ</th><th>内容</th></tr>
+						<tr><td>基本</td><td>/dev/sda1</td><td class="number">48.4</td><td>NTFS</td><td>Windows（Ｃドライブ）</td></tr>
+						<tr><td>基本</td><td>/dev/sda2</td><td class="number">0.5</td><td>NTFS</td><td>Windows（不明）</td></tr>
+						<tr><td>基本</td><td>/dev/sda3</td><td class="number">5.0</td><td>NTFS</td><td>Windows（Ｄドライブ）</td></tr>
+						<tr><td>基本</td><td>/dev/sda4</td><td class="number">179.0</td><td>-</td><td>拡張領域</td></tr>
+						<tr><td>論理</td><TD>/dev/sda5</td><td class="number">13.6</td><td>Ext4</td><td>ルートファイルシステム</td></tr>
+						<tr><td>論理</td><td>/dev/sda6</td><td class="number">5.8</td><td>Ext4</td><td>システムデータ（/var）</td></tr>
+						<tr><td>論理</td><td>/dev/sda7</td><td class="number">4.8</td><td>swap</td><td>スワップ</td></tr>
+						<tr><td>論理</td><td>/dev/sda8</td><td class="number">146.5</td><td>Ext4</td><td>ユーザーデータ（/home）</td></tr>
+						<tr><td>論理</td><td>/dev/sda9</td><td class="number">8.3</td><td>Ext4</td><td>予備</td></tr>
+					</table>
+				</aside>
+			</section>
+
+			<section>
+				<h3 id="lbl_mount">付録3.3 ファイルシステムのマウント</h3>
+				<p>UNIX系OSのファイルシステムは<strong>マウント</strong>という操作を行わないと使うことはできません。ただし、KDEやGNOMEのディスクトップ環境の場合は、CDやDVD装置などの光学ドライブやUSB機器はプラグアンドプレイで自動的にマウントされて、すぐに使える状態になります。</p>
+				<p>常にマウントしておきたいファイルシステムがある場合（/home等）は<strong>/etc/fstab</strong>ファイルに登録しておけばブート時に自動的にマウントできます。このファイルはインストール時に作られますので、必要なファイルシステムはインストール時に指定しておくとよいでしょう。</p>
+				<aside>
+					<h4>補足（ご参考）</h4>
+					<p>私のPCのfstabファイルの内容です。（WindowsとLinuxのデュアルブートシステムです）</p>
+					<div class="exe-samp">
+<pre><samp>$ <kbd>cat /etc/fstab</kbd>
+#
+# /etc/fstab
+# Created by anaconda on Thu Jul 13 23:48:10 2017
+#
+# Accessible filesystems, by reference, are maintained under '/dev/disk'
+# See man pages fstab(5), findfs(8), mount(8) and/or blkid(8) for more info
+#
+UUID=69744001-62a5-4ca3-ba4a-cf63ebb36c49 /                       ext4    defaults        1 1
+UUID=7899ba61-52b8-4e3b-a468-df99980976e3 /home                   ext4    defaults        1 2
+UUID=6C3120D719A04CD6   /mnt/win                ntfs    defaults      0 0<strong> ← WindowsのDドライブです</strong>
+UUID=03e4e67f-ce01-4d39-a40a-95edaa35529b /var                    ext4    defaults        1 2
+UUID=77498ab9-5d4c-4b57-8c3e-5641d969eb01 swap                    swap    defaults        0 0
+$</samp></pre>
+					</div>
+				</aside>
+			</section>
+		</section>
+	</section>
+
+	<footer>
+		<nav>
+			<ul>
+				<li><a href="../../index.html">ホーム</a></li>
+				<li><a href="../cmdtop.html#lbl_index">目次</a></li>
+			</ul>
+		</nav>
+		<p id="footer-author">更新日：<time datetime="2018-03-20">2018年03月20日</time> Merry</p>
+	</footer>
+</div>
+</body>
+</html>

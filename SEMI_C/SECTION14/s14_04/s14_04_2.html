@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initialscale=1.0">
+	<meta name="robots" content="INDEX,FOLLOW">
+	<meta name="keywords" content="文字処理ライブラリ,関数,sin,asin,sinh,cos,aco,cosh,tan,atan,atan2,tanh,abs,labs,fabs,div,ldiv,ceil,floor">
+	<meta name="description" content="sin関数、asin関数、sinh関数、cos関数、acos関数、cosh関数、tan関数、atan関数、atan2関数、tanh関数abs関数、labs関数、fabs関数、div関数、ldiv関数、ceil関数、floor関数の使用法を説明します。">
+	<meta name="author" content="T.Hagiwara">
+	<link rel="stylesheet" href="../../../CSS3/seminar.css" type="text/css">
+	<link rel="stylesheet" href="../../../CSS3/hl_clang.css" type="text/css">
+	<link rel="prev" href="./s14_04_1.html">
+	<link rel="next" href="./s14_04_3.html">
+	<title>Ｃ言語プログラミング入門&nbsp;-&nbsp;ライブラリ関数&nbsp;-&nbsp;数学ライブラリ（2/3）-</title>
+	<style type="text/css">
+	</style>
+</head>
+<body>
+<div id="container">
+	<header>
+		<p>Linux講座にようこそ。このページは「Ｃ言語プログラミング入門&nbsp;-&nbsp;第14章．ライブラリ関数&nbsp;-&nbsp;数学ライブラリ」です。</p>
+		<h1>Ｃ言語プログラミング入門</h1>
+		<nav>
+			<ul>
+				<li><a href="../../../index.html">ホーム</a></li>
+				<li><a href="../../c_langtop.html#lbl_index">目次</a></li>
+				<li><a href="./s14_04_1.html">前のページ</a></li>
+				<li><a href="./s14_04_3.html">次のページ</a></li>
+			</ul>
+		</nav>
+	</header>
+
+	<section class="contents">
+		<h1>14. ライブラリ関数（21/36）&nbsp;-&nbsp;数学ライブラリ（2/3）</h1>
+		<section>
+			<h2 id="lbl_trig">14.30 三角関数</h2>
+			<section>
+				<h3>14.30.1 sin関数、asin関数、sinh関数、cos関数、acos関数、cosh関数、tan関数、atan関数、atan2関数、tanh関数</h3>
+				<ul>
+					<li>sin関数はxの正弦（サイン）の値を返します。</li>
+					<li>asin関数はxの逆正弦（アークサイン）の値を返します。</li>
+					<li>sinh関数は双曲線正弦（ハイパボリックサイン）の値を返します。</li>
+					<li>cos関数はxの余弦（コサイン）の値を返します。</li>
+					<li>acos関数はxの逆余弦（アークコサイン）の値を返します。</li>
+					<li>cosh関数は双曲線余弦（ハイパボリックコサイン）の値を返します。</li>
+					<li>tan関数はxの正接（タンジェント）の値を返します。</li>
+					<li>atan関数はxの逆正接（アークタンジェント）の値を返します。</li>
+					<li>atan2関数はy/xの逆正接（アークタンジェント）の値を返します。</li>
+					<li>tanh関数はxの双曲線正接（ハイパボリックタンジェント）の値を返します。</li>
+				</ul>
+				<table>
+					<caption>【表14-4-2】 sin関数、asin関数、sinh関数、cos関数、acos関数、<br>cosh関数、tan関数、atan関数、atan2関数、tanh関数</caption>
+					<tr><th>形式</th><td>#include &lt;math.h&gt;<br>
+										double sin(double x);<br>
+										double asin(double x);<br>
+										double sinh(double x);<br>
+										double cos(double x);<br>
+										double acos(double x);<br>
+										double cosh(double x);<br>
+										double tan(double x);<br>
+										double atan(double x);<br>
+										double atan2(double y, double x);<br>
+										double tanh(double x)</td></tr>
+					<tr><th>返り値</th><td>正しく計算ができた場合は計算結果を返します。単位はラジアンです。</td></tr>
+					<tr><th>引数</th>
+						<td>
+							<dl>
+								<dt>double x</dt>
+									<dd>角度をラジアン単位で指定します。</dd>
+							</dl>
+						</td></tr>
+					<tr><th>使用法、<br />他</th>
+						<td>これらの関数は引数と返り値がdouble型ですが、float型とlong double型の関数もあります。</td></tr>
+				</table>
+			</section>
+		</section>
+
+		<section>
+			<h2 id="lbl_abs">14.31 絶対値関数</h2>
+			<section>
+				<h3>14.31.1 abs関数、labs関数、fabs関数</h3>
+				<ul>
+					<li>abs関数は整数（int型）の絶対値を返します。</li>
+					<li>labs関数は大きな整数（long int型）の絶対値を返します。</li>
+					<li>fabs関数は浮動小数点数（double型）の絶対値を返します。</li>
+				</ul>
+				<table>
+					<caption>【表14-4-3】 abs関数、labs関数、fabs関数</caption>
+					<tr><th>形式</th><td>#include &lt;math.h&gt;<br>
+										int abs(int i);<br>
+										long int labs(long int i);<br>
+										double fabs(double x);</td></tr>
+					<tr><th>返り値</th><td>それぞれの関数の型に応じた絶対値を返します。</td></tr>
+					<tr><th>引数</th>
+						<td>
+							<dl>
+								<dt>int i</dt>
+									<dd>絶対値を算出したい整数（int型）の値を指定します。</dd>
+								<dt>long int i</dt>
+									<dd>絶対値を算出したい整数（long int型）の値を指定します。</dd>
+								<dt>double x</dt>
+									<dd>絶対値を算出したい浮動小数点数（double型）の値を指定します。</dd>
+							</dl>
+						</td></tr>
+				</table>
+			</section>
+		</section>
+
+		<section>
+			<h2 id="lbl_div">14.32 整数の除算関数</h2>
+			<section>
+				<h3>14.32.1 div関数、ldiv関数</h3>
+				<p>整数の除算は/演算子で商が求まりますし、%演算子で余りが求まりますので、通常はこれらの演算子を使用した方がよいでしょう。</p>
+				<ul>
+					<li>div関数は整数（int型）の除算で、商と余りを返します。</li>
+					<li>ldiv関数は大きな整数（long int型）の除算で、商と余りを返します。</li>
+				</ul>
+				<table>
+					<caption>【表14-4-4】 div関数、ldiv関数</caption>
+					<tr><th>形式</th><td>#include &lt;math.h&gt;<br>
+										div_t div(int numerator, int denominator);<br>
+										ldiv_t ldiv(long int numerator, long int denominator);</td></tr>
+					<tr><th>返り値</th><td>div_t（またはldiv_t）構造体のquotメンバに商を、remメンバに余りを設定して返します。</td></tr>
+					<tr><th>引数</th>
+						<td>
+							<dl>
+								<dt>int numerator</dt>
+									<dd>被除数（割られる方の値）を指定します。</dd>
+								<dt>int denominator</dt>
+									<dd>除数（割る方の値）を指定します。</dd>
+								<dt>long int numerator</dt>
+									<dd>被除数（割られる方の値）を指定します。</dd>
+								<dt>long int denominator</dt>
+									<dd>除数（割る方の値）を指定します。</dd>
+							</dl>
+						</td></tr>
+				</table>
+			</section>
+		</section>
+
+		<section>
+			<h2 id="lbl_ceil">14.33 最小・最大の整数値算出関数</h2>
+			<section>
+				<h3>14.33.1 ceil関数、floor関数</h3>
+				<ul>
+					<li>ceil関数は指定した引数の値を下回らない最小の整数値を返します。例えば、1.5が指定された場合は2.0が返ります。</li>
+					<li>floor関数は指定した引数の値を越えない最大の整数値を返します。例えば、1.5が指定された場合は1.0が返ります。</li>
+				</ul>
+				<table>
+					<caption>【表14-4-5】 ceil関数、floor関数</caption>
+					<tr><th>形式</th><td>#include &lt;math.h&gt;<br>
+										double ceil(double x);<br>
+										double floor(double x);</td></tr>
+					<tr><th>返り値</th><td>算出結果を返します。</td></tr>
+					<tr><th>引数</th>
+						<td>
+							<dl>
+								<dt>double x</dt>
+									<dd>算出の元となる値を指定します。</dd>
+							</dl>
+						</td></tr>
+				</table>
+			</section>
+			<section>
+				<h3>14.33.2 例題</h3>
+				<p>入力した数値に対して、ceil関数とfloor関数の結果を表示します。</p>
+				<div class="source-code">
+					<div class="c"><ol><li class="li1"><div class="de1"><span class="co2">#include &lt;stdio.h&gt;</span></div></li>
+					<li class="li1"><div class="de1"><span class="co2">#include &lt;ctype.h&gt;</span></div></li>
+					<li class="li1"><div class="de1"><span class="co2">#include &lt;math.h&gt;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1"><span class="kw4">int</span> main<span class="br0">&#40;</span><span class="kw4">void</span><span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">double</span> &nbsp;num<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">char</span> &nbsp; &nbsp;ans<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">do</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;数値を入力してください ==&gt; &quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">scanf</span><span class="br0">&#40;</span><span class="st0">&quot;%lf&quot;</span><span class="sy0">,</span> <span class="sy0">&amp;</span>num<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;ceil() &nbsp;: %f<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> <span class="kw3">ceil</span><span class="br0">&#40;</span>num<span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;floor() : %f<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> <span class="kw3">floor</span><span class="br0">&#40;</span>num<span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;再度入力しますか（y/n） ==&gt; &quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">scanf</span><span class="br0">&#40;</span><span class="st0">&quot;%*c%c&quot;</span><span class="sy0">,</span> <span class="sy0">&amp;</span>ans<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span> <span class="kw1">while</span><span class="br0">&#40;</span><span class="kw3">toupper</span><span class="br0">&#40;</span>ans<span class="br0">&#41;</span> <span class="sy0">==</span> <span class="st0">'Y'</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">return</span> <span class="nu0">0</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#125;</span></div></li>
+					</ol></div>
+				</div>
+				<div class="exe-samp">
+<pre><samp>$ <kbd>./ex14_4_1.prg</kbd>
+数値を入力してください ==&gt; <kbd>1.5</kbd>
+ceil()  : 2.000000
+floor() : 1.000000
+再度入力しますか（y/n） ==&gt; <kbd>y</kbd>
+数値を入力してください ==&gt; <kbd>-1.5</kbd>
+ceil()  : -1.000000
+floor() : -2.000000
+再度入力しますか（y/n） ==&gt; <kbd>y</kbd>
+数値を入力してください ==&gt; <kbd>0.5</kbd>
+ceil()  : 1.000000
+floor() : 0.000000
+再度入力しますか（y/n） ==&gt; <kbd>y</kbd>
+数値を入力してください ==&gt; <kbd>-0.5</kbd>
+ceil()  : -0.000000
+floor() : -1.000000
+再度入力しますか（y/n） ==&gt; <kbd>y</kbd>
+数値を入力してください ==&gt; <kbd>0</kbd>
+ceil()  : 0.000000
+floor() : 0.000000
+再度入力しますか（y/n） ==&gt; <kbd>n</kbd>
+$</samp></pre>
+				</div>
+				<dl>
+					<dt>3行目</dt>
+						<dd>数学関数を使いますので、math.hを取り込みます。</dd>
+					<dt>15行目</dt>
+						<dd>入力した値（変数num）を下回らない最小の整数値をceil関数で求めます。</dd>
+					<dt>16行目</dt>
+						<dd>入力した値（変数num）を越えない最大の整数値をfloor関数で求めます。</dd>
+				</dl>
+			</section>
+		</section>
+	</section>
+
+	<footer>
+		<nav>
+			<ul>
+				<li><a href="../../../index.html">ホーム</a></li>
+				<li><a href="../../c_langtop.html#lbl_index">目次</a></li>
+				<li><a href="./s14_04_1.html">前のページ</a></li>
+				<li><a href="./s14_04_3.html">次のページ</a></li>
+			</ul>
+		</nav>
+		<p id="footer-author">更新日：<time datetime="2019-01-10">2012年05月20日</time> Merry</p>
+	</footer>
+</div>
+</body>
+</html>

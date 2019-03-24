@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initialscale=1.0">
+	<meta name="robots" content="INDEX,FOLLOW">
+	<meta name="keywords" content="ライブラリ関数,Ｃ言語,関数,ヘッダーファイル,動的リンク,静的リンク">
+	<meta name="description" content="Ｃ言語のライブラリ関数の概要を説明します。">
+	<meta name="author" content="T.Hagiwara">
+	<link rel="stylesheet" href="../../CSS3/seminar.css" type="text/css">
+	<link rel="prev" href="../SECTION13/section13_2.html">
+	<link rel="next" href="./s14_01/s14_01_1.html">
+	<title>Ｃ言語プログラミング入門&nbsp;-&nbsp;ライブラリ関数</title>
+	<style type="text/css">
+	</style>
+</head>
+<body>
+<div id="container">
+	<header>
+		<p>Linux講座にようこそ。このページは「Ｃ言語プログラミング入門&nbsp;-&nbsp;第14章．ライブラリ関数」です。</p>
+		<h1>Ｃ言語プログラミング入門</h1>
+		<nav>
+			<ul>
+				<li><a href="../../index.html">ホーム</a></li>
+				<li><a href="../c_langtop.html#lbl_index">目次</a></li>
+				<li><a href="../SECTION13/section13_2.html">前のページ</a></li>
+				<li><a href="./s14_01/s14_01_1.html">次のページ</a></li>
+			</ul>
+		</nav>
+	</header>
+
+	<section class="contents">
+		<h1>14. ライブラリ関数（1/36）</h1>
+		<section>
+			<h2>14.1 ライブラリ関数とは</h2>
+			<p>Ｃ言語で開発するプログラムは、通常、複数の関数で構成します。これはプログラムの機能が多くなると、ソースプログラムの行数が増えますので、１つの関数で全てを記述してしまうと、複雑で分かりにくいプログラムになってしまうからです。機能単位に関数に纏めることにより、見通しの良い分かりやすいプログラムになる可能性があります。</p>
+			<p>プログラムを関数に分割して行くと、どのようなプログラムでも共通的に必要な関数が見えてきます。例えば、標準入力から入力したい、あるいは文字列を連結したい、といったようなことです。この様な関数は個人で作ることは勿論出来ますが、予め用意しておいて皆で共有した方が効率的ですし、不良の入り込む確率も小さくなることが期待できます。このようなことから、Ｃ言語では共通的に必要であろうと思われる機能の関数を<strong>ライブラリ関数</strong>という形で提供しています。</p>
+			<p>関数を使うには関数プロトタイプ宣言や関数内で使用している定数等が必要になりますが、それらはヘッダーファイルとして提供されていますので、ライブラリ関数を使う場合はヘッダファイルの取り込みが必要です。逆に考えれば、ヘッダファイルを指定しておけば、関数プロトタイプ宣言や定数等を一々指定しなくてよい、ということになります。</p>
+			<p>ライブラリ関数はライブラリファイルという形で、いくつかのファイルに纏められています。UNIX系OSの場合は/lib/や/usr/lib/及び、/usr/lib64/以降に用意されているファイルで、拡張子が「.a」および、「.so」のものです。</p>
+			<p>ここではANSI規格に定義されているライブラリ関数の使い方を、次のようにグルーピングして説明します。</p>
+			<ul>
+				<li><a href="./s14_01/s14_01_1.html">入出力ライブラリ</a></li>
+				<li><a href="./s14_02/s14_02_1.html">文字列処理ライブラリ</a></li>
+				<li><a href="./s14_03/s14_03_1.html">文字処理ライブラリ</a></li>
+				<li><a href="./s14_04/s14_04_1.html">数学ライブラリ</a></li>
+				<li><a href="./s14_05/s14_05_1.html">日付および時間ライブラリ</a></li>
+				<li><a href="./s14_06/s14_06_1.html">メモリ操作ライブラリ</a></li>
+				<li><a href="./s14_07/s14_07_1.html">一般ユーティリティライブラリ</a></li>
+				<li><a href="./s14_08/s14_08_1.html">その他のライブラリ</a></li>
+			</ul>
+			<aside>
+				<h3>補足</h3>
+				<p id="lbl_note_1">実行可能ファイルはコンパイル・リンク作業で作成しますが、ライブラリ関数の組み込みはリンクで行います。関数の組み込み方としては「動的リンク」と「静的リンク」と呼ぶ２つの方法があります。動的リンクの場合はプログラム実行時に関数の連結を行うのに対して、静的リンクは予め（リンク時に）連結を行います。</p>
+				<p>それぞれ、長所・短所がありますが、関数に変更があった場合、動的リンクであればあまり影響はありませんが、静的リンクの場合は変更があった関数を使っている全プログラムの再リンク作業（組み込み直し作業）が必要です。</p>
+				<p>ライブラリファイルの拡張子が「.so」のものが動的リンク用で、「.a」のものが静的リンク用です。また、gccコマンドはデフォルトでは動的リンクを行います。</p>
+			</aside>
+		</section>
+	</section>
+
+	<footer>
+		<nav>
+			<ul>
+				<li><a href="../../index.html">ホーム</a></li>
+				<li><a href="../c_langtop.html#lbl_index">目次</a></li>
+				<li><a href="../SECTION13/section13_2.html">前のページ</a></li>
+				<li><a href="./s14_01/s14_01_1.html">次のページ</a></li>
+			</ul>
+		</nav>
+		<p id="footer-author">更新日：<time datetime="2018-12-19">2018年12月19日</time> Merry</p>
+	</footer>
+</div>
+</body>
+</html>

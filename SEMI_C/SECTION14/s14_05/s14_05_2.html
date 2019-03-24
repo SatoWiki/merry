@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initialscale=1.0">
+	<meta name="robots" content="INDEX,FOLLOW">
+	<meta name="keywords" content="日付および時間ライブラリ,関数,time,localtime,gmtime,mktime,tm構造体">
+	<meta name="description" content="time関数、localtime関数、gmtime関数、mktime関数の使用法を説明します。">
+	<meta name="author" content="T.Hagiwara">
+	<link rel="stylesheet" href="../../../CSS3/seminar.css" type="text/css">
+	<link rel="stylesheet" href="../../../CSS3/hl_clang.css" type="text/css">
+	<link rel="prev" href="./s14_05_1.html">
+	<link rel="next" href="./s14_05_3.html">
+	<title>Ｃ言語プログラミング入門&nbsp;-&nbsp;ライブラリ関数&nbsp;-&nbsp;日付および時間ライブラリ（2/3）-</title>
+	<style type="text/css">
+	</style>
+</head>
+<body>
+<div id="container">
+	<header>
+		<p>Linux講座にようこそ。このページは「Ｃ言語プログラミング入門&nbsp;-&nbsp;第14章．ライブラリ関数&nbsp;-&nbsp;日付および時間ライブラリ」です。</p>
+		<h1>Ｃ言語プログラミング入門</h1>
+		<nav>
+			<ul>
+				<li><a href="../../../index.html">ホーム</a></li>
+				<li><a href="../../c_langtop.html#lbl_index">目次</a></li>
+				<li><a href="./s14_05_1.html">前のページ</a></li>
+				<li><a href="./s14_05_3.html">次のページ</a></li>
+			</ul>
+		</nav>
+	</header>
+
+	<section class="contents">
+		<h1>14. ライブラリ関数（24/36）&nbsp;-&nbsp;日付および時間ライブラリ（2/3）</h1>
+		<section>
+			<h2 id="lbl_getdate">14.37 日時の取得・変換関数</h2>
+			<section>
+				<h3 id="lbl_time">14.37.1 time関数</h3>
+				<p>time関数は紀元からの経過秒数（1970年1月1日00:00:00 UTCからの経過秒数）を取得します。</p>
+				<table>
+					<caption>【表14-5-2】 time関数</caption>
+					<tr><th>形式</th><td>#include &lt;time.h&gt;<br>
+										time_t time(time_t *timep);</td></tr>
+					<tr><th>返り値</th><td>紀元からの経過秒数を返します。エラーの場合は<code>((time_t) -1)</code>を返します。</td></tr>
+					<tr><th>引数</th>
+						<td>
+							<dl>
+								<dt>time_t *timep</dt>
+									<dd>紀元からの経過秒数を設定する領域を指定します。返り値でも結果が返ってきますので、引数での結果が不要な場合はNULLを指定します。</dd>
+							</dl>
+						</td></tr>
+				</table>
+			</section>
+			<section>
+				<h3 id="lbl_localtime">14.37.2 localtime関数</h3>
+				<p>localtime関数は紀元からの経過秒数を日時構造体（tm構造体）に変換します。日時はローカル標準時になりますので、通常は日本標準時（JST）に変換します。ちなみに、JSTは「協定世界時（UTC）＋９時間」です。</p>
+				<table>
+					<caption>【表14-5-3】 localtime関数</caption>
+					<tr><th>形式</th><td>#include &lt;time.h&gt;<br>
+										struct tm *localtime(const time_t *timep);</td></tr>
+					<tr><th>返り値</th><td>日時構造体を返します。エラーの場合はNULLを返します。</td></tr>
+					<tr><th>引数</th>
+						<td>
+							<dl>
+								<dt>const time_t *timep</dt>
+									<dd>ローカル標準時に変換する紀元からの経過秒数を指定します。紀元からの経過秒数はtime関数で取得できます。</dd>
+							</dl>
+						</td></tr>
+				</table>
+				<p id="lbl_tm_struct">日時構造体（tm構造体）の内容は、次の通りです。この構造体はヘッダファイルのtime.hに宣言されています。（各メンバーの型名はint型です）</p>
+				<table class="simple-table">
+					<caption>【表14-5-4】 tm構造体</caption>
+					<tr><th>メンバー名</th><th>内容</th></tr>
+					<tr><td>tm_sec</td><td>秒数で、0から59までの値です。（但し、閏秒のため60までの値は許されます。）</td></tr>
+					<tr><td>tm_min</td><td>分数で、0から59までの値です。</td></tr>
+					<tr><td>tm_hour</td><td>真夜中からの通算時間で、0から23までの値です。</td></tr>
+					<tr><td>tm_mday</td><td>月はじめからの日数で、1から31までの値です。</td></tr>
+					<tr><td>tm_mon</td><td>１月からの通算月数で、0から11までの値です。</td></tr>
+					<tr><td>tm_year</td><td>1900年からの通算年数です。</td></tr>
+					<tr><td>tm_wday</td><td>日曜日からの通算日数（曜日）で、０から６までの値です。（０が日曜日です。）</td></tr>
+					<tr><td>tm_yday</td><td>１月１日からの通算日数で、0から365までの値です。</td></tr>
+					<tr><td>tm_isdst</td><td>夏時間が有効かどうかのフラグです。正の値ならば夏時間は有効になり、０ならば無効、負の値ならばこの情報には意味がないことを表します。</td></tr>
+				</table>
+			</section>
+			<section>
+				<h3 id="lbl_gmtime">14.37.3 gmtime関数</h3>
+				<p>gmtime関数は紀元からの経過秒数を日時構造体（tm構造体）に変換します。日時は協定世界時（UTC）になります。</p>
+				<table>
+					<caption>【表14-5-5】 gmtime関数</caption>
+					<tr><th>形式</th><td>#include &lt;time.h&gt;<br>
+										struct tm *gmtime(const time_t *timep);</td></tr>
+					<tr><th>返り値</th><td>日時構造体を返します。エラーの場合はNULLを返します。</td></tr>
+					<tr><th>引数</th>
+						<td>
+							<dl>
+								<dt>const time_t *timep</dt>
+									<dd>協定世界時に変換する紀元からの経過秒数を指定します。紀元からの経過秒数はtime関数で取得できます。</dd>
+							</dl>
+						</td></tr>
+				</table>
+			</section>
+			<section>
+				<h3 id="lbl_mktime">14.37.4 mktime関数</h3>
+				<p>mktime関数は日時構造体（tm構造体）を紀元からの経過秒数に変換します。tm構造体のメンバーの内容は次の様に変更されます。</p>
+				<ul>
+					<li>tm_wday（曜日）とtm_yday（１月１日からの通算日数）は他のメンバーの内容から求めた値を設定します。</li>
+					<li>メンバーの値が有効な範囲にない場合は正規化します。例えば、11月31日は12月01日に変更します。</li>
+					<li>tm_isdst（夏時間が有効かどうかのフラグ）は正の値か０を設定します。</li>
+				</ul>
+				<table>
+					<caption>【表14-5-6】 mktime関数</caption>
+					<tr><th>形式</th><td>#include &lt;time.h&gt;<br>
+										time_t mktime(struct tm *tm);</td></tr>
+					<tr><th>返り値</th><td>紀元からの経過秒数を返します。エラーの場合は<code>((time_t) -1)</code>を返します。</td></tr>
+					<tr><th>引数</th>
+						<td>
+							<dl>
+								<dt>struct tm *tm</dt>
+									<dd>変換するtm構造体を指定します。</dd>
+							</dl>
+						</td></tr>
+				</table>
+			</section>
+			<section>
+				<h3>14.37.5 例題</h3>
+				<p>現在日時を「年/月/日 時:分:秒」の形式で表示します。</p>
+				<div class="source-code">
+					<div class="c"><ol><li class="li1"><div class="de1"><span class="co2">#include &lt;stdio.h&gt;</span></div></li>
+					<li class="li1"><div class="de1"><span class="co2">#include &lt;time.h&gt;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1"><span class="kw4">int</span> main<span class="br0">&#40;</span><span class="kw4">void</span><span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; time_t &nbsp; &nbsp; &nbsp;timep<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">struct</span> tm &nbsp; <span class="sy0">*</span>time_inf<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="coMULTI">/* 紀元からの経過秒数を得る */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; timep <span class="sy0">=</span> <span class="kw3">time</span><span class="br0">&#40;</span>NULL<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="coMULTI">/* ローカル標準時へ変換 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; time_inf <span class="sy0">=</span> <span class="kw3">localtime</span><span class="br0">&#40;</span><span class="sy0">&amp;</span>timep<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;JST：%d/%02d/%02d %02d:%02d:%02d<span class="es1">\n</span>&quot;</span><span class="sy0">,</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; time_inf<span class="sy0">-&gt;</span>tm_year <span class="sy0">+</span> <span class="nu0">1900</span><span class="sy0">,</span> &nbsp; <span class="coMULTI">/* 年 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; time_inf<span class="sy0">-&gt;</span>tm_mon <span class="sy0">+</span> <span class="nu0">1</span><span class="sy0">,</span> &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* 月 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; time_inf<span class="sy0">-&gt;</span>tm_mday<span class="sy0">,</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="coMULTI">/* 日 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; time_inf<span class="sy0">-&gt;</span>tm_hour<span class="sy0">,</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="coMULTI">/* 時 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; time_inf<span class="sy0">-&gt;</span>tm_min<span class="sy0">,</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* 分 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; time_inf<span class="sy0">-&gt;</span>tm_sec<span class="br0">&#41;</span><span class="sy0">;</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="coMULTI">/* 秒 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">return</span> <span class="nu0">0</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#125;</span></div></li>
+					</ol></div>
+				</div>
+				<div class="exe-samp">
+<pre><samp>$ <kbd>./ex14_5_1.prg</kbd>
+JST：2009/08/20 10:34:49
+$</samp></pre>
+				</div>
+				<dl>
+					<dt>2行目</dt>
+						<dd>日時の取得・変換関数を使いますので、time.hヘッダファイルを取り込みます。</dd>
+					<dt>10行目</dt>
+						<dd>現在の紀元からの経過秒数をtime関数で求めます。</dd>
+					<dt>13行目</dt>
+						<dd>現在の紀元からの経過秒数をローカル標準時にlocaltime関数で変換します。結果は日時構造体（tm構造体）のtime_inf構造体に格納します。</dd>
+				</dl>
+			</section>
+		</section>
+	</section>
+
+	<footer>
+		<nav>
+			<ul>
+				<li><a href="../../../index.html">ホーム</a></li>
+				<li><a href="../../c_langtop.html#lbl_index">目次</a></li>
+				<li><a href="./s14_05_1.html">前のページ</a></li>
+				<li><a href="./s14_05_3.html">次のページ</a></li>
+			</ul>
+		</nav>
+		<p id="footer-author">更新日：<time datetime="2019-01-11">2019年01月11日</time> Merry</p>
+	</footer>
+</div>
+</body>
+</html>

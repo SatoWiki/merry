@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initialscale=1.0">
+	<meta name="robots" content="INDEX,FOLLOW">
+	<meta name="keywords" content="文字列処理ライブラリ,関数">
+	<meta name="description" content="文字列処理ライブラリをご紹介します。">
+	<meta name="author" content="T.Hagiwara">
+	<link rel="stylesheet" href="../../../CSS3/seminar.css" type="text/css">
+	<link rel="prev" href="../s14_01/s14_01_A.html">
+	<link rel="next" href="./s14_02_2.html">
+	<title>Ｃ言語プログラミング入門&nbsp;-&nbsp;ライブラリ関数&nbsp;-&nbsp;文字列処理ライブラリ（1/5）-</title>
+	<style type="text/css">
+	</style>
+</head>
+<body>
+<div id="container">
+	<header>
+		<p>Linux講座にようこそ。このページは「Ｃ言語プログラミング入門&nbsp;-&nbsp;第14章．ライブラリ関数&nbsp;-&nbsp;文字列処理ライブラリ」です。</p>
+		<h1>Ｃ言語プログラミング入門</h1>
+		<nav>
+			<ul>
+				<li><a href="../../../index.html">ホーム</a></li>
+				<li><a href="../../c_langtop.html#lbl_index">目次</a></li>
+				<li><a href="../s14_01/s14_01_A.html">前のページ</a></li>
+				<li><a href="./s14_02_2.html">次のページ</a></li>
+			</ul>
+		</nav>
+	</header>
+
+	<section class="contents">
+		<h1>14. ライブラリ関数（12/36）&nbsp;-&nbsp;文字列処理ライブラリ（1/5）</h1>
+		<p>Ｃ言語では文字列をchar型の配列として扱いますので、文字列の代入（コピー）や文字列の比較は代入演算子（=）や比較演算子（==&gt;や!=）で行う事は出来ません。そこで、文字列を扱うライブラリ関数が沢山用意されていますので、文字列を扱う場合はここで紹介する関数を使用すると良いでしょう。</p>
+		<p>なお、文字列については次のページで説明していますので、文字列についての基本事項をお知りになりたい場合は参照してください。</p>
+		<ul>
+			<li><a href="../../SECTION07/section07_2.html">文字列の取扱い</a></li>
+			<li><a href="../../SECTION08/section08_3.html">ポインタによる文字列の操作</a></li>
+		</ul>
+		<p>ここで説明する関数は次の通りです。なお、ヘッダファイルとしては<strong>string.h</strong>が必要です。</p>
+		<table class="simple-table">
+			<caption>【表14-2-1】 文字列処理ライブラリ関数一覧</caption>
+			<thead>
+			<tr><th>区分</th><th>関数名</th><th>機能概要</th></tr>
+			</thead>
+			<tbody>
+			<tr><td rowspan="1"><a href="./s14_02_2.html#lbl_len">文字列長の取得</a></td><td><a href="./s14_02_2.html#lbl_strlen">strlen()</a></td><td>文字列の長さを取得します。</td></tr>
+			<tr><td rowspan="3"><a href="./s14_02_2.html#lbl_cmp">文字列の比較</a></td><td><a href="./s14_02_2.html#lbl_strcmp">strcmp()</a></td><td>２つの文字列を比較します。</td></tr>
+			<tr><td><a href="./s14_02_2.html#lbl_strncmp">strncmp()</a></td><td>２つの文字列を比較します。strcmp関数との相違は比較する文字数を引数で指定できることです。</td></tr>
+			<tr><td><a href="./s14_02_2.html#lbl_memcmp">memcmp()</a></td><td>２つのメモリ領域を比較します。（文字列の比較ではないのですが、ここで説明します）</td></tr>
+			<tr><td rowspan="3"><a href="./s14_02_2.html#lbl_cpy">文字列のコピー</a></td><td><a href="./s14_02_2.html#lbl_strcpy">strcpy()</a></td><td>終端のヌル文字を含めて、文字列をコピーします。</td></tr>
+			<tr><td><a href="./s14_02_2.html#lbl_strncpy">strncpy()</a></td><td>終端のヌル文字を含めて、文字列をコピーします。strcpy関数との相違はコピーする文字数を引数で指定できることです。</td></tr>
+			<tr><td><a href="./s14_02_2.html#lbl_memcpy">memcpy()</a></td><td>メモリ領域をコピーします。（文字列のコピーではないのですが、ここで説明します）</td></tr>
+			<tr><td rowspan="2"><a href="./s14_02_3.html#lbl_cat">文字列の連結</a></td><td><a href="./s14_02_3.html#lbl_strcat">strcat()</a></td><td>２つの文字列を連結します。</td></tr>
+			<tr><td><a href="./s14_02_3.html#lbl_strncat">strncat()</a></td><td>２つの文字列を連結します。strcat関数との相違は連結する文字数を引数で指定できることです</td></tr>
+			<tr><td rowspan="4"><a href="./s14_02_3.html#lbl_chr">文字および、文字列の検索</a></td><td><a href="./s14_02_3.html#lbl_strchr">strchr()</a></td><td>文字列から指定された文字を検索して、その位置を結果として返します。</td></tr>
+			<tr><td><a href="./s14_02_3.html#lbl_strrchr">strrchr()</a></td><td>文字列から指定された文字を検索して、その位置を結果として返します。strchr関数との相違は指定された文字が複数あった場合は、最後に現れた文字の位置を返します。</td></tr>
+			<tr><td><a href="./s14_02_3.html#lbl_strstr">strstr()</a></td><td>文字列から指定された文字列を検索して、その位置を結果として返します。</td></tr>
+			<tr><td><a href="./s14_02_3.html#lbl_memchr">memchr()</a></td><td>メモリ領域の指定バイト数先から指定された文字を検索して、その位置を結果として返します。（文字列の比較ではないのですが、ここで説明します）</td></tr>
+			<tr><td rowspan="1"><a href="./s14_02_3.html#lbl_tok">文字列から字句を取り出す</a></td><td><a href="./s14_02_3.html#lbl_strtok">strtok()</a></td><td>文字列中の区切り文字で区切られた字句（項目）を取り出します。</td></tr>
+			<tr><td rowspan="2"><a href="./s14_02_4.html#lbl_spn">文字セットから成る文字列か<br />否かをチェック</a></td><td><a href="./s14_02_4.html#lbl_strspn">strspn()</a></td><td>指定された文字の組み合わせ（文字セット）から成る文字列か否かをチェックし、一致した文字数を返します。</td></tr>
+			<tr><td><a href="./s14_02_4.html#lbl_strcspn">strcspn()</a></td><td>指定された文字の組み合わせ（文字セット）<strong>以外</strong>から成る文字列か否かをチェックし、一致した文字数を返します。</td></tr>
+			<tr><td rowspan="2"><a href="./s14_02_4.html#lbl_coll">文字列のロケールに基づく<br />比較および、変換</a></td><td><a href="./s14_02_4.html#lbl_strcoll">strcoll()</a></td><td>現在のロケールに従い、二つの文字列を比較します。&nbsp;</td></tr>
+			<tr><td><a href="./s14_02_4.html#lbl_strxfrm">strxfrm()</a></td><td>strcoll関数とstrcmp関数（または、strncmp関数）で比較した結果が同じになるように文字列を変換します。</td></tr>
+			<tr><td rowspan="4"><a href="./s14_02_5.html#lbl_other">その他</a></td><td><a href="./s14_02_5.html#lbl_strerror">strerror()</a></td><td>エラー番号に対応する説明文を取得します。</td></tr>
+			<tr><td><a href="./s14_02_5.html#lbl_strpbrk">strpbrk()</a></td><td>指定された文字の組み合わせ（文字セット）から成る文字列を検索します。</td></tr>
+			<tr><td><a href="./s14_02_5.html#lbl_memmove">memmove()</a></td><td>メモリ領域をコピーします。memcpy関数との相違は、コピー元とコピー先の領域が重なっていてもよいことです。（文字列のコピーではないのですが、ここで説明します）</td></tr>
+			<tr><td><a href="./s14_02_5.html#lbl_memset">memset()</a></td><td>メモリ領域を指定した値で埋め込みます。（文字列に特化した関数ではないのですが、ここで説明します）</td></tr>
+			</tbody>
+		</table>
+	</section>
+
+	<footer>
+		<nav>
+			<ul>
+				<li><a href="../../../index.html">ホーム</a></li>
+				<li><a href="../../c_langtop.html#lbl_index">目次</a></li>
+				<li><a href="../s14_01/s14_01_A.html">前のページ</a></li>
+				<li><a href="./s14_02_2.html">次のページ</a></li>
+			</ul>
+		</nav>
+		<p id="footer-author">更新日：<time datetime="2012-05-20">2012年05月20日</time> Merry</p>
+	</footer>
+</div>
+</body>
+</html>

@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initialscale=1.0">
+	<meta name="robots" content="INDEX,FOLLOW">
+	<meta name="keywords" content="入出力ライブラリ,関数,fopen,fclose,fflush,freopen,入出力区分,入出力モード,NULLポインタ,EOF">
+	<meta name="description" content="入出力ライブラリと、fopen関数、fclose関数、fflush関数、freopen関数の使い方を説明します。">
+	<meta name="author" content="T.Hagiwara">
+	<link rel="stylesheet" href="../../../CSS3/seminar.css" type="text/css">
+	<link rel="stylesheet" href="../../../CSS3/hl_clang.css" type="text/css">
+	<link rel="prev" href="./s14_01_1.html">
+	<link rel="next" href="./s14_01_3.html">
+	<title>Ｃ言語プログラミング入門&nbsp;-&nbsp;ライブラリ関数&nbsp;-&nbsp;入出力ライブラリ（2/10）-</title>
+	<style type="text/css">
+	</style>
+</head>
+<body>
+<div id="container">
+	<header>
+		<p>Linux講座にようこそ。このページは「Ｃ言語プログラミング入門&nbsp;-&nbsp;第14章．ライブラリ関数&nbsp;-&nbsp;入出力ライブラリ」講座です。</p>
+		<h1>Ｃ言語プログラミング入門</h1>
+		<nav>
+			<ul>
+				<li><a href="../../../index.html">ホーム</a></li>
+				<li><a href="../../c_langtop.html#lbl_index">目次</a></li>
+				<li><a href="./s14_01_1.html">前のページ</a></li>
+				<li><a href="./s14_01_3.html">次のページ</a></li>
+			</ul>
+		</nav>
+	</header>
+
+	<section class="contents">
+		<h1>14. ライブラリ関数（3/36）&nbsp;-&nbsp;入出力ライブラリ（2/10）</h1>
+		<section>
+			<h2>14.2 ファイル操作関数</h2>
+			<section>
+				<h3 id="lbl_fopen">14.2.1 fopen関数</h3>
+				<p>fopen関数はファイルの入出力を行うための準備（オープン）を行ないます。また、入出力完了後はfclose関数で後処理（クローズ）が必要です。従って、fopen関数とfclose関数はペアで使用します。</p>
+				<table>
+					<caption>【表14-1-2】 fopen関数</caption>
+					<tr><th>形式</th><td>#include &lt;stdio.h&gt;<br>
+										FILE *fopen(const char *file_path, const char *io_mode);</td></tr>
+					<tr><th>返り値</th><td>ファイルのオープンが出来た場合はファイルポインタを返し、出来なかった場合は<strong>NULLポインタ</strong>を返します。</td></tr>
+					<tr><th>引数</th>
+						<td>
+							<dl>
+								<dt>const char *file_path</dt>
+									<dd>オープンするファイルのパス名を文字列で指定します。</dd>
+								<dt>const char *io_mode</dt>
+									<dd>入出力の区分（モード）を「【表14-1-3】 入出力モード一覧」で示す文字列で指定します。</dd>
+							</dl>
+						</td></tr>
+					<tr><th>使用法、<br>他</th>
+						<td>
+						<p>返り値がNULLポインタ以外の場合はファイルのオープンが出来ましたので、ファイルポインタを保存しておき、以降の処理でファイルポインタを使用して入出力を行ないます。</p>
+						<p>返り値がNULLポインタの場合はファイルのオープンが出来ていませんので、通常はエラー処理を行いプログラムを終了します。</p>
+						</td></tr>
+				</table>
+				<table class="simple-table">
+					<caption>【表14-1-3】 入出力モード一覧</caption>
+					<tr><th>モード</th><th>意味</th></tr>
+					<tr><td class="text-center">"r"</td><td>既存ファイルを読み出し専用でオープンします。</td></tr>
+					<tr><td class="text-center">"w"</td><td>新規あるいは、既存ファイルを書き込み専用でオープンします。既存ファイルの場合は上書きとなります。</td></tr>
+					<tr><td class="text-center">"a"</td><td>新規あるいは、既存ファイルを書き込み専用でオープンします。既存ファイルの場合はファイルの末尾に追加書きとなります。</td></tr>
+					<tr><td class="text-center">"r+"</td><td>既存ファイルを更新用（読み出し、書き込みの両方）でオープンします。</td></tr>
+					<tr><td class="text-center">"w+"</td><td>新規あるいは、既存ファイルを更新用でオープンします。既存ファイルの場合は上書きとなります。</td></tr>
+					<tr><td class="text-center">"a+"</td><td>新規あるいは、既存ファイルを更新用でオープンします。既存ファイルの場合はファイルの末尾に追加書きとなります。</td></tr>
+				</table>
+				<aside>
+					<h4>補足</h4>
+					<ul>
+						<li>実引数として、変数や定数を指定できますが、const型修飾子が付いていますので、fopen関数内では仮引数の値の変更は行えません。つまり、実引数で指定した値は変更されないことが保証されています。</li>
+						<li id="lbl_note_2">NULLポインタはヘッダファイル中にNULLというマクロ名で宣言されていますので、自分で宣言する必要はありません。ちなみに、NULLは次のように宣言されています。（Ｃ言語の処理系により、異なるかもしれません）<br><code>#define NULL ((void *)0)</code></li>
+						<li>UNIX系OSはテキストファイルとバイナリファイルを区別しませんが、Windows系OSは区別します。そのため、明確にバイナリファイルであることを指定したい場合は、入出力モードに「b」を指定すると良いでしょう。例えば更新用でオープンする場合は、「"w+b"」のように指定します。</li>
+					</ul>
+				</aside>
+			</section>
+			<section>
+				<h3 id="lbl_fclose">14.2.2 fclose関数</h3>
+				<p>fclose関数はファイル入出力の後処理（クローズ）を行ないます。プログラムの実行終了時にオープンしたままのファイルがあると、自動的にクローズしますので、クローズしなくても多くの場合は問題ありません。ただし、同時にオープンできるファイルの数には制限がありますので、多くのファイルを取り扱う場合には、オープンしたファイルをクローズして、別のファイルをオープンするといった様なことを行う必要があります。また、プログラミングスタイルとして、オープンしたファイルは明示的にクローズするようにした方が良いでしょう。</p>
+				<table>
+					<caption>【表14-1-4】 fclose関数</caption>
+					<tr><th>形式</th><td>#include &lt;stdio.h&gt;<br>
+										int fclose(FILE *fp);</td></tr>
+					<tr><th>返り値</th><td>ファイルのクローズが出来た場合は０を返し、出来なかった場合は<strong>EOF</strong>を返します。</td></tr>
+					<tr><th>引数</th>
+						<td>
+							<dl>
+								<dt>FILE *fp</dt>
+									<dd>クローズするファイルのファイルポインタを指定します。</dd>
+							</dl>
+						</td></tr>
+				</table>
+				<aside>
+					<h4>補足</h4>
+					<p id="lbl_note_4">EOFはヘッダファイル中にEOFというマクロ名で宣言されていますので、自分で宣言する必要はありません。ちなみに、EOFは次のように宣言されています。（Ｃ言語の処理系により、異なるかもしれません）</p>
+					<p><code>#define EOF (-1)</code></p>
+				</aside>
+			</section>
+			<section>
+				<h3 id="lbl_fflush">【14.2.3】 fflush関数</h3>
+				<p>fflush関数は<strong>バッファ</strong>に保持されている出力データをファイルに出力します。バッファが満杯になったり、fclose関数が実行されるとバッファの内容はファイルに出力されますので、通常はfflush関数を使う必要はありません。ただし、長時間実行するプログラムでログファイルなどを出力し続ける場合は、一定時間経過したら、強制的にバッファの内容を出力するといったことが必要かもしれません。</p>
+				<p>fflush関数実行後もファイルはオープンしたままですので、引き続き入出力は行えます。</p>
+				<table>
+					<caption>【表14-1-5】 fflush関数</caption>
+					<tr><th>形式</th><td>#include &lt;stdio.h&gt;<br>
+										int fflush(FILE *fp);</td></tr>
+					<tr><th>返り値</th><td>正常に出力できた場合は０を返し、出来なかった場合は<strong>EOF</strong>を返します。</td></tr>
+					<tr><th>引数</th>
+						<td>
+							<dl>
+								<dt>FILE *fp</dt>
+									<dd>バッファの内容を出力するファイルのファイルポインタを指定します。</dd>
+							</dl>
+						</td></tr>
+				</table>
+				<aside>
+					<h4>補足</h4>
+					<p id="lbl_note_5">通常、ファイルはハードディスク（HDD）に作成しますが、ハードディスクの動作はCPUやメモリと比べると大変に低速です。これをカバーするにはハードディスクへのアクセスを極力減らすことです。そこで、ファイルに出力するデータをメモリに蓄積しておき、満杯になったら実際にファイルに出力するということを行っています。これにより、ハードディスクへのアクセス数が減りますので、プログラムの見かけの実行スピードは早くなります。この、データを蓄積しておく場所を「バッファ」と呼んでいます。</p>
+				</aside>
+			</section>
+			<section>
+				<h3 id="lbl_freopen">14.2.4 freopen関数</h3>
+				<p>freopen関数は次のことを行ないます。</p>
+				<ol>
+					<li>第３引数で指定したファイルポインタに対応するファイルをクローズします。</li>
+					<li>第１引数で指定したファイルをオープンし、ファイルポインタを作成します。</li>
+					<li>第３引数で指定したファイルポインタを、上記ファイルポインタの値に更新します。</li>
+				</ol>
+				<p>freopen関数は予め用意されているファイルポインタ（stdin、stdout、stderr等）を、一般ファイル用に使いたいときなどに使うようです。</p>
+				<table>
+					<caption>【表14-1-6】 freopen関数</caption>
+					<tr><th>形式</th><td>#include &lt;stdio.h&gt;<br>
+										FILE *freopen(const char *file_path, const char *io_mode, FILE *fp);</td></tr>
+					<tr><th>返り値</th><td>第１引数のfile_pathで指定したファイルが正常にオープンできた場合はfile_pathのファイルポインタを返し、オープンできなかった場合はNULLポインタを返します。</td></tr>
+					<tr><th>引数</th>
+						<td>
+							<dl>
+								<dt>const char *file_path</dt>
+									<dd>オープンするファイルのパス名を文字列で指定します。</dd>
+								<dt>const char *io_mode</dt>
+									<dd>fopen関数の入出力区分（モード）と同じです。「【表14-1-3】 入出力モード一覧」を参照してください。</dd>
+								<dt>FILE *fp</dt>
+									<dd>既に作成済みのファイルポインタを指定します。第１引数で指定したファイルのファイルポインタに内容を変更されます。</dd>
+							</dl>
+						</td></tr>
+				</table>
+			</section>
+			<section>
+				<h3>14.2.5 例題</h3>
+				<p>カレントディレクトリの下にあるtemp.txtファイルのオープンとクローズを行ないます。fopen関数とfclose関数の使用法を説明するだけのプログラムですので、実用性はまったくありません。</p>
+				<div class="source-code">
+					<div class="c"><ol><li class="li1"><div class="de1"><span class="co2">#include &lt;stdio.h&gt;</span></div></li>
+					<li class="li1"><div class="de1"><span class="kw4">int</span> main<span class="br0">&#40;</span><span class="kw4">void</span><span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">char</span> &nbsp; &nbsp;<span class="sy0">*</span>out_file <span class="sy0">=</span> <span class="st0">&quot;temp.txt&quot;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; FILE &nbsp; &nbsp;<span class="sy0">*</span>fp<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">int</span> &nbsp; &nbsp; return_code <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; fp <span class="sy0">=</span> <span class="kw3">fopen</span><span class="br0">&#40;</span>out_file<span class="sy0">,</span> <span class="st0">&quot;r&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">if</span><span class="br0">&#40;</span>fp <span class="sy0">!=</span> NULL<span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* オープン成功 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;%sファイルのオープンは成功しました<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> out_file<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">if</span><span class="br0">&#40;</span><span class="kw3">fclose</span><span class="br0">&#40;</span>fp<span class="br0">&#41;</span> <span class="sy0">==</span> <span class="nu0">0</span><span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* クローズ成功 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;%sファイルのクローズは成功しました<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> out_file<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">else</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* クローズ失敗 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;%sファイルのクローズは失敗しました<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> out_file<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; return_code <span class="sy0">=</span> <span class="nu0">1</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">else</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* オープン失敗 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;%sファイルのオープンは失敗しました<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> out_file<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; return_code <span class="sy0">=</span> <span class="nu0">1</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">return</span> return_code<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#125;</span></div></li>
+					</ol></div>
+				</div>
+				<div class="exe-samp">
+<pre><samp>$ <kbd>ls -l temp.txt</kbd><strong> ← temp.txtファイルの確認です</strong>
+ls: cannot access temp.txt: そのようなファイルやディレクトリはありません
+$ <kbd>./ex14_1_1.prg</kbd><strong> ← temp.txtファイルは有りませんのでオープンは失敗します</strong>
+temp.txtファイルのオープンは失敗しました
+$ <kbd>echo $?</kbd>
+1
+$
+$ <kbd>cat &gt; temp.txt</kbd><strong> ← temp.txtファイルを作成します</strong>
+Hello World!!.
+$ <kbd>ls -l temp.txt</kbd><strong> ← temp.txtファイルの確認です</strong>
+-rw-r--r-- 1 merry users 15 2007-12-06 10:43 temp.txt
+$ <kbd>./ex14_1_1.prg</kbd>
+temp.txtファイルのオープンは成功しました
+temp.txtファイルのクローズは成功しました
+$ <kbd>echo $?</kbd>
+0
+$</samp></pre>
+				</div>
+				<dl>
+					<dt>1行目</dt>
+						<dd>入出力ライブラリ関数を使用しますので、stdio.hファイルを取り込みます。</dd>
+					<dt>5行目</dt>
+						<dd>オープンしたファイルのファイルポインタを保存しておくためのポインタ変数を宣言します。</dd>
+					<dt>8行目</dt>
+						<dd>fopen関数でtemp.txtファイルをオープンします。返り値のファイルポインタは変数fpに代入しておきます。</dd>
+					<dt>9行目</dt>
+						<dd>オープン出来たかをチェックします。</dd>
+					<dt>14行目</dt>
+						<dd>fclose関数でtemp.txtファイルをクローズし、返り値のチェックを行ないます。</dd>
+				</dl>
+				<aside>
+					<h4>補足</h4>
+					<p>上記例題ではファイルのオープンとチェックを分けて行っていますが、次のように１文に纏めることもできます。</p>
+					<p><code>if(<strong>(</strong>fp = fopen(out_file, "r")<strong>)</strong> != NULL)</code></p>
+					<p>注意点としては、２つの演算子を使っていますが、比較演算子（!=）の方が代入演算子（=）よりも優先順位が高いため、代入の方の優先順位を上げないと、変数fpには比較の結果（論理値の真または偽）が代入されてしまいます。</p>
+				</aside>
+			</section>
+		</section>
+	</section>
+
+	<footer>
+		<nav>
+			<ul>
+				<li><a href="../../../index.html">ホーム</a></li>
+				<li><a href="../../c_langtop.html#lbl_index">目次</a></li>
+				<li><a href="./s14_01_1.html">前のページ</a></li>
+				<li><a href="./s14_01_3.html">次のページ</a></li>
+			</ul>
+		</nav>
+		<p id="footer-author">更新日：<time datetime="2018-12-21">2018年12月21日</time> Merry</p>
+	</footer>
+</div>
+</body>
+</html>

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initialscale=1.0">
+	<meta name="robots" content="INDEX,FOLLOW">
+	<meta name="keywords" content="実行レベル,ランレベル,プロセス,サービス,inittab,/etc/rc.d/init.d,services,chkconfig">
+	<meta name="description" content="システム管理のうち、SysVinitによるサービスの制御方法についてご紹介します。">
+	<meta name="author" content="T.Hagiwara">
+	<link rel="stylesheet" href="../../CSS3/seminar.css" type="text/css">
+	<link rel="prev" href="../../index.html">
+	<title>Linuxの使い方 - 付録１. SysVinitによるサービスの制御（chkconfigとserviceコマンド）</title>
+	<style type="text/css">
+	</style>
+</head>
+<body>
+<div id="container">
+	<header>
+		<p>Linux講座にようこそ。このページは「Linuxの使い方&nbsp;-&nbsp;付録１.&nbsp;SysVinitによるサービスの制御（chkconfigとserviceコマンド）です。</p>
+		<h1>Linuxの使い方</h1>
+		<nav>
+			<ul>
+				<li><a href="../../index.html">ホーム</a></li>
+				<li><a href="../cmdtop.html#lbl_index">目次</a></li>
+			</ul>
+		</nav>
+	</header>
+
+	<section class="contents">
+		<h1>付録</h1>
+		<section>
+			<h2>付録１. SysVinitによるサービスの制御（chkconfigとserviceコマンド）</h2>
+				<p>OS起動時に自動的に起動するサービスの制御の方法はディストリビューションにより異なります。ここでは、従来から使われている「SysVinit」によるサービスの制御方法について説明します。</p>
+				<p>サービスの起動は<strong>実行レベル</strong>（ランレベルとも呼ぶ）により定義されており、実行レベルを変えることにより起動するサービスを変えることができます。システムの標準の実行レベルは<strong>/etc/inittab</strong>ファイルに記述してあります。</p>
+				<p>実行レベルは０〜６まで定義されており、次のような意味が有ります。</p>
+				<table class="simple-table">
+					<caption>【付表1-1】実行レベル一覧</caption>
+					<tr><th>実行レベル</th><th>意味</th><th>起動シェルスクリプトの場所</th></tr>
+					<tr><td class="text-center">0</td><td>システム停止</td><td>/etc/rc.d/rc0.d/</td></tr>
+					<tr><td class="text-center">1</td><td>シングルユーザモード</td><td>/etc/rc.d/rc1.d/</td></tr>
+					<tr><td class="text-center">2</td><td>マルチユーザモード（NFSの使用不可）</td><td>/etc/rc.d/rc2.d/</td></tr>
+					<tr><td class="text-center">3</td><td>マルチユーザモード</td><td>/etc/rc.d/rc3.d/</td></tr>
+					<tr><td class="text-center">4</td><td>未使用</td><td>/etc/rc.d/rc4.d/</td></tr>
+					<tr><td class="text-center">5</td><td>Xウィンドウシステム、マルチユーザモード</td><td>/etc/rc.d/rc5.d/</td></tr>
+					<tr><td class="text-center">6</td><td>リブート</td><td>/etc/rc.d/rc6.d/</td></tr>
+				</table>
+				<p>デスクトップ環境（KDEやGNOME）の場合は実行レベル５で、サーバーの場合は実行レベル３になります。また、実行レベル１（シングルユーザモード）はシステムに影響の有るメンテナンスや、障害の修復等を行うためのものです。</p>
+				<figure class="left-box myphoto">
+					<dl>
+						<dt><img src="../IMAGES/apnd01_1.jpg" alt="起動シェルスクリプト"></dt>
+						<dd>【付図１-１】</dd>
+						<dd>起動シェルスクリプト</dd>
+					</dl>
+				</figure>
+				<p>実行レベル毎のサービスの開始と停止は、付図1-1に示す/etc/rc.d/rc0.d/から/etc/rc.d/rc6.d/ディレクトリの下に用意されているシェルスクリプトで行います。これらのシェルスクリプトは実際には/etc/rc.d/init.d/に用意されており、各々のディレクトリにリンク（シンボリックリンク）が張られています。</p>
+				<p>シェルスクリプト名の先頭１文字が「S」のものはサービスの開始、「K」のものはサービスの停止を行います。但し、実際には１つのサービスの開始と停止は１つのシェルスクリプトで行うように作られており、スクリプト起動時の引数にstartが指定されたらサービスの開始、stopが指定されたら停止となります。つまり、シェルスクリプトの先頭１文字が「S」のものは引数がstartで、「K」のものはstopで実行されます。</p>
+				<p>実行の順序は名前で決まります（ASCIIコード順）ので、順序を制御したいときは名前の一部に付けた数字で調整します。つまり、最初に実行したいのであればファイル名を「S01XXX」、最期に実行したいのであれば「S99XXX」の様にします。</p>
+				<div class="exe-samp">
+<pre><samp>$ <kbd>ls -l /etc/rc.d/rc5.d/S64mysqld /etc/rc.d/rc5.d/S85httpd</kbd><strong> ← 実行レベル５の時に実行するシェルスクリプトです</strong>
+lrwxrwxrwx 1 root root 16 2010-06-02 17:09 /etc/rc.d/rc5.d/S64mysqld -&gt; ../init.d/mysqld<strong> ← mysqld（MySQL）の開始シェルスクリプトです</strong>
+lrwxrwxrwx 1 root root 15 2010-08-19 09:09 /etc/rc.d/rc5.d/S85httpd -&gt; ../init.d/httpd<strong> ← httpd（Apache）の開始シェルスクリプトです</strong>
+$
+$ <kbd>ls -l /etc/rc.d/rc0.d/K36mysqld /etc/rc.d/rc0.d/K15httpd</kbd><strong> ← 実行レベル０の時に実行するシェルスクリプトです</strong>
+lrwxrwxrwx  1 root root 15 2010-08-19 09:09 /etc/rc.d/rc0.d/K15httpd -&gt; ../init.d/httpd<strong> ← httpd（Apache）の停止シェルスクリプトです</strong>
+lrwxrwxrwx. 1 root root 16 2010-05-13 11:38 /etc/rc.d/rc0.d/K36mysqld -&gt; ../init.d/mysqld<strong> ← mysqld（MySQL）の停止シェルスクリプトです</strong>
+$</samp></pre>
+				</div>
+				<p>上記、mysqldとhttpdの例の場合、開始シェルスクリプトはmysqldがS64でhttpdがS85ですので、mysqldが先に開始します。一方、停止シェルスクリプトはhttpdがK15でmysqldがK36ですので、httpdの方が先に停止します。このことにより、httpd開始時にはmysqldは開始済みですので、httpdからmysqldへの接続が行えますし、逆に、mysqld停止時にはhttpdは停止済み（切断済み）ですので、データベースが安全に保たれます。</p>
+				<figure class="left-box myphoto">
+					<dl>
+						<dt><img src="../IMAGES/apnd01_2.jpg" alt="サービス設定ツール（system-config-services）"></dt>
+						<dd>【付図１-２】</dd>
+						<dd>サービス設定ツール（system-config-services）</dd>
+					</dl>
+				</figure>
+				<p>デスクトップ環境の実行レベルは５ですが、この場合、サーバー関係のサービスは無効になっていますのでhttpd（Apache）は使えません。httpdのサービスをシステム起動時に自動的に開始したい場合は、設定によりサービスを有効にする必要があります。</p>
+				<p>実行レベルのサービスを変更したい場合は、リンクの追加（lnコマンド）と削除（rmコマンド）を行うことになりますが、これでは作業が難しいですので専用のGUIツールとコマンドが用意されています。</p>
+				<p>付図1-2はsystem-config-servicesというGUIのサービス設定ツールで、サービスの有効・無効、及び実行中のサービスの停止や開始等が行えます。また、サービスの説明なども表示されます。</p>
+				<p>デスクトップ環境の場合はGUIのサービス設定ツールが使えますが、サーバーの場合はコマンドで作業を行なうことになります。その場合は<span id="lbl_chkconfig">chkconfig</span>コマンドと<span id="lbl_service">service</span>コマンドを使うとよいでしょう。</p>
+				<div class="form-exp">
+					※ サービス情况の表示<br>
+					# chkconfig --list サービス名<br>
+					※ サービスの有効・無効<br>
+					# chkconfig --level 実行レベル サービス名 offまたはon<br>
+					※ サービスの制御<br>
+					# service サービス名 コマンド<strong> ← コマンドにはstart、stop、status等を指定できます</strong>
+				</div>
+				<p>chkconfigコマンドはサービスの有効・無効を行ない、有効にしておきますと、次回のシステム起動時に自動的にサービスを開始します。システムを再起動しないで、サービスを開始・停止したい場合はserviceコマンドを使います。実際の使い方は次の例題をご覧下さい。</p>
+				<div class="exe-samp">
+<pre><samp># <kbd>chkconfig --list</kbd><strong> ← サービス情况を表示します（サービス名を省略すると全てのサービスを表示します）</strong>
+NetworkManager  0:off    1:off    2:on    3:on    4:on    5:on    6:off
+abrtd           0:off    1:off    2:off   3:off   4:off   5:off   6:off
+acpid           0:off    1:off    2:on    3:on    4:on    5:on    6:off
+atd             0:off    1:off    2:off   3:off   4:off   5:off   6:off
+
+   （省略）
+
+udev-post       0:off    1:on     2:on    3:on    4:on    5:on    6:off
+vncserver       0:off    1:off    2:off   3:off   4:off   5:off   6:off
+wpa_supplicant  0:off    1:off    2:off   3:off   4:off   5:off   6:off
+ypbind          0:off    1:off    2:off   3:off   4:off   5:off   6:off
+#
+# <kbd>chkconfig --list cups</kbd><strong> ← CUPSの設定を確認します</strong>
+cups            0:off    1:off    2:off   3:off   4:off   5:off   6:off
+#
+# <kbd>chkconfig --level 5 cups on</kbd><strong> ← 実行レベル５のCUPSを有効化します</strong>
+# <kbd>chkconfig --list cups</kbd><strong> ← CUPSの設定を確認します</strong>
+cups            0:off    1:off    2:off   3:off   4:off   <strong>5:on</strong>   6:off
+#
+# <kbd>service cups status</kbd><strong> ← CUPSの動作を確認します</strong>
+cupsd は停止しています
+# <kbd>service cups start</kbd><strong> ← CUPSを起動します</strong>
+cups を起動中:                                             [  OK  ]
+#
+# <kbd>service cups stop</kbd><strong> ← CUPSを停止します</strong>
+cups を停止中:                                             [  OK  ]
+#</samp></pre>
+				</div>
+				<p>システム起動時に独自のサービスを開始したい場合は/etc/rc.d/rc.localスクリプトに開始コマンドを記述するとよいでしょう。このスクリプトは実行レベル２～５で「S99local」という名前（実際はリンク）で定義されています。</p>
+				<aside>
+					<h4>補足</h4>
+					<ul>
+						<li>/etc/inittabはテキストファイルですので、catコマンドなどで内容を表示できます。Fedora&nbsp;13以降は標準の実行レベルが定義されているだけです。（id:5:initdefault:）</li>
+						<li id="l_systemd">Fedora&nbsp;15から、OS起動時のサービスの起動方法がsystemdに変わりました。systemdでは、サービスが必要になった時点でサービスを自動起動し、使用しないサービスは一切起動しないという事になりますので、人手によるサービスの管理が不要になります。</li>
+					</ul>
+				</aside>
+		</section>
+	</section>
+
+	<footer>
+		<nav>
+			<ul>
+				<li><a href="../../index.html">ホーム</a></li>
+				<li><a href="../cmdtop.html#lbl_index">目次</a></li>
+			</ul>
+		</nav>
+		<p id="footer-author">更新日：<time datetime="2017-06-14">2017年06月14日</time> Merry</p>
+	</footer>
+</div>
+</body>
+</html>

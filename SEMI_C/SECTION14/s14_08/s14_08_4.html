@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initialscale=1.0">
+	<meta name="robots" content="INDEX,FOLLOW">
+	<meta name="keywords" content="ライブラリ,関数,可変個引数,可変引数,va_start,va_arg,va_end,構造体関数,offsetof">
+	<meta name="description" content="va_start関数、va_arg関数、va_end関数、offsetof関数の使い方を説明します。">
+	<meta name="author" content="T.Hagiwara">
+	<link rel="stylesheet" href="../../../CSS3/seminar.css" type="text/css">
+	<link rel="stylesheet" href="../../../CSS3/hl_clang.css" type="text/css">
+	<link rel="prev" href="./s14_08_3.html">
+	<title>Ｃ言語プログラミング入門&nbsp;-&nbsp;ライブラリ関数&nbsp;-&nbsp;その他のライブラリ（4/4）-</title>
+	<style type="text/css">
+	</style>
+</head>
+<body>
+<div id="container">
+	<header>
+		<p>Linux講座にようこそ。このページは「Ｃ言語プログラミング入門&nbsp;-&nbsp;第14章．ライブラリ関数&nbsp;-&nbsp;その他のライブラリ」です。</p>
+		<h1>Ｃ言語プログラミング入門</h1>
+		<nav>
+			<ul>
+				<li><a href="../../../index.html">ホーム</a></li>
+				<li><a href="../../c_langtop.html#lbl_index">目次</a></li>
+				<li><a href="./s14_08_3.html">前のページ</a></li>
+			</ul>
+		</nav>
+	</header>
+
+	<section class="contents">
+		<h1>14. ライブラリ関数（36/36）&nbsp;-&nbsp;その他のライブラリ（4/4）</h1>
+		<section>
+			<h2 id="lbl_va">14.50 可変個引数操作関数</h2>
+			<p>可変個引数の操作はva_start関数・va_arg関数・va_end関数で行うことが出来ます。これらの関数を使う場合は次の点に注意が必要です。</p>
+			<ul>
+				<li>引数のうち、最低１つは固定引数（通常の引数）が必要です。この引数により、受取側（呼び出された関数）で可変部分の数と内容が分かるようにします。</li>
+				<li>va_start関数・va_arg関数・va_end関数は同じ関数内で、この順番で呼び出さなければなりません。</li>
+			</ul>
+			<p>これらの関数はマクロとして定義されている可能性がありますが、特に意識する必要はありませんので、ここではすべて関数という表現をしています。</p>
+			<section>
+				<h3 id="lbl_start">14.50.1 va_start関数</h3>
+				<p>va_start関数は可変個引数を取り扱うための引数リストの初期化（準備）を行ないます。</p>
+				<table>
+					<caption>【表14-8-12】 va_start関数</caption>
+					<tr><th>形式</th><td>#include &lt;stdarg.h&gt;<br>
+										void va_start(va_list ap, last);</td></tr>
+					<tr><th>返り値</th><td>ありません。</td></tr>
+					<tr><th>引数</th>
+						<td>
+							<dl>
+								<dt>va_list ap</dt>
+									<dd>引数リストを格納する領域（引数リストオブジェクト）を指定します。以後、使用するva_arg関数とva_end関数では、この引数リストを使用して引数の操作を行います。</dd>
+								<dt>last</dt>
+									<dd>固定引数の最後の引数を指定します。</dd>
+							</dl>
+						</td></tr>
+				</table>
+			</section>
+			<section>
+				<h3 id="lbl_arg">14.50.2 va_arg関数</h3>
+				<p>va_arg関数は引数リストから値を取得します。この関数を繰り返し呼び出すことにより、引数の値を順番に取得する事が出来ます。なお、va_start関数直後の呼び出し（最初の呼び出し）時には、最後の固定引数（va_start関数の第２引数）の次の引数の値を取得します。</p>
+				<table>
+					<caption>【表14-8-13】 va_arg関数</caption>
+					<tr><th>形式</th><td>#include &lt;stdarg.h&gt;<br>
+										type va_arg(va_list ap, type);</td></tr>
+					<tr><th>返り値</th><td>引数の値を返します。</td></tr>
+					<tr><th>引数</th>
+						<td>
+							<dl>
+								<dt>va_list ap</dt>
+									<dd>va_start関数で作成した引数リストオブジェクトを指定します。</dd>
+								<dt>type</dt>
+									<dd>取得する引数の型名を指定します。*を付けて指定するとポインタとして取得出来ます。</dd>
+							</dl>
+						</td></tr>
+				</table>
+			</section>
+			<section>
+				<h3 id="lbl_end">14.50.3 va_end関数</h3>
+				<p>va_end関数は引数リストオブジェクトをリセットします。リセットした引数リストオブジェクトは、va_start関数で初期化することにより再使用可能です。</p>
+				<table>
+					<caption>【表14-8-14】 va_end関数</caption>
+					<tr><th>形式</th><td>#include &lt;stdarg.h&gt;<br>
+										void va_end(va_list ap);</td></tr>
+					<tr><th>返り値</th><td>ありません。</td></tr>
+					<tr><th>引数</th>
+						<td>
+							<dl>
+								<dt>va_list ap</dt>
+									<dd>va_start関数で作成した引数リストオブジェクトを指定します。</dd>
+							</dl>
+						</td></tr>
+				</table>
+			</section>
+			<section>
+				<h3>14.50.4 例題</h3>
+				<p>肥満度（BMI）の計算を行い結果を表示します。肥満度が異常の場合は「再検査要です」のメッセージを付け加えます。結果の表示はVarMessage関数で行いますが、肥満度が正常な場合と異常の場合でメッセージが異なりますので、可変個引数の関数にしています。なお、第１引数は固定引数で、可変引数の型名を文字列で指定します。（sは文字列、fはdouble型を表します）</p>
+				<div class="source-code">	<!-- ex14_8_5.c -->
+					<div class="c"><ol><li class="li1"><div class="de1"><span class="co2">#include &lt;stdio.h&gt;</span></div></li>
+					<li class="li1"><div class="de1"><span class="co2">#include &lt;stdarg.h&gt;</span></div></li>
+					<li class="li1"><div class="de1"><span class="coMULTI">/* 肥満状態を判定するための定数 */</span></div></li>
+					<li class="li1"><div class="de1"><span class="co2">#define BMI_LIMIT_UNDER &nbsp; &nbsp;18.5</span></div></li>
+					<li class="li1"><div class="de1"><span class="co2">#define BMI_LIMIT_OVER &nbsp; &nbsp; 25.0</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1"><span class="kw4">int</span> main<span class="br0">&#40;</span><span class="kw4">void</span><span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="coMULTI">/* 結果の表示間数 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">void</span> VarMessage<span class="br0">&#40;</span><span class="kw4">char</span> <span class="sy0">*</span>Format<span class="sy0">,</span> ...<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">char</span> &nbsp; &nbsp;cont<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">double</span> &nbsp;weight<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">double</span> &nbsp;height<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">double</span> &nbsp;bmi<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;肥満度(BMI)の計算を行います。<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; cont <span class="sy0">=</span> <span class="st0">'Y'</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">while</span><span class="br0">&#40;</span>cont <span class="sy0">==</span> <span class="st0">'Y'</span> <span class="sy0">||</span> cont <span class="sy0">==</span> <span class="st0">'y'</span><span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;体重(kg)と身長(m)を入力してください ==&gt; &quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">scanf</span><span class="br0">&#40;</span><span class="st0">&quot;%lf%lf&quot;</span><span class="sy0">,</span> <span class="sy0">&amp;</span>weight<span class="sy0">,</span> <span class="sy0">&amp;</span>height<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* 肥満度(BMI) = 体重(kg) / 身長(m) / 身長(m) */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; bmi <span class="sy0">=</span> weight <span class="sy0">/</span> height <span class="sy0">/</span> height<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">if</span><span class="br0">&#40;</span>bmi <span class="sy0">&lt;</span> BMI_LIMIT_UNDER <span class="sy0">||</span> bmi <span class="sy0">&gt;</span> BMI_LIMIT_OVER<span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* BMIが異常 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; VarMessage<span class="br0">&#40;</span><span class="st0">&quot;sfss&quot;</span><span class="sy0">,</span> <span class="st0">&quot;BMIは&quot;</span><span class="sy0">,</span> bmi<span class="sy0">,</span> <span class="st0">&quot;です。&quot;</span><span class="sy0">,</span> <span class="st0">&quot;再検査要です。&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">else</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; VarMessage<span class="br0">&#40;</span><span class="st0">&quot;sfs&quot;</span><span class="sy0">,</span> <span class="st0">&quot;BMIは&quot;</span><span class="sy0">,</span> bmi<span class="sy0">,</span> <span class="st0">&quot;です。&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;繰り返し肥満度の計算をしますか（Y/N） ==&gt; &quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">scanf</span><span class="br0">&#40;</span><span class="st0">&quot;%*c%c&quot;</span><span class="sy0">,</span> <span class="sy0">&amp;</span>cont<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">return</span> <span class="nu0">0</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1"><span class="coMULTI">/* 結果の表示関数 */</span></div></li>
+					<li class="li1"><div class="de1"><span class="kw4">void</span> VarMessage<span class="br0">&#40;</span><span class="kw4">char</span> <span class="sy0">*</span>p_format<span class="sy0">,</span> ...<span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; va_list ap<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="coMULTI">/* 可変引数リストの初期化 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">va_start</span><span class="br0">&#40;</span>ap<span class="sy0">,</span> p_format<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">while</span> <span class="br0">&#40;</span><span class="sy0">*</span>p_format<span class="br0">&#41;</span> <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">switch</span> <span class="br0">&#40;</span><span class="sy0">*</span>p_format<span class="br0">&#41;</span> <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">case</span> <span class="st0">'f'</span><span class="sy0">:</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* double型の表示 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;%.2f&quot;</span><span class="sy0">,</span> <span class="kw3">va_arg</span><span class="br0">&#40;</span>ap<span class="sy0">,</span> <span class="kw4">double</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw2">break</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">case</span> <span class="st0">'s'</span><span class="sy0">:</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* 文字列の表示 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;%s&quot;</span><span class="sy0">,</span> <span class="kw3">va_arg</span><span class="br0">&#40;</span>ap<span class="sy0">,</span> <span class="kw4">char</span> <span class="sy0">*</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw2">break</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">default</span><span class="sy0">:</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;引数の型名が不当です。<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="sy0">++</span>p_format<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="coMULTI">/* 可変引数リストのリセット */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">va_end</span><span class="br0">&#40;</span>ap<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">return</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#125;</span></div></li>
+					</ol></div>
+				</div>
+				<div class="exe-samp">
+<pre><samp>$ <kbd>./ex14_8_5.prg</kbd>
+肥満度(BMI)の計算を行います。
+体重(kg)と身長(m)を入力してください ==&gt; <kbd>63.5 1.75</kbd>
+BMIは20.73です。
+繰り返し肥満度の計算をしますか（Y/N） ==&gt; <kbd>y</kbd>
+体重(kg)と身長(m)を入力してください ==&gt; <kbd>63.5 1.56</kbd>
+BMIは26.09です。再検査要です。
+繰り返し肥満度の計算をしますか（Y/N） ==&gt; <kbd>n</kbd>
+$</samp></pre>
+				</div>
+				<dl>
+					<dt>2行目</dt>
+						<dd>可変個引数関数を使いますのでstdarg.hファイルを取り込みます。</dd>
+					<dt>10行目</dt>
+						<dd>可変個引数のVarMessage関数のプロトタイプ宣言です。第１引数は固定引数で、可変引数の型名を文字列で指定します。ちなみに、sは文字列、fはdouble型を表します。</dd>
+					<dt>28行目</dt>
+						<dd>VarMessage関数で結果を表示します。可変引数は「文字列・double型・文字列・文字列」の４つです。</dd>
+					<dt>32行目</dt>
+						<dd>VarMessage関数で結果を表示します。可変引数は「文字列・double型・文字列」の３つです。</dd>
+					<dt>48行目</dt>
+						<dd>引数リストを初期化（準備）します。</dd>
+					<dt>54行目</dt>
+						<dd>double型の引数の値を取得します。</dd>
+					<dt>58行目</dt>
+						<dd>文字列（char *）の引数の値を取得します。</dd>
+					<dt>69行目</dt>
+						<dd>引数リストをリセットします。</dd>
+				</dl>
+			</section>
+		</section>
+
+		<section>
+			<h2 id="lbl_struct">14.51 構造体関数</h2>
+			<section>
+				<h3 id="lbl_offsetof">14.51.1 offsetof関数</h3>
+				<p>offsetof関数は構造体メンバーの位置（構造体の先頭からのバイト数）を取得します。型名の長さは処理系により異なりますのでメンバーの位置も処理系により異なる可能性があります。また、通常、各メンバは２あるいは４の整数倍の位置に配置されますが、これも処理系やコンパイルオプションにより異なる可能性があります。</p>
+				<table>
+					<caption>【表14-8-15】 offsetof関数</caption>
+					<tr><th>形式</th><td>#include &lt;stddef.h&gt;<br>
+										size_t offsetof(type, member);</td></tr>
+					<tr><th>返り値</th><td>構造体メンバーの位置を先頭からのバイト数で返します。</td></tr>
+					<tr><th>引数</th>
+						<td>
+							<dl>
+								<dt>type</dt>
+									<dd>構造体を指定します。</dd>
+								<dt>member</dt>
+									<dd>構造体メンバーを指定します。</dd>
+							</dl>
+						</td></tr>
+				</table>
+			</section>
+			<section>
+				<h3>14.51.2 例題</h3>
+				<p>BMI_REC構造体とLIMIT型のメンバーの位置を表示します。</p>
+				<div class="source-code">	<!-- ex14_8_6.c -->
+					<div class="c"><ol><li class="li1"><div class="de1"><span class="co2">#include &lt;stdio.h&gt;</span></div></li>
+					<li class="li1"><div class="de1"><span class="co2">#include &lt;stddef.h&gt;</span></div></li>
+					<li class="li1"><div class="de1"><span class="coMULTI">/* 肥満度データを格納する構造体 */</span></div></li>
+					<li class="li1"><div class="de1"><span class="kw4">struct</span> BMI_REC</div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">int</span> &nbsp; &nbsp; number<span class="sy0">;</span> &nbsp; &nbsp; &nbsp; &nbsp;<span class="coMULTI">/* 番号 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">char</span> &nbsp; &nbsp;judge<span class="sy0">;</span> &nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* 肥満状態 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">short</span> &nbsp; age<span class="sy0">;</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* 年齢 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">float</span> &nbsp; weight<span class="sy0">;</span> &nbsp; &nbsp; &nbsp; &nbsp;<span class="coMULTI">/* 体重 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">double</span> &nbsp;height<span class="sy0">;</span> &nbsp; &nbsp; &nbsp; &nbsp;<span class="coMULTI">/* 身長 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">char</span> &nbsp; &nbsp;sex<span class="sy0">;</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* 性別 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">double</span> &nbsp;bmi<span class="sy0">;</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* 肥満度 */</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#125;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1"><span class="coMULTI">/* 肥満状態を判定するための値 */</span></div></li>
+					<li class="li1"><div class="de1"><span class="kw4">typedef</span> <span class="kw4">struct</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">double</span> &nbsp;limit_under<span class="sy0">;</span> &nbsp; <span class="coMULTI">/* 低 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">double</span> &nbsp;limit_over<span class="sy0">;</span> &nbsp; &nbsp;<span class="coMULTI">/* 高 */</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#125;</span> LIMIT<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1"><span class="kw4">int</span> main<span class="br0">&#40;</span><span class="kw4">void</span><span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;BMI_REC構造体の大きさ : %d<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> <span class="kw4">sizeof</span><span class="br0">&#40;</span><span class="kw4">struct</span> BMI_REC<span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;number &nbsp;(int) &nbsp; &nbsp; &nbsp; &nbsp; : %d<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> <span class="kw3">offsetof</span><span class="br0">&#40;</span><span class="kw4">struct</span> BMI_REC<span class="sy0">,</span> number<span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;judge &nbsp; (char) &nbsp; &nbsp; &nbsp; &nbsp;: %d<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> <span class="kw3">offsetof</span><span class="br0">&#40;</span><span class="kw4">struct</span> BMI_REC<span class="sy0">,</span> judge<span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;age &nbsp; &nbsp; (short) &nbsp; &nbsp; &nbsp; : %d<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> <span class="kw3">offsetof</span><span class="br0">&#40;</span><span class="kw4">struct</span> BMI_REC<span class="sy0">,</span> age<span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;weight &nbsp;(float) &nbsp; &nbsp; &nbsp; : %d<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> <span class="kw3">offsetof</span><span class="br0">&#40;</span><span class="kw4">struct</span> BMI_REC<span class="sy0">,</span> weight<span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;height &nbsp;(double) &nbsp; &nbsp; &nbsp;: %d<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> <span class="kw3">offsetof</span><span class="br0">&#40;</span><span class="kw4">struct</span> BMI_REC<span class="sy0">,</span> height<span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;sex &nbsp; &nbsp; (char) &nbsp; &nbsp; &nbsp; &nbsp;: %d<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> <span class="kw3">offsetof</span><span class="br0">&#40;</span><span class="kw4">struct</span> BMI_REC<span class="sy0">,</span> sex<span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;bmi &nbsp; &nbsp; (double) &nbsp; &nbsp; &nbsp;: %d<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> <span class="kw3">offsetof</span><span class="br0">&#40;</span><span class="kw4">struct</span> BMI_REC<span class="sy0">,</span> bmi<span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;<span class="es1">\n</span>LIMIT型の大きさ &nbsp; &nbsp; : %d<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> <span class="kw4">sizeof</span><span class="br0">&#40;</span>LIMIT<span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;limit_under &nbsp;(double) : %d<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> <span class="kw3">offsetof</span><span class="br0">&#40;</span>LIMIT<span class="sy0">,</span> limit_under<span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;limit_over &nbsp; (double) : %d<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> <span class="kw3">offsetof</span><span class="br0">&#40;</span>LIMIT<span class="sy0">,</span> limit_over<span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">return</span> <span class="nu0">0</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#125;</span></div></li>
+					</ol></div>
+				</div>
+				<div class="exe-samp">
+<pre><samp>$ <kbd>./ex14_8_6.prg</kbd>
+BMI_REC構造体の大きさ : 32
+number  (int)         : 0
+judge   (char)        : 4
+age     (short)       : 6
+weight  (float)       : 8
+height  (double)      : 12
+sex     (char)        : 20
+bmi     (double)      : 24
+
+LIMIT型の大きさ     : 16
+limit_under  (double) : 0
+limit_over   (double) : 8
+$</samp></pre>
+					</div>
+				<dl>
+					<dt>2行目</dt>
+						<dd>offsetof関数を使いますのでstddef.hファイルを取り込みます。</dd>
+					<dt>4行目</dt>
+						<dd>BMI_REC構造体を宣言します。</dd>
+					<dt>20行目</dt>
+						<dd>構造体をtypedefでLIMIT型として宣言します。</dd>
+					<dt>24行目</dt>
+						<dd>構造体全体の大きさをsizeof演算子で求めます。</dd>
+					<dt>25行目</dt>
+						<dd>offsetof関数でBMI_REC構造体のnumberメンバーの位置を求めます。</dd>
+					<dt>34行目</dt>
+						<dd>offsetof関数でLIMIT型のlimit_underメンバーの位置を求めます。</dd>
+				</dl>
+			</section>
+		</section>
+	</section>
+
+	<footer>
+		<nav>
+			<ul>
+				<li><a href="../../../index.html">ホーム</a></li>
+				<li><a href="../../c_langtop.html#lbl_index">目次</a></li>
+				<li><a href="./s14_08_3.html">前のページ</a></li>
+			</ul>
+		</nav>
+		<p id="footer-author">更新日：<time datetime="2019-01-14">2019年01月14日</time> Merry</p>
+	</footer>
+</div>
+</body>
+</html>
