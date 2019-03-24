@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initialscale=1.0">
+	<meta name="robots" content="INDEX,FOLLOW">
+	<meta name="keywords" content="Ｃ言語プログラミング入門,入出力,入力,出力,標準入出力,標準入力,標準出力,ライブラリ,関数,ヘッダファイル,stdio.h,printf,書式制御文字列,書式制御,scanf,コメント,注釈">
+	<meta name="description" content="Ｃ言語でのデータの入出力方法を説明します。">
+	<meta name="author" content="T.Hagiwara">
+	<link rel="stylesheet" href="../../CSS3/seminar.css" type="text/css">
+	<link rel="stylesheet" href="../../CSS3/hl_clang.css" type="text/css">
+	<link rel="prev" href="./section02_1.html">
+	<link rel="next" href="../SECTION03/section03_1.html">
+	<title>Ｃ言語プログラミング入門&nbsp;-&nbsp;データを格納するための変数（2/2）</title>
+	<style type="text/css">
+	</style>
+</head>
+<body>
+<div id="container">
+	<header>
+		<p>Linux講座にようこそ。このページは「Ｃ言語プログラミング入門&nbsp;-&nbsp;第２章&nbsp;データを格納するための変数」です。</p>
+		<h1>Ｃ言語プログラミング入門</h1>
+		<nav>
+			<ul>
+				<li ><a href="../../index.html">ホーム</a></li>
+				<li><a href="../c_langtop.html#lbl_index">目次</a></li>
+				<li><a href="./section02_1.html">前のページ</a></li>
+				<li><a href="../SECTION03/section03_1.html">次のページ</a></li>
+			</ul>
+		</nav>
+	</header>
+
+	<section class="contents">
+		<h1>2. データを格納するための変数（2/2）</h1>
+		<section>
+			<h2>2.2 基本的な入出力方法</h2>
+			<p>変数とデータの入出力は直接の関係は無いのですが、入出力が出来ないと例題のプログラムが作成しにくいので、ここで簡単なデータの入出力の方法について説明します。</p>
+			<p>UNIX系OSには標準入出力という機能があり、これを利用するとキーボードからの入力やターミナルへの出力が簡単に行えます。また、シェルの機能のリダイレクションやパイプラインは標準入出力を対象としていますので、標準入出力への入出力が出来ればこれらの機能が使えます。例えば、ターミナルに出力しているメッセージをファイルに保存したい場合や、他のコマンドに渡したいような場合も、リダイレクションやパイプラインの機能を使えばプログラムを変更しなくても対応できます。</p>
+			<p>Ｃ言語での入出力は<strong>ライブラリ</strong>と呼ぶプログラム部品が提供されていますので、通常は、これらのプログラム部品を使います。このプログラム部品は<strong>関数</strong>と呼ぶ形式で作成されていますので、入出力を行いたいところで、入出力関数を呼び出します。</p>
+			<p>ライブラリ関数を使う場合の注意点として、<strong>ヘッダファイル</strong>と呼ぶファイルを取り込む必要があります。ヘッダファイルには関数の定義情報や、関数を使うのに必要なデータが定義されています。入出力関数の場合は<strong>stdio.h</strong>ファイルを取り込みます。（ファイルの取り込みに付いては「<a href="../SECTION13/section13_1.html">13. プリプロセッサ</a>」をご覧ください）</p>
+			<p>ここでは、入出力関数として例題などによく使われている２つの関数の使い方を説明します。</p>
+			<section>
+				<h3 id="lbl_stdout">2.2.1 ターミナルへのデータ出力（標準出力）</h3>
+				<p>ターミナルへメッセージを出力するには<strong>printf関数</strong>を使用します。この関数は最初に紹介したHello&nbsp;Worldプログラムで使っていました。printf関数は標準出力へ出力を行う関数です。</p>
+				<section>
+					<h4>形式</h4>
+					<p>printf関数の形式は大きく分けると次の２種類になります。最初の形式は出力したいメッセージが固定の場合に使用し、２番目の形式は変数の値を出力する場合に使用します。出力する内容によって、使い分けが必要です。</p>
+					<div class="form-exp">
+						※ メッセージが固定の場合<br>
+						printf("出力文字列");<br><br>
+						※ 変数の値を出力する場合<br>
+						printf("書式制御文字列と出力文字列", 変数名);
+					</div>
+					<dl>
+						<dt>出力文字列</dt>
+							<dd>出力する内容を指定します。<strong>"</strong>（引用符）で括りますので注意してください。</dd>
+						<dt>書式制御文字列と出力文字列</dt>
+							<dd>変数の値の編集形式を指定するための<strong>書式制御文字列</strong>と出力文字列を指定します。書式制御文字列は変数の値に置き換えられます。書式制御文字列の種類は沢山ありますが、ここでは例題プログラムで使う程度の簡単なもののみ説明します。
+								<dl>
+									<dt>%c</dt>
+										<dd>char型の変数の値を編集します。</dd>
+									<dt>%d</dt>
+										<dd>short intとint型の変数の値を編集します。</dd>
+									<dt>%f</dt>
+										<dd>floatとduble型の変数の値を編集します。標準では小数点以下６桁まで出力します。小数点以下の桁数を指定したい場合は「%.nf」の形式になります。（nは小数点以下の桁数です）</dd>
+									<dt>書式制御文字列以外の文字列</dt>
+										<dd>そのまま出力します。</dd>
+								</dl>
+							</dd>
+						<dt>変数名</dt>
+							<dd>出力したい変数の名前（変数名）を指定します。複数の変数を指定する場合は<strong>,</strong>（コンマ）で区切ります。なお、変数の型と書式制御文字列は一致している必要があります。</dd>
+					</dl>
+					<p>文字の定数は'（アポストロフィ）で括る場合と、"（引用符）で括る場合があります。使い分けの詳細は後ほど説明します。（<a href="../SECTION07/section07_2.html">7.3 文字列の取扱い</a>）</p>
+				</section>
+				<section>
+					<h4>例題</h4>
+					<p>この例題プログラムでは変数を使う必要性は無いのですが、printf関数の使い方を説明するために変数を使っています。</p>
+					<div class="source-code">
+						<div class="c"><ol><li class="li1"><div class="de1"><span class="co2">#include &lt;stdio.h&gt;</span></div></li>
+						<li class="li1"><div class="de1"><span class="kw4">int</span> main<span class="br0">&#40;</span><span class="br0">&#41;</span></div></li>
+						<li class="li1"><div class="de1"><span class="br0">&#123;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">int</span> &nbsp; &nbsp; nenrei &nbsp;<span class="sy0">=</span> <span class="nu0">13</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">double</span> &nbsp;taijyu &nbsp;<span class="sy0">=</span> <span class="nu16">18.5</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">char</span> &nbsp; &nbsp;ketueki <span class="sy0">=</span> <span class="st0">'A'</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp;</div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;私のプロフィルです。<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;・年齢：%d歳<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> nenrei<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;・体重：%fKg<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> taijyu<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;・血液型：%c<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> ketueki<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; </div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">return</span> <span class="nu0">0</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1"><span class="br0">&#125;</span></div></li>
+						</ol></div>
+					</div>
+					<dl>
+						<dt>1行目</dt>
+							<dd>ヘッダファイル（stdio.h）を取り込みます。</dd>
+						<dt>4〜6行目</dt>
+							<dd>変数を宣言します。</dd>
+						<dt>8行目</dt>
+							<dd>printf関数で「私のプロフィルです。」を標準出力に出力します。\nは改行を指示します。</dd>
+						<dt>9行目</dt>
+							<dd>%d書式制御文字列を使って、変数nenreiの値を標準出力に出力します。書式制御文字列以外の文字はそのまま出力しますので、「・年齢：13歳」を出力します。変数nenreiはint型ですので書式制御文字列は%dになります。</dd>
+						<dt>10行目</dt>
+							<dd>%f書式制御文字列を使って、変数taijyuの値を標準出力に出力します。書式制御文字列以外の文字はそのまま出力しますので、「・体重：18.500000Kg」を出力します。変数taijyuはdouble型ですので書式制御文字列は%fになります。</dd>
+						<dt>11行目</dt>
+							<dd>%c書式制御文字列を使って、変数ketuekiの値を標準出力に出力します。書式制御文字列以外の文字はそのまま出力しますので、「・血液型：A」を出力します。変数ketuekiはchar型ですので書式制御文字列は%cになります。</dd>
+					</dl>
+					<p>コンパイルして実行します。</p>
+					<div class="exe-samp">
+<pre><samp>$ <kbd>gcc -o ex02_2.prg ex02_2.c</kbd>
+$ <kbd>./ex02_2.prg</kbd><strong> ← 実行します</strong>
+私のプロフィルです。
+・年齢：13歳
+・体重：18.500000Kg<strong> ← 書式制御文字列%fは小数点以下６桁で出力します</strong>
+・血液型：A
+$
+$ <kbd>./ex02_2.prg &gt; profil.txt</kbd><strong> ← 出力先をprofil.txtに切り替えます</strong>
+$ cat profil.txt
+私のプロフィルです。
+・年齢：13歳
+・体重：18.500000Kg
+・血液型：A
+$
+$ <kbd>./ex02_2.prg | wc -l</kbd><strong> ← 出力をパイプラインでwcコマンドに渡して行数をカウントします</strong>
+4
+$</samp></pre>
+					</div>
+					<aside>
+						<h5>補足</h5>
+							<p>書式制御文字列%fは小数点以下６桁で出力しますが、変更したい場合は桁数を指定します。例えば上記例題で、小数点以下２桁で出力したい場合は次のように記述します。</p>
+							<p>例：<code>printf("・体重：<strong>%.2f</strong>Kg\n", taijyu);</code></p>
+							<p>上記例題では変数を一つだけ指定していますが、複数指定することもできます。その場合、書式制御文字列と変数の数は一致させる必要があります。</p>
+							<p>例：<code>printf("・年齢：%d歳\n・体重：%fKg\n・血液型：%c\n", nenrei, taijyu, ketueki);</code></p>
+					</aside>
+				</section>
+			</section>
+			<section>
+				<h3 id="lbl_stdin">2.2.2 キーボードからの入力（標準入力）</h3>
+				<p>キーボードからデータを変数に入力するには<strong>scanf関数</strong>を使用します。scanf関数は標準入力から入力を行う関数です。なお、この関数はバッファオーバフローと呼ぶ、セキュリティ上重大な問題を起こす可能性がありますので、使用は例題プログラムや実験的なプログラムにとどめ、業務プログラムには使わない方がよいでしょう。</p>
+				<section>
+					<h4>形式</h4>
+					<p>scanf関数は入力したデータをどのような型のデータとして変数に格納するかを、書式制御文字列で指定します。</p>
+					<div class="form-exp">
+						scanf("書式制御文字列", &amp;変数名);
+					</div>
+					<dl>
+						<dt>書式制御文字列</dt>
+							<dd>ここでは、例題プログラムで使う程度の簡単なもののみ説明します。
+								<dl>
+									<dt>%c</dt>
+										<dd>char型の変数に１文字入力します。入力データ中の空白文字（スペース、改行、タブ、等）は読み込みます。</dd>
+									<dt>%d</dt>
+										<dd>int型の変数に整数として入力します。入力データ中の空白文字は区切りとして読み飛ばします。</dd>
+									<dt>%f</dt>
+										<dd>float型の変数に浮動小数点数として入力します。入力データ中の空白文字は区切りとして読み飛ばします。</dd>
+									<dt>%lf</dt>
+										<dd>double型の変数に浮動小数点数として入力します。scanf関数の場合は、float型とdouble型で書式制御文字列が異なりますので注意してください。入力データ中の空白文字は区切りとして読み飛ばします。</dd>
+								</dl>
+							</dd>
+						<dt>&amp;変数名</dt>
+							<dd><strong>&amp;</strong>（アンパサンド）の次に入力したデータを格納する変数を指定します。複数の変数を指定する場合は,（コンマ）で区切ります。なお、変数の型と書式制御文字列は一致している必要があります。</dd>
+					</dl>
+					<p>&amp;（アンパサンド）は演算子の一種です。詳細については後ほど説明します。（<a href="../SECTION08/section08_1.html#lbl_dec">8.2 ポインタ変数の宣言</a>）</p>
+				</section>
+				<section>
+					<h4>例題</h4>
+					<p>キーボードから年齢・体重・血液型を入力して、結果をターミナルに出力するプログラムです。</p>
+					<div class="source-code">
+						<div class="c"><ol><li class="li1"><div class="de1"><span class="co2">#include &lt;stdio.h&gt;</span></div></li>
+						<li class="li1"><div class="de1"><span class="kw4">int</span> main<span class="br0">&#40;</span><span class="br0">&#41;</span></div></li>
+						<li class="li1"><div class="de1"><span class="br0">&#123;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">int</span> &nbsp; &nbsp; nenrei<span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">double</span> &nbsp;taijyu<span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">char</span> &nbsp; &nbsp;ketueki<span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">char</span> &nbsp; &nbsp;dummy<span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp;</div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="coMULTI">/* 年齢、体重、血液型の入力 */</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;年齢を入力してください ==&gt; &quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">scanf</span><span class="br0">&#40;</span><span class="st0">&quot;%d&quot;</span><span class="sy0">,</span> <span class="sy0">&amp;</span>nenrei<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;体重を入力してください ==&gt; &quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">scanf</span><span class="br0">&#40;</span><span class="st0">&quot;%lf&quot;</span><span class="sy0">,</span> <span class="sy0">&amp;</span>taijyu<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">scanf</span><span class="br0">&#40;</span><span class="st0">&quot;%c&quot;</span><span class="sy0">,</span> <span class="sy0">&amp;</span>dummy<span class="br0">&#41;</span><span class="sy0">;</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="coMULTI">/* 改行文字を入力 */</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;血液型を入力してください ==&gt; &quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">scanf</span><span class="br0">&#40;</span><span class="st0">&quot;%c&quot;</span><span class="sy0">,</span> <span class="sy0">&amp;</span>ketueki<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp;</div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="coMULTI">/* プロフィルの出力 */</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;<span class="es1">\n</span>あなたのプロフィルです。<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;・年齢：%d歳<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> nenrei<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;・体重：%.1fKg<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> taijyu<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;・血液型：%c<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> ketueki<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp;</div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">return</span> <span class="nu0">0</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1"><span class="br0">&#125;</span></div></li>
+						</ol></div>
+					</div>
+					<dl>
+						<dt>1行目</dt>
+							<dd>ヘッダファイル（stdio.h）を取り込みます。</dd>
+						<dt>9、18行目</dt>
+							<dd>コメント行です。「/*」と「*/」の間にはコメント（注釈）を記述することができます。コメントはプログラムの実行に影響しません。</dd>
+						<dt>10、12、15行目</dt>
+							<dd>入力を促すためのメッセージを出力します。改行指定をしていません。</dd>
+						<dt>11行目</dt>
+							<dd>%d書式制御文字列を使って、変数nenreiに整数の値を入力します。</dd>
+						<dt>13行目</dt>
+							<dd>%lf書式制御文字列を使って、変数taijyuに浮動小数点数の値を入力します。</dd>
+						<dt>14行目</dt>
+							<dd>%c書式制御文字列を使って、変数dummyに１文字入力します。ここで入力しているのは体重を入力したときの改行文字です。%cは空白文字も入力してしまいますので注意してください。</dd>
+						<dt>16行目</dt>
+							<dd>%c書式制御文字列を使って、変数ketuekiに１文字入力します。</dd>
+						<dt>19行目</dt>
+							<dd>「あなたのプロフィルです。」の前後に\n（改行文字）が入っていますので、メッセージの前と後で改行します。</dd>
+					</dl>
+					<p>コンパイルして実行します。</p>
+					<div class="exe-samp">
+<pre><samp>$ <kbd>gcc -o ex02_3.prg ex02_3.c</kbd>
+$ <kbd>./ex02_3.prg</kbd>
+年齢を入力してください ==&gt; <kbd>13</kbd><strong> ← 「1、3、改行」を入力します</strong>
+体重を入力してください ==&gt; <kbd>18.5</kbd><strong> ← 「1、8、.、5、改行」を入力します</strong>
+血液型を入力してください ==&gt; <kbd>A</kbd><strong> ← 「A、改行」を入力します</strong>
+<strong> ← 空行です</strong>
+あなたのプロフィルです。
+・年齢：13歳
+・体重：18.5Kg
+・血液型：A
+$</samp></pre>
+					</div>
+					<aside>
+						<h5>補足</h5>
+						<ul>
+							<li>１つのscanf関数で複数のデータを入力できます。<br>例：<code>scanf("%d%lf", &amp;nenrei, &amp;taijyu);</code></li>
+							<li id="lbl_note_6">「/*」と「*/」の間にはコメント（注釈）を記述することができます。コメントは複数行に渡ってもかまいませんし、日本語で記述することもできます。ただし、「/*」と「*/」の中に「/*」と「*/」は記述できません。<br>適切なコメントはプログラムを読みやすくしますので、できるだけ記述するようにすると良いでしょう。また、プログラムロジックの区切りのところには空行（改行だけの行）を入れておくと、さらに読みやすくなります。</li>
+						</ul>
+					</aside>
+				</section>
+			</section>
+		</section>
+	</section>
+
+	<footer>
+		<nav>
+			<ul>
+				<li><a href="../../index.html">ホーム</a></li>
+				<li><a href="../c_langtop.html#lbl_index">目次</a></li>
+				<li><a href="./section02_1.html">前のページ</a></li>
+				<li><a href="../SECTION03/section03_1.html">次のページ</a></li>
+			</ul>
+		</nav>
+		<p id="footer-author">更新日：<time datetime="2018-04-23">2018年04月23日</time> Merry</p>
+	</footer>
+</div>
+</body>
+</html>

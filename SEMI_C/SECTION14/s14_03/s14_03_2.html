@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initialscale=1.0">
+	<meta name="robots" content="INDEX,FOLLOW">
+	<meta name="keywords" content="文字処理ライブラリ,関数,isalnum,isalpha,isdigit,isxdigit,isgraph,isprint,ispunct">
+	<meta name="description" content="isalnum関数、isalpha関数、isdigit関数、isxdigit関数、isgraph関数、isprint関数、ispunct関数の使用法を説明します。">
+	<meta name="author" content="T.Hagiwara">
+	<link rel="stylesheet" href="../../../CSS3/seminar.css" type="text/css">
+	<link rel="stylesheet" href="../../../CSS3/hl_clang.css" type="text/css">
+	<link rel="prev" href="./s14_03_1.html">
+	<link rel="next" href="./s14_03_3.html">
+	<title>Ｃ言語プログラミング入門&nbsp;-&nbsp;ライブラリ関数&nbsp;-&nbsp;文字処理ライブラリ（2/3）-</title>
+	<style type="text/css">
+	</style>
+</head>
+<body>
+<div id="container">
+	<header>
+		<p>Linux講座にようこそ。このページは「Ｃ言語プログラミング入門&nbsp;-&nbsp;第14章．ライブラリ関数&nbsp;-&nbsp;文字処理ライブラリ」です。</p>
+		<h1>Ｃ言語プログラミング入門</h1>
+		<nav>
+			<ul>
+				<li><a href="../../../index.html">ホーム</a></li>
+				<li><a href="../../c_langtop.html#lbl_index">目次</a></li>
+				<li><a href="./s14_03_1.html">前のページ</a></li>
+				<li><a href="./s14_03_3.html">次のページ</a></li>
+			</ul>
+		</nav>
+	</header>
+
+	<section class="contents">
+		<h1>14. ライブラリ関数（18/36）&nbsp;-&nbsp;文字処理ライブラリ（2/3）</h1>
+		<section>
+			<h2 id="lbl_alnum">14.25 英数字チェック関数</h2>
+			<section>
+				<h3>14.25.1 isalnum関数、isalpha関数、isdigit関数、isxdigit関数</h3>
+				<p>これらの関数は文字（１文字）が英字または数字かどうかをチェックします。</p>
+				<ul>
+					<li>isalnum関数は英字（'A'〜'Z'、'a'〜'z'）または数字（'0'〜'9'）かどうかをチェックします。</li>
+					<li>isalpha関数は英字（'A'〜'Z'、'a'〜'z'）かどうかをチェックします。</li>
+					<li>isdigit関数は数字（'0'〜'9'）かどうかをチェックします。</li>
+					<li>isxdigit関数は十六進数（'0'〜'9'、'A'〜'F'または'a'〜'f'）の数字かどうかをチェックします。</li>
+				</ul>
+				<table>
+					<caption>【表14-3-2】 isalnum関数、isalpha関数、isdigit関数、isxdigit関数</caption>
+					<tr><th>形式</th><td>#include &lt;ctype.h&gt;<br>
+										int isalnum(int c);<br>
+										int isalpha(int c);<br>
+										int isdigit(int c);<br>
+										int isxdigit(int c);</td></tr>
+					<tr><th>返り値</th><td>文字の種類が合っていた場合は０以外を返し、そうでない場合は０を返します。</td></tr>
+					<tr><th>引数</th>
+						<td>
+							<dl>
+								<dt>int c</dt>
+									<dd>チェックしたい文字を指定します。</dd>
+							</dl>
+						</td></tr>
+				</table>
+			</section>
+			<section>
+				<h3>14.25.2 例題</h3>
+				<p>入力した商品コードと単価の形式をチェックします。それぞれの形式は次の通りです。</p>
+				<ul>
+					<li>商品コードは長さが６文字で、先頭１文字は英字、２文字目以降は英数字です。</li>
+					<li>単価は１〜６文字で、全文字数字です。</li>
+				</ul>
+				<div class="source-code">
+					<div class="c"><ol><li class="li1"><div class="de1"><span class="co2">#include &lt;stdio.h&gt;</span></div></li>
+					<li class="li1"><div class="de1"><span class="co2">#include &lt;string.h&gt;</span></div></li>
+					<li class="li1"><div class="de1"><span class="co2">#include &lt;ctype.h&gt;</span></div></li>
+					<li class="li1"><div class="de1"><span class="co2">#define SIZE &nbsp; &nbsp;16</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1"><span class="coMULTI">/* 関数プロトタイプ宣言 */</span></div></li>
+					<li class="li1"><div class="de1"><span class="kw4">int</span> ItemCheck<span class="br0">&#40;</span><span class="kw4">char</span> <span class="sy0">*</span>Item<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1"><span class="kw4">int</span> PriceCheck<span class="br0">&#40;</span><span class="kw4">char</span> <span class="sy0">*</span>Price<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1"><span class="kw4">int</span> main<span class="br0">&#40;</span><span class="kw4">void</span><span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">char</span> &nbsp; &nbsp;item<span class="br0">&#91;</span>SIZE<span class="br0">&#93;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">char</span> &nbsp; &nbsp;price<span class="br0">&#91;</span>SIZE<span class="br0">&#93;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;商品コードを入力してください ==&gt; &quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">scanf</span><span class="br0">&#40;</span><span class="st0">&quot;%s&quot;</span><span class="sy0">,</span> item<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">if</span><span class="br0">&#40;</span>ItemCheck<span class="br0">&#40;</span>item<span class="br0">&#41;</span><span class="br0">&#41;</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="coMULTI">/* 商品コードチェック */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;単価を入力してください ==&gt; &quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">scanf</span><span class="br0">&#40;</span><span class="st0">&quot;%s&quot;</span><span class="sy0">,</span> price<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">if</span><span class="br0">&#40;</span>PriceCheck<span class="br0">&#40;</span>price<span class="br0">&#41;</span><span class="br0">&#41;</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="coMULTI">/* 単価チェック */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;商品コード：%s<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> item<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;単価：%s<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> price<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">else</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;単価が不当です。<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">else</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;商品コードが不当です。<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">return</span> <span class="nu0">0</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1"><span class="coMULTI">/* 商品コードのチェック */</span></div></li>
+					<li class="li1"><div class="de1"><span class="kw4">int</span> ItemCheck<span class="br0">&#40;</span><span class="kw4">char</span> <span class="sy0">*</span>pItem<span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">int</span> &nbsp; &nbsp; idx<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="coMULTI">/* 長さは６文字 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">if</span><span class="br0">&#40;</span><span class="kw3">strlen</span><span class="br0">&#40;</span>pItem<span class="br0">&#41;</span> <span class="sy0">!=</span> <span class="nu0">6</span><span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">return</span> <span class="nu0">0</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="coMULTI">/* 先頭１文字は英字 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">if</span><span class="br0">&#40;</span><span class="sy0">!</span> <span class="kw3">isalpha</span><span class="br0">&#40;</span><span class="sy0">*</span>pItem<span class="br0">&#41;</span><span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">return</span> <span class="nu0">0</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="coMULTI">/* ２文字目以降は英数字 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">for</span><span class="br0">&#40;</span>idx <span class="sy0">=</span> <span class="nu0">1</span><span class="sy0">;</span> idx <span class="sy0">&lt;</span> <span class="nu0">6</span><span class="sy0">;</span> <span class="sy0">++</span>idx<span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">if</span><span class="br0">&#40;</span><span class="sy0">!</span> <span class="kw3">isalnum</span><span class="br0">&#40;</span><span class="sy0">*</span><span class="br0">&#40;</span>pItem <span class="sy0">+</span> idx<span class="br0">&#41;</span><span class="br0">&#41;</span><span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">return</span> <span class="nu0">0</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">return</span> <span class="nu0">1</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1"><span class="coMULTI">/* 単価のチェック */</span></div></li>
+					<li class="li1"><div class="de1"><span class="kw4">int</span> PriceCheck<span class="br0">&#40;</span><span class="kw4">char</span> <span class="sy0">*</span>pPrice<span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">int</span> &nbsp; &nbsp; length<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">int</span> &nbsp; &nbsp; idx<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; length <span class="sy0">=</span> <span class="kw3">strlen</span><span class="br0">&#40;</span>pPrice<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="coMULTI">/* 長さは６文字以下 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">if</span><span class="br0">&#40;</span>length <span class="sy0">&lt;=</span> <span class="nu0">0</span> <span class="sy0">||</span> length <span class="sy0">&gt;</span> <span class="nu0">6</span><span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">return</span> <span class="nu0">0</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="coMULTI">/* 全文字数字 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">for</span><span class="br0">&#40;</span>idx <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">;</span> idx <span class="sy0">&lt;</span> length<span class="sy0">;</span> <span class="sy0">++</span>idx<span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">if</span><span class="br0">&#40;</span><span class="sy0">!</span> <span class="kw3">isdigit</span><span class="br0">&#40;</span><span class="sy0">*</span><span class="br0">&#40;</span>pPrice <span class="sy0">+</span> idx<span class="br0">&#41;</span><span class="br0">&#41;</span><span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">return</span> <span class="nu0">0</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">return</span> <span class="nu0">1</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#125;</span></div></li>
+					</ol></div>
+				</div>
+				<div class="exe-samp">
+<pre><samp>$ <kbd>./ex14_3_1.prg</kbd>
+商品コードを入力してください ==&gt; <kbd>T00001</kbd>
+単価を入力してください ==&gt; <kbd>100</kbd>
+商品コード：T00001
+単価：100
+$
+$ <kbd>./ex14_3_1.prg</kbd>
+商品コードを入力してください ==&gt; <kbd>123456</kbd>
+商品コードが不当です。
+$
+$ <kbd>./ex14_3_1.prg</kbd>
+商品コードを入力してください ==&gt; <kbd>k123456</kbd>
+商品コードが不当です。
+$
+$ <kbd>./ex14_3_1.prg</kbd>
+商品コードを入力してください ==&gt; <kbd>k23-56</kbd>
+商品コードが不当です。
+$
+$ <kbd>./ex14_3_1.prg</kbd>
+商品コードを入力してください ==&gt; <kbd>t00002</kbd>
+単価を入力してください ==&gt; <kbd>10-</kbd>
+単価が不当です。
+$
+$ <kbd>./ex14_3_1.prg</kbd>
+商品コードを入力してください ==&gt; <kbd>T00003</kbd>
+単価を入力してください ==&gt; <kbd>1234567</kbd>
+単価が不当です。
+$</samp></pre>
+				</div>
+				<dl>
+					<dt>3行目</dt>
+						<dd>文字処理関数を使いますので、ctype.hヘッダファイルを取り込みます。</dd>
+					<dt>51行目</dt>
+						<dd>商品コードの先頭１文字が英字かどうかをisalpha関数でチェックします。</dd>
+					<dt>59行目</dt>
+						<dd>商品コードの２文字目から６文字目が英数字かどうかをisalnum関数でチェックします。</dd>
+					<dt>84行目</dt>
+						<dd>単価が数字かどうかをisdigit関数でチェックします。</dd>
+				</dl>
+			</section>
+		</section>
+
+		<section>
+			<h2 id="lbl_print">14.26 表示可能チェック関数</h2>
+			<section>
+				<h3>14.26.1 isgraph関数、isprint関数、ispunct関数</h3>
+				<p>これらの関数は表示可能な文字かどうかをチェックします。</p>
+				<ul>
+					<li>isgraph関数はスペース以外の表示可能な文字かどうかをチェックします。</li>
+					<li>isprint関数はスペースを含む表示可能な文字かどうかをチェックします。</li>
+					<li>ispunct関数はスペースと英数字以外の表示可能な文字かどうかをチェックします。</li>
+				</ul>
+				<table>
+					<caption>【表14-3-3】 isgraph関数、isprint関数、ispunct関数</caption>
+					<tr><th>形式</th><td>#include &lt;ctype.h&gt;<br>
+										int isgraph(int c);<br>
+										int isprint(int c);<br>
+										int ispunct(int c);</td></tr>
+					<tr><th>返り値</th><td>文字の種類が合っていた場合は０以外を返し、そうでない場合は０を返します。</td></tr>
+					<tr><th>引数</th>
+						<td>
+							<dl>
+								<dt>int c</dt>
+									<dd>チェックしたい文字を指定します。</dd>
+							</dl>
+						</td></tr>
+				</table>
+			</section>
+			<section>
+				<h3>14.26.2 例題</h3>
+				<p>入力した文字列中の表示しない文字を_（アンダライン）に置き替え表示します。</p>
+				<div class="source-code">
+					<div class="c"><ol><li class="li1"><div class="de1"><span class="co2">#include &lt;stdio.h&gt;</span></div></li>
+					<li class="li1"><div class="de1"><span class="co2">#include &lt;ctype.h&gt;</span></div></li>
+					<li class="li1"><div class="de1"><span class="co2">#define SIZE &nbsp; &nbsp;100</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1"><span class="kw4">int</span> main<span class="br0">&#40;</span><span class="kw4">void</span><span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">char</span> &nbsp; &nbsp;str<span class="br0">&#91;</span>SIZE<span class="br0">&#93;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">int</span> &nbsp; &nbsp; idx<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;文字列を入力してください ==&gt; &quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">fgets</span><span class="br0">&#40;</span>str<span class="sy0">,</span> SIZE<span class="sy0">,</span> stdin<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">for</span><span class="br0">&#40;</span>idx <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">;</span> str<span class="br0">&#91;</span>idx<span class="br0">&#93;</span> <span class="sy0">!=</span> <span class="st0">'<span class="es1">\n</span>'</span><span class="sy0">;</span> <span class="sy0">++</span>idx<span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">if</span><span class="br0">&#40;</span><span class="sy0">!</span> <span class="kw3">isgraph</span><span class="br0">&#40;</span>str<span class="br0">&#91;</span>idx<span class="br0">&#93;</span><span class="br0">&#41;</span><span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* 表示しない文字を＿に置き替える */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; str<span class="br0">&#91;</span>idx<span class="br0">&#93;</span> <span class="sy0">=</span> <span class="st0">'_'</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;文字列：%s&quot;</span><span class="sy0">,</span> str<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">return</span> <span class="nu0">0</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#125;</span></div></li>
+					</ol></div>
+				</div>
+				<div class="exe-samp">
+<pre><samp>$ <kbd>./ex14_3_2.prg</kbd>
+文字列を入力してください ==&gt; <kbd>Hello. Bye.</kbd><strong> ← 半角スペースを含みます</strong>
+文字列：Hello._Bye.
+$
+$ <kbd>./ex14_3_2.prg</kbd>
+文字列を入力してください ==&gt; <kbd>Hello.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Bye.</kbd><strong> ← タブを含みます</strong>
+文字列：Hello._Bye.
+$</samp></pre>
+				</div>
+				<dl>
+					<dt>15行目</dt>
+						<dd>スペース以外の表示可能な文字であることをisgraph関数でチェックします。</dd>
+				</dl>
+			</section>
+		</section>
+	</section>
+
+	<footer>
+		<nav>
+			<ul>
+				<li><a href="../../../index.html">ホーム</a></li>
+				<li><a href="../../c_langtop.html#lbl_index">目次</a></li>
+				<li><a href="./s14_03_1.html">前のページ</a></li>
+				<li><a href="./s14_03_3.html">次のページ</a></li>
+			</ul>
+		</nav>
+		<p id="footer-author">更新日：<time datetime="2019-01-05">2019年01月05日</time> Merry</p>
+	</footer>
+</div>
+</body>
+</html>

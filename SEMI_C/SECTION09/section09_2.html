@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initialscale=1.0">
+	<meta name="robots" content="INDEX,FOLLOW">
+	<meta name="keywords" content="値渡し,call by value,参照渡し,call by reference,逆順">
+	<meta name="description" content="関数間のデータの受け渡し方法を説明します。">
+	<meta name="author" content="T.Hagiwara">
+	<link rel="stylesheet" href="../../CSS3/seminar.css" type="text/css">
+	<link rel="stylesheet" href="../../CSS3/hl_clang.css" type="text/css">
+	<link rel="prev" href="../SECTION08/section08_3.html">
+	<link rel="next" href="./section09_2.html">
+	<title>Ｃ言語プログラミング入門&nbsp;-&nbsp;プログラムの部品化のための関数（2/3）</title>
+	<style type="text/css">
+	</style>
+</head>
+<body>
+<div id="container">
+	<header>
+		<p>Linux講座にようこそ。このページは「Ｃ言語プログラミング入門&nbsp;-&nbsp;第９章．プログラムの部品化のための関数」です。</p>
+		<h1>Ｃ言語プログラミング入門</h1>
+		<nav>
+			<ul>
+				<li><a href="../../index.html">ホーム</a></li>
+				<li><a href="../c_langtop.html#lbl_index">目次</a></li>
+				<li><a href="./section09_1.html">前のページ</a></li>
+				<li><a href="./section09_3.html">次のページ</a></li>
+			</ul>
+		</nav>
+	</header>
+
+	<section class="contents">
+		<h1>9. プログラムの部品化のための関数（2/3）</h1>
+		<section>
+			<h2>9.3 関数間のデータの受け渡し</h2>
+			<p>関数間のデータの受け渡しは前のページで簡単に説明した通り、通常、引数と返り値を使用します。このうち、引数を使ったデータの受け渡しについては２つの方法が有ります。ここでは主に、引数を使ったデータの受け渡しについて説明します。</p>
+			<section>
+				<h3 id="lbl_call_value">9.3.1 値をコピーして渡す</h3>
+				<figure class="left-box myphoto">
+					<dl>
+						<dt><img src="../IMAGES/sec09_2.jpg" alt="値渡し（call by value）"></dt>
+						<dd>【図９-２】値渡し（call by value）</dd>
+					</dl>
+				</figure>
+				<p>引数を使ったデータの受け渡しの１つ目は、図9-2に示す<strong>値渡し</strong>（call by value）と呼ばれている方法です。前ページの例題プログラムは全て値渡しを使っています。</p>
+				<p>main関数でfunc関数を呼び出していますが、実引数として、変数para1とpara2を指定しています。そうすると、この２つの変数の値がfunc関数の仮引数用の変数arg1とarg2に<strong>コピー</strong>されます。これにより、変数para1とpara2の値が変数arg1とarg2に渡っていったことになります。</p>
+				<p>この方法の利点は実引数と仮引数がまったく別の変数になりますので、func関数で仮引数の変数arg1の値を変更しても、main関数の実引数の変数para1の値は影響を受けません。他の関数からの影響を少なくできますので、変数の誤操作による不良が少なくなる可能性が有ります。ただし、func関数からmain関数に引数を使って値を返すことは出来ませんので、値を返したい場合は返り値を使うしか方法はありません。</p>
+				<p>返り値はreturn文で簡単に返せますが、<strong>返せる値は１つだけ</strong>です。</p>
+			</section>
+			<section>
+				<h3 id="lbl_call_reference">9.3.2 値をポインタで渡す</h3>
+				<figure class="left-box myphoto">
+					<dl>
+						<dt><img src="../IMAGES/sec09_3.jpg" alt="参照渡し（call by reference）"></dt>
+						<dd>【図９-３】参照渡し（call by reference）</dd>
+					</dl>
+				</figure>
+				<p>引数を使ったデータの受け渡しの２つ目は、図9-3に示す<strong>参照渡し</strong>（call by reference）と呼ばれている方法です。</p>
+				<p>func関数の呼び出しで実引数として変数para1とpara2の<strong>先頭アドレス</strong>を指定しています。（アドレス演算子（&amp;）を使っていることに注目してください。）</p>
+				<p><code>func(<strong>&amp;</strong>para1, <strong>&amp;</strong>para2);</code></p>
+				<p>一方、func関数の仮引数の変数arg1とarg2は<strong>ポインタ変数</strong>として宣言しています。</p>
+				<p><code>int func(int <strong>*</strong>arg1, int <strong>*</strong>arg2)</code></p>
+				<p>これにより、実引数の変数para1とpara2の先頭アドレスが仮引数の変数arg1とarg2にコピーされて、間接的に変数para1とpara2の値がfunc関数に渡っていったことになります。func関数での変数para1とpara2の値の操作は間接参照演算子（*）を使って、次のように行います。</p>
+				<div class="source-code" style="clear: left;">
+<pre><code>v1 = *arg1; <strong>← 参照（変数para1の値を変数v1に代入します）</strong>
+*arg1 = *arg2 + 10; <strong>← 更新（変数para2の値に10を加算した結果を変数para1に代入します）</strong></code></pre>
+				</div>
+				<p>参照渡しの場合、実引数の参照だけでなく更新も行うことが出来ます。更新が出来るということは呼出し元に値を返すことが出来るということになります。参照渡しの利点は引数を使って複数の値を呼び出し元に返すことが出来るということです。ただし、変数の誤操作による不良が発生する可能性が有りますので、注意して使ってください。</p>
+				<p>参照渡しは例題プログラムで既に使っています。scanf関数で入力する場合、入力データを受け取る変数（実引数）はアドレス演算子を指定していましたが、これはscanf関数からデータを返してもらうために参照渡しをしているためです。</p>
+			</section>
+			<section>
+				<h3>9.3.3 配列の受け渡し</h3>
+				<figure class="left-box myphoto">
+					<dl>
+						<dt><img src="../IMAGES/sec09_4.jpg" alt="配列の受け渡し"></dt>
+						<dd>【図９-４】配列の受け渡し</dd>
+					</dl>
+				</figure>
+				<p>配列名はその配列の先頭アドレスを値としてもつポインタの定数ですので、実引数に配列名を指定すると、参照渡しになります。従って、呼び出された関数から呼び出し元の配列の更新が出来ます。</p>
+				<p>図9-4ではmain関数に配列a_paraが有り、func関数の呼び出しで実引数に配列名のa_paraを指定しています。</p>
+				<p><code>func(a_para);</code> <strong>← a_paraは配列です</strong></p>
+				<p>これにより、配列a_paraの先頭アドレスがfunc関数の仮引数a_argにコピーされます。a_argは配列として宣言していますので、添字を使って操作が可能です。</p>
+				<div class="source-code" style="clear: left;">
+<pre><code>v1 = a_arg[1]; <strong>← 参照（配列a_paraの２番目の要素の値を変数v1に代入します）</strong>
+a_arg[2] = v1; <strong>← 更新（変数v1の値を配列a_paraの３番目の要素に代入します）</strong></code></pre>
+				</div>
+				<p>また、間接参照演算子（*）を使って、参照・更新を行うこともできます。（こちらの方法を使う場合は仮引数の宣言もポインタで行った方がプログラムが理解しやすくなるでしょう）</p>
+				<div class="source-code">
+<pre><code>v1 = *(a_arg + 1); <strong>← 参照（配列a_paraの２番目の要素の値を変数v1に代入します）</strong>
+*(a_arg + 2) = v1; <strong>← 更新（変数v1の値を配列a_paraの３番目の要素に代入します）</strong></code></pre>
+				</div>
+				<p>なお、実引数に配列の１要素だけを指定する場合は値渡しになります。ちょっとした違いですがインターフェース上は大きく異なりますので注意して下さい。</p>
+				<div class="source-code">
+<pre><code>/* main関数のfunc関数の呼出し*/
+func(a_para[0]); <strong>← 実引数として配列a_paraの先頭要素の値を指定しています</strong>
+
+/* func関数の定義 */
+int func(int arg1) <strong>← 実引数の値をint型の変数として受け取ります</strong></code></pre>
+				</div>
+			</section>
+			<section>
+				<h3>9.3.4 例題</h3>
+				<section>
+					<h4>例題１</h4>
+					<p>肥満度(BMI)と、その値の範囲が正常か否かを出力するプログラムです。CalcBmi関数はdouble型の体重と身長を引数として受け取り、肥満度を返り値として返すと共に、正常か否かを引数で返します。</p>
+					<div class="source-code">
+						<div class="c"><ol><li class="li1"><div class="de1"><span class="co2">#include &lt;stdio.h&gt;</span></div></li>
+						<li class="li1"><div class="de1"><span class="kw4">int</span> main<span class="br0">&#40;</span><span class="kw4">void</span><span class="br0">&#41;</span></div></li>
+						<li class="li1"><div class="de1"><span class="br0">&#123;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">double</span> &nbsp;weight<span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">double</span> &nbsp;height<span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">double</span> &nbsp;bmi<span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">char</span> &nbsp; &nbsp;judge<span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">int</span> &nbsp; &nbsp; return_code<span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="coMULTI">/* CalcBmi関数のプロトタイプ宣言 */</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">double</span> CalcBmi<span class="br0">&#40;</span><span class="kw4">double</span> BmiWeight<span class="sy0">,</span> <span class="kw4">double</span> BmiHeifht<span class="sy0">,</span> <span class="kw4">char</span> <span class="sy0">*</span>BmiJudge<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp;</div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;肥満度(BMI)の計算を行います<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;体重(kg)と身長(cm)を入力してください ==&gt; &quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">scanf</span><span class="br0">&#40;</span><span class="st0">&quot;%lf%lf&quot;</span><span class="sy0">,</span> <span class="sy0">&amp;</span>weight<span class="sy0">,</span> <span class="sy0">&amp;</span>height<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp;</div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; bmi <span class="sy0">=</span> CalcBmi<span class="br0">&#40;</span>weight<span class="sy0">,</span> height<span class="sy0">,</span> <span class="sy0">&amp;</span>judge<span class="br0">&#41;</span><span class="sy0">;</span> &nbsp; &nbsp; <span class="coMULTI">/* 肥満度(BMI)を返り値として取得 */</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">if</span><span class="br0">&#40;</span>bmi <span class="sy0">&gt;</span> <span class="nu16">0.0</span><span class="br0">&#41;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;肥満度は%.2fです。&quot;</span><span class="sy0">,</span> bmi<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">switch</span><span class="br0">&#40;</span>judge<span class="br0">&#41;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">case</span> <span class="st0">'n'</span><span class="sy0">:</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;正常です。<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw2">break</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">case</span> <span class="st0">'l'</span><span class="sy0">:</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;低すぎます。<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw2">break</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">case</span> <span class="st0">'h'</span><span class="sy0">:</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;高すぎます。<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw2">break</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">default</span><span class="sy0">:</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; return_code <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">else</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;入力した値が不当です<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; return_code <span class="sy0">=</span> <span class="nu0">1</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp;</div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">return</span> return_code<span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1"><span class="br0">&#125;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp;</div></li>
+						<li class="li1"><div class="de1"><span class="coMULTI">/* 体重と身長を元に肥満度(BMI)の計算を行iい、正常かどうかの判定を行う*/</span></div></li>
+						<li class="li1"><div class="de1"><span class="kw4">double</span> CalcBmi<span class="br0">&#40;</span><span class="kw4">double</span> pWeight<span class="sy0">,</span> <span class="kw4">double</span> pHeight<span class="sy0">,</span> <span class="kw4">char</span> <span class="sy0">*</span>pJudge<span class="br0">&#41;</span></div></li>
+						<li class="li1"><div class="de1"><span class="br0">&#123;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">double</span> &nbsp;bmi<span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp;</div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="coMULTI">/* 体重と身長の値をチェック */</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">if</span> <span class="br0">&#40;</span>pWeight <span class="sy0">&gt;</span> <span class="nu16">0.0</span> <span class="sy0">&amp;&amp;</span> pHeight <span class="sy0">&gt;</span> <span class="nu16">0.0</span><span class="br0">&#41;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* 身長をセンチメートルからメートルに変換 */</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; pHeight <span class="sy0">=</span> pHeight <span class="sy0">/</span> <span class="nu16">100.0</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* 肥満度(BMI) = 体重(kg) / 身長(m) / 身長(m) */</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; bmi <span class="sy0">=</span> pWeight <span class="sy0">/</span> pHeight <span class="sy0">/</span> pHeight<span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* 肥満度が18.5〜25.5の範囲であれば正常 */</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">if</span><span class="br0">&#40;</span>bmi <span class="sy0">&gt;=</span> <span class="nu16">18.5</span> <span class="sy0">&amp;&amp;</span> bmi <span class="sy0">&lt;=</span> <span class="nu16">25.0</span><span class="br0">&#41;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="sy0">*</span>pJudge <span class="sy0">=</span> <span class="st0">'n'</span><span class="sy0">;</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* 正常 */</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">else</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">if</span><span class="br0">&#40;</span>bmi <span class="sy0">&gt;</span> <span class="nu16">25.0</span><span class="br0">&#41;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="sy0">*</span>pJudge <span class="sy0">=</span> <span class="st0">'h'</span><span class="sy0">;</span> &nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* 高い */</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">else</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="sy0">*</span>pJudge <span class="sy0">=</span> <span class="st0">'l'</span><span class="sy0">;</span> &nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* 低い */</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">else</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; bmi <span class="sy0">=</span> <span class="nu16">0.0</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="sy0">*</span>pJudge <span class="sy0">=</span> <span class="st0">' '</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp;</div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">return</span> bmi<span class="sy0">;</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="coMULTI">/* 肥満度(BMI)を返り値として返す */</span></div></li>
+						<li class="li1"><div class="de1"><span class="br0">&#125;</span></div></li>
+						</ol></div>
+					</div>
+					<div class="exe-samp">
+<pre><samp>$ <kbd>./ex09_4.prg</kbd>
+肥満度(BMI)の計算を行います
+体重(kg)と身長(cm)を入力してください ==&gt; <kbd>71.5 174.5</kbd>
+肥満度は23.48です。正常です。
+$
+$ <kbd>./ex09_4.prg</kbd>
+肥満度(BMI)の計算を行います
+体重(kg)と身長(cm)を入力してください ==&gt; <kbd>71.5 163.5</kbd>
+肥満度は26.75です。高すぎます。
+$</samp></pre>
+					</div>
+					<dl>
+						<dt>10行目</dt>
+							<dd>CalcBmi関数の第３引数をポインタとして宣言します。つまり、参照渡しになります。</dd>
+						<dt>16行目</dt>
+							<dd>CalcBmi関数の第３引数は参照渡しですので、変数judgeにアドレス演算子（&amp;）を付けることにより、変数judgeの先頭アドレスを指定します。</dd>
+						<dt>20行目</dt>
+							<dd>CalcBmi関数により、変数judgeに肥満度の値が正常か否かが文字として設定されていますので、その文字により結果を出力します。（変数judgeの値が'n'は正常、'l'は低すぎる、'h'は高すぎることを表します）</dd>
+						<dt>46行目</dt>
+							<dd>CalcBmi関数の第３引数は参照渡しですので、ポインタとして宣言します。</dd>
+						<dt>60、66、70行目</dt>
+							<dd>第３引数のpJudgeに間接参照演算子（*）を付けることにより、呼び出し元の変数judgeに肥満度の値が正常か否かの文字を設定します。</dd>
+					</dl>
+				</section>
+				<section>
+					<h4>例題２</h4>
+					<p>入力した半角文字列をStrRev関数で逆順にして出力します。StrRev関数は引数で指定した文字列を逆順にして返すと共に、文字数を返り値として返します。（入力文字は半角で100文字以下とし、スペースやタブ等の空白文字は含みません）</p>
+					<div class="source-code">
+						<div class="c"><ol><li class="li1"><div class="de1"><span class="co2">#include &lt;stdio.h&gt;</span></div></li>
+						<li class="li1"><div class="de1"><span class="kw4">int</span> main<span class="br0">&#40;</span><span class="kw4">void</span><span class="br0">&#41;</span></div></li>
+						<li class="li1"><div class="de1"><span class="br0">&#123;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">char</span> &nbsp; &nbsp;a_rev<span class="br0">&#91;</span><span class="nu0">101</span><span class="br0">&#93;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">int</span> &nbsp; &nbsp; length<span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">int</span> &nbsp; &nbsp; return_code<span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="coMULTI">/* StrRev関数のプロトタイプ宣言 */</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">int</span> StrRev<span class="br0">&#40;</span><span class="kw4">char</span> Rev<span class="br0">&#91;</span><span class="br0">&#93;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp;</div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;文字列を入力してください ==&gt; &quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">scanf</span><span class="br0">&#40;</span><span class="st0">&quot;%s&quot;</span><span class="sy0">,</span> a_rev<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp;</div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; length <span class="sy0">=</span> StrRev<span class="br0">&#40;</span>a_rev<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">if</span><span class="br0">&#40;</span>length <span class="sy0">&gt;</span> <span class="nu0">0</span><span class="br0">&#41;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;逆順：%s<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> a_rev<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; return_code <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">else</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;逆順にできません<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; return_code <span class="sy0">=</span> <span class="nu0">1</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp;</div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">return</span> return_code<span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1"><span class="br0">&#125;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp;</div></li>
+						<li class="li1"><div class="de1"><span class="coMULTI">/* 引数の文字列を逆順にして、文字数を返す */</span></div></li>
+						<li class="li1"><div class="de1"><span class="kw4">int</span> StrRev<span class="br0">&#40;</span><span class="kw4">char</span> pRev<span class="br0">&#91;</span><span class="br0">&#93;</span><span class="br0">&#41;</span></div></li>
+						<li class="li1"><div class="de1"><span class="br0">&#123;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">int</span> &nbsp; &nbsp; cur_index<span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">int</span> &nbsp; &nbsp; rev_index<span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">int</span> &nbsp; &nbsp; length<span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">char</span> &nbsp; &nbsp;save_char<span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp;</div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="coMULTI">/* 文字列の最後の文字を探す */</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">for</span><span class="br0">&#40;</span>rev_index <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; pRev<span class="br0">&#91;</span>rev_index<span class="br0">&#93;</span> <span class="sy0">!=</span> <span class="st0">'<span class="es5">\0</span>'</span> <span class="sy0">&amp;&amp;</span> rev_index <span class="sy0">&lt;=</span> <span class="nu0">100</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="sy0">++</span>rev_index<span class="br0">&#41;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">if</span><span class="br0">&#40;</span>rev_index <span class="sy0">&gt;=</span> <span class="nu0">1</span> <span class="sy0">&amp;&amp;</span> rev_index <span class="sy0">&lt;=</span> <span class="nu0">100</span><span class="br0">&#41;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; length <span class="sy0">=</span> rev_index<span class="sy0">;</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="coMULTI">/* 文字数設定 */</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="sy0">--</span>rev_index<span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* 文字の入れ替え */</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">for</span><span class="br0">&#40;</span>cur_index <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">;</span> cur_index <span class="sy0">&lt;</span> rev_index<span class="sy0">;</span> <span class="sy0">++</span>cur_index<span class="br0">&#41;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; save_char <span class="sy0">=</span> pRev<span class="br0">&#91;</span>cur_index<span class="br0">&#93;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; pRev<span class="br0">&#91;</span>cur_index<span class="br0">&#93;</span> <span class="sy0">=</span> pRev<span class="br0">&#91;</span>rev_index<span class="br0">&#93;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; pRev<span class="br0">&#91;</span>rev_index<span class="br0">&#93;</span> <span class="sy0">=</span> save_char<span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp;</div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="sy0">--</span>rev_index<span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">else</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; length <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp;</div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">return</span> length<span class="sy0">;</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* 文字数を返り値として返す */</span></div></li>
+						<li class="li1"><div class="de1"><span class="br0">&#125;</span></div></li>
+						</ol></div>
+					</div>
+					<div class="exe-samp">
+<pre><samp>$ <kbd>./ex09_5.prg</kbd>
+文字列を入力してください ==&gt; <kbd>HelloWorld.</kbd>
+逆順：.dlroWolleH
+$</samp></pre>
+					</div>
+					<dl>
+						<dt>8行目</dt>
+							<dd>StrRev関数のプロトタイプ宣言です。引数はchar型の配列（文字列）です</dd>
+						<dt>13行目</dt>
+							<dd>実引数に入力した文字列（配列a_rev）を指定してStrRev関数を呼び出します。逆順にした文字列は実引数に指定した配列a_revに返り、返り値として文字数が返ります。</dd>
+						<dt>29行目</dt>
+							<dd>StrRev関数の仮引数は配列で、返り値はint型です。</dd>
+						<dt>38行目</dt>
+							<dd>文字列の最後までカウントしていきます。文字数は最大100文字とします。</dd>
+						<dt>48〜50行目</dt>
+							<dd>文字列を逆順にするために、後ろの文字と入れ替えます。</dd>
+					</dl>
+				</section>
+				<section>
+					<h4>例題３</h4>
+					<p>例題２と同じ機能ですが、StrRev関数の文字列を取り扱う部分をポインタで記述しました。</p>
+					<div class="source-code">
+						<div class="c"><ol><li class="li1"><div class="de1"><span class="co2">#include &lt;stdio.h&gt;</span></div></li>
+						<li class="li1"><div class="de1"><span class="kw4">int</span> main<span class="br0">&#40;</span><span class="kw4">void</span><span class="br0">&#41;</span></div></li>
+						<li class="li1"><div class="de1"><span class="br0">&#123;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">char</span> &nbsp; &nbsp;a_rev<span class="br0">&#91;</span><span class="nu0">101</span><span class="br0">&#93;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">int</span> &nbsp; &nbsp; length<span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">int</span> &nbsp; &nbsp; return_code<span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="coMULTI">/* StrRev関数のプロトタイプ宣言 */</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">int</span> StrRev<span class="br0">&#40;</span><span class="kw4">char</span> Rev<span class="br0">&#91;</span><span class="br0">&#93;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp;</div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;文字列を入力してください ==&gt; &quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">scanf</span><span class="br0">&#40;</span><span class="st0">&quot;%s&quot;</span><span class="sy0">,</span> a_rev<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp;</div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; length <span class="sy0">=</span> StrRev<span class="br0">&#40;</span>a_rev<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">if</span><span class="br0">&#40;</span>length <span class="sy0">&gt;</span> <span class="nu0">0</span><span class="br0">&#41;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;逆順：%s<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> a_rev<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; return_code <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">else</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;逆順にできません<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; return_code <span class="sy0">=</span> <span class="nu0">1</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp;</div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">return</span> return_code<span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1"><span class="br0">&#125;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp;</div></li>
+						<li class="li1"><div class="de1"><span class="coMULTI">/* 引数の文字列を逆順にして、文字数を返す */</span></div></li>
+						<li class="li1"><div class="de1"><span class="kw4">int</span> StrRev<span class="br0">&#40;</span><span class="kw4">char</span> <span class="sy0">*</span>pRev<span class="br0">&#41;</span></div></li>
+						<li class="li1"><div class="de1"><span class="br0">&#123;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">char</span> &nbsp; &nbsp;<span class="sy0">*</span>p_cur<span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">char</span> &nbsp; &nbsp;<span class="sy0">*</span>p_rev<span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">int</span> &nbsp; &nbsp; length <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">char</span> &nbsp; &nbsp;save_char<span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp;</div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="coMULTI">/* 文字列の最後の文字を探す */</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">for</span><span class="br0">&#40;</span>p_rev <span class="sy0">=</span> pRev<span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="sy0">*</span>p_rev <span class="sy0">!=</span> <span class="st0">'<span class="es5">\0</span>'</span> <span class="sy0">&amp;&amp;</span> p_rev <span class="sy0">&lt;=</span> <span class="br0">&#40;</span>pRev <span class="sy0">+</span> <span class="nu0">100</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="sy0">++</span>p_rev<span class="br0">&#41;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="sy0">++</span>length<span class="sy0">;</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="coMULTI">/* 文字数カウント */</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">if</span><span class="br0">&#40;</span>p_rev <span class="sy0">&gt;</span> pRev <span class="sy0">&amp;&amp;</span> p_rev <span class="sy0">&lt;=</span> <span class="br0">&#40;</span>pRev <span class="sy0">+</span> <span class="nu0">100</span><span class="br0">&#41;</span><span class="br0">&#41;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="sy0">--</span>p_rev<span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* 文字の入れ替え */</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">for</span><span class="br0">&#40;</span>p_cur <span class="sy0">=</span> pRev<span class="sy0">;</span> p_cur <span class="sy0">&lt;</span> p_rev<span class="sy0">;</span> <span class="sy0">++</span>p_cur<span class="br0">&#41;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; save_char <span class="sy0">=</span> <span class="sy0">*</span>p_cur<span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="sy0">*</span>p_cur <span class="sy0">=</span> <span class="sy0">*</span>p_rev<span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="sy0">*</span>p_rev <span class="sy0">=</span> save_char<span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp;</div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="sy0">--</span>p_rev<span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">else</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; length <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp;</div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">return</span> length<span class="sy0">;</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* 文字数を返り値として返す */</span></div></li>
+						<li class="li1"><div class="de1"><span class="br0">&#125;</span></div></li>
+						</ol></div>
+					</div>
+					<dl>
+						<dt>29行目</dt>
+							<dd>仮引数をchar型のポインタで宣言します。</dd>
+						<dt>37行目</dt>
+							<dd>添字の代わりにポインタを使います。以降、すべてポインタの演算を使います。</dd>
+					</dl>
+				</section>
+			</section>
+		</section>
+	</section>
+
+	<footer>
+		<nav>
+			<ul>
+				<li><a href="../../index.html">ホーム</a></li>
+				<li><a href="../c_langtop.html#lbl_index">目次</a></li>
+				<li><a href="./section09_1.html">前のページ</a></li>
+				<li><a href="./section09_3.html">次のページ</a></li>
+			</ul>
+		</nav>
+		<p id="footer-author">更新日：<time datetime="2018-12-12">2018年12月12日</time> Merry</p>
+	</footer>
+</div>
+</body>
+</html>

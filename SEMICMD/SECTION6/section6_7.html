@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initialscale=1.0">
+	<meta name="robots" content="INDEX,FOLLOW">
+	<meta name="keywords" content="シェルスクリプト,関数,declare,typeset,local,有効範囲,グローバル,ローカル,配列">
+	<meta name="description" content="シェルスクリプトでの関数の使用方法をご紹介します。ここでは変数の宣言と有効範囲について説明します。">
+	<meta name="author" content="T.Hagiwara">
+	<link rel="stylesheet" href="../../CSS3/seminar.css" type="text/css">
+	<link rel="prev" href="./section6_6.html">
+	<link rel="next" href="./section6_8.html">
+	<title>Linuxの使い方 - シェルスクリプトの作り方（7/8）</title>
+	<style type="text/css">
+	</style>
+</head>
+<body>
+<div id="container">
+	<header>
+		<p>Linux講座にようこそ。このページは「Linuxの使い方&nbsp;-&nbsp;第６章&nbsp;シェルスクリプトの作り方」です。</p>
+		<h1>Linuxの使い方</h1>
+		<nav>
+			<ul>
+				<li><a href="../../index.html">ホーム</a></li>
+				<li><a href="../cmdtop.html#lbl_index">目次</a></li>
+				<li><a href="./section6_6.html">前のページ</a></li>
+				<li><a href="./section6_8.html">次のページ</a></li>
+			</ul>
+		</nav>
+	</header>
+
+	<section class="contents">
+		<h1>6. シェルスクリプトの作り方（7/8）</h1>
+		<section>
+			<!-- 関数 -->
+			<h2 id="func">6.8 関数（1/2）</h2>
+			<p>少し大きめなシェルスクリプトになりますと、複数の機能を持っています。このようなものを１つのファイルとして作りますと、次のような不具合が考えられます。</p>
+			<ul>
+				<li>内容が整理されていないものになりがちで、可読性が悪くなる可能性が大きくなります。</li>
+				<li>機能の変更や追加がしにくくなります。</li>
+				<li>不良を作り込みやすく、不良があっても対策しにくくなります。</li>
+			</ul>
+			<p>これらの対応策として、機能毎のモジュール（部品）化が考えられます。この部品がシェルスクリプトの場合は<strong>関数</strong>になります。</p>
+			<p>関数はシェルスクリプト中に記述することも出来ますし、関数だけを別のファイルに記述しておくことも出来ます。また、特別な使い方として、aliasコマンドで定義したコマンドは引数の指定が出来ませんが、関数の場合は出来ますので、aliasコマンドの拡張機能的に使うことも出来ます。</p>
+			<p>ここでは次の事項に付いて説明します。</p>
+			<ul>
+				<li><a href="#val">変数の宣言と有効範囲</a></li>
+				<li><a href="./section6_8.html#func_def">関数宣言</a></li>
+				<li><a href="./section6_8.html#func_load">関数宣言の分離</a></li>
+			</ul>
+			<section>
+				<!-- 変数の宣言と有効範囲 -->
+				<h3 id="val">6.8.1 変数の宣言と有効範囲</h3>
+				<p>変数は必要なときに名前を指定してすぐに使うことが出来ますが、この場合のデータは文字データとして変数に格納されます。一方、変数は明示的に宣言してから使用することも出来ますが、この場合はいろいろな属性を与えることが出来ます。</p>
+				<p>変数の宣言は<strong>declare</strong>またはtypesetコマンド、及び<strong>local</strong>コマンドで行います。declareコマンドには次のようなオプションがあります。</p>
+				<table class="simple-table">
+					<caption>【表6-16】 declareコマンドのオプション一覧</caption>
+					<tr><th>オプション</th><th>意味</th></tr>
+					<tr><td>-a</td><td>変数を配列として作成します。</td></tr>
+					<tr><td>-i</td><td>変数を整数型（integer）として作成します。</td></tr>
+					<tr><td>-r</td><td>変数を参照のみ可能（read only）として作成します。</td></tr>
+					<tr><td>-f</td><td>定義済関数を表示します。</td></tr>
+					<tr><td>-F</td><td>定義済関数名を表示します。</td></tr>
+				</table>
+				<p>配列は連続した変数領域で、同じ種類のデータを複数扱うときに使用します。つまり、１つの配列に複数のデータを格納できるということです。配列中の個々のデータを取り扱うときには何番目のデータなのかを指定します。この番号を<strong>添字</strong>と呼んでおり、０から始まる整数で指定します。</p>
+				<p>-iオプションを付けて整数型として宣言した変数は整数演算用として宣言したことになりますので、「$(( 式 ))」の形式でなくても「式」だけで演算が出来ます。ただし、演算子の前後に空白を入れてはいけません。また、値の参照のための$も省略可能です。さらに、代入する値も整数型とみなしますので、代入する変数が文字型の場合は整数型に変換されます。（例題２をご覧ください）</p>
+				<p>read onlyとした場合は後からその変数に値を設定することは出来ませんので、宣言時に値を与えておきます。また、read onlyの解除は「<strong>+r</strong>」オプションで再宣言を行えば可能です。</p>
+				<figure class="left-box myphoto">
+					<dl>
+						<dt><img src="../IMAGES/sec06_2.jpg" alt="変数の有効範囲"></dt>
+						<dd>【図６-２】</dd>
+						<dd>変数の有効範囲</dd>
+					</dl>
+				</figure>
+				<p>変数には<strong>有効範囲</strong>があります。つまり、シェルスクリプト中のどこでも使えるもの（<strong>グローバル変数</strong>）と、関数内だけで使えるもの（<strong>ローカル変数</strong>）です。関数内でlocalコマンドで宣言しますとローカル変数になります。それ以外の変数はグローバル変数です。また、位置パラメータはローカル変数です。</p>
+				<p>図6-2で、（1）はシェルスクリプト内全体に有効（グローバル変数）を、（2）は関数の外側、（3）は関数内で有効（ローカル変数）を表しています。（1）に該当する変数はval00、val01、val03、val04で、（2）に該当する変数は$2で、（3）に該当する変数はval02と$1です。</p>
+				<aside>
+					<h4>補足</h4>
+					<p>declareコマンドとtypesetコマンドは機能的にはほとんど同じですが、現在はdeclareコマンドが一般的に使われているようです。当講座ではtypesetコマンドの説明は行ないません。</p>
+				</aside>
+				<section>
+					<h4>形式</h4>
+					<p>配列の宣言で、<code>-i</code>や<code>-r</code>オプションの指定もできます。また、localコマンドで配列の宣言も出来ますし、<code>-i</code>や<code>-r</code>オプションの指定もできます。</p>
+					<div class="form-exp">
+						※&nbsp;declareコマンド<br>
+						declare -a 配列名<br>
+						declare -a 配列名[要素数]<strong> ← データ格納数（要素数）を指定します。要素数は[]で括ります</strong><br>
+						declare -a 配列名=(値１ 値２ … 値n)<strong> ← 初期値を指定します。値は空白で区切ります</strong><br>
+						<br>
+						declare -i 変数名<br>
+						declare -i 変数名=値<strong> ← 値は整数を指定します</strong><br>
+						<br>
+						declare -r 変数名=値<strong> ← 初期値を指定します。後からの設定は出来ません</strong><br>
+						<br>
+						declare -f<strong> ← 定義してある関数全ての内容を表示します</strong><br>
+						declare -f 関数名<strong> ← 指定した関数の内容のみ表示します</strong><br>
+						declare -F<strong> ← 関数名のみ表示します</strong><br>
+						<br>
+						※&nbsp;配列への値の設定<br>
+						配列名[添字]=値<strong> ← 添字は整数値で、先頭の要素は０です</strong><br>
+						配列名=(値１ 値２ … 値n)<strong> ← 複数の値を設定できます</strong><br>
+						<br>
+						※&nbsp;配列の値の参照<br>
+						${配列名[添字]}<strong> ← 添字で指定した要素の値のみを参照します</strong><br>
+						${配列名[*]}<strong> ← 全ての要素の値を参照します</strong><br>
+						${#配列名[添字]}<strong> ← 添字で指定した要素の文字数を参照します</strong><br>
+						${#配列名[*]}<strong> ← データ数を参照します</strong><br>
+						<br>
+						※&nbsp;localコマンド（-a、-i、-rオプションの指定もできます）<br>
+						local 変数名<br>
+						local 変数名=値
+					</div>
+				</section>
+				<section>
+					<h4>例題</h4>
+					<section>
+						<h5>例題１</h5>
+						<p>配列の使い方を示します。</p>
+						<div class="exe-samp">
+<pre><samp>$ <kbd>declare -a array1</kbd><strong> ← 配列の宣言です</strong>
+$ <kbd>array1[0]=merry</kbd><strong> ← 配列要素に値を設定します</strong>
+$ <kbd>array1[1]=ken</kbd>
+$ <kbd>array1[2]=kuma</kbd>
+$ <kbd>echo ${array1[1]}</kbd><strong> ← ２番目の要素の値を表示します</strong>
+ken
+$ <kbd>echo ${array1[*]}</kbd><strong> ← 全ての要素の値を表示します</strong>
+merry ken kuma
+$ <kbd>echo ${#array1[2]}</kbd><strong> ← ３番目の要素の文字数を表示します</strong>
+4
+$ <kbd>echo ${#array1[*]}</kbd><strong> ← データが設定されている要素の数を表示します</strong>
+3
+$</samp></pre>
+						</div>
+					</section>
+					<section>
+						<h5>例題２</h5>
+						<p>整数型とRead only変数の使い方を示します。</p>
+						<div class="exe-samp">
+<pre><samp>$ <kbd>declare -i v01=10</kbd><strong> ← 整数型変数の宣言です</strong>
+$ <kbd>declare -i v02=20</kbd>
+$ <kbd>declare -i ans</kbd>
+$
+$ <kbd>char=$(( $v01 + $v02 ))</kbd><strong> ← char変数は宣言無しのため文字型です</strong>
+$ <kbd>echo $char</kbd>
+30
+$ <kbd>char=$(( v01 + v02 ))</kbd><strong> ← 変数の値の参照のための$は省略可能です</strong>
+$ <kbd>echo $char</kbd>
+30
+$ <kbd>char=$v01+$v02</kbd><strong> ← char変数は文字型のため「$v01+$v02」は文字列として代入されてしまいます</strong>
+$ <kbd>echo $char</kbd>
+10+20
+$ <kbd>ans=$v01+$v02</kbd><strong> ← ans変数は整数型のため「$v01+$v02」は整数演算となります</strong>
+$ <kbd>echo $ans</kbd>
+30
+$ <kbd>ans=v01+v02</kbd><strong> ← 変数の値の参照のための$は省略可能です</strong>
+$ <kbd>echo $ans</kbd>
+30
+$
+$ <kbd>char="200"</kbd><strong> ← 文字型のchar変数に文字の200を代入します</strong>
+$ <kbd>ans=char+10</kbd><strong> ← ans変数は整数型のため、char変数の値は整数型に変換されます</strong>
+$ <kbd>echo $ans</kbd>
+210
+$
+$ <kbd>declare -r v03</kbd><strong> ← Read only変数の宣言です</strong>
+$ <kbd>v03=merry</kbd>
+bash: v03: readonly variable<strong> ← 値の代入は出来ません</strong>
+$
+$ <kbd>declare -r v04=ken</kbd><strong> ← 初期値として値を設定します</strong>
+$ <kbd>echo $v04</kbd>
+ken
+$ <kbd>v04=merry</kbd>
+bash: v04: readonly variable
+$</samp></pre>
+						</div>
+					</section>
+				</section>
+			</section>
+		</section>
+	</section>
+
+	<footer>
+		<nav>
+			<ul>
+				<li><a href="../../index.html">ホーム</a></li>
+				<li><a href="../cmdtop.html#lbl_index">目次</a></li>
+				<li><a href="./section6_6.html">前のページ</a></li>
+				<li><a href="./section6_8.html">次のページ</a></li>
+			</ul>
+		</nav>
+		<p id="footer-author">更新日：<time datetime="2018-02-16">2018年02月16日</time> Merry</p>
+	</footer>
+</div>
+</body>
+</html>

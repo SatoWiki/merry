@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initialscale=1.0">
+	<meta name="robots" content="INDEX,FOLLOW">
+	<meta name="keywords" content="ログイン,ログアウト,再起動,停止,シャットダウン,konsole,ターミナル・エミュレータ,プロンプト,入力促進記号,コマンド名,引数">
+	<meta name="description" content="Linuxコマンドを使用するための基本的な事項を説明します。">
+	<meta name="author" content="T.Hagiwara">
+	<link rel="stylesheet" href="../../CSS3/seminar.css" type="text/css">
+	<link rel="prev" href="../cmdtop.html">
+	<link rel="next" href="./section1_2.html">
+	<title>Linuxの使い方&nbsp;-&nbsp;コマンド使用の基礎知識（1/2）</title>
+	<style type="text/css">
+	</style>
+</head>
+<body>
+<div id="container">
+	<header>
+		<p>Linux講座にようこそ。このページは「Linuxの使い方&nbsp;-&nbsp;第１章&nbsp;コマンド使用の基礎知識」です。</p>
+		<h1>Linuxの使い方</h1>
+		<nav>
+			<ul>
+				<li><a href="../../index.html">ホーム</a></li>
+				<li><a href="../cmdtop.html#lbl_index">目次</a></li>
+				<li><a href="./section1_2.html">次のページ</a></li>
+			</ul>
+		</nav>
+	</header>
+
+	<section class="contents">
+		<h1>1. コマンド使用の基礎知識（1/2）</h1>
+		<p>Linuxを使うにはLinuxをコンピュータに組み込む（インストール）必要が有りますし、インストールが終って実際に使うときにはログインと呼ぶ操作が必要です。ここでは、実際にコマンドを使う前に必要となるログインとログアウトやコマンドの一般形式などを説明します。</p>
+		<p>また、コマンドとはどういうものかを実感して頂くために、比較的使用頻度が高くて、かつ使い方が簡単な次の４種類のコマンドをご紹介しますので、実際に使ってみてください。</p>
+		<ul>
+			<li><a href="./section1_2.html#clear_cmd">clear</a></li>
+			<li><a href="./section1_2.html#date_cmd">date</a></li>
+			<li><a href="./section1_2.html#man_cmd">man</a></li>
+			<li><a href="./section1_2.html#uname_cmd">uname</a></li>
+		</ul>
+		<section>
+			<h2 id="kiso">1.1 コマンドを使う前に</h2>
+			<section>
+				<h3 id="lbl_login">1.1.1 ログインとログアウト</h3>
+				<p>Linuxの場合はPCの電源を入れてシステムを起動してもすぐには使えません。使用するためにはログイン操作が必要で、それには<strong>ユーザー名</strong>と<strong>パスワード</strong>が必要ですので、予め登録しておいて下さい。登録はインストールのときにも出来ますし、後から行うことも出来ます。登録方法は「システム管理」の<a href="../SECTION7/section7_2.html">「ユーザー管理」</a>の項を参照して下さい。</p>
+				<p>PCの電源を入れてしばらくすると、図1-1のようなログイン画面が表示されますので、そこにユーザー名とパスワードを入力してEnterキーを押します。この操作がログイン操作になります。入力したユーザー名とパスワードに誤りが無ければ図1-2のようなデスクトップ環境が開き、システムを使えるようになります。</p>
+				<p>なお、ログイン画面とディスクトップ環境のデザインはディストリビューションやデスクトップ環境の種類により異なります。図1-1と図1-2はあくまでも一つの例となります。</p>
+				<figure class="gallery-box myphoto">
+					<dl>
+						<dt><img src="../IMAGES/sec01_1.jpg" alt="ログイン画面"></dt>
+						<dd>【図１-１】ログイン画面</dd>
+						<dd>システムが正常に起動できると、このようなログイン画面になります</dd>
+					</dl>
+					<dl>
+						<dt><img src="../IMAGES/sec01_2.jpg" alt="ディスクトップ（KDE）環境"></dt>
+						<dd>【図１-２】ディスクトップ（KDE）環境</dd>
+						<dd>ログイン後、スタートボタンを押してアプリケーションランチャーを表示した状態です</dd>
+					</dl>
+				</figure>
+				<p style="clear: left;">作業を終了するためにはログアウト操作を行います。ログアウトの方法はいろいろありますが、ここでは次の２つの方法をご紹介します。ただし、この方法はディスクトップ環境の種類やバージョンによって異なりますので注意して下さい。あくまでもKDEの場合です。以降、説明する操作方法も全てKDEの場合です。</p>
+				<div class="form-exp">
+					<ul>
+						<li>パネルの「アプリケーションランチャー」→「終了」→「ログアウト」を選択します。</li>
+						<li>ウィンドウが表示されていないデスクトップ領域（ルートウィンドウ）で、マウスの右ボタンを押してメニューを表示して「終了...」→「ログアウト」を選択します。</li>
+					</ul>
+				</div>
+				<p>なお、「ログアウト」の他に、「再起動（コンピュータを再起動）」や「シャットダウン（コンピュータを停止）」などのメニュー項目がありますので、それらを選択することにより、システムの再起動や停止が出来ます。</p>
+				<aside>
+					<h4>補足</h4>
+					<ul>
+						<li>パネルとは、モニタ画面の一番下に表示されている帯状の領域で、各種アイコン（ウィジェット）が並んでいる部分のことです。</li>
+						<li>アプリケーションランチャーとは、パネルの左端のアイコン（スタートボタン）により表示するメニューのことで、図1-2の左下に表示しているメニューです。</li>
+					</ul>
+				</aside>
+			</section>
+			<section>
+				<h3 id="lbl_konsole">1.1.2 ターミナル・エミュレータ（konsole）</h3>
+				<figure class="left-box myphoto">
+					<dl>
+						<dt><img src="../IMAGES/sec01_3.jpg" alt="Konsoleウィンドウ"></dt>
+						<dd>【図１-３】Konsoleウィンドウ</dd>
+						<dd>起動直後で、プロンプト（入力促進記号）のみ表示されています</dd>
+					</dl>
+				</figure>
+				<p>コマンドはターミナル（端末）上で実行しますが、デスクトップ環境ではターミナルがありません。そこで、仮想的なターミナルを作成するターミナル・エミュレータと呼ぶソフトウェアを利用します。これにはいくつか種類が有りますが、KDEではKonsoleが標準のようです。</p>
+				<p>Konsoleを起動すると図1-3のようなKonsoleウィンドウが表示されますので、ここにコマンドを入力して実行します。Konsoleを起動するには次のような方法があります。</p>
+				<div class="form-exp">
+					<ul>
+						<li>「アプリケーションランチャー」→「アプリケーション」→「システム」→「ターミナル（Konsole）」を選択します。</li>
+						<li>ウィンドウが表示されていないデスクトップ領域（ルートウィンドウ）で、マウスの右ボタンを押してメニューを表示して「Konsole」を選択します。</li>
+					</ul>
+				</div>
+				<p>konsole起動直後の先頭行には<samp>[ken@localhost ~]$&nbsp;</samp>のような文字列が表示されますが、これは<strong>プロンプト</strong>（入力促進記号）と呼んでいるもので、コマンド入力が可能な状態を表しています。以降、当講座ではプロンプトを<samp>$&nbsp;</samp>（ドル記号と半角スペース）で表します。なお、プロンプトの次に白い四角形が表示されていますが、これはカーソルで、キーボードから文字を入力すると、ここに表示（エコーバック）されます。</p>
+				<p id="exit_cmd">ターミナル・エミュレータの終了はexitコマンドで行ないます。exitコマンドはプロセスを終了させるコマンドで、ターミナル・エミュレータで実行するとターミナル・エミュレータを終了させます。また、コントロールキー（Ctrlキー）とDキーを同時に押す（E.O.F入力）ことにより終了することも出来ます。</p>
+			</section>
+			<section>
+				<h3 id="lbl_cmd">1.1.3 コマンドの一般形式</h3>
+				<p>コマンドの一般形式を説明します。これは基本中の基本ですのでおぼえてください。</p>
+				<div class="form-exp">
+					$ コマンド名 引数１ 引数２ … 引数n
+				</div>
+				<div class="form-exp">
+					<dl>
+						<dt>$&nbsp;（ドル記号と半角スペース）</dt>
+						<dd>先程説明したプロンプト（入力促進記号）で、コマンド入力が可能な状態を表しています。これはシェルが表示しますので入力する必要はありません。</dd>
+						<dt>コマンド名</dt>
+						<dd>実行したいコマンドの名前を指定します。</dd>
+						<dt>引数１ 引数２ … 引数n</dt>
+						<dd>コマンドに与えるオプションを指定します。引数がない場合もあれば複数指定する場合もあります。</dd>
+					</dl>
+				</div>
+				<p>コマンド名と引数の間や引数と引数の間には、区切り記号として１個以上の空白（半角スペースやタブ）が必要です。また、引数として指定するものとして、ファイル名やコマンドに与えるオプションがあります。</p>
+				<p>オプションの形式はいろいろありますが、-（負記号）と英字を組み合わせるのが一般的です。例えば、-aや-lのような形式ですが、まとめて-alのように指定することもできます。また、--（負記号２つ）と英単語を組み合わせた形式もありますが、こちらはまとめて指定することはできませんが、オプションの意味が分かりやすいという利点があります。</p>
+				<p>当講座でのオプションの説明は、-（負記号）１個のものと２個のもので同じ意味のものは,（コンマ）で区切って併記します。（-mと--machineオプションが同じ意味の場合は「-m, --machine」のように記述します）なお、実行例は基本的には-（負記号）１個のオプションを使用します。</p>
+				<p>多くのコマンドに共通に使えるオプションとして次のものがありますが、全てのコマンドに使えるわけではありませんので注意して下さい。</p>
+				<table class="simple-table">
+					<caption>【表1-1】共通オプション</caption>
+					<tr><th>オプション</th><th>意味</th></tr>
+					<tr><td>--help</td><td>コマンドの使用方法などを表示します。</td></tr>
+					<tr><td>--version</td><td>コマンドのバージョン情報を表示します。</td></tr>
+				</table>
+				<p>コマンドを入力したらEnterキーで実行します。コマンド入力中に入力誤りに気付いたら、BackSpaceキーでカーソルを戻して再入力となります。</p>
+				<aside>
+					<h4>補足</h4>
+					<p>シェルに付いては後程詳しく説明します。ここではコマンドを解釈して実行する機能と思って頂ければよいでしょう。</p>
+				</aside>
+			</section>
+			<section>
+				<h3 id="lbl_example">1.1.4 コマンド実行例</h3>
+				<p>dateコマンドに--versionオプションを指定して実行します。</p>
+				<div class="exe-samp">
+<pre><samp>$ <kbd>date --version</kbd><strong> ← 最後にEnterキーを入力して実行します</strong>
+date (GNU coreutils) 8.27<strong> ← 以降は実行結果です</strong>
+Copyright (C) 2017 Free Software Foundation, Inc.
+ライセンス GPLv3+: GNU GPL version 3 or later &lt;http://gnu.org/licenses/gpl.html&gt;.
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+
+作者 David MacKenzie。<strong> ← ここまでが実行結果です</strong>
+$<strong> ← dateコマンドが終了し、次のコマンド入力が可能になったのでシェルがプロンプトを表示します</strong>
+</samp></pre>
+				</div>
+			</section>
+		</section>
+	</section>
+
+	<footer>
+		<nav>
+			<ul>
+				<li><a href="../../index.html">ホーム</a></li>
+				<li><a href="../cmdtop.html#lbl_index">目次</a></li>
+				<li><a href="./section1_2.html">次のページ</a></li>
+			</ul>
+		</nav>
+		<p id="footer-author">更新日：<time datetime="2017-10-26">2017年10月26日</time> Merry</p>
+	</footer>
+</div>
+</body>
+</html>

@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initialscale=1.0">
+	<meta name="robots" content="INDEX,FOLLOW">
+	<meta name="keywords" content="制御演算,繰り返し,for,while,until">
+	<meta name="description" content="シェルスクリプトでの条件判定や繰り返し処理の方法をご紹介します。ここでは繰り返しについて説明します。">
+	<meta name="author" content="T.Hagiwara">
+	<link rel="stylesheet" href="../../CSS3/seminar.css" type="text/css">
+	<link rel="stylesheet" href="../../CSS3/hl_bash.css" type="text/css">
+	<link rel="prev" href="./section6_5.html">
+	<link rel="next" href="./section6_7.html">
+	<title>Linuxの使い方 - シェルスクリプトの作り方（6/8）</title>
+	<style type="text/css">
+	</style>
+</head>
+<body>
+<div id="container">
+	<header>
+		<p>Linux講座にようこそ。このページは「Linuxの使い方&nbsp;-&nbsp;第６章&nbsp;シェルスクリプトの作り方」です。</p>
+		<h1>Linuxの使い方</h1>
+		<nav>
+			<ul>
+				<li><a href="../../index.html">ホーム</a></li>
+				<li><a href="../cmdtop.html#lbl_index">目次</a></li>
+				<li><a href="./section6_5.html">前のページ</a></li>
+				<li><a href="./section6_7.html">次のページ</a></li>
+			</ul>
+		</nav>
+	</header>
+
+	<section class="contents">
+		<h1>6. シェルスクリプトの作り方（6/8）</h1>
+		<section>
+			<!-- 制御演算 -->
+			<h2 id="cntl">6.7 制御演算（2/2）</h2>
+			<section>
+				<!-- forコマンド -->
+				<h3 id="for">6.7.4 forコマンド</h3>
+				<p>forコマンドは先頭で変数に値を設定しつつ繰り返します。設定する値が無くなったら繰り返しを終了します。</p>
+				<section>
+					<h4>形式</h4>
+					<p>変数には形式１の場合はin以降で指定した値が、形式２の場合は位置パラメータの値が設定されます。</p>
+					<div class="form-exp">
+						※&nbsp;形式１<br>
+						for 変数 in 値１ 値２ … 値n<strong> ← 変数に値１から値nを設定しつつ繰り返します</strong><br>
+						do<br>
+						&nbsp;&nbsp;コマンドリスト<br>
+						done<br>
+						<br>
+						※&nbsp;形式２<br>
+						for 変数<strong> ← 変数に位置パラメータの値を設定しつつ繰り返します</strong><br>
+						do<br>
+						&nbsp;&nbsp;コマンドリスト<br>
+						done
+					</div>
+				</section>
+				<section>
+					<h4>例題</h4>
+					<section>
+						<h5>例題１</h5>
+						<p>ディレクトリの絶対パス名を記述したファイル（ディレクトリ・リスト）を入力し、そのディレクトリが存在するかをチェックします。（ex53.sh）</p>
+						<div class="exe-samp">
+<pre class="bash"><span class="co0">#!/bin/bash</span>
+<span class="co0"># 機能 :  ディレクトリの絶対パス名を記述したファイルを入力し、</span>
+<span class="co0">#         そのディレクトリが存在するかをチェックします</span>
+<span class="co0"># 作成 :  メリー</span>
+&nbsp;
+<span class="re2">dirlist_path</span>=<span class="co1">${1:?&quot;ディレクトリ・リストの指定がありません。中止します。&quot;}</span>
+&nbsp;
+<span class="co0"># ディレクトリ・リストの有無をチェック</span>
+<span class="kw1">if</span> <span class="br0">&#91;</span><span class="br0">&#91;</span> <span class="sy0">!</span> <span class="re5">-f</span> <span class="st0">&quot;<span class="es2">$dirlist_path</span>&quot;</span> <span class="br0">&#93;</span><span class="br0">&#93;</span>
+<span class="kw1">then</span>
+    <span class="kw3">echo</span> <span class="st0">&quot;<span class="es3">${dirlist_path}</span>がありません。中止します。&quot;</span>
+    <span class="kw3">exit</span> <span class="nu0">1</span>;
+<span class="kw1">fi</span>
+&nbsp;
+<span class="kw1">for</span> path <span class="kw1">in</span> $<span class="br0">&#40;</span><span class="kw2">cat</span> <span class="re1">$dirlist_path</span><span class="br0">&#41;</span>    <span class="co0"># pathにはcatコマンドの実行結果が順番に設定される</span>
+<span class="kw1">do</span>
+    <span class="co0"># ディレクトリとして存在するかをチェック</span>
+    <span class="kw1">if</span> <span class="br0">&#91;</span><span class="br0">&#91;</span> <span class="re5">-d</span> <span class="st0">&quot;<span class="es2">$path</span>&quot;</span> <span class="br0">&#93;</span><span class="br0">&#93;</span>
+    <span class="kw1">then</span>
+        <span class="kw3">echo</span> <span class="st0">&quot;<span class="es3">${path}</span>はディレクトリとして存在します。&quot;</span>
+    <span class="kw1">else</span>
+        <span class="kw3">echo</span> <span class="st0">&quot;<span class="es3">${path}</span>はディレクトリとして存在しません。&quot;</span>
+    <span class="kw1">fi</span>
+<span class="kw1">done</span></pre>
+						</div>
+						<div class="exe-samp">
+<pre><samp>$ <kbd>cat ./mybin/ex53_1.conf</kbd><strong> ← ディレクトリ・リストの内容を表示します</strong>
+/home/merry/TMP/WORK
+/home/merry/TMP/DUMMY
+/home/merry/TMP/PHOTO
+$
+$ <kbd>ex53.sh ./mybin/ex53_1.conf</kbd>
+/home/merry/TMP/WORKはディレクトリとして存在します。
+/home/merry/TMP/DUMMYはディレクトリとして存在しません。
+/home/merry/TMP/PHOTOはディレクトリとして存在します。
+$</samp></pre>
+						</div>
+					</section>
+					<section>
+						<h5>例題２</h5>
+						<p>引数に指定されたディレクトリが存在するかをチェックします。（ex54.sh）</p>
+						<div class="exe-samp">
+<pre class="bash"><span class="co0">#!/bin/bash</span>
+<span class="co0"># 機能 :  引数に指定されたディレクトリが存在するかをチェックします</span>
+<span class="co0"># 作成 :  メリー</span>
+&nbsp;
+<span class="co0"># 引数の有無をチェック</span>
+<span class="kw1">if</span> <span class="br0">&#40;</span><span class="br0">&#40;</span> <span class="re4">$#</span> == <span class="nu0">0</span> <span class="br0">&#41;</span><span class="br0">&#41;</span>
+<span class="kw1">then</span>
+    <span class="kw3">echo</span> <span class="st0">&quot;ディレクトリの指定がありません。中止します。&quot;</span>
+    <span class="kw3">exit</span> <span class="nu0">1</span>;
+<span class="kw1">fi</span>
+&nbsp;
+<span class="kw1">for</span> path                     <span class="co0"># pathには引数に指定された値が順番に設定される</span>
+<span class="kw1">do</span>
+    <span class="co0"># ディレクトリとして存在するかをチェック</span>
+    <span class="kw1">if</span> <span class="br0">&#91;</span><span class="br0">&#91;</span> <span class="re5">-d</span> <span class="st0">&quot;<span class="es2">$path</span>&quot;</span> <span class="br0">&#93;</span><span class="br0">&#93;</span>
+    <span class="kw1">then</span>
+        <span class="kw3">echo</span> <span class="st0">&quot;<span class="es3">${path}</span>はディレクトリとして存在します。&quot;</span>
+    <span class="kw1">else</span>
+        <span class="kw3">echo</span> <span class="st0">&quot;<span class="es3">${path}</span>はディレクトリとして存在しません。&quot;</span>
+    <span class="kw1">fi</span>
+<span class="kw1">done</span></pre>
+						</div>
+						<div class="exe-samp">
+<pre><samp>$ <kbd>ls -l</kbd>
+合計 12
+drwxr-xr-x 2 merry merry 4096 12月  7 09:12 'My Documents'
+drwxr-xr-x 2 merry merry 4096 12月  7 09:13 'Program Files'
+drwxr-xr-x 2 merry merry 4096 12月  7 09:22  SCRIPT
+$
+$ <kbd>ex54.sh</kbd><strong> ← 引数を指定しません</strong>
+ディレクトリの指定がありません。中止します。
+$
+$ <kbd>ex54.sh ./SCRIPT ./SCRIPT/ex01.sh My Documents 'My Documents'</kbd><strong> ← パス名を複数指定します</strong>
+./SCRIPTはディレクトリとして存在します。
+./SCRIPT/ex01.shはディレクトリとして存在しません。
+Myはディレクトリとして存在しません。
+Documentsはディレクトリとして存在しません。
+My Documentsはディレクトリとして存在します。
+$</samp></pre>
+						</div>
+					</section>
+				<aside>
+					<h4>補足</h4>
+					<p>例題１のex53.shは'My Documents'のように半角スペースを含むパス名は、MyとDocumentsの２つのパス名として認識します。</p>
+					<div class="exe-samp">
+<pre><samp>$ <kbd>cat ./mybin/ex53_2.conf</kbd><strong> ← ディレクトリ・リストの内容を表示します</strong>
+/home/merry/TMP/WORK
+/home/merry/TMP/WORK/DOC/My Documents<strong> ← 半角スペースを含みます</strong>
+$
+$ <kbd>ex53.sh ./mybin/ex53_2.conf</kbd>
+/home/merry/TMP/WORKはディレクトリとして存在します。
+/home/merry/TMP/WORK/DOC/Myはディレクトリとして存在しません。<strong> ← 'My Documents'は2つの引数として認識されます</strong>
+Documentsはディレクトリとして存在しません。
+$</samp></pre>
+					</div>
+					<p>bashコマンドに-xオプションを指定すると、シェルスクリプト中のコマンドを表示してから実行しますのでシェルスクリプトの動作がよくわかります。</p>
+					<div class="exe-samp">
+<pre><samp>$ <kbd>bash -x ex53.sh ./mybin/ex53_2.conf</kbd>
++ dirlist_path=./mybin/ex53_2.conf
++ [[ ! -f ./mybin/ex53_2.conf ]]
+++ cat ./mybin/ex53_2.conf<strong> ← ディレクトリ・リストの内容を入力します</strong>
++ for path in $(cat $dirlist_path)
++ [[ -d /home/merry/TMP/WORK ]]<strong> ← '/home/merry/TMP/WORK'のチェック</strong>
++ echo /home/merry/TMP/WORKはディレクトリとして存在します。
+/home/merry/TMP/WORKはディレクトリとして存在します。
++ for path in $(cat $dirlist_path)
++ [[ -d /home/merry/TMP/WORK/DOC/My ]]<strong> ← '/home/merry/TMP/WORK/DOC/My'のチェック</strong>
++ echo /home/merry/TMP/WORK/DOC/Myはディレクトリとして存在しません。
+/home/merry/TMP/WORK/DOC/Myはディレクトリとして存在しません。
++ for path in $(cat $dirlist_path)
++ [[ -d Documents ]]<strong> ← 'Documents'のチェック</strong>
++ echo Documentsはディレクトリとして存在しません。
+Documentsはディレクトリとして存在しません。
+$</samp></pre>
+					</div>
+				</aside>	
+				</section>
+			</section>
+			<section>
+				<!-- whileとuntilコマンド -->
+				<h3 id="while">6.7.5 whileとuntilコマンド</h3>
+				<p>whileコマンドとuntilコマンドは繰り返しを制御します。whileコマンドは条件が<strong>成立（真）</strong>の間繰り返します。それに対して、untilコマンドは条件が<strong>不成立（偽）</strong>の間繰り返します。これらのコマンドで繰り返しの処理をする場合は、次のことに注意する必要があります。</p>
+				<ul>
+					<li>whileコマンドの場合は、繰り返しに入る前に条件が<strong>真</strong>になるような処理を行わないと、繰り返しを行わないで直ちに繰り返しを抜けてしまいます。</li>
+					<li>untilコマンドの場合は、繰り返しに入る前に条件が<strong>偽</strong>になるような処理を行わないと、繰り返しを行わないで直ちに繰り返しを抜けてしまいます。</li>
+					<li>繰り返しの中で何らかの手段で条件を変えないと、<strong>永久ループ</strong>になってしまいます。</li>
+				</ul>
+				<section>
+					<h4>形式</h4>
+					<div class="form-exp">
+						※&nbsp;whileコマンド<br>
+						while 条件<br>
+						do<br>
+						&nbsp;&nbsp;コマンドリスト<strong> ← 条件を偽に変えるようなコマンドが必要です</strong><br>
+						done<br>
+						<br>
+						※&nbsp;untilコマンド<br>
+						until 条件<br>
+						do<br>
+						&nbsp;&nbsp;コマンドリスト<strong> ← 条件を真に変えるようなコマンドが必要です</strong><br>
+						done
+					</div>
+				</section>
+				<section>
+					<h4>例題</h4>
+					<section>
+						<h5>例題１</h5>
+						<p>whileコマンドで繰り返し四則演算を行います。（ex55.sh）</p>
+						<div class="exe-samp">
+<pre class="bash"><span class="co0">#!/bin/bash</span>
+<span class="co0"># 機能  :  繰り返し四則演算を行います</span>
+<span class="co0"># 作成  :  メリー</span>
+&nbsp;
+<span class="re2">cont</span>=<span class="st0">&quot;y&quot;</span>
+<span class="kw1">while</span> <span class="br0">&#91;</span><span class="br0">&#91;</span> <span class="st0">&quot;<span class="es2">$cont</span>&quot;</span> = <span class="st0">&quot;y&quot;</span> <span class="br0">&#93;</span><span class="br0">&#93;</span> <span class="sy0">||</span> <span class="br0">&#91;</span><span class="br0">&#91;</span> <span class="st0">&quot;<span class="es2">$cont</span>&quot;</span> = <span class="st0">&quot;Y&quot;</span> <span class="br0">&#93;</span><span class="br0">&#93;</span>
+<span class="kw1">do</span>
+    <span class="kw3">echo</span> <span class="re5">-e</span> <span class="st0">&quot;(+)加算<span class="es1">\n</span>(-)減算<span class="es1">\n</span>(*)乗算<span class="es1">\n</span>(/)除算&quot;</span>
+    <span class="kw2">read</span> <span class="re5">-p</span> <span class="st0">&quot;演算子を入力して下さい --&gt; &quot;</span> enzansi
+&nbsp;
+    <span class="kw1">if</span> <span class="br0">&#91;</span><span class="br0">&#91;</span> <span class="re5">-n</span> <span class="st0">&quot;<span class="es2">$enzansi</span>&quot;</span> <span class="br0">&#93;</span><span class="br0">&#93;</span>
+    <span class="kw1">then</span>
+        <span class="kw2">read</span> <span class="re5">-p</span> <span class="st0">&quot;数値を２つ入力して下さい --&gt; &quot;</span> atai1 atai2
+        <span class="kw1">if</span> <span class="br0">&#91;</span><span class="br0">&#91;</span> <span class="re5">-n</span> <span class="st0">&quot;<span class="es2">$atai1</span>&quot;</span> <span class="br0">&#93;</span><span class="br0">&#93;</span> <span class="sy0">&amp;&amp;</span> <span class="br0">&#91;</span><span class="br0">&#91;</span> <span class="re5">-n</span> <span class="st0">&quot;<span class="es2">$atai2</span>&quot;</span> <span class="br0">&#93;</span><span class="br0">&#93;</span>
+        <span class="kw1">then</span>
+            <span class="kw1">case</span> <span class="st0">&quot;<span class="es2">$enzansi</span>&quot;</span> <span class="kw1">in</span>
+                <span class="st_h">'+'</span> <span class="br0">&#41;</span> <span class="kw3">echo</span> <span class="st0">&quot;<span class="es2">$atai1</span> + <span class="es2">$atai2</span> = &quot;</span> $<span class="br0">&#40;</span><span class="br0">&#40;</span> <span class="re1">$atai1</span> + <span class="re1">$atai2</span> <span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;;</span>
+                <span class="st_h">'-'</span> <span class="br0">&#41;</span> <span class="kw3">echo</span> <span class="st0">&quot;<span class="es2">$atai1</span> - <span class="es2">$atai2</span> = &quot;</span> $<span class="br0">&#40;</span><span class="br0">&#40;</span> <span class="re1">$atai1</span> - <span class="re1">$atai2</span> <span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;;</span>
+                <span class="st_h">'*'</span> <span class="br0">&#41;</span> <span class="kw3">echo</span> <span class="st0">&quot;<span class="es2">$atai1</span> * <span class="es2">$atai2</span> = &quot;</span> $<span class="br0">&#40;</span><span class="br0">&#40;</span> <span class="re1">$atai1</span> <span class="sy0">*</span> <span class="re1">$atai2</span> <span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;;</span>
+                <span class="st_h">'/'</span> <span class="br0">&#41;</span> <span class="kw3">echo</span> <span class="st0">&quot;<span class="es2">$atai1</span> / <span class="es2">$atai2</span> = &quot;</span> $<span class="br0">&#40;</span><span class="br0">&#40;</span> <span class="re1">$atai1</span> <span class="sy0">/</span> <span class="re1">$atai2</span> <span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;;</span>
+                <span class="sy0">*</span> <span class="br0">&#41;</span> <span class="kw3">echo</span> <span class="st0">&quot;演算子が不当です&quot;</span><span class="sy0">;;</span>
+            <span class="kw1">esac</span>
+        <span class="kw1">else</span>
+            <span class="kw3">echo</span> <span class="st0">&quot;数値が入力されませんでした&quot;</span>
+        <span class="kw1">fi</span>
+    <span class="kw1">else</span>
+        <span class="kw3">echo</span> <span class="st0">&quot;演算子が入力されませんでした&quot;</span>
+    <span class="kw1">fi</span>
+&nbsp;
+    <span class="kw2">read</span> <span class="re5">-p</span> <span class="st0">&quot;計算を続けますか(y/n) ---&gt; &quot;</span> cont        <span class="co0"># 条件を変える</span>
+<span class="kw1">done</span>
+&nbsp;
+<span class="kw3">echo</span> <span class="st0">&quot;終了します&quot;</span></pre>
+						</div>
+						<div class="exe-samp">
+<pre><samp>$ <kbd>ex55.sh</kbd>
+(+)加算
+(-)減算
+(*)乗算
+(/)除算
+演算子を入力して下さい --&gt; <kbd>+</kbd>
+数値を２つ入力して下さい --&gt; <kbd>10 20</kbd>
+10 + 20 =  30
+計算を続けますか(y/n) ---&gt; <kbd>y</kbd><strong> ← "y"を入力して繰り返します</strong>
+(+)加算
+(-)減算
+(*)乗算
+(/)除算
+演算子を入力して下さい --&gt; <kbd>-</kbd>
+数値を２つ入力して下さい --&gt; <kbd>10 10</kbd>
+10 - 10 =  0
+計算を続けますか(y/n) ---&gt; <kbd>Y</kbd>
+(+)加算
+(-)減算
+(*)乗算
+(/)除算
+演算子を入力して下さい --&gt; <kbd>*</kbd>
+数値を２つ入力して下さい --&gt; <kbd>10 -10</kbd>
+10 * -10 =  -100
+計算を続けますか(y/n) ---&gt; <kbd>n</kbd><strong> ← "n"を入力して終了します</strong>
+終了します
+$</samp></pre>
+						</div>
+					</section>
+					<section>
+						<h5>例題２</h5>
+						<p>untilコマンドで繰り返し四則演算を行います。（ex56.sh）</p>
+						<div class="exe-samp">
+<pre class="bash"><span class="co0">#!/bin/bash</span>
+<span class="co0"># 機能  :  四則演算を行います</span>
+<span class="co0"># 作成  :  メリー</span>
+&nbsp;
+<span class="re2">cont</span>=<span class="st0">&quot;y&quot;</span>
+<span class="kw1">until</span> <span class="br0">&#91;&#91;</span> <span class="re1">$cont</span> = <span class="st0">&quot;n&quot;</span> <span class="br0">&#93;&#93;</span> <span class="sy0">||</span> <span class="br0">&#91;&#91;</span> <span class="re1">$cont</span> = <span class="st0">&quot;N&quot;</span> <span class="br0">&#93;&#93;</span>
+<span class="kw1">do</span>
+<span class="co0">    （以下省略）</span></pre>
+						</div>
+					</section>
+				</section>
+			</section>
+		</section>
+	</section>
+
+	<footer>
+		<nav>
+			<ul>
+				<li><a href="../../index.html">ホーム</a></li>
+				<li><a href="../cmdtop.html#lbl_index">目次</a></li>
+				<li><a href="./section6_5.html">前のページ</a></li>
+				<li><a href="./section6_7.html">次のページ</a></li>
+			</ul>
+		</nav>
+		<p id="footer-author">更新日：<time datetime="2018-02-12">2018年02月12日</time> Merry</p>
+	</footer>
+</div>
+</body>
+</html>

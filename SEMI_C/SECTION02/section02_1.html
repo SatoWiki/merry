@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initialscale=1.0">
+	<meta name="robots" content="INDEX,FOLLOW">
+	<meta name="keywords" content="Ｃ言語プログラミング入門,変数,宣言,整数,浮動小数点数,型名,データ型,変数名,初期値,char,short,int,unsigned,signed,float,double,ブロック">
+	<meta name="description" content="データの値を格納しておくための変数の使い方を説明します。">
+	<meta name="author" content="T.Hagiwara">
+	<link rel="stylesheet" href="../../CSS3/seminar.css" type="text/css">
+	<link rel="stylesheet" href="../../CSS3/hl_clang.css" type="text/css">
+	<link rel="prev" href="../SECTION01/section01_1.html">
+	<link rel="next" href="../SECTION02/section02_2.html">
+	<title>Ｃ言語プログラミング入門&nbsp;-&nbsp;データを格納するための変数（1/2）</title>
+	<style type="text/css">
+	</style>
+</head>
+<body>
+<div id="container">
+	<header>
+		<p>Linux講座にようこそ。このページは「Ｃ言語プログラミング入門&nbsp;-&nbsp;第２章&nbsp;データを格納するための変数」です。</p>
+		<h1>Ｃ言語プログラミング入門</h1>
+		<nav>
+			<ul>
+				<li ><a href="../../index.html">ホーム</a></li>
+				<li><a href="../c_langtop.html#lbl_index">目次</a></li>
+				<li><a href="../SECTION01/section01_1.html">前のページ</a></li>
+				<li><a href="./section02_2.html">次のページ</a></li>
+			</ul>
+		</nav>
+	</header>
+
+	<section class="contents">
+		<h1>2. データを格納するための変数（1/2）</h1>
+		<section>
+			<h2>2.1 変数の宣言</h2>
+			<p>ここでは、Ｃ言語で変数を使用する際に必要な基本的な約束事を説明します。</p>
+			<p>人間がちょっと複雑な計算を人手で行うときには、数値をメモ用紙にメモしながら計算を行うことになると思います。この様な計算をプログラムで処理するときのメモ用紙に相当するものが<strong>変数</strong>になります。変数はプログラムと同様に、コンピュータのメモリー上に確保されて、内容の設定や変更が自由にできます。</p>
+			<p>プログラミング言語の種類により、変数の使い方は多少異なります。Ｃ言語の場合はあらかじめ<strong>宣言</strong>をしておく必要があります。</p>
+			<p>Ｃ言語で取り扱えるデータは大きくわけると数値と文字になりますが、数値はさらに<strong>整数</strong>と<strong>浮動小数点数</strong>になります。整数と浮動小数点数は取り扱うデータの種類により、使い分ける必要があります。例えば、バレーボールのブロック本数を数えるような場合は1本、2本、…のような数えかたになりますので整数になるでしょうし、ブロック得点率を求めるような場合は0.96、0.80のような集計になりますので浮動小数点数になるでしょう。</p>
+			<p>また、文字も実際には整数値として取り扱っています。つまり、取り扱う全ての文字には整数値が割り当てられており、内部的な文字の処理は、その整数値で行います。各文字に対して、どのような整数値を割り振るかはコード表に従います。Ｃ言語では一般にASCIIコード表を採用しています。</p>
+			<section>
+				<h3 id="lbl_type_format">2.1.1 形式</h3>
+				<p>変数の宣言は<strong>型名</strong>あるいはデータ型と呼ぶものと、<strong>変数名</strong>を指定します。型名には格納するデータの種類を、変数名には変数を識別するための名前を指定します。また、あらかじめ設定したい値が決まっている場合は、初期値として指定することもできます。なお、Ｃ言語では変数の宣言はブロックの先頭で行うことになっていますので注意して下さい。</p>
+				<p>初期値としては整数や浮動小数点数などの値を直接指定できます。例えば、10や3.15のような指定になります。このように記述した値は変更することができませんので、変数に対して<strong>定数</strong>と呼んでいます。</p>
+				<div class="form-exp">
+					※ 宣言時に初期値を指定しない場合<br>
+					型名 変数名;<strong> ← 宣言も一種の文になりますので、最後に;（セミコロン）を指定します</strong><br><br>
+					※ 宣言時に初期値を指定する場合<br>
+					型名 変数名 = 初期値;<br>
+				</div>
+				<dl>
+					<dt>型名</dt>
+						<dd>変数に格納するデータの種類により、【表2-1】にあげたような型名を指定します。型名はＣ言語の仕様により決まっています。なお、型名と変数名の間には１個以上の空白（半角スペースやタブ）が必要です。</dd>
+					<dt>変数名</dt>
+						<dd>変数を識別するための名前を指定します。変数名は使える文字種に制限は有るものの自由に指定できますが、格納するデータの使用目的等が類推できるような名前にするとよいでしょう。変数名として使用できる文字は半角の<strong>英数字</strong>と<strong>_</strong>（アンダライン）です。また、先頭１文字は英字または、アンダラインで数字は指定できません。大文字と小文字は区別しますので注意してください。</dd>
+					<dt>初期値</dt>
+						<dd>変数にあらかじめ設定しておきたい値が有ればそれを指定します。初期値は省略可能で、省略した場合の値は基本的には<strong>不定</strong>です。（詳しくは「<a href="../SECTION10/section10_1.html">10.&nbsp;データの有効範囲と寿命を規定する記憶クラス</a>」で説明します）なお、=（等号）の前後の空白は有っても無くても良いのですが、当講座では見やすくするために半角スペースを１個入れています。</dd>
+				</dl>
+				<table id="lbl_type_list" class="simple-table">
+					<caption>【表2-1】 型名一覧（代表的なもの）</caption>
+					<thead>
+					<tr><th>型名</th><th>大きさ（表現できる範囲）</th><th>説明</th></tr>
+					</thead>
+					<tbody>
+					<tr><td>char</td><td>１バイト（-128〜127）</td><td>符号付の最も小さな整数です。通常は半角１文字を扱います。</td></tr>
+					<tr><td>short</td><td>２バイト（-32768〜32767）</td><td>符号付の小さな整数です。</td></tr>
+					<tr><td>int</td><td>４バイト<br>（-2147483648〜2147483647）</td><td>符号付の標準的な整数です。</td></tr>
+					<tr><td>unsigned char</td><td>１バイト（0〜255）</td><td>符号無しの最も小さな整数です。</td></tr>
+					<tr><td>unsigned short</td><td>２バイト（0〜65535）</td><td>符号無しの小さな整数です。</td></tr>
+					<tr><td>unsigned int</td><td>４バイト（0〜4294967295）</td><td>符号無しの標準的な整数です。</td></tr>
+					<tr><td>float</td><td>４バイト<br>（-3.40282×10<sup>38</sup>〜3.40282×10<sup>38</sup>）</td><td>小さな浮動小数点数です。（単精度、精度は6桁）</td></tr>
+					<tr><td>double</td><td>８バイト<br>（-1.79769×10<sup>308</sup>〜1.79769×10<sup>308</sup>）</td><td>標準的な浮動小数点数です。（倍精度、精度は15桁）</td></tr>
+					</tbody>
+				</table>
+				<p>型名により、取り扱える数値の範囲が異なりますので使いわけが必要です。一般に、整数はint型、浮動小数点数はdouble型を使えば問題は少ないでしょう。また、コンピュータの性能も一番引き出せると思います。</p>
+				<p>char型は整数型の一種ですが、通常は文字を取り扱うときに使用します。コンピュータは文字も数値として取り扱いますので、文字と数値の対応を定義したコード表が必要です。通常、Ｃ言語ではASCIIコード表と呼ぶコード表に対応しています。ASCIIコード表については「<a href="../APPENDIX/apnd01.html">付録１．ASCIIコード表</a>」をご覧ください。</p>
+				<p id="lbl_note_2">整数型には符号付きのものと符号無しのものが有ります。符号無しのものは負の値は取り扱えませんので注意してください。また、char、short、intは「signed」を付けてsigned char、signed short、signed intとしてもかまいません。</p>
+				<p>【表2-1】にあげた型名は代表的なもののみです。今の所はこのくらい認識しておいていただければ充分です。また、「大きさ」はコンピュータやOSの種類により異なることがあります。</p>
+				<aside>
+					<h4>補足</h4>
+						<p id="lbl_note_1">変数名は命名規則の範囲であれば自由に付けることが出来ますが、Ｃ言語の文法で定義されている語（予約語）は変数名として使用することは出来ません。（変数名の一部としてなら使用できます）</p>
+						<div class="scroll-box">
+						<table id="width-fixed" class="simple-table">
+							<caption>【表2-2】 予約語一覧</caption>
+							<tr><td>auto</td><td>break</td><td>case</td><td>char</td><td>const</td><td>continue</td><td>default</td><td>do</td></tr>
+							<tr><td>double</td><td>else</td><td>enum</td><td>extern</td><td>float</td><td>for</td><td>goto</td><td>if</td></tr>
+							<tr><td>int</td><td>long</td><td>register</td><td>return</td><td>short</td><td>signed</td><td>sizeof</td><td>static</td></tr>
+							<tr><td>struct</td><td>switch</td><td>typedef</td><td>union</td><td>unsigned</td><td>void</td><td>volatile</td><td>while</td></tr>
+						</table>
+						</div>
+				</aside>
+			</section>
+			<section>
+				<h3>2.1.2 例題</h3>
+				<p>この例題は変数の宣言だけしか行っていませんので、実行しても何も表示しません。</p>
+				<div class="source-code">
+					<div class="c"><ol><li class="li1"><div class="de1"><span class="kw4">int</span> main<span class="br0">&#40;</span><span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">short</span> &nbsp; bango &nbsp; <span class="sy0">=</span> <span class="nu0">12</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">int</span> &nbsp; &nbsp; nenrei<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">float</span> &nbsp; taijyu &nbsp;<span class="sy0">=</span> <span class="nu16">65.5</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">double</span> &nbsp;sintyo<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">char</span> &nbsp; &nbsp;ketueki <span class="sy0">=</span> <span class="st0">'A'</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">return</span> <span class="nu0">0</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#125;</span></div></li>
+					</ol></div>
+				</div>
+				<dl>
+					<dt>3行目</dt>
+						<dd>short型のbangoという名前の変数で、初期値は12です。12や5行目の65.5は定数です。</dd>
+					<dt>4行目</dt>
+						<dd>int型のnenreiという名前の変数です。初期値の指定がありませんので値は不定です。このような場合は後で値を設定する必要があります。設定は代入演算子を使って行います。（演算子については後ほど説明します）</dd>
+					<dt>5行目</dt>
+						<dd>float型のtaijyuという名前の変数で、初期値は65.5です。</dd>
+					<dt>6行目</dt>
+						<dd>double型のsintyoという名前の変数です。初期値の指定がありませんので値は不定です。</dd>
+					<dt>7行目</dt>
+						<dd>char型のketuekiという名前の変数で、初期値は半角のAです。char型は半角１文字しか取り扱えませんので、初期値で指定できる文字は１文字だけです。また、文字は<strong>'</strong>（アポストロフィ）で括りますので注意して下さい。</dd>
+				</dl>
+				<aside>
+					<h4>補足</h4>
+					<p>同じ型名の変数を複数宣言する場合は、下の例のように変数名を,（コンマ）で区切って指定できます。しかし、一般的にプログラムが読みにくくなりますし、修正もしにくくなりますので、できるだけ１行１変数にしたほうがよいでしょう。</p>
+					<p>例：<code>int&nbsp;&nbsp;kokugo, sansu, rika, syakai;</code></p>
+				</aside>
+			</section>
+		</section>
+	</section>
+
+	<footer>
+		<nav>
+			<ul>
+				<li><a href="../../index.html">ホーム</a></li>
+				<li><a href="../c_langtop.html#lbl_index">目次</a></li>
+				<li><a href="../SECTION01/section01_1.html">前のページ</a></li>
+				<li><a href="./section02_2.html">次のページ</a></li>
+			</ul>
+		</nav>
+		<p id="footer-author">更新日：<time datetime="2018-04-22">2018年04月22日</time> Merry</p>
+	</footer>
+</div>
+</body>
+</html>

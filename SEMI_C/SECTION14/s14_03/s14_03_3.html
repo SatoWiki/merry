@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initialscale=1.0">
+	<meta name="robots" content="INDEX,FOLLOW">
+	<meta name="keywords" content="文字処理ライブラリ,関数,isupper,islowe,toupper,tolower,iscntrl,isspace">
+	<meta name="description" content="isupper関数、islowe関数、toupper関数、tolower関数、iscntrl関数、isspace関数の使用法を説明します。">
+	<meta name="author" content="T.Hagiwara">
+	<link rel="stylesheet" href="../../../CSS3/seminar.css" type="text/css">
+	<link rel="stylesheet" href="../../../CSS3/hl_clang.css" type="text/css">
+	<link rel="prev" href="./s14_03_2.html">
+	<link rel="next" href="../s14_04/s14_04_1.html">
+	<title>Ｃ言語プログラミング入門&nbsp;-&nbsp;ライブラリ関数&nbsp;-&nbsp;文字処理ライブラリ（3/3）-</title>
+	<style type="text/css">
+	</style>
+</head>
+<body>
+<div id="container">
+	<header>
+		<p>Linux講座にようこそ。このページは「Ｃ言語プログラミング入門&nbsp;-&nbsp;第14章．ライブラリ関数&nbsp;-&nbsp;文字処理ライブラリ」です。</p>
+		<h1>Ｃ言語プログラミング入門</h1>
+		<nav>
+			<ul>
+				<li><a href="../../../index.html">ホーム</a></li>
+				<li><a href="../../c_langtop.html#lbl_index">目次</a></li>
+				<li><a href="./s14_03_2.html">前のページ</a></li>
+				<li><a href="../s14_04/s14_04_1.html">次のページ</a></li>
+			</ul>
+		</nav>
+	</header>
+
+	<section class="contents">
+		<h1>14. ライブラリ関数（19/36）&nbsp;-&nbsp;文字処理ライブラリ（3/3）</h1>
+		<section>
+			<h2 id="lbl_chklowupper">14.27 大文字・小文字チェック関数</h2>
+			<section>
+				<h3>14.27.1 isupper関数、islower関数</h3>
+				<p>これらの関数は文字（１文字）が英小文字または英大文字かどうかをチェックします。</p>
+				<ul>
+					<li>isupper関数は英大文字（'A'〜'Z'）かどうかをチェックします。</li>
+					<li>islower関数は英小文字（'a'〜'z'）かどうかをチェックします。</li>
+				</ul>
+				<table>
+					<caption>【表14-3-4】 isupper関数、islower関数</caption>
+					<tr><th>形式</th><td>#include &lt;ctype.h&gt;<br>
+										int isupper(int c);<br>
+										int islower(int c);</td></tr>
+					<tr><th>返り値</th><td>文字の種類が合っていた場合は０以外を返し、そうでない場合は０を返します。</td></tr>
+					<tr><th>引数</th>
+						<td>
+							<dl>
+								<dt>int c</dt>
+									<dd>チェックしたい文字を指定します。</dd>
+							</dl>
+						</td></tr>
+				</table>
+			</section>
+			<section>
+				<h3>14.27.2 例題</h3>
+				<p>入力した文字が全て大文字かどうかをチェックします。</p>
+				<div class="source-code">
+					<div class="c"><ol><li class="li1"><div class="de1"><span class="co2">#include &lt;stdio.h&gt;</span></div></li>
+					<li class="li1"><div class="de1"><span class="co2">#include &lt;ctype.h&gt;</span></div></li>
+					<li class="li1"><div class="de1"><span class="co2">#define SIZE &nbsp; &nbsp;1024</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1"><span class="kw4">int</span> main<span class="br0">&#40;</span><span class="kw4">void</span><span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">char</span> &nbsp; &nbsp;str<span class="br0">&#91;</span>SIZE<span class="br0">&#93;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">int</span> &nbsp; &nbsp; idx<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;文字列を入力してください ==&gt; &quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">scanf</span><span class="br0">&#40;</span><span class="st0">&quot;%s&quot;</span><span class="sy0">,</span> str<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp;<span class="coMULTI">/* 文字列の最後でなく、かつ大文字でない間繰り返す */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">for</span><span class="br0">&#40;</span>idx <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">;</span> str<span class="br0">&#91;</span>idx<span class="br0">&#93;</span> <span class="sy0">&amp;&amp;</span> <span class="kw3">isupper</span><span class="br0">&#40;</span>str<span class="br0">&#91;</span>idx<span class="br0">&#93;</span><span class="br0">&#41;</span><span class="sy0">;</span> <span class="sy0">++</span>idx<span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="coMULTI">/* 文字列の最後の場合は全部大文字 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; str<span class="br0">&#91;</span>idx<span class="br0">&#93;</span> <span class="sy0">?</span> <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;NG.<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span> <span class="sy0">:</span> <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;OK.<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">return</span> <span class="nu0">0</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#125;</span></div></li>
+					</ol></div>
+				</div>
+				<div class="exe-samp">
+<pre><samp>$ <kbd>./ex14_3_3.prg</kbd>
+文字列を入力してください ==&gt; <kbd>HELLO</kbd>
+OK.
+$
+$ <kbd>./ex14_3_3.prg</kbd>
+文字列を入力してください ==&gt; <kbd>HeLLO</kbd>
+NG.
+$</samp></pre>
+				</div>
+				<dl>
+					<dt>14行目</dt>
+						<dd>大文字かどうかをisupper関数でチェックします。</dd>
+				</dl>
+			</section>
+		</section>
+
+		<section>
+			<h2 id="lbl_cnvlowuppe">14.28 大文字・小文字変換関数</h2>
+			<section>
+				<h3>14.28.1 toupper関数、tolower関数</h3>
+				<p>これらの関数は文字（１文字）を英大文字または英小文字に変換します。</p>
+				<ul>
+					<li>toupper関数は英大文字に変換できる文字であれば英大文字に変換します。</li>
+					<li>tolower関数は英小文字に変換できる文字であれば英小文字に変換します。</li>
+				</ul>
+				<table>
+					<caption>【表14-3-5】「 toupper関数、tolower関数</caption>
+					<tr><th>形式</th><td>#include &lt;ctype.h&gt;<br>
+										int toupper(int c);<br>
+										int tolower(int c);</td></tr>
+					<tr><th>返り値</th><td>変換できた場合は変換後の文字を返し、そうでない場合は元の文字をそのまま返します。</td></tr>
+					<tr><th>引数</th>
+						<td>
+							<dl>
+								<dt>int c</dt>
+									<dd>変換したい文字を指定します。</dd>
+							</dl>
+						</td></tr>
+				</table>
+			</section>
+			<section>
+				<h3>14.28.2 例題</h3>
+				<p>入力した文字列中の長さ（文字数）を表示することを繰り返し行います。「再度入力しますか（y/n） ==&gt;」のメッセージに対して、「y」または「Y」が入力された場合に繰り返します。</p>
+				<div class="source-code">
+					<div class="c"><ol><li class="li1"><div class="de1"><span class="co2">#include &lt;stdio.h&gt;</span></div></li>
+					<li class="li1"><div class="de1"><span class="co2">#include &lt;string.h&gt;</span></div></li>
+					<li class="li1"><div class="de1"><span class="co2">#include &lt;ctype.h&gt;</span></div></li>
+					<li class="li1"><div class="de1"><span class="co2">#define BUFFSIZE &nbsp; &nbsp;1024</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1"><span class="kw4">int</span> main<span class="br0">&#40;</span><span class="kw4">void</span><span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">char</span> &nbsp; &nbsp;buff<span class="br0">&#91;</span>BUFFSIZE<span class="br0">&#93;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">char</span> &nbsp; &nbsp;ans<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">do</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;メッセージを入力してください ==&gt; &quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">fgets</span><span class="br0">&#40;</span>buff<span class="sy0">,</span> BUFFSIZE<span class="sy0">,</span> stdin<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;長さは%d文字です。<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> <span class="kw3">strlen</span><span class="br0">&#40;</span>buff<span class="br0">&#41;</span> <span class="sy0">-</span> <span class="nu0">1</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;再度入力しますか（y/n） ==&gt; &quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">scanf</span><span class="br0">&#40;</span><span class="st0">&quot;%c%*c&quot;</span><span class="sy0">,</span> <span class="sy0">&amp;</span>ans<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span> <span class="kw1">while</span><span class="br0">&#40;</span><span class="kw3">toupper</span><span class="br0">&#40;</span>ans<span class="br0">&#41;</span> <span class="sy0">==</span> <span class="st0">'Y'</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">return</span> <span class="nu0">0</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#125;</span></div></li>
+					</ol></div>
+				</div>
+				<div class="exe-samp">
+<pre><samp>$ <kbd>./ex14_3_4.prg</kbd>
+メッセージを入力してください ==&gt; <kbd>Hello.</kbd>
+長さは6文字です。
+再度入力しますか（y/n） ==&gt; <kbd>y</kbd><strong> ← 小文字のyを入力します</strong>
+メッセージを入力してください ==&gt; <kbd>Hello World!!.</kbd>
+長さは14文字です。
+再度入力しますか（y/n） ==&gt; <kbd>Y</kbd><strong> ← 大文字のYを入力します</strong>
+メッセージを入力してください ==&gt; <kbd>Bye.</kbd>
+長さは4文字です。
+再度入力しますか（y/n） ==&gt; <kbd>n</kbd>
+$</samp></pre>
+				</div>
+				<dl>
+					<dt>20行目</dt>
+						<dd>変数ansの値をtoupper関数で大文字に変換して、大文字の'Y'かどうかをチェックします。</dd>
+				</dl>
+			</section>
+		</section>
+
+		<section>
+			<h2 id="lbl_other">14.29 その他の関数</h2>
+			<section>
+				<h3>14.29.1 iscntrl関数、isspace関数</h3>
+				<ul>
+					<li>iscntrl関数は制御文字かどうかをチェックします。</li>
+					<li>isspace関数は空白文字かどうかをチェックします。ここでの空白文字とは、半角スペース、フォームフィード（FF）、改行（LF/NL）、復帰（CR）、水平タブ（HT）、垂直タブ（VT）です。 </li>
+				</ul>
+				<table>
+					<caption>【表14-3-6】 iscntrl関数、isspace関数</caption>
+					<tr><th>形式</th><td>#include &lt;ctype.h&gt;<br>
+										int iscntrl(int c);<br>
+										int isspace(int c);</td></tr>
+					<tr><th>返り値</th><td>文字の種類が合っていた場合は０以外を返し、そうでない場合は０を返します。</td></tr>
+					<tr><th>引数</th>
+						<td>
+							<dl>
+								<dt>int c</dt>
+									<dd>チェックしたい文字を指定します。</dd>
+							</dl>
+						</td></tr>
+				</table>
+			</section>
+		</section>
+	</section>
+
+	<footer>
+		<nav>
+			<ul>
+				<li><a href="../../../index.html">ホーム</a></li>
+				<li><a href="../../c_langtop.html#lbl_index">目次</a></li>
+				<li><a href="./s14_03_2.html">前のページ</a></li>
+				<li><a href="../s14_04/s14_04_1.html">次のページ</a></li>
+			</ul>
+		</nav>
+		<p id="footer-author">更新日：<time datetime="2019-01-06">2019年01月06日</time> Merry</p>
+	</footer>
+</div>
+</body>
+</html>

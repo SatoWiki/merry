@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initialscale=1.0">
+	<meta name="robots" content="INDEX,FOLLOW">
+	<meta name="keywords" content="入出力ライブラリ,関数,文字の入力,fgetc,getc,getchar,ungetc,文字の出力,fputc,putc,putchar,fgets,gets,fputs,puts">
+	<meta name="description" content="fgetc関数、getc関数、getchar関数、ungetc関数、fputc関数、putc関数、putchar関数、fgets関数、gets関数、fputs関数、puts関数の使い方を説明します。">
+	<meta name="author" content="T.Hagiwara">
+	<link rel="stylesheet" href="../../../CSS3/seminar.css" type="text/css">
+	<link rel="stylesheet" href="../../../CSS3/hl_clang.css" type="text/css">
+	<link rel="prev" href="./s14_01_2.html">
+	<link rel="next" href="./s14_01_4.html">
+	<title>Ｃ言語プログラミング入門&nbsp;-&nbsp;ライブラリ関数&nbsp;-&nbsp;入出力ライブラリ（3/10）-</title>
+	<style type="text/css">
+	</style>
+</head>
+<body>
+<div id="container">
+	<header>
+		<p>Linux講座にようこそ。このページは「Ｃ言語プログラミング入門&nbsp;-&nbsp;第14章．ライブラリ関数&nbsp;-&nbsp;入出力ライブラリ」です。</p>
+		<h1>Ｃ言語プログラミング入門</h1>
+		<nav>
+			<ul>
+				<li><a href="../../../index.html">ホーム</a></li>
+				<li><a href="../../c_langtop.html#lbl_index">目次</a></li>
+				<li><a href="./s14_01_2.html">前のページ</a></li>
+				<li><a href="./s14_01_4.html">次のページ</a></li>
+			</ul>
+		</nav>
+	</header>
+
+	<section class="contents">
+		<h1>14. ライブラリ関数（4/36）&nbsp;-&nbsp;入出力ライブラリ（3/10）</h1>
+		<section>
+			<h2>14.3 文字の入力関数</h2>
+			<section>
+				<h3 id="lbl_fgetc">14.3.1 fgetc関数、getc関数</h3>
+				<p>fgetc関数とgetc関数は関数名が異なるだけで機能および、形式は同じです。ただし、Ｃ言語の処理系により異なりますが、getc関数は関数ではなくマクロで実装されている可能性が有ります。</p>
+				<p>これらの関数はファイルポインタに対応したファイルから<strong>１文字</strong>を入力して返り値として返します。返り値の型名はchar型ではなくint型ですので注意してください。（char型は整数型（short型やint型、等）の一種ですので、char型からint型への変換は可能です。従って、文字をint型として取り扱っても問題有りません）</p>
+				<table>
+					<caption>【表14-1-7】 fgetc関数、getc関数</caption>
+					<tr><th>形式</th><td>#include &lt;stdio.h&gt;<br>
+										int fgetc(FILE *fp);<br>
+										int getc(FILE *fp);</td></tr>
+					<tr><th>返り値</th><td>入力できた場合は入力した１文字を返します。ファイルの終端やエラーを検出した場合は<strong>EOF</strong>を返します。</td></tr>
+					<tr><th>引数</th>
+						<td>
+							<dl>
+								<dt>FILE *fp</dt>
+									<dd>入力するファイルのファイルポインタを指定します。</dd>
+							</dl>
+						</td></tr>
+					<tr><th>使用法、<br>他</th>
+						<td>
+						返り値がEOFの場合は厳密にはファイルの終端かエラーか分かりませんので、必要に応じて、<a href="./s14_01_6.html#lbl_feof">feof関数</a>や<a href="./s14_01_6.html#lbl_ferror">ferror関数</a>でチェックを行います。
+						</td></tr>
+				</table>
+			</section>
+			<section>
+				<h3 id="lbl_getchar">14.3.2 getchar関数</h3>
+				<p>getchar関数は<strong>標準入力</strong>から１文字を入力します。従って、<code>int fgetc(stdin);</code>や<code>int getc(stdin);</code>と同じです。</p>
+				<table>
+					<caption>【表14-1-8】 getchar関数</caption>
+					<tr><th>形式</th><td>#include &lt;stdio.h&gt;<br>
+										int getchar(void);</td></tr>
+					<tr><th>返り値</th><td>fgetc関数、getc関数と同じです。</td></tr>
+					<tr><th>引数</th>
+						<td>なし。</td></tr>
+				</table>
+			</section>
+			<section>
+				<h3 id="lbl_ungetc">14.3.3 ungetc関数</h3>
+				<p>ungetc関数は文字を再度入力できるように入力ストリームに戻します。戻せる文字は<strong>１文字のみ</strong>です。</p>
+				<table>
+					<caption>【表14-1-9】 ungetc関数</caption>
+					<tr><th>形式</th><td>#include &lt;stdio.h&gt;<br>
+										int ungetc(int c, FILE *fp);</td></tr>
+					<tr><th>返り値</th><td>正常に戻せた場合は第１引数の値を返し、出来なかった場合は<strong>EOF</strong>を返します。</td></tr>
+					<tr><th>引数</th>
+						<td>
+							<dl>
+								<dt>int c</dt>
+									<dd>入力ストリームに戻す文字を指定します。</dd>
+								<dt>FILE *fp</dt>
+									<dd>文字を戻す入力ストリームのファイルポインタを指定します。</dd>
+							</dl>
+						</td></tr>
+				</table>
+			</section>
+			<section>
+				<h3>14.3.4 例題</h3>
+				<p>実行時引数で指定したファイルの内容を標準出力に出力します。（catコマンドと同じような機能です）</p>
+				<div class="source-code">
+					<div class="c"><ol><li class="li1"><div class="de1"><span class="co2">#include &lt;stdio.h&gt;</span></div></li>
+					<li class="li1"><div class="de1"><span class="kw4">int</span> main<span class="br0">&#40;</span><span class="kw4">int</span> argc<span class="sy0">,</span> <span class="kw4">char</span> <span class="sy0">**</span>argv<span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; FILE &nbsp; &nbsp;<span class="sy0">*</span>fp<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">int</span> &nbsp; &nbsp; one_char<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">int</span> &nbsp; &nbsp; return_code <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">if</span><span class="br0">&#40;</span>argc <span class="sy0">==</span> <span class="nu0">2</span><span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">if</span><span class="br0">&#40;</span><span class="br0">&#40;</span>fp <span class="sy0">=</span> <span class="kw3">fopen</span><span class="br0">&#40;</span><span class="sy0">*</span><span class="br0">&#40;</span>argv <span class="sy0">+</span> <span class="nu0">1</span><span class="br0">&#41;</span><span class="sy0">,</span> <span class="st0">&quot;r&quot;</span><span class="br0">&#41;</span><span class="br0">&#41;</span> <span class="sy0">!=</span> NULL<span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* オープン成功。ファイルから１文字ずつ入力 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">while</span><span class="br0">&#40;</span><span class="br0">&#40;</span>one_char <span class="sy0">=</span> <span class="kw3">fgetc</span><span class="br0">&#40;</span>fp<span class="br0">&#41;</span><span class="br0">&#41;</span> <span class="sy0">!=</span> EOF<span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;%c&quot;</span><span class="sy0">,</span> <span class="br0">&#40;</span><span class="kw4">char</span><span class="br0">&#41;</span>one_char<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">if</span><span class="br0">&#40;</span><span class="kw3">fclose</span><span class="br0">&#40;</span>fp<span class="br0">&#41;</span> <span class="sy0">!=</span> <span class="nu0">0</span><span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* クローズ失敗 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;%sファイルのクローズは失敗しました。<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> <span class="sy0">*</span><span class="br0">&#40;</span>argv <span class="sy0">+</span> <span class="nu0">1</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; return_code <span class="sy0">=</span> <span class="nu0">1</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">else</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* オープン失敗 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;%sファイルのオープンは失敗しました。<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> <span class="sy0">*</span><span class="br0">&#40;</span>argv <span class="sy0">+</span> <span class="nu0">1</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; return_code <span class="sy0">=</span> <span class="nu0">1</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">else</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* 実行時引数が不当 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;実行時引数が不当です。<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; return_code <span class="sy0">=</span> <span class="nu0">2</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">return</span> return_code<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#125;</span></div></li>
+					</ol></div>
+				</div>
+				<div class="exe-samp">
+<pre><samp>$ <kbd>cat /etc/issue</kbd><strong> ← catコマンドで/etc/issueファイルの内容を確認します</strong>
+Fedora release 8 (Werewolf)
+Kernel \r on an \m
+
+$ <kbd>./ex14_1_2.prg /etc/issue</kbd><strong> ← 実行時引数に/etc/issueを指定して実行します</strong>
+Fedora release 8 (Werewolf)
+Kernel \r on an \m
+
+$</samp></pre>
+				</div>
+				<dl>
+					<dt>10行目</dt>
+						<dd>fopen関数で実行時引数に指定されたファイルをオープンします。</dd>
+					<dt>13行目</dt>
+						<dd>while文の繰り返しの中でfgetc関数で１文字入力します。fgetc関数の返り値がEOFでない間、繰り返します。ここではfgetc関数を使っていますが、getc関数を使っても同じです。</dd>
+					<dt>15行目</dt>
+						<dd>fgetc関数で入力した１文字をprintf関数で出力しますが、出力するのは文字ですので書式は%cです。変数one_charはint型ですので、ここでは明示的にchar型に変換していますが、変換を指定しなくても構いません。（char型は整数型の一種ですので、自動的に変換されます）</dd>
+				</dl>
+			</section>
+		</section>
+
+		<section>
+			<h2 id="lbl_charputfunc">14.4 文字の出力関数</h2>
+			<section>
+				<h3 id="lbl_fputc">14.4.1 fputc関数、putc関数</h3>
+				<p>fputc関数とputc関数は関数名が異なるだけで機能及び、形式は同じです。ただし、Ｃ言語の処理系により異なりますが、putc関数は関数ではなくマクロで実装されている可能性が有ります。</p>
+				<p>これらの関数はファイルポインタに対応したファイルに<strong>１文字</strong>出力します。</p>
+				<table>
+					<caption>【表14-1-10】 fputc関数、putc関数</caption>
+					<tr><th>形式</th><td>#include &lt;stdio.h&gt;<br>
+										int fputc(int c, FILE *fp);<br>
+										int putc(int c, FILE *fp);</td></tr>
+					<tr><th>返り値</th><td>出力できた場合は出力した１文字を返します。エラーを検出した場合は<strong>EOF</strong>を返します。</td></tr>
+					<tr><th>引数</th>
+						<td>
+							<dl>
+								<dt>int c</dt>
+									<dd>出力する１文字を指定します。型名はint型ですので注意してください。</dd>
+								<dt>FILE *fp</dt>
+									<dd>出力するファイルのファイルポインタを指定します。</dd>
+							</dl>
+						</td></tr>
+				</table>
+			</section>
+			<section>
+				<h3 id="lbl_putchar">14.4.2 putchar関数</h3>
+				<p>putchar関数は<strong>標準出力</strong>に１文字出力します。従って、<code>int fputc(c, stdout);</code>や<code>int putc(c, stdout);</code>と同じです。</p>
+				<table>
+					<caption>【表14-1-11】 putchar関数</caption>
+					<tr><th>形式</th><td>#include &lt;stdio.h&gt;<br>
+										int putchar(int c);</td></tr>
+					<tr><th>返り値</th><td>fputc関数、putc関数と同じです。</td></tr>
+					<tr><th>引数</th>
+						<td>出力する１文字を指定します。</td></tr>
+				</table>
+			</section>
+			<section>
+				<h3>14.4.3 例題</h3>
+				<p>実行時引数として２つのファイルパス名を指定してファイルのコピーを行います。（cpコマンドと同じような機能です）なお、ソースファイルの行数を少なくしてプログラムのポイントを明確にするため、エラー処理は省略しています。</p>
+				<div class="source-code">
+					<div class="c"><ol><li class="li1"><div class="de1"><span class="co2">#include &lt;stdio.h&gt;</span></div></li>
+					<li class="li1"><div class="de1"><span class="kw4">int</span> main<span class="br0">&#40;</span><span class="kw4">int</span> argc<span class="sy0">,</span> <span class="kw4">char</span> <span class="sy0">**</span>argv<span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; FILE &nbsp; &nbsp;<span class="sy0">*</span>fp_src<span class="sy0">;</span> &nbsp; &nbsp;<span class="coMULTI">/* コピー元ファイル */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; FILE &nbsp; &nbsp;<span class="sy0">*</span>fp_dest<span class="sy0">;</span> &nbsp; &nbsp;<span class="coMULTI">/* コピー先ファイル */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">int</span> &nbsp; &nbsp; one_char<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; fp_src <span class="sy0">=</span> <span class="kw3">fopen</span><span class="br0">&#40;</span><span class="sy0">*</span><span class="br0">&#40;</span>argv <span class="sy0">+</span> <span class="nu0">1</span><span class="br0">&#41;</span><span class="sy0">,</span> <span class="st0">&quot;r&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; fp_dest <span class="sy0">=</span> <span class="kw3">fopen</span><span class="br0">&#40;</span><span class="sy0">*</span><span class="br0">&#40;</span>argv <span class="sy0">+</span> <span class="nu0">2</span><span class="br0">&#41;</span><span class="sy0">,</span> <span class="st0">&quot;w&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">while</span><span class="br0">&#40;</span><span class="br0">&#40;</span>one_char <span class="sy0">=</span> <span class="kw3">fgetc</span><span class="br0">&#40;</span>fp_src<span class="br0">&#41;</span><span class="br0">&#41;</span> <span class="sy0">!=</span> EOF<span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">fputc</span><span class="br0">&#40;</span>one_char<span class="sy0">,</span> fp_dest<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">fclose</span><span class="br0">&#40;</span>fp_dest<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">fclose</span><span class="br0">&#40;</span>fp_src<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">return</span> <span class="nu0">0</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#125;</span></div></li>
+					</ol></div>
+				</div>
+				<div class="exe-samp">
+<pre><samp>$ <kbd>ls ./temp.txt</kbd><strong> ← ./temp.txtファイルの有無を確認します</strong>
+ls: cannot access ./temp.txt: そのようなファイルやディレクトリはありません
+$
+$ <kbd>./ex14_1_3.prg /etc/issue ./temp.txt</kbd><strong> ← 実行時引数に/etc/issueと./temp.txtを指定して実行します</strong>
+$
+$ <kbd>cat ./temp.txt</kbd><strong> ← ./temp.txtファイルの内容を確認します</strong>
+Fedora release 8 (Werewolf)
+Kernel \r on an \m
+
+$</samp></pre>
+				</div>
+				<dl>
+					<dt>13行目</dt>
+						<dd>while文の繰り返しの中でfgetc関数で１文字入力し、それをfputc関数で出力します。ここではfputc関数を使っていますが、putc関数を使っても同じです。</dd>
+				</dl>
+			</section>
+		</section>
+
+		<section>
+			<h2 id="lbl_lineinputfunc">14.5 行の入力関数</h2>
+			<section>
+				<h3 id="lbl_fgets">14.5.1 fgets関数</h3>
+				<p>fgets関数はファイルポインタに対応したファイルから指定した長さの文字列または、１行分の文字列を入力します。</p>
+				<table>
+					<caption>【表14-1-12】 fgets関数</caption>
+					<tr><th>形式</th><td>#include &lt;stdio.h&gt;<br>
+										char *fgets(char *buff, int size, FILE *fp);</td></tr>
+					<tr><th>返り値</th><td>入力できた場合は第１引数のbuffの値（buffの先頭アドレス）を返します。エラーを検出した場合または、何も入力しないでファイルの終端を検出した場合は<strong>NULL</strong>を返します。</td></tr>
+					<tr><th>引数</th>
+						<td>
+							<dl>
+								<dt>char *buff</dt>
+									<dd>入力した文字列を格納する領域を指定します。入力したデータの最後にはヌル文字（'\0'）が付加されて文字列になっています。</dd>
+								<dt>int size</dt>
+									<dd>入力する文字列の最大文字数を指定します。この関数は１行の文字数がsizeよりも少ない場合は１行全体を入力し、多い場合はsize分の文字を入力します。ただし、最後にヌル文字が付加されるため、実際に入力する文字数は<code>size - 1</code>になります。</dd>
+								<dt>FILE *fp</dt>
+									<dd>入力するファイルのファイルポインタを指定します。</dd>
+							</dl>
+						</td></tr>
+					<tr><th>使用法、<br>他</th>
+						<td>
+						返り値がNULLの場合は厳密にはファイルの終端かエラーか分かりませんので、必要に応じて、<a href="./s14_01_6.html#lbl_feof">feof関数</a>や<a href="./s14_01_6.html#lbl_ferror">ferror関数</a>でチェックを行います。
+						</td></tr>
+				</table>
+			</section>
+			<section>
+				<h3 id="lbl_gets">14.5.2 gets関数</h3>
+				<p>gets関数は標準入力から１行分の文字列を入力します。この関数は第１引数に指定したバッファに入りきらない容量の文字列も入力してしまいます。従って、セキュリティ上、大変危険ですので、なるべく使わない方がよいでしょう。</p>
+				<table>
+					<caption>【表14-1-13】 gets関数</caption>
+					<tr><th>形式</th><td>#include &lt;stdio.h&gt;<br>
+										char *gets(char *buff);</td></tr>
+					<tr><th>返り値</th><td>fgets関数と同じです。</td></tr>
+					<tr><th>引数</th>
+						<td>
+							<dl>
+								<dt>char *buff</dt>
+									<dd>入力した文字列を格納する領域を指定します。入力したデータ中の改行文字やEOFはヌル文字（'\0'）に置き換えられます。</dd>
+							</dl>
+						</td></tr>
+				</table>
+			</section>
+			<section>
+				<h3>14.5.3 例題</h3>
+				<p>実行時引数で指定したファイルの内容を標準出力に出力します。（catコマンドと同じような機能です）なお、ソースファイルの行数を少なくしてプログラムのポイントを明確にするため、エラー処理は省略しています。</p>
+				<div class="source-code">
+					<div class="c"><ol><li class="li1"><div class="de1"><span class="co2">#include &lt;stdio.h&gt;</span></div></li>
+					<li class="li1"><div class="de1"><span class="co2">#define SIZE 4096</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1"><span class="kw4">int</span> main<span class="br0">&#40;</span><span class="kw4">int</span> argc<span class="sy0">,</span> <span class="kw4">char</span> <span class="sy0">**</span>argv<span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; FILE &nbsp; &nbsp;<span class="sy0">*</span>fp<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">char</span> &nbsp; &nbsp;buff<span class="br0">&#91;</span>SIZE<span class="br0">&#93;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; fp <span class="sy0">=</span> <span class="kw3">fopen</span><span class="br0">&#40;</span><span class="sy0">*</span><span class="br0">&#40;</span>argv <span class="sy0">+</span> <span class="nu0">1</span><span class="br0">&#41;</span><span class="sy0">,</span> <span class="st0">&quot;r&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">while</span><span class="br0">&#40;</span><span class="kw3">fgets</span><span class="br0">&#40;</span>buff<span class="sy0">,</span> SIZE<span class="sy0">,</span> fp<span class="br0">&#41;</span> <span class="sy0">!=</span> NULL<span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;%s&quot;</span><span class="sy0">,</span> buff<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">fclose</span><span class="br0">&#40;</span>fp<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">return</span> <span class="nu0">0</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#125;</span></div></li>
+					</ol></div>
+				</div>
+				<div class="exe-samp">
+<pre><samp>$ <kbd>./ex14_1_4.prg /etc/issue</kbd><strong> ← 実行時引数に/etc/issueを指定して実行します</strong>
+Fedora release 8 (Werewolf)
+Kernel \r on an \m
+
+$</samp></pre>
+					</div>
+				<dl>
+					<dt>2行目</dt>
+						<dd>fgets関数で入力する文字列の最大文字数を、SIZEという名称のマクロとして定義します。</dd>
+					<dt>7行目</dt>
+						<dd>fgets関数で入力したデータを格納するchar型の配列を宣言します。要素数は２行目で定義したマクロ（SIZE）を指定していますので、実際は4096です。</dd>
+					<dt>11行目</dt>
+						<dd>while文の繰り返しの中でfgets関数で文字列を入力します。</dd>
+					<dt>13行目</dt>
+						<dd>入力した文字列をprintf関数で出力します。配列buffに格納されているデータの最後には、ヌル文字（'\0'）が付加されて文字列になっていますので%s書式を指定します。</dd>
+				</dl>
+			</section>
+		</section>
+
+		<section>
+			<h2 id="lbl_lineoutputfunc">14.6 行の出力関数</h2>
+			<section>
+				<h3 id="lbl_fputs">14.6.1 fputs関数</h3>
+				<p>fputs関数はファイルポインタに対応したファイルに文字列を出力します。</p>
+				<table>
+					<caption>【表14-1-14】 fputs関数</caption>
+					<tr><th>形式</th><td>#include &lt;stdio.h&gt;<br>
+										int fputs(const char *buff, FILE *fp);</td></tr>
+					<tr><th>返り値</th><td>正常に出力できた場合は<strong>EOF</strong>以外（０以上の値）を返します。エラーを検出した場合は<strong>EOF</strong>を返します。</td></tr>
+					<tr><th>引数</th>
+						<td>
+							<dl>
+								<dt>const char *buff</dt>
+									<dd>出力する文字列を指定します。文字列の最後のヌル文字（'\0'）は出力しません。</dd>
+								<dt>FILE *fp</dt>
+									<dd>出力するファイルのファイルポインタを指定します。</dd>
+							</dl>
+						</td></tr>
+				</table>
+			</section>
+			<section>
+				<h3 id="lbl_puts">14.6.2 puts関数</h3>
+				<p>puts関数は標準出力に１行分の文字列を出力します。なお、文字列の最後のヌル文字を改行文字に置き換えて出力しますので注意してください。</p>
+				<table>
+					<caption>【表14-1-15】 puts関数</caption>
+					<tr><th>形式</th><td>#include &lt;stdio.h&gt;<br>
+										int puts(const char *buff);</td></tr>
+					<tr><th>返り値</th><td>fputs関数と同じです。</td></tr>
+					<tr><th>引数</th>
+						<td>
+							<dl>
+								<dt>char *buff</dt>
+									<dd>出力する文字列を指定します。文字列の最後のヌル文字（<code>'\0'</code>）は出力しません。また、文字列の最後に改行文字を付加します。</dd>
+							</dl>
+						</td></tr>
+				</table>
+			</section>
+			<section>
+				<h3>14.6.3 例題</h3>
+				<p>fgetc関数とfputc関数の例題と同じく、実行時引数として２つのファイルパス名を指定して、ファイルのコピーを行います。なお、ソースファイルの行数を少なくしてプログラムのポイントを明確にするため、エラー処理は省略しています。</p>
+				<div class="source-code">
+					<div class="c"><ol><li class="li1"><div class="de1"><span class="co2">#include &lt;stdio.h&gt;</span></div></li>
+					<li class="li1"><div class="de1"><span class="co2">#define SIZE 4096</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1"><span class="kw4">int</span> main<span class="br0">&#40;</span><span class="kw4">int</span> argc<span class="sy0">,</span> <span class="kw4">char</span> <span class="sy0">**</span>argv<span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; FILE &nbsp; &nbsp;<span class="sy0">*</span>fp_src<span class="sy0">;</span> &nbsp; &nbsp;<span class="coMULTI">/* コピー元ファイル */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; FILE &nbsp; &nbsp;<span class="sy0">*</span>fp_dest<span class="sy0">;</span> &nbsp; <span class="coMULTI">/* コピー先ファイル */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">char</span> &nbsp; &nbsp;buff<span class="br0">&#91;</span>SIZE<span class="br0">&#93;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; fp_src <span class="sy0">=</span> <span class="kw3">fopen</span><span class="br0">&#40;</span><span class="sy0">*</span><span class="br0">&#40;</span>argv <span class="sy0">+</span> <span class="nu0">1</span><span class="br0">&#41;</span><span class="sy0">,</span> <span class="st0">&quot;r&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; fp_dest <span class="sy0">=</span> <span class="kw3">fopen</span><span class="br0">&#40;</span><span class="sy0">*</span><span class="br0">&#40;</span>argv <span class="sy0">+</span> <span class="nu0">2</span><span class="br0">&#41;</span><span class="sy0">,</span> <span class="st0">&quot;w&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">while</span><span class="br0">&#40;</span><span class="kw3">fgets</span><span class="br0">&#40;</span>buff<span class="sy0">,</span> SIZE<span class="sy0">,</span> fp_src<span class="br0">&#41;</span> <span class="sy0">!=</span> NULL<span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">fputs</span><span class="br0">&#40;</span>buff<span class="sy0">,</span> fp_dest<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">fclose</span><span class="br0">&#40;</span>fp_dest<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">fclose</span><span class="br0">&#40;</span>fp_src<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">return</span> <span class="nu0">0</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#125;</span></div></li>
+					</ol></div>
+				</div>
+				<div class="exe-samp">
+<pre><samp>$ <kbd>ls ./temp.txt</kbd>
+ls: cannot access ./temp.txt: そのようなファイルやディレクトリはありません
+$
+$ <kbd>./ex14_1_5.prg /etc/issue ./temp.txt</kbd>
+$ <kbd>cat ./temp.txt</kbd>
+Fedora release 8 (Werewolf)
+Kernel \r on an \m
+
+$</samp></pre>
+				</div>
+				<dl>
+					<dt>15行目</dt>
+						<dd>13行目のfgets関数で入力した文字列をfputs関数で出力します。</dd>
+				</dl>
+			</section>
+		</section>
+	</section>
+
+	<footer>
+		<nav>
+			<ul>
+				<li><a href="../../../index.html">ホーム</a></li>
+				<li><a href="../../c_langtop.html#lbl_index">目次</a></li>
+				<li><a href="./s14_01_2.html">前のページ</a></li>
+				<li><a href="./s14_01_4.html">次のページ</a></li>
+			</ul>
+		</nav>
+		<p id="footer-author">更新日：<time datetime="2018-12-22">2018年12月22日</time> Merry</p>
+	</footer>
+</div>
+</body>
+</html>

@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initialscale=1.0">
+	<meta name="robots" content="INDEX,FOLLOW">
+	<meta name="keywords" content="文字列処理ライブラリ,関数,strcmp,strncmp,memcmp,strcpy,strncpy,memcpy">
+	<meta name="description" content="strcmp関数、strncmp関数、memcmp関数、strcpy関数、strncpy関数、memcpy関数の使用法を説明します。">
+	<meta name="author" content="T.Hagiwara">
+	<link rel="stylesheet" href="../../../CSS3/seminar.css" type="text/css">
+	<link rel="stylesheet" href="../../../CSS3/hl_clang.css" type="text/css">
+	<link rel="prev" href="./s14_02_1.html">
+	<link rel="next" href="./s14_02_3.html">
+	<title>Ｃ言語プログラミング入門&nbsp;-&nbsp;ライブラリ関数&nbsp;-&nbsp;文字列処理ライブラリ（2/5）-</title>
+	<style type="text/css">
+	</style>
+</head>
+<body>
+<div id="container">
+	<header>
+		<p>Linux講座にようこそ。このページは「Ｃ言語プログラミング入門&nbsp;-&nbsp;第14章．ライブラリ関数&nbsp;-&nbsp;文字列処理ライブラリ」です。</p>
+		<h1>Ｃ言語プログラミング入門</h1>
+		<nav>
+			<ul>
+				<li><a href="../../../index.html">ホーム</a></li>
+				<li><a href="../../c_langtop.html#lbl_index">目次</a></li>
+				<li><a href="./s14_02_1.html">前のページ</a></li>
+				<li><a href="./s14_02_3.html">次のページ</a></li>
+			</ul>
+		</nav>
+	</header>
+
+	<section class="contents">
+		<h1>14. ライブラリ関数（13/36）&nbsp;-&nbsp;文字列処理ライブラリ（2/5）</h1>
+		<section>
+			<h2 id="lbl_len">14.16 文字列長の取得関数</h2>
+			<section>
+				<h3 id="lbl_strlen">14.16.1 strlen関数</h3>
+				<p>strlen関数はヌル文字を含まない文字列の長さ（文字数）を取得します。</p>
+				<table>
+					<caption>【表14-2-2】 strlen関数</caption>
+					<tr><th>形式</th><td>#include &lt;string.h&gt;<br>
+										size_t strlen(const char *str);</td></tr>
+					<tr><th>返り値</th><td>文字列の長さを返します。文字列の最後のヌル文字を含みます。</td></tr>
+					<tr><th>引数</th>
+						<td>
+							<dl>
+								<dt>const char *str</dt>
+									<dd>長さを求めたい文字列を指定します。</dd>
+							</dl>
+						</td></tr>
+					<tr id="lbl_note_1"><th>使用法、<br>他</th>
+						<td>返り値の型はsize_tになっていますが、これは長さを表すための型名でヘッダファイルに定義してあります。通常はunsigned intですので整数値として取り扱います。</td></tr>
+				</table>
+				<aside>
+					<h4>補足</h4>
+					<p>この関数は日本語などのワイド文字を含む文字列の文字数は数えられません。ワイド文字を含む場合は、この講座では説明していませんがwcslen関数を使うと良いでしょう。</p>
+				</aside>
+			</section>
+			<section>
+				<h3>14.16.2 例題</h3>
+				<p>入力した文字列の長さ（文字数）を表示します。</p>
+				<div class="source-code">
+					<div class="c"><ol><li class="li1"><div class="de1"><span class="co2">#include &lt;stdio.h&gt;</span></div></li>
+					<li class="li1"><div class="de1"><span class="co2">#include &lt;string.h&gt;</span></div></li>
+					<li class="li1"><div class="de1"><span class="co2">#define BUFFSIZE &nbsp; &nbsp;1024</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1"><span class="kw4">int</span> main<span class="br0">&#40;</span><span class="kw4">void</span><span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">char</span> &nbsp; &nbsp;buff<span class="br0">&#91;</span>BUFFSIZE<span class="br0">&#93;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">char</span> &nbsp; &nbsp;ans<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">do</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;メッセージを入力してください ==&gt; &quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">fgets</span><span class="br0">&#40;</span>buff<span class="sy0">,</span> BUFFSIZE<span class="sy0">,</span> stdin<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;長さは%d文字です。<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> <span class="kw3">strlen</span><span class="br0">&#40;</span>buff<span class="br0">&#41;</span> <span class="sy0">-</span> <span class="nu0">1</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;再度入力しますか（y/n） ==&gt; &quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">scanf</span><span class="br0">&#40;</span><span class="st0">&quot;%c%*c&quot;</span><span class="sy0">,</span> <span class="sy0">&amp;</span>ans<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span> <span class="kw1">while</span><span class="br0">&#40;</span>ans <span class="sy0">==</span> <span class="st0">'y'</span> <span class="sy0">||</span> ans <span class="sy0">==</span> <span class="st0">'Y'</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">return</span> <span class="nu0">0</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#125;</span></div></li>
+					</ol></div>
+				</div>
+				<div class="exe-samp">
+<pre><samp>$ <kbd>./ex14_2_1.prg</kbd>
+メッセージを入力してください ==&gt; <kbd>Hello World.</kbd>
+長さは12文字です。
+再度入力しますか（y/n） ==&gt; <kbd>y</kbd>
+メッセージを入力してください ==&gt; <kbd>Bye Bye.</kbd>
+長さは8文字です。
+再度入力しますか（y/n） ==&gt; <kbd>n</kbd>
+$
+$ <kbd>./ex14_2_1.prg</kbd>
+メッセージを入力してください ==&gt; <kbd>こんにちは。</kbd>
+長さは18文字です。<strong> ← 日本語文字列の場合は、正しい文字数ではありません</strong>
+再度入力しますか（y/n） ==&gt; <kbd>n</kbd>
+$</samp></pre>
+				</div>
+				<dl>
+					<dt>2行目</dt>
+						<dd>strlen関数を使いますのでstring.hファイルを取り込みます。</dd>
+					<dt>15行目</dt>
+						<dd>strlen関数で入力メッセージの文字数を取得します。改行文字を含んだ文字数が返ってきますので１を減算した値を出力します。</dd>
+				</dl>
+			</section>
+		</section>
+
+		<section>
+			<h2 id="lbl_cmp">14.17 文字列の比較関数</h2>
+			<section>
+				<h3 id="lbl_strcmp">14.17.1 strcmp関数</h3>
+				<p>strcmp関数は２つの文字列を比較し、結果を返り値で返します。</p>
+				<p>文字列の比較ですのでヌル文字が現れるまで１文字ずつ比較します。長さが異なる場合はヌル文字が現れた時点で比較を終了します。</p>
+				<table>
+					<caption>【表14-2-3】 strcmp関数</caption>
+					<tr><th>形式</th><td>#include &lt;string.h&gt;<br>
+										int strcmp(const char *str1, const char *str2);</td></tr>
+					<tr><th>返り値</th><td>比較結果を次のような値で返します。
+											<ul>
+												<li>str1がstr2よりも小さい場合は負の整数値を返します。</li>
+												<li>str1とstr2が等しい場合は０を返します。</li>
+												<li>str1がstr2よりも大きい場合は正の整数値を返します。</li>
+											</ul>
+										</td></tr>
+					<tr><th>引数</th>
+						<td>
+							<dl>
+								<dt>const char *str1</dt>
+									<dd>比較する文字列を指定します。</dd>
+								<dt>const char *str2</dt>
+									<dd>比較する文字列を指定します。</dd>
+							</dl>
+						</td></tr>
+				</table>
+			</section>
+			<section>
+				<h3 id="lbl_strncmp">14.17.2 strncmp関数</h3>
+				<p>strncmp関数は２つの文字列を比較し、結果を返り値で返します。strcmp関数との相違は第３引数で比較する文字数を指定できることです。</p>
+				<table>
+					<caption>【表14-2-4】 strncmp関数</caption>
+					<tr><th>形式</th><td>#include &lt;string.h&gt;<br>
+										int strncmp(const char *s1, const char *s2, size_t n);</td></tr>
+					<tr><th>返り値</th><td>strcmp関数と同じです。</td></tr>
+					<tr><th>引数</th>
+						<td>
+							<dl>
+								<dt>const char *str1</dt>
+									<dd>比較する文字列を指定します。</dd>
+								<dt>const char *str2</dt>
+									<dd>比較する文字列を指定します。</dd>
+								<dt>size_t n</dt>
+									<dd>比較する文字数を指定します。</dd>
+							</dl>
+						</td></tr>
+				</table>
+			</section>
+			<section>
+				<h3 id="lbl_memcmp">14.17.3 memcmp関数</h3>
+				<p>memcmp関数は２つのメモリ領域を比較し、結果を返り値で返します。比較する領域は文字列でなくても構いません。</p>
+				<table>
+					<caption>【表14-2-5】 memcmp関数</caption>
+					<tr><th>形式</th><td>#include &lt;string.h&gt;<br>
+										int memcmp(const void *mem1, const void *mem2, size_t n);</td></tr>
+					<tr><th>返り値</th><td>strcmp関数と同じです。</td></tr>
+					<tr><th>引数</th>
+						<td>
+							<dl>
+								<dt>const void *mem1</dt>
+									<dd>比較する領域を指定します。</dd>
+								<dt>const void *mem2</dt>
+									<dd>比較する領域を指定します。</dd>
+								<dt>size_t n</dt>
+									<dd>比較する文字数（バイト数）を指定します。</dd>
+							</dl>
+						</td></tr>
+				</table>
+			</section>
+			<section>
+				<h3>14.17.4 例題</h3>
+				<p>文字列を２つ入力してそれが等しいか否かを表示します。</p>
+				<div class="source-code">
+					<div class="c"><ol><li class="li1"><div class="de1"><span class="co2">#include &lt;stdio.h&gt;</span></div></li>
+					<li class="li1"><div class="de1"><span class="co2">#include &lt;string.h&gt;</span></div></li>
+					<li class="li1"><div class="de1"><span class="co2">#define BUFFSIZE &nbsp; &nbsp;1024</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1"><span class="kw4">int</span> main<span class="br0">&#40;</span><span class="kw4">void</span><span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">char</span> &nbsp; &nbsp;pass1<span class="br0">&#91;</span>BUFFSIZE<span class="br0">&#93;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">char</span> &nbsp; &nbsp;pass2<span class="br0">&#91;</span>BUFFSIZE<span class="br0">&#93;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;パスワードを入力してください ==&gt; &quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">fgets</span><span class="br0">&#40;</span>pass1<span class="sy0">,</span> BUFFSIZE<span class="sy0">,</span> stdin<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;再度同じパスワードを入力してください ==&gt; &quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">fgets</span><span class="br0">&#40;</span>pass2<span class="sy0">,</span> BUFFSIZE<span class="sy0">,</span> stdin<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">if</span> <span class="br0">&#40;</span><span class="kw3">strcmp</span><span class="br0">&#40;</span>pass1<span class="sy0">,</span> pass2<span class="br0">&#41;</span> <span class="sy0">==</span> <span class="nu0">0</span><span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;OKです。<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">else</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;NGです。パスワードが異なります。<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">return</span> <span class="nu0">0</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#125;</span></div></li>
+					</ol></div>
+				</div>
+				<div class="exe-samp">
+<pre><samp>$ <kbd>./ex14_2_2.prg</kbd>
+パスワードを入力してください ==&gt; <kbd>hogehogepass</kbd>
+再度同じパスワードを入力してください ==&gt; <kbd>hogehogepass</kbd>
+OKです。
+$
+$ <kbd>./ex14_2_2.prg</kbd>
+パスワードを入力してください ==&gt; <kbd>hogehogepass</kbd>
+再度同じパスワードを入力してください ==&gt; <kbd>HOGEHOGEPASS</kbd>
+NGです。パスワードが異なります。
+$</samp></pre>
+				</div>
+				<dl>
+					<dt>15行目</dt>
+						<dd>strcmp関数でpass1とpass2の文字列を比較します。返り値が０の場合は二つの文字列が等しいことになります。</dd>
+				</dl>
+			</section>
+		</section>
+
+		<section>
+			<h2 id="lbl_cpy">14.18 文字列のコピー関数</h2>
+			<section>
+				<h3 id="lbl_strcpy">14.18.1 strcpy関数</h3>
+				<p>strcpy関数は終端のヌル文字を含めて文字列をコピーします。使用する場合は次の点に注意してください。</p>
+				<ul>
+					<li>コピー元とコピー先の文字列は重なっていないこと。</li>
+					<li>コピー先の文字列はコピー元の文字列が全部入るだけの大きさがあること。</li>
+				</ul>
+				<table>
+					<caption>【表14-2-6】 strcpy関数</caption>
+					<tr><th>形式</th><td>#include &lt;string.h&gt;<br>
+										char *strcpy(char *dest, const char *src);</td></tr>
+					<tr><th>返り値</th><td>コピー先の文字列destへのポインタを返します。</td></tr>
+					<tr><th>引数</th>
+						<td>
+							<dl>
+								<dt>char *dest</dt>
+									<dd>コピー先の文字列を指定します。</dd>
+								<dt>const char *src</dt>
+									<dd>コピー元の文字列を指定します。</dd>
+							</dl>
+						</td></tr>
+				</table>
+			</section>
+			<section>
+				<h3 id="lbl_strncpy">14.18.2 strncpy関数</h3>
+				<p>strncpy関数は終端のヌル文字を含めて文字列をコピーします。strcpy関数との相違は第３引数でコピーする文字数を指定できることです。使用上の注意点もstrcpy関数と同じですが、さらに次の点にも注意してください。</p>
+				<ul>
+					<li>コピー元の先頭から第３引数で指定したコピーする文字数の間にヌル文字がない場合は、コピー先の文字列は終端のヌル文字がない状態になります。</li>
+					<li>コピー元の文字列が第３引数で指定したコピーする文字数よりも小さい（短い）場合は、コピー先の文字列の残りの部分はヌル文字を埋め込みます。</li>
+				</ul>
+				<table>
+					<caption>【表14-2-7】 関数</caption>
+					<tr><th>形式</th><td>#include &lt;string.h&gt;<br>
+										char *strncpy(char *dest, const char *src, size_t n);</td></tr>
+					<tr><th>返り値</th><td>strcpy関数と同じです。</td></tr>
+					<tr><th>引数</th>
+						<td>
+							<dl>
+								<dt>char *dest</dt>
+									<dd>コピー先の文字列を指定します。</dd>
+								<dt>const char *src</dt>
+									<dd>コピー元の文字列を指定します。</dd>
+								<dt>size_t n</dt>
+									<dd>コピーする文字数を指定します。</dd>
+							</dl>
+						</td></tr>
+				</table>
+			</section>
+			<section>
+				<h3 id="lbl_memcpy">14.18.3 memcpy関数</h3>
+				<p>memcpy関数はメモリ領域を第３引数で指定したバイト数分コピーします。コピー元とコピー先が重なっている場合は<a href="./s14_02_5.html#lbl_memmove">memmove関数</a>を使用してください。</p>
+				<table>
+					<caption>【表14-2-8】 memcpy関数</caption>
+					<tr><th>形式</th><td>#include &lt;string.h&gt;<br>
+										void *memcpy(void *dest, const void *src, size_t n);</td></tr>
+					<tr><th>返り値</th><td>コピー先の領域destへのポインタを返します。</td></tr>
+					<tr><th>引数</th>
+						<td>
+							<dl>
+								<dt>void *dest</dt>
+									<dd>コピー先の領域を指定します。</dd>
+								<dt>const void *src</dt>
+									<dd>コピー元の領域を指定します。</dd>
+								<dt>size_t n</dt>
+									<dd>コピーするバイト数を指定します。</dd>
+							</dl>
+						</td></tr>
+				</table>
+			</section>
+			<section>
+				<h3>14.18.4 例題</h3>
+				<p>任意の数のメッセージを入力して、入力し終わったら番号を付けて表示します。メッセージの入力は「end」が入力されるか、10個入力されるまで続きます。なお、<a href="../s14_06/s14_06_2.html#lbl_malloc">malloc関数</a>はメモリ領域を動的に確保する関数で、<a href="../s14_06/s14_06_2.html#lbl_free">free関数</a>は確保した領域を解放する関数です。これらについては後ほど説明します。</p>
+				<div class="source-code">
+					<div class="c"><ol><li class="li1"><div class="de1"><span class="co2">#include &lt;stdio.h&gt;</span></div></li>
+					<li class="li1"><div class="de1"><span class="co2">#include &lt;string.h&gt;</span></div></li>
+					<li class="li1"><div class="de1"><span class="co2">#include &lt;stdlib.h&gt;</span></div></li>
+					<li class="li1"><div class="de1"><span class="co2">#define BUFF_SIZE &nbsp; &nbsp;1024</span></div></li>
+					<li class="li1"><div class="de1"><span class="co2">#define MESSAGE_MAX &nbsp;10</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1"><span class="kw4">int</span> main<span class="br0">&#40;</span><span class="kw4">void</span><span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">char</span> &nbsp; &nbsp;buff<span class="br0">&#91;</span>BUFF_SIZE<span class="br0">&#93;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">char</span> &nbsp; &nbsp;<span class="sy0">*</span>message_buff<span class="br0">&#91;</span>MESSAGE_MAX<span class="br0">&#93;</span><span class="sy0">;</span> &nbsp; &nbsp; &nbsp; &nbsp;<span class="coMULTI">/* メッセージ格納領域の配列 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">char</span> &nbsp; &nbsp;<span class="sy0">*</span>message_ptr<span class="sy0">;</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="coMULTI">/* メッセージ格納領域ポインタ */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">int</span> &nbsp; &nbsp; message_idx<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">int</span> &nbsp; &nbsp; num<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">for</span><span class="br0">&#40;</span>message_idx <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">;</span> message_idx <span class="sy0">&lt;</span> MESSAGE_MAX<span class="sy0">;</span> <span class="sy0">++</span>message_idx<span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;メッセージを入力してください ==&gt; &quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">fgets</span><span class="br0">&#40;</span>buff<span class="sy0">,</span> BUFF_SIZE<span class="sy0">,</span> stdin<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">if</span><span class="br0">&#40;</span><span class="kw3">strncmp</span><span class="br0">&#40;</span>buff<span class="sy0">,</span> <span class="st0">&quot;end&quot;</span><span class="sy0">,</span> <span class="nu0">3</span><span class="br0">&#41;</span><span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* メッセージを格納するための領域を確保 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; message_ptr <span class="sy0">=</span> <span class="br0">&#40;</span><span class="kw4">char</span> <span class="sy0">*</span><span class="br0">&#41;</span><span class="kw3">malloc</span><span class="br0">&#40;</span><span class="kw3">strlen</span><span class="br0">&#40;</span>buff<span class="br0">&#41;</span> <span class="sy0">+</span> <span class="nu0">1</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* メッセージ格納領域に入力したメッセージをコピー */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">strcpy</span><span class="br0">&#40;</span>message_ptr<span class="sy0">,</span> buff<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* メッセージ格納領域の配列にメッセージ格納領域のアドレスを設定 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="sy0">*</span><span class="br0">&#40;</span>message_buff <span class="sy0">+</span> message_idx<span class="br0">&#41;</span> <span class="sy0">=</span> message_ptr<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">else</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw2">break</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;<span class="es1">\n</span>入力したメッセージに番号を付加して表示します。<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">for</span><span class="br0">&#40;</span>num <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">;</span> num <span class="sy0">&lt;</span> message_idx<span class="sy0">;</span> <span class="sy0">++</span>num<span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;%.3d : %s&quot;</span><span class="sy0">,</span> num <span class="sy0">+</span> <span class="nu0">1</span><span class="sy0">,</span> <span class="sy0">*</span><span class="br0">&#40;</span>message_buff <span class="sy0">+</span> num<span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* メッセージ格納領域を解放 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">free</span><span class="br0">&#40;</span><span class="sy0">*</span><span class="br0">&#40;</span>message_buff <span class="sy0">+</span> num<span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">return</span> <span class="nu0">0</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#125;</span></div></li>
+					</ol></div>
+				</div>
+				<div class="exe-samp">
+<pre><samp>$ <kbd>./ex14_2_3.prg</kbd>
+メッセージを入力してください ==&gt; <kbd>Hi.</kbd>
+メッセージを入力してください ==&gt; <kbd>Hello!</kbd>
+メッセージを入力してください ==&gt; <kbd>Bye.</kbd>
+メッセージを入力してください ==&gt; <kbd>Bye bye.</kbd>
+メッセージを入力してください ==&gt; <kbd>end</kbd>
+
+入力したメッセージに番号を付加して表示します。
+001 : Hi.
+002 : Hello!
+003 : Bye.
+004 : Bye bye.
+$</samp></pre>
+				</div>
+				<dl>
+					<dt>10行目</dt>
+						<dd>入力したメッセージを格納するポインタの配列を宣言します。ここにメッセージ（char型の配列）の先頭アドレスを格納します。</dd>
+					<dt>20行目</dt>
+						<dd>入力メッセージが「end」かをチェックします。</dd>
+					<dt>25行目</dt>
+						<dd>メッセージ格納領域に入力したメッセージをコピーします。</dd>
+				</dl>
+			</section>
+		</section>
+	</section>
+
+	<footer>
+		<nav>
+			<ul>
+				<li><a href="../../../index.html">ホーム</a></li>
+				<li><a href="../../c_langtop.html#lbl_index">目次</a></li>
+				<li><a href="./s14_02_1.html">前のページ</a></li>
+				<li><a href="./s14_02_3.html">次のページ</a></li>
+			</ul>
+		</nav>
+		<p id="footer-author">更新日：<time datetime="2018-12-27">2018年12月27日</time> Merry</p>
+	</footer>
+</div>
+</body>
+</html>

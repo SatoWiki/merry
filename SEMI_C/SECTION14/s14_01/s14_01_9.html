@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initialscale=1.0">
+	<meta name="robots" content="INDEX,FOLLOW">
+	<meta name="keywords" content="入出力ライブラリ,関数,書式出力,可変個引数,vfprintf,vprintf,vsprintf,ファイルポインタ,書式制御,標準出力">
+	<meta name="description" content="vfprintf関数、vprintf関数、vsprintf関数の使い方を説明します。">
+	<meta name="author" content="T.Hagiwara">
+	<link rel="stylesheet" href="../../../CSS3/seminar.css" type="text/css">
+	<link rel="stylesheet" href="../../../CSS3/hl_clang.css" type="text/css">
+	<link rel="prev" href="./s14_01_8.html">
+	<link rel="next" href="./s14_01_A.html">
+	<title>Ｃ言語プログラミング入門&nbsp;-&nbsp;ライブラリ関数&nbsp;-&nbsp;入出力ライブラリ（9/10）-</title>
+	<style type="text/css">
+	</style>
+</head>
+<body>
+<div id="container">
+	<header>
+		<p>Linux講座にようこそ。このページは「Ｃ言語プログラミング入門&nbsp;-&nbsp;第14章．ライブラリ関数&nbsp;-&nbsp;入出力ライブラリ」です。</p>
+		<h1>Ｃ言語プログラミング入門</h1>
+		<nav>
+			<ul>
+				<li><a href="../../../index.html">ホーム</a></li>
+				<li><a href="../../c_langtop.html#lbl_index">目次</a></li>
+				<li><a href="./s14_01_8.html">前のページ</a></li>
+				<li><a href="./s14_01_A.html">次のページ</a></li>
+			</ul>
+		</nav>
+	</header>
+
+	<section class="contents">
+		<h1>14. ライブラリ関数（10/36）&nbsp;-&nbsp;入出力ライブラリ（9/10）</h1>
+		<section>
+			<h2>14.13 書式出力（可変個引数）関数</h2>
+			<p>ここで紹介する出力関数は引数が可変（可変個引数）であること以外は書式出力関数の<a href="./s14_01_5.html#lbl_fprintf">fprintf関数</a>・<a href="./s14_01_5.html#lbl_printf">printf関数</a>・<a href="./s14_01_5.html#lbl_sprintf">sprintf関数</a>と同じです。引数の可変部分は引数リストオブジェクト（引数リストを格納する領域）を指定しますが、これについては「<a href="../s14_08/s14_08_4.html">可変個引数操作関数</a>」をご覧下さい。</p>
+			<section>
+				<h3 id="lbl_vfprintf">14.13.1 vfprintf関数</h3>
+				<p>vfprintf関数はファイルポインタに対応したファイルに、書式制御文字列に従い編集した文字列を出力します。</p>
+				<table>
+					<caption>【表14-1-37】 vfprintf関数</caption>
+					<tr><th>形式</th><td>#include &lt;stdarg.h&gt;<br>
+										int vfprintf(FILE *fp, const char *format, va_list ap);</td></tr>
+					<tr><th>返り値</th><td>出力できた場合は出力文字数を返します。エラーが発生した場合は負の値を返します。</td></tr>
+					<tr><th>引数</th>
+						<td>
+							<dl>
+								<dt>FILE *fp</dt>
+									<dd>出力するファイルのファイルポインタを指定します。</dd>
+								<dt>const char *format</dt>
+									<dd>書式制御文字列を指定します。書式制御文字列については<a href="./s14_01_5.html#lbl_fprintf">fprintf関数</a>をご覧下さい。</dd>
+								<dt>va_list ap</dt>
+									<dd>引数リストオブジェクトを指定します。</dd>
+							</dl>
+						</td></tr>
+				</table>
+			</section>
+			<section>
+				<h3 id="lbl_vprintf">14.13.2 vprintf関数</h3>
+				<p>vprintf関数は書式制御文字列に従い編集した文字列を標準出力に出力します。</p>
+				<table>
+					<caption>【表14-1-38】 vprintf関数</caption>
+					<tr><th>形式</th><td>#include &lt;stdarg.h&gt;<br>
+										int vprintf(const char *format, va_list ap);</td></tr>
+					<tr><th>返り値</th><td>vfprintf関数と同じです。</td></tr>
+					<tr><th>引数</th>
+						<td>
+							<dl>
+								<dt>const char *format</dt>
+									<dd>書式制御文字列を指定します。</dd>
+								<dt>va_list ap</dt>
+									<dd>引数リストオブジェクトを指定します。</dd>
+							</dl>
+						</td></tr>
+				</table>
+			</section>
+			<section>
+				<h3 id="lbl_vsprintf">14.13.3 vsprintf関数</h3>
+				<p>vsprintf関数は書式制御文字列に従い編集した文字列を引数に指定した変数に設定します。</p>
+				<table>
+					<caption>【表14-1-39】 vsprintf関数</caption>
+					<tr><th>形式</th><td>#include &lt;stdarg.h&gt;<br>
+										int vsprintf(char *str, const char *format, va_list ap);</td></tr>
+					<tr><th>返り値</th><td>vfprintf関数と同じです。</td></tr>
+					<tr><th>引数</th>
+						<td>
+							<dl>
+								<dt>char *str</dt>
+									<dd>編集結果を出力する文字列を指定します。</dd>
+								<dt>const char *format</dt>
+									<dd>書式制御文字列を指定します。</dd>
+								<dt>va_list ap</dt>
+									<dd>引数リストオブジェクトを指定します。</dd>
+							</dl>
+						</td></tr>
+				</table>
+			</section>
+			<section>
+				<h3>14.13.4 例題</h3>
+				<p>肥満度（BMI）の計算を行い結果を表示します。オプションにより肥満度の診断を行い、「正常です。」「低すぎます。」「高すぎます。」のメッセージを付け加えます。結果の表示はVarMessage関数で行いますが、オプションによりメッセージが異なりますので可変個引数の関数にしていま0す。なお、第１引数は固定引数でオプションを文字で指定します。</p>
+				<div class="source-code">
+					<div class="c"><ol><li class="li1"><div class="de1"><span class="co2">#include &lt;stdio.h&gt;</span></div></li>
+					<li class="li1"><div class="de1"><span class="co2">#include &lt;stdarg.h&gt;</span></div></li>
+					<li class="li1"><div class="de1"><span class="coMULTI">/* 肥満状態を判定するための定数 */</span></div></li>
+					<li class="li1"><div class="de1"><span class="co2">#define BMI_LIMIT_UNDER &nbsp; 18.5</span></div></li>
+					<li class="li1"><div class="de1"><span class="co2">#define BMI_LIMIT_OVER &nbsp; &nbsp;25.0</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1"><span class="kw4">int</span> main<span class="br0">&#40;</span><span class="kw4">void</span><span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="coMULTI">/* 結果の表示間数 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">void</span> VarMessage<span class="br0">&#40;</span><span class="kw4">char</span> Check<span class="sy0">,</span> ...<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">double</span> &nbsp;weight<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">double</span> &nbsp;height<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">double</span> &nbsp;bmi<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">char</span> &nbsp; &nbsp;check<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;肥満度(BMI)の計算を行います。<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;体重(kg)と身長(m)を入力してください ==&gt; &quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">scanf</span><span class="br0">&#40;</span><span class="st0">&quot;%lf%lf&quot;</span><span class="sy0">,</span> <span class="sy0">&amp;</span>weight<span class="sy0">,</span> <span class="sy0">&amp;</span>height<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="coMULTI">/* 肥満度(BMI) = 体重(kg) / 身長(m) / 身長(m) */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; bmi <span class="sy0">=</span> weight <span class="sy0">/</span> height <span class="sy0">/</span> height<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;診断結果を表示しますか（Y/N） ==&gt; &quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">scanf</span><span class="br0">&#40;</span><span class="st0">&quot;%*c%c&quot;</span><span class="sy0">,</span> <span class="sy0">&amp;</span>check<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">if</span><span class="br0">&#40;</span>check <span class="sy0">==</span> <span class="st0">'Y'</span> <span class="sy0">||</span> check <span class="sy0">==</span> <span class="st0">'y'</span><span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">if</span><span class="br0">&#40;</span>bmi <span class="sy0">&gt;=</span> BMI_LIMIT_UNDER <span class="sy0">&amp;&amp;</span> bmi <span class="sy0">&lt;=</span> BMI_LIMIT_OVER<span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; VarMessage<span class="br0">&#40;</span>check<span class="sy0">,</span> bmi<span class="sy0">,</span> <span class="st0">&quot;正常です。&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">else</span> <span class="kw1">if</span><span class="br0">&#40;</span>bmi <span class="sy0">&lt;</span> BMI_LIMIT_UNDER<span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; VarMessage<span class="br0">&#40;</span>check<span class="sy0">,</span> bmi<span class="sy0">,</span> <span class="st0">&quot;低すぎます。&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">else</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; VarMessage<span class="br0">&#40;</span>check<span class="sy0">,</span> bmi<span class="sy0">,</span> <span class="st0">&quot;高すぎます。&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">else</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; VarMessage<span class="br0">&#40;</span>check<span class="sy0">,</span> bmi<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">return</span> <span class="nu0">0</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1"><span class="coMULTI">/* 結果の表示関数 */</span></div></li>
+					<li class="li1"><div class="de1"><span class="kw4">void</span> VarMessage<span class="br0">&#40;</span><span class="kw4">char</span> p_check<span class="sy0">,</span> ...<span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">char</span> &nbsp; &nbsp;<span class="sy0">*</span>format<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; va_list ap<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="coMULTI">/* 可変引数リストの初期化 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">va_start</span><span class="br0">&#40;</span>ap<span class="sy0">,</span> p_check<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="coMULTI">/* 書式の作成 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">if</span><span class="br0">&#40;</span>p_check <span class="sy0">==</span> <span class="st0">'Y'</span> <span class="sy0">||</span> p_check <span class="sy0">==</span> <span class="st0">'y'</span><span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; format <span class="sy0">=</span> <span class="st0">&quot;BMI : %.2f（%s）<span class="es1">\n</span>&quot;</span><span class="sy0">;;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">else</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; format <span class="sy0">=</span> <span class="st0">&quot;BMI : %.2f<span class="es1">\n</span>&quot;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="coMULTI">/* メッセージ出力 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">vprintf</span><span class="br0">&#40;</span>format<span class="sy0">,</span> ap<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="coMULTI">/* 可変引数リストのリセット */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">va_end</span><span class="br0">&#40;</span>ap<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">return</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#125;</span></div></li>
+					</ol></div>
+				</div>
+				<div class="exe-samp">
+<pre><samp>$ <kbd>./ex14_1_12.prg</kbd>
+肥満度(BMI)の計算を行います。
+体重(kg)と身長(m)を入力してください ==&gt; <kbd>65.5 1.72</kbd>
+診断結果を表示しますか（Y/N） ==&gt; <kbd>y</kbd>
+BMI : 22.14（正常です。）
+$
+$ <kbd>./ex14_1_12.prg</kbd>
+肥満度(BMI)の計算を行います。
+体重(kg)と身長(m)を入力してください ==&gt; <kbd>65.5 1.55</kbd>
+診断結果を表示しますか（Y/N） ==&gt; <kbd>y</kbd>
+BMI : 27.26（高すぎます。）
+$
+$ <kbd>./ex14_1_12.prg</kbd>
+肥満度(BMI)の計算を行います。
+体重(kg)と身長(m)を入力してください ==&gt; <kbd>65.5 1.95</kbd>
+診断結果を表示しますか（Y/N） ==&gt; <kbd>y</kbd>
+BMI : 17.23（低すぎます。）
+$
+$ <kbd>./ex14_1_12.prg</kbd>
+肥満度(BMI)の計算を行います。
+体重(kg)と身長(m)を入力してください ==&gt; <kbd>65.5 1.72</kbd>
+診断結果を表示しますか（Y/N） ==&gt; <kbd>n</kbd>
+BMI : 22.14
+$</samp></pre>
+				</div>
+				<dl>
+					<dt>10行目</dt>
+						<dd>可変個引数のVarMessage関数のプロトタイプ宣言です。第１引数は固定引数で診断オプションを指定します。（Yまたはyの場合に診断を行います）</dd>
+					<dt>31、35、39行目</dt>
+						<dd>診断結果を表示しますので、引数を３つ指定（第３引数に診断メッセージを指定）してVarMessage関数を呼び出します。</dd>
+					<dt>44行目</dt>
+						<dd>診断結果を表示しませんので、引数を２つ指定してVarMessage関数を呼び出します。</dd>
+					<dt>56行目</dt>
+						<dd>引数リストを準備（初期化）します。</dd>
+					<dt>68行目</dt>
+						<dd>vprintf関数でメッセージを標準出力に出力します。</dd>
+					<dt>71行目</dt>
+						<dd>引数リストをリセットします。</dd>
+				</dl>
+			</section>
+		</section>
+	</section>
+
+	<footer>
+		<nav>
+			<ul>
+				<li><a href="../../../index.html">ホーム</a></li>
+				<li><a href="../../c_langtop.html#lbl_index">目次</a></li>
+				<li><a href="./s14_01_8.html">前のページ</a></li>
+				<li><a href="./s14_01_A.html">次のページ</a></li>
+			</ul>
+		</nav>
+		<p id="footer-author">更新日：<time datetime="2018-12-23">2018年12月23日</time> Merry</p>
+	</footer>
+</div>
+</body>
+</html>

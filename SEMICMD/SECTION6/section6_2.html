@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initialscale=1.0">
+	<meta name="robots" content="INDEX,FOLLOW">
+	<meta name="keywords" content="シェルスクリプト,文字列演算,文字列の連結,set,unset,パターンマッチング">
+	<meta name="description" content="シェルスクリプトを作成するための事項をご説明します。ここでは、シェル変数と文字列演算についてご説明します。">
+	<meta name="author" content="T.Hagiwara">
+	<link rel="stylesheet" href="../../CSS3/seminar.css" type="text/css">
+	<link rel="stylesheet" href="../../CSS3/hl_bash.css" type="text/css">
+	<link rel="prev" href="./section6_1.html">
+	<link rel="next" href="./section6_3.html">
+	<title>Linuxの使い方 - シェルスクリプトの作り方（2/8）</title>
+	<style type="text/css">
+	</style>
+</head>
+<body>
+<div id="container">
+	<header>
+		<p>Linux講座にようこそ。このページは「Linuxの使い方&nbsp;-&nbsp;第６章&nbsp;シェルスクリプトの作り方」です。</p>
+		<h1>Linuxの使い方</h1>
+		<nav>
+			<ul>
+				<li><a href="../../index.html">ホーム</a></li>
+				<li><a href="../cmdtop.html#lbl_index">目次</a></li>
+				<li><a href="./section6_1.html">前のページ</a></li>
+				<li><a href="./section6_3.html">次のページ</a></li>
+			</ul>
+		</nav>
+	</header>
+
+	<section class="contents">
+		<h1>6. シェルスクリプトの作り方（2/8）</h1>
+		<section>
+			<!-- シェル変数と文字列演算 -->
+			<h2 id="var">6.3 シェル変数と文字列演算</h2>
+			<p>シェル変数とは値を格納する領域のことで、これを使うことにより、より高度なシェルスクリプトを作ることが出来ます。シェル変数には次の３種類があります。</p>
+			<dl>
+				<dt>ユーザ定義変数</dt>
+					<dd>ユーザが必要に応じて作成できる変数で、自由に名前を付けることが出来ますし、値の参照・設定も自由に行うことが出来ます。</dd>
+				<dt>位置パラメータ</dt>
+					<dd>シェルが用意する変数で、名前は1〜nまでの数字と決まっています。シェルスクリプト実行時に指定した<strong>引数の値</strong>を持っています。また、setコマンドで値の設定を行うことも出来ます。</dd>
+				<dt>環境変数</dt>
+					<dd>シェルやアプリケーションソフトにより作成される変数で、名前は大文字のものがほとんどです。どのような環境変数があるかは「<a href="../SECTION5/section5_2.html#lbl_env">環境変数</a>」をご覧ください。</dd>
+			</dl>
+			<p>ユーザ定義変数の名前は先頭１文字が英字で、２文字目以降は英数字の組み合わせです。なお、_（アンダライン）は英字に含みます。</p>
+			<section>
+				<h3 id="var_set">6.3.1 変数への値の代入と参照</h3>
+				<p>ユーザ定義変数と環境変数に値を設定するには前で説明したreadコマンドで入力するか、<strong>=</strong>演算子で代入します。また、位置パラメータに直接値を設定するにはsetコマンドの引数に値を指定します。</p>
+				<p>変数の値を参照するには<strong>${変数名}</strong>と<strong>$変数名</strong>のどちらの形式でも可能ですが、シェルが変数名を認識できない場合は${変数名}の形式を使用します。（具体的な使用例は「<a href="#lbl_addstring">文字列の連結</a>」をご覧ください）また、位置パラメータの1〜9までは<strong>$数字</strong>の形式で参照できますが、10以上は${10}のような指定になります。</p>
+				<p>また、ユーザ定義変数の消去（開放）はunsetコマンドで行います。なお、以降、ユーザ定義変数は単に変数と記述します。</p>
+				<div class="form-exp">
+					※変数への値の設定<br>
+					変数=値<strong> ← =の前後に空白を置いてはいけません。また、値として空白文字を含む場合は'（アポストロフィ）または、"（引用符）で括ります</strong><br>
+					<br>
+					※位置パラメータへの値の設定<br>
+					set 値１ 値２ …<strong> ← 位置パラメータ１には「値１」が、位置パラメータ２には「値２」が設定されます</strong><br>
+					<br>
+					※値の参照<br>
+					${変数名}<br>
+					$変数名<br>
+					${n}<strong> ← nは数字です</strong><br>
+					$n<strong> ← nは１～９の数字です</strong><br>
+					<br>
+					※変数の消去（開放）<br>
+					unset 変数名
+				</div>
+				<p>変数に設定されている文字列を文字列演算子を使って、次のような操作を行うことが出来ます。</p>
+				<ul>
+					<li><a href="#var_01">デフォルト値の設定</a></li>
+					<li><a href="#var_02">値が設定されていなかったときのエラー処理</a></li>
+					<li><a href="#var_03">文字列の部分取り出し</a></li>
+					<li><a href="#var_04">パターンマッチング</a></li>
+					<li><a href="#var_05">文字列長の取得</a></li>
+				</ul>
+				<p>また、変数の値に文字列を連結して文字列を作ることが出来ます。</p>
+				<ul>
+					<li><a href="#lbl_addstring">文字列の連結</a></li>
+				</ul>
+				<section>
+					<h4 id="var_01">デフォルト値の設定</h4>
+					<table class="simple-table">
+						<caption>【表6-4】デフォルト値の設定演算子一覧</caption>
+						<tr><th>形式</th><th>説明／例題</th></tr>
+						<tr><td style="white-space:nowrap;">${変数名:-語}</td><td>変数が存在し、値が設定されている場合はその値を返し、それ以外の場合は「語」を返します。
+							<div class="exe-samp">
+<pre><samp>$ <kbd>var1="Hello"</kbd><strong> ← 変数var1へ値を設定します</strong>
+$ <kbd>rtn=${var1:-"World"}</kbd><strong> ← 戻り値を変数rtnに代入します</strong>
+$ <kbd>echo $rtn</kbd><strong> ← 戻り値を表示します</strong>
+Hello
+$ <kbd>unset var1</kbd><strong> ← 変数var1を消去します</strong>
+$ <kbd>rtn=${var1:-"World"}</kbd>
+$ <kbd>echo $rtn</kbd><strong> ← 戻り値を表示します</strong>
+World
+$ <kbd>echo $var1</kbd>
+<strong> ← 変数var1は存在しないため空行です</strong>
+$</samp></pre>
+							</div></td></tr>
+						<tr><td style="white-space:nowrap;">${変数名:=語}</td><td>変数が存在し、値が設定されている場合はその値を返し、それ以外の場合は変数に「語」を設定します。（位置パラメータは不可）
+							<div class="exe-samp">
+<pre><samp>$ <kbd>unset var1</kbd>
+$ <kbd>rtn=${var1:="World"}</kbd>
+$ <kbd>echo $rtn<strong> ← 戻り値を表示します</strong></kbd>
+World
+$ <kbd>echo $var1</kbd><strong> ← 変数var1の値を表示します</strong>
+World
+$</samp></pre>
+							</div></td></tr>
+						<tr><td style="white-space:nowrap;">${変数名:+語}</td><td>変数が存在し、値が設定されている場合は「語」を返し、それ以外の場合は空（NULL）を返します。
+							<div class="exe-samp">
+<pre><samp>$ <kbd>var1="Hello"</kbd>
+$ <kbd>rtn=${var1:+"True"}</kbd>
+$ <kbd>echo $rtn</kbd>
+True<strong> ← 戻り値です</strong>
+$ <kbd>unset var1</kbd>
+$ <kbd>rtn=${var1:+"True"}</kbd>
+$ <kbd>echo $rtn</kbd>
+<strong> ← 戻り値は空（NULL）です</strong>
+$</samp></pre>
+							</div></td></tr>
+					</table>
+				</section>
+				<section>
+					<h4 id="var_02">値が設定されていなかったときのエラー処理</h4>
+					<table class="simple-table">
+						<caption>【表6-5】エラー処理演算子一覧</caption>
+						<tr><th>形式</th><th>説明／例題</th></tr>
+						<tr><td style="white-space:nowrap;">${変数名:?メッセージ}</td>
+							<td>変数が存在し、値が設定されている場合はその値を返し、それ以外の場合は「メッセージ」を出力します。次の例題のシェルスクリプト（ex10.sh）は、引数が指定されなかった場合はメッセージを出力して直ちに終了します。
+								<div class="exe-samp">
+<pre class="bash"><span class="co0">#!/bin/bash</span>
+<span class="co0"># 機能  :  引数の有無をチェックします</span>
+<span class="co0"># 作成  :  メリー</span>
+&nbsp;
+<span class="re2">para</span>=<span class="co1">${1:?&quot;引数の指定がありません&quot;}</span>    <span class="co0"># 引数の有無をチェック</span>
+&nbsp;
+<span class="kw3">echo</span> <span class="st0">&quot;引数は<span class="es3">${para}</span>です&quot;</span></pre>
+								</div>
+								<div class="exe-samp">
+<pre><samp>$ <kbd>ex10.sh</kbd><strong> ← 引数指定無しで実行します</strong>
+/home/merry/mybin/ex10.sh: 行 5: 1: 引数の指定がありません
+$
+$ <kbd>ex10.sh Hello</kbd><strong> ← 引数を指定して実行します</strong>
+引数はHelloです
+$</samp></pre>
+								</div></td></tr>
+					</table>
+				</section>
+				<aside>
+					<h4>補足</h4>
+					<p>エラー処理演算子やreadコマンドのプロンプト（read -p プロンプト）は標準エラー出力に出力されます。</p>
+					<div class="exe-samp">
+<pre><samp>$ <kbd>ex10.sh 2&gt; error.txt</kbd><strong> ← 標準エラー出力をerror.txtファイルに切り替えます</strong>
+$<strong> ← 標準出力には何も出力されません</strong>
+$ <kbd>cat error.txt</kbd><strong> ← error.txtファイルの内容を確認します</strong>
+/home/merry/mybin/ex10.sh: 行 5: 1: 引数の指定がありません
+$
+$ <kbd>ex02.sh 2&gt; error.txt</kbd><strong> ← 標準エラー出力をerror.txtファイルに切り替えます</strong>
+<strong> ← Enterで実行を開始します</strong>
+./
+./hello.c
+./loop.c
+./ex20.sh
+./ex01.sh
+バックアップ完了
+$
+$ <kbd>cat error.txt</kbd><strong> ← error.txtファイルの内容を確認します</strong>
+バックアップを開始します$ 
+$</samp></pre>
+					</div>
+				</aside>
+				<section>
+					<h4 id="var_03">文字列の部分取り出し</h4>
+					<table class="simple-table">
+						<caption>【表6-6】部分取り出し演算子一覧</caption>
+						<tr><th>形式</th><th>説明／例題</th></tr>
+						<tr><td style="white-space:nowrap;">${変数名:位置:長さ｝<br>${変数名:位置}</td>
+							<td>変数に設定されている文字列の「位置」の位置から「長さ」文字の長さの文字列を取り出します。
+								位置は０からカウントし、「長さ」が省略された場合は「位置」の位置から最後までの文字列を取り出します。また、「変数名」が@の場合は「位置」は位置パラメータに、「長さ」は個数になります。
+								<div class="exe-samp">
+<pre><samp>$ <kbd>echo $HOME</kbd>
+/home/merry<strong> ← 環境変数HOMEの値です</strong>
+$ <kbd>echo ${HOME:6}</kbd>
+merry
+$ <kbd>echo ${HOME:6:2}</kbd>
+me
+$
+$ <kbd>set PARA1 PARA2 PARA3 PARA4</kbd><strong> ← 位置パラメータ１から４へ値を設定します</strong>
+$ <kbd>echo $1 $2 $3 $4</kbd><strong> ← 位置パラメータの値を確認します</strong>
+PARA1 PARA2 PARA3 PARA4
+$ <kbd>echo ${@:3:1}</kbd><strong> ← 位置パラメータ3を指定します</strong>
+PARA3
+$</samp></pre>
+								</div></td></tr>
+					</table>
+				</section>
+				<section>
+					<h4 id="var_04">パターンマッチング</h4>
+					<table class="simple-table">
+						<caption>【表6-7】パターンマッチング演算子一覧</caption>
+						<tr><th>形式</th><th>説明／例題</th></tr>
+						<tr><td style="white-space:nowrap;">${変数名#パターン}</td>
+							<td>変数の値の<strong>最初</strong>の部分と「パターン」が一致した場合、最も<strong>短く</strong>一致する部分を削除し、残りの部分を返します。
+								<div class="exe-samp">
+<pre><samp>$ <kbd>echo $PWD</kbd><strong> ← 環境変数PWD（カレントディレクトリの絶対パス名）の値を表示します</strong>
+/home/merry/mybin
+$ <kbd>rtn=${PWD#/*/}</kbd><strong> ← "/"で始まり"/"で終るパターンを指定します</strong>
+$ <kbd>echo $rtn</kbd>
+merry/mybin<strong> ← 先頭の"/home/"とパターンが一致しました</strong>
+$</samp></pre>
+								</div></td></tr>
+						<tr><td style="white-space:nowrap;">${変数名##パターン}</td>
+							<td>変数の値の<strong>最初</strong>の部分と「パターン」が一致した場合、最も<strong>長く</strong>一致する部分を削除し、残りの部分を返します。
+								<div class="exe-samp">
+<pre><samp>$ <kbd>echo $PWD</kbd>
+/home/merry/mybin
+$ <kbd>rtn=${PWD##/*/}</kbd>
+$ <kbd>echo $rtn</kbd>
+mybin<strong> ← 先頭の"/home/merry/"とパターンが一致しました</strong>
+$</samp></pre>
+								</div></td></tr>
+						<tr><td style="white-space:nowrap;">${変数名%パターン}</td>
+							<td>変数の値の<strong>最後</strong>の部分と「パターン」が一致した場合、最も<strong>短く</strong>一致する部分を削除し、残りの部分を返します。
+								<div class="exe-samp">
+<pre><samp>$ <kbd>echo $HOSTNAME</kbd>
+merry.org.jp
+$ <kbd>echo ${HOSTNAME%.*}</kbd>
+merry.org<strong> ← 最後の".jp" とパターンが一致しました</strong>
+$</samp></pre>
+								</div></td></tr>
+						<tr><td style="white-space:nowrap;">${変数名%%パターン}</td>
+							<td>変数の値の<strong>最後</strong>の部分と「パターン」が一致した場合、最も<strong>長く</strong>一致する部分を削除し、残りの部分を返します。
+								<div class="exe-samp">
+<pre><samp>$ <kbd>echo $HOSTNAME</kbd>
+merry.org.jp
+$ <kbd>echo ${HOSTNAME%%.*}</kbd>
+merry<strong> ← 最後の".org.jp" とパターンが一致しました</strong>
+$</samp></pre>
+								</div></td></tr>
+				</table>
+				</section>
+				<section>
+					<h4 id="var_05">文字列長の取得</h4>
+					<table class="simple-table">
+						<caption>【表6-8】文字列長の取得演算子一覧</caption>
+						<tr><th>形式</th><th>説明／例題</th></tr>
+						<tr><td style="white-space:nowrap;">${#変数名}</td><td>変数に設定されている文字列の文字数を返します。
+								<div class="exe-samp">
+<pre><samp>$ <kbd>echo $HOSTNAME</kbd>
+merry.org.jp
+$ <kbd>echo ${#HOSTNAME}</kbd>
+12<strong> ← "merry.org.jp"の文字数です</strong>
+$</samp></pre>
+								</div></td></tr>
+					</table>
+				</section>
+				<section>
+					<h4 id="lbl_addstring">文字列の連結</h4>
+					<p>変数の値と文字列の連結を行うための演算子はありませんので、変数名に$を付けて参照して、その後に文字列を指定すれば連結します。ただし、シェルにとって変数名が明確になるように指定しないと連結出来ません。連結出来ない場合は、変数を${変数名}の形式で参照するとよいでしょう。</p>
+					<div class="exe-samp">
+<pre><samp>$ <kbd>var1="Hello_"</kbd><strong> ← 変数var1に「Hello_」を設定します</strong>
+$
+$ <kbd>echo $var1World</kbd><strong> ← 変数var1に「World」を連結しようとしました</strong>
+<strong> ← シェルはvar1Worldという変数の値を表示しようとしましたが、var1Worldは未定義のため何も表示しません</strong>
+$ <kbd>echo $var1 World</kbd><strong> ←echoコマンドの引数として、変数var1と文字列を指定（文字列の連結ではない）します</strong>
+Hello_ World
+$
+$ <kbd>echo ${var1}World</kbd><strong> ← ${変数名}の形式でvar1の値を参照することで、変数var1を明確にします</strong>
+Hello_World
+$
+$ <kbd>myll="ls -l"</kbd>
+$ <kbd>$myll TMP</kbd><strong> ← 「ls -l TMP」を実行します</strong>
+合計 176152
+drwxr-xr-x 4 merry merry      4096 2010-08-22 09:58 DOWNLOAD
+drwxr-xr-x 3 merry merry      4096 2010-08-19 16:05 PHOTO
+drwxr-xr-x 2 merry merry      4096 2010-08-25 16:37 WORK
+-rw-r--r-- 1 merry merry        38 2010-08-26 10:42 memo.txt
+$
+</samp></pre>
+					</div>
+					<p>日本語文字列と連結する場合は変数名は明確になることが多いのですが、できるだけ${変数名}の形式で指定しておいた方がよいでしょう。</p>
+					<div class="exe-samp">
+<pre><samp>$ <kbd>var2=今日は</kbd>
+$
+$ <kbd>echo $var2世界</kbd>
+今日は世界
+$ <kbd>echo ${var2}世界</kbd><strong> ← こちらの形式を推奨します</strong>
+今日は世界
+$
+</samp></pre>
+					</div>
+				</section>
+			</section>
+		</section>
+	</section>
+
+	<footer>
+		<nav>
+			<ul>
+				<li><a href="../../index.html">ホーム</a></li>
+				<li><a href="../cmdtop.html#lbl_index">目次</a></li>
+				<li><a href="./section6_1.html">前のページ</a></li>
+				<li><a href="./section6_3.html">次のページ</a></li>
+			</ul>
+		</nav>
+		<p id="footer-author">更新日：<time datetime="2017-12-03">2017年12月03日</time> Merry</p>
+	</footer>
+</div>
+</body>
+</html>

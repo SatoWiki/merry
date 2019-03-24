@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initialscale=1.0">
+	<meta name="robots" content="INDEX,FOLLOW">
+	<meta name="keywords" content="１次元配列,２次元配列">
+	<meta name="description" content="２次元配列の取扱い方を説明します。">
+	<meta name="author" content="T.Hagiwara">
+	<link rel="stylesheet" href="../../CSS3/seminar.css" type="text/css">
+	<link rel="stylesheet" href="../../CSS3/hl_clang.css" type="text/css">
+	<link rel="prev" href="./section07_2.html">
+	<title>Ｃ言語プログラミング入門&nbsp;-&nbsp;たくさんのデータを処理するための配列（3/3）</title>
+	<style type="text/css">
+	</style>
+</head>
+<body>
+<div id="container">
+	<header>
+		<p>Linux講座にようこそ。このページは「Ｃ言語プログラミング入門&nbsp;-&nbsp;第７章．たくさんのデータを処理するための配列」です。</p>
+		<h1>Ｃ言語プログラミング入門</h1>
+		<nav>
+			<ul>
+				<li><a href="../../index.html">ホーム</a></li>
+				<li><a href="../c_langtop.html#lbl_index">目次</a></li>
+				<li><a href="./section07_2.html">前のページ</a></li>
+				<li><a href="../SECTION08/section08_1.html">次のページ</a></li>
+			</ul>
+		</nav>
+	</header>
+
+	<section class="contents">
+		<h1>7. たくさんのデータを処理するための配列（3/3）</h1>
+		<section>
+			<h2 id="lbl_array">7.4 ２次元配列</h2>
+			<figure class="left-box myphoto">
+				<dl>
+					<dt><img src="../IMAGES/sec07_3.jpg" alt="２次元配列"></dt>
+					<dd>【図７-３】２次元配列</dd>
+				</dl>
+			</figure>
+			<p>今まで説明した配列は１次元配列と呼ばれるもので、表計算ソフトに例えると「行」に相当します。２次元配列になると、「列」が加わり、行と列で構成する配列ということになります。３次元以上の配列もありますが、使われることは少ないと思いますので、ここでは主に２次元配列に付いて説明します。</p>
+			<p>２次元配列を取り扱うには１つの要素に対して、行と列に対応する添字が必要です。２次元配列の場合、列に対応する添字の方が先に変化するようにメモリ上に配置されます。（一般に、次元数の多い方から先に変化するように配置されます）</p>
+			<p>２次元配列で複数の文字列を取り扱うこともできます。その場合、１つの文字列が１つの行になります。文字列の最後にヌル文字が必要なことは１次元配列の場合と同じです。</p>
+			<section>
+				<h3>7.4.1 形式</h3>
+				<p>２次元配列の宣言は配列名の次に「行の要素数」と「列の要素数」をそれぞれ大括弧（[と]）で括って指定します。</p>
+				<p>初期値を指定する場合は初期値全体を中括弧（{と}）で括って、その中に行単位に中括弧で括って指定します。なお、行および、初期値は,（コンマ）で区切ります。</p>
+				<p>要素の内容を参照する場合も「行の添字」と「列の添字」をそれぞれ大括弧（[と]）で括って指定します。</p>
+				<div class="form-exp">
+					※ 宣言時に初期値を指定しない場合<br>
+					型名 配列名[行の要素数][列の要素数];<br><br>
+
+					※ 宣言時に初期値を指定する場合<br>
+					型名 配列名[行の要素数][列の要素数] = {{初期値１, 初期値２, … 初期値ｎ}, {初期値１, 初期値２, … 初期値ｎ}, …};<br>
+					型名 配列名[行の要素数][列の要素数] = {{１行目の文字列}, {２行目の文字列}, … {ｎ行目の文字列}};<br><br>
+
+					※ 参照<br>
+					配列名[行の添字][列の添字];
+				</div>
+				<p>初期値を指定する場合、各行の初期値の数は必ずしも一致させる必要はありません。つまり、行ごとに初期値の数が異なっていても良いということになります。このため、列数は単純には決まりませんので、初期値を指定した場合でも<strong>列の要素数は省略できません</strong>ので注意してください。</p>
+				<p>例１：<code>int ar1[][4] = {{1, 2, 3, 4}, {5, 6, 7}, {8, 9}};</code><strong> ← 行の要素数は省略可能です</strong></p>
+				<p>次の例では、最初の初期値の「hello」がヌル文字を含めて６文字と一番長いので、列の要素数は最低６必要です。</p>
+				<p>例２：<code>int ar2[][6] = {{"hello"}, {"hi"}, {"bye"}};</code></p>
+				<aside>
+					<h4>補足</h4>
+					<p>３次元以上の配列の宣言も「１次元目の要素数」「２次元目の要素数」「３次元目の要素数」…「n次元目の要素数」をそれぞれ大括弧（[と]）で括って指定します。</p>
+				</aside>
+			</section>
+			<section>
+				<h3>7.4.2 例題</h3>
+				<section>
+					<h4 id="lbl_ex07_5">例題１</h4>
+					<p>メートル単位の長さを入力するとインチ、フィート、ヤード、尺、寸の長さに変換した値を出力します。どの単位の長さに変換するかはメニューで選択します。</p>
+					<div class="source-code">
+						<div class="c"><ol><li class="li1"><div class="de1"><span class="co2">#include &lt;stdio.h&gt;</span></div></li>
+						<li class="li1"><div class="de1"><span class="kw4">int</span> main<span class="br0">&#40;</span><span class="br0">&#41;</span></div></li>
+						<li class="li1"><div class="de1"><span class="br0">&#123;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">double</span> &nbsp;coefficient<span class="br0">&#91;</span><span class="br0">&#93;</span> <span class="sy0">=</span> <span class="br0">&#123;</span><span class="nu16">39.370</span><span class="sy0">,</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* インチ */</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="nu16">3.280</span><span class="sy0">,</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* フィート */</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="nu16">1.093</span><span class="sy0">,</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* ヤード */</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="nu16">3.300</span><span class="sy0">,</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* 尺 */</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="nu16">33.000</span><span class="br0">&#125;</span><span class="sy0">;</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* 寸 */</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">char</span> &nbsp; &nbsp;unit_name<span class="br0">&#91;</span><span class="br0">&#93;</span><span class="br0">&#91;</span><span class="nu0">20</span><span class="br0">&#93;</span> <span class="sy0">=</span> <span class="br0">&#123;</span><span class="br0">&#123;</span><span class="st0">&quot;インチ&quot;</span><span class="br0">&#125;</span><span class="sy0">,</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#123;</span><span class="st0">&quot;フィート&quot;</span><span class="br0">&#125;</span><span class="sy0">,</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#123;</span><span class="st0">&quot;ヤード&quot;</span><span class="br0">&#125;</span><span class="sy0">,</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#123;</span><span class="st0">&quot;尺&quot;</span><span class="br0">&#125;</span><span class="sy0">,</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#123;</span><span class="st0">&quot;寸&quot;</span><span class="br0">&#125;</span><span class="br0">&#125;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">double</span> &nbsp;length<span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">int</span> &nbsp; &nbsp; number<span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp;</div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;長さの変換を行います<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;変換する長さを入力してください（単位はメートル） ==&gt; &quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">scanf</span><span class="br0">&#40;</span><span class="st0">&quot;%lf&quot;</span><span class="sy0">,</span> <span class="sy0">&amp;</span>length<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp;</div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;1. インチ<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;2. フィート<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;3. ヤード<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;4. 尺<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;5. 寸<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;変換する単位の番号を入力してください ==&gt; &quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">scanf</span><span class="br0">&#40;</span><span class="st0">&quot;%d&quot;</span><span class="sy0">,</span> <span class="sy0">&amp;</span>number<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp;</div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">if</span> <span class="br0">&#40;</span>number <span class="sy0">&gt;=</span> <span class="nu0">1</span> <span class="sy0">&amp;&amp;</span> number <span class="sy0">&lt;=</span> <span class="nu0">5</span><span class="br0">&#41;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;%.2fメートルは%.3f%sです<span class="es1">\n</span>&quot;</span><span class="sy0">,</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; length<span class="sy0">,</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="coMULTI">/* 入力した値（変換する長さ） */</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; length <span class="sy0">*</span> coefficient<span class="br0">&#91;</span>number <span class="sy0">-</span> <span class="nu0">1</span><span class="br0">&#93;</span><span class="sy0">,</span> &nbsp; <span class="coMULTI">/* 指定された長さの単位に変換 */</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; unit_name<span class="br0">&#91;</span>number <span class="sy0">-</span> <span class="nu0">1</span><span class="br0">&#93;</span><span class="br0">&#41;</span><span class="sy0">;</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* 変換した長さの単位 */</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">else</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;番号が不当です<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp;</div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">return</span> <span class="nu0">0</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1"><span class="br0">&#125;</span></div></li>
+						</ol></div>					
+					</div>
+					<div class="exe-samp">
+<pre><samp>$ <kbd>./ex07_5.prg</kbd>
+長さの変換を行います
+変換する長さを入力してください（単位はメートル） ==&gt; <kbd>2</kbd>
+1. インチ
+2. フィート
+3. ヤード
+4. 尺
+5. 寸
+変換する単位の番号を入力してください ==&gt; <kbd>3</kbd>
+2.00メートルは2.186ヤードです
+$</samp></pre>
+					</div>
+					<dl>
+						<dt>4〜8行目</dt>
+							<dd>メートル単位の長さを変換するための係数を格納した配列です。インチ、フィート、ヤード、尺、寸の順番です。</dd>
+						<dt>9〜13行目</dt>
+							<dd>変換する長さの単位名（文字列）を格納した配列です。格納の順番は上記配列と対応させます。</dd>
+						<dt>19行目</dt>
+							<dd>変換する長さを入力します。</dd>
+						<dt>27行目</dt>
+							<dd>入力した長さの変換番号（変換する長さの単位）を入力します。</dd>
+						<dt>31〜34行目</dt>
+							<dd>入力した値、変換結果、変換した長さの単位を出力します。変換した長さの単位はunit_name配列の「number - 1」が示す行全体ですので「unit_name[number - 1]」と指定します。</dd>
+					</dl>
+				</section>
+				<section>
+					<h4>例題２</h4>
+					<p>５人の方の肥満度を計算して正常・異常を判定して結果を出力すると共に、異常の人のみの値を最後に出力します。正常は18.5〜52.0の範囲で、それ以外を異常とします。</p>
+					<p>体重と身長を入力しますが、体重はキログラム、身長はセンチメートル単位で入力します。</p>
+					<div class="source-code">
+						<div class="c"><ol><li class="li1"><div class="de1"><span class="co2">#include &lt;stdio.h&gt;</span></div></li>
+						<li class="li1"><div class="de1"><span class="kw4">int</span> main<span class="br0">&#40;</span><span class="br0">&#41;</span></div></li>
+						<li class="li1"><div class="de1"><span class="br0">&#123;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">int</span> &nbsp; &nbsp; number<span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">int</span> &nbsp; &nbsp; index1<span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">int</span> &nbsp; &nbsp; index2<span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">double</span> &nbsp;weight<span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">double</span> &nbsp;height<span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">double</span> &nbsp;bmi<span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">double</span> &nbsp;alert_table<span class="br0">&#91;</span><span class="nu0">5</span><span class="br0">&#93;</span><span class="br0">&#91;</span><span class="nu0">3</span><span class="br0">&#93;</span><span class="sy0">;</span> &nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* 番号、体重、身長を格納 */</span></div></li>
+						<li class="li1"><div class="de1">&nbsp;</div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;肥満度(BMI)の計算を行います<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; index1 <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp;</div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">for</span><span class="br0">&#40;</span>number <span class="sy0">=</span> <span class="nu0">1</span><span class="sy0">;</span> number <span class="sy0">&lt;=</span> <span class="nu0">5</span><span class="sy0">;</span> <span class="sy0">++</span>number<span class="br0">&#41;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;%d. 体重(kg)と身長(cm)を入力してください ==&gt; &quot;</span><span class="sy0">,</span> number<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">scanf</span><span class="br0">&#40;</span><span class="st0">&quot;%lf%lf&quot;</span><span class="sy0">,</span> <span class="sy0">&amp;</span>weight<span class="sy0">,</span> <span class="sy0">&amp;</span>height<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; height <span class="sy0">=</span> height <span class="sy0">/</span> <span class="nu16">100.0</span><span class="sy0">;</span> &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* センチメートルをメートルに変換 */</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* 肥満度(BMI) = 体重(kg) / 身長(m) / 身長(m) */</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; bmi <span class="sy0">=</span> weight <span class="sy0">/</span> height <span class="sy0">/</span> height<span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;<span class="es1">\t</span>%d番の方の肥満度は%.2fです。&quot;</span><span class="sy0">,</span> number<span class="sy0">,</span> bmi<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp;</div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">if</span><span class="br0">&#40;</span>bmi <span class="sy0">&gt;=</span> <span class="nu16">18.5</span> <span class="sy0">&amp;&amp;</span> bmi <span class="sy0">&lt;=</span> <span class="nu16">25.0</span><span class="br0">&#41;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;正常です。<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">else</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;異常です。<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp;</div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* 異常な人のデータを格納 */</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; alert_table<span class="br0">&#91;</span>index1<span class="br0">&#93;</span><span class="br0">&#91;</span><span class="nu0">0</span><span class="br0">&#93;</span> <span class="sy0">=</span> <span class="br0">&#40;</span><span class="kw4">double</span><span class="br0">&#41;</span>number<span class="sy0">;</span> &nbsp; <span class="coMULTI">/* 番号 */</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; alert_table<span class="br0">&#91;</span>index1<span class="br0">&#93;</span><span class="br0">&#91;</span><span class="nu0">1</span><span class="br0">&#93;</span> <span class="sy0">=</span> weight<span class="sy0">;</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* 体重 */</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; alert_table<span class="br0">&#91;</span>index1<span class="br0">&#93;</span><span class="br0">&#91;</span><span class="nu0">2</span><span class="br0">&#93;</span> <span class="sy0">=</span> height<span class="sy0">;</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* 身長 */</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="sy0">++</span>index1<span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp;</div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">if</span><span class="br0">&#40;</span>index1 <span class="sy0">&gt;</span> <span class="nu0">0</span><span class="br0">&#41;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;<span class="es1">\n</span>肥満度が異常な方<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;番号<span class="es1">\t</span>体重<span class="es1">\t</span>身長<span class="es1">\t</span>肥満度<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">for</span><span class="br0">&#40;</span>index2 <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">;</span> index2 <span class="sy0">&lt;</span> index1<span class="sy0">;</span> <span class="sy0">++</span>index2<span class="br0">&#41;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;%d<span class="es1">\t</span>%.2f<span class="es1">\t</span>%.2f<span class="es1">\t</span>%.2f<span class="es1">\n</span>&quot;</span><span class="sy0">,</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#40;</span><span class="kw4">int</span><span class="br0">&#41;</span>alert_table<span class="br0">&#91;</span>index2<span class="br0">&#93;</span><span class="br0">&#91;</span><span class="nu0">0</span><span class="br0">&#93;</span><span class="sy0">,</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* 番号 */</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; alert_table<span class="br0">&#91;</span>index2<span class="br0">&#93;</span><span class="br0">&#91;</span><span class="nu0">1</span><span class="br0">&#93;</span><span class="sy0">,</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="coMULTI">/* 体重 */</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; alert_table<span class="br0">&#91;</span>index2<span class="br0">&#93;</span><span class="br0">&#91;</span><span class="nu0">2</span><span class="br0">&#93;</span><span class="sy0">,</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="coMULTI">/* 身長 */</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; alert_table<span class="br0">&#91;</span>index2<span class="br0">&#93;</span><span class="br0">&#91;</span><span class="nu0">1</span><span class="br0">&#93;</span> <span class="sy0">/</span> alert_table<span class="br0">&#91;</span>index2<span class="br0">&#93;</span><span class="br0">&#91;</span><span class="nu0">2</span><span class="br0">&#93;</span> <span class="sy0">/</span> alert_table<span class="br0">&#91;</span>index2<span class="br0">&#93;</span><span class="br0">&#91;</span><span class="nu0">2</span><span class="br0">&#93;</span><span class="br0">&#41;</span><span class="sy0">;</span> &nbsp; &nbsp; <span class="coMULTI">/* 肥満度 */</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">else</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;<span class="es1">\n</span>肥満度が異常な方はいませんでした<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp;</div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">return</span> <span class="nu0">0</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1"><span class="br0">&#125;</span></div></li>
+						</ol></div>	
+					</div>
+					<div class="exe-samp">
+<pre><samp>$ <kbd>./ex07_6.prg</kbd>
+肥満度(BMI)の計算を行います
+1. 体重(kg)と身長(cm)を入力してください ==&gt; <kbd>67 188</kbd>
+        1番の方の肥満度は18.96です。正常です。
+2. 体重(kg)と身長(cm)を入力してください ==&gt; <kbd>98 176</kbd>
+        2番の方の肥満度は31.64です。異常です。
+3. 体重(kg)と身長(cm)を入力してください ==&gt; <kbd>43 156</kbd>
+        3番の方の肥満度は17.67です。異常です。
+4. 体重(kg)と身長(cm)を入力してください ==&gt; <kbd>55 167</kbd>
+        4番の方の肥満度は19.72です。正常です。
+5. 体重(kg)と身長(cm)を入力してください ==&gt; <kbd>75 166</kbd>
+        5番の方の肥満度は27.22です。異常です。
+
+肥満度が異常な方
+番号    体重    身長    肥満度
+2       98.00   1.76    31.64
+3       43.00   1.56    17.67
+5       75.00   1.66    27.22
+$</samp></pre>
+					</div>
+					<dl>
+						<dt>10行目</dt>
+							<dd>肥満度が異常だった人のデータ（番号、体重、身長）のみを格納しておくための２次元配列です。</dd>
+						<dt>24行目</dt>
+							<dd>肥満度が正常かどうかを判定します。</dd>
+						<dt>33〜35行目</dt>
+							<dd>肥満度が異常だった場合、alert_table配列に入力データを格納（番号、体重、身長）します。</dd>
+						<dt>46〜50行目</dt>
+							<dd>alert_table配列に格納されているデータを出力します。</dd>
+					</dl>
+					<aside>
+						<h5>補足</h5>
+						<p>33行目の(double)numberは型変換（キャスト）演算子で、変数number（int型）の値をdouble型に変換しています。これはalert_table配列がdouble型で型名が異なるためです。47行目では逆にdouble型からint型に変換しています。</p>
+						<p>33行目は型変換を指定しなくても自動的に型変換を行いますが、型が異なる配列への代入であることを明確にすることもあり、明示的に型変換を行なっています。</p>
+					</aside>
+				</section>
+			</section>
+		</section>
+	</section>
+
+	<footer>
+		<nav>
+			<ul>
+				<li><a href="../../index.html">ホーム</a></li>
+				<li><a href="../c_langtop.html#lbl_index">目次</a></li>
+				<li><a href="./section07_2.html">前のページ</a></li>
+				<li><a href="../SECTION08/section08_1.html">次のページ</a></li>
+			</ul>
+		</nav>
+		<p id="footer-author">更新日：<time datetime="2018-12-05">2018年12月05日</time> Merry</p>
+	</footer>
+</div>
+</body>
+</html>

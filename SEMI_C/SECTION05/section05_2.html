@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initialscale=1.0">
+	<meta name="robots" content="INDEX,FOLLOW">
+	<meta name="keywords" content="ビット,論理積,AND,論理和,OR,排他的論理和,XOR,反転,NOT,シフト,型変換">
+	<meta name="description" content="その他の演算子の説明をします。">
+	<meta name="author" content="T.Hagiwara">
+	<link rel="stylesheet" href="../../CSS3/seminar.css" type="text/css">
+	<link rel="stylesheet" href="../../CSS3/hl_clang.css" type="text/css">
+	<link rel="prev" href="./section05_1.html">
+	<link rel="next" href="../SECTION06/section06_1.html">
+	<title>Ｃ言語プログラミング入門&nbsp;-&nbsp;いろいろな演算子（2/2）</title>
+	<style type="text/css">
+	</style>
+</head>
+<body>
+<div id="container">
+	<header>
+		<p>Linux講座にようこそ。このページは「Ｃ言語プログラミング入門&nbsp;-&nbsp;第５章．いろいろな演算子」です。</p>
+		<h1>Ｃ言語プログラミング入門</h1>
+		<nav>
+			<ul>
+				<li><a href="../../index.html">ホーム</a></li>
+				<li><a href="../c_langtop.html#lbl_index">目次</a></li>
+				<li><a href="./section05_1.html">前のページ</a></li>
+				<li><a href="../SECTION06/section06_1.html">次のページ</a></li>
+			</ul>
+		</nav>
+	</header>
+
+	<section class="contents">
+		<h1>5. いろいろな演算子（2/2）</h1>
+		<section>
+			<h2>5.3 その他の演算子</h2>
+			<p>今まで説明していない演算子と、ポインタの操作に関する演算子以外の演算子を下表にまとめました。ビット演算子を使う機会は少ないかもしれませんが、機器制御などの分野のプログラムでは使うことがあるかもしれません。</p>
+			<table id="lbl_operator" class="simple-table">
+				<caption>【表5-1】その他の演算子一覧</caption>
+				<thead>
+				<tr><th>区分</th><th>演算子</th><th>意味</th><th>例題</th></tr>
+				</thead>
+				<tbody>
+				<tr><td class="text-center" rowspan="6">ビット</td><td class="text-center">&amp;</td><td>ビットごとの論理積（AND）</td><td>int型の変数dataの右端の８ビットを取り出します。<br><code>bit8 = data &amp; 0x000000ff;</code></td></tr>
+				<tr><td class="text-center">|</td><td>ビットごとの論理和（OR）</td><td>int型の変数dataの右端の８ビットを１にします。<br><code>bit8 = data | 0x000000ff;</code></td></tr>
+				<tr><td class="text-center">^</td><td>ビットごとの排他的論理和（XOR）</td><td>int型の変数dataを０にします。<br><code>data = data ^ data;</code></td></tr>
+				<tr><td class="text-center">~</td><td>ビットごとの反転（NOT）</td><td>int型の変数dataのビットを反転します。<br><code>data = ~data;</code></td></tr>
+				<tr><td class="text-center">&lt;&lt;</td><td>ビットの左シフト</td><td>int型の変数dataの値を２倍にします。<br><code>data = data &lt;&lt; 1;</code></td></tr>
+				<tr><td class="text-center">&gt;&gt;</td><td>ビットの右シフト</td><td>int型の変数dataの値を半分にします。<br><code>data = data &gt;&gt; 1;</code></td></tr>
+				<tr><td class="text-center">サイズ</td><td class="text-center">sizeof()</td><td>型名や変数のサイズ（バイト数）を求める</td><td>int型のサイズを求めます。<br><code>length = sizeof(int);</code></td></tr>
+				<tr><td class="text-center">型変換<br>（キャスト）</td><td class="text-center">()</td><td>括弧内に指定した型名に変換</td><td>int型の変数dataの値をdouble型に変換します。（変数kotaeとataiはdouble型とします）<br><code>kotae = atai * (double)data;</code></td></tr>
+				<tr><td class="text-center">順次実行</td><td class="text-center">,</td><td>複数の式を順次実行</td><td>int型の変数にそれぞれの値を代入します。右辺の式の値は最後の式の式の値になりますので、変数atai1の値は３になります。<br><code>atai1 = (atai2 = 1, atai3 = 2, atai4 = 3);</code></td></tr>
+				</tbody>
+			</table>
+			<aside>
+				<h3>補足</h3>
+				<ul>
+					<li>ビット演算子については代入を同時に行う複合代入演算子も用意されています。
+						<div class="form-exp">&amp;=、|=、^=、&lt;&lt;=、&gt;&gt;=</div></li>
+					<li>Ｃ言語ではビットはint型で取り扱います。また、定数は八進数および、十六進数としても指定できます。八進数は０を、十六進数は0xまたは0Xを先頭に指定します。
+						<div class="source-code">
+							<code>data = 0577;</code><strong> ← 八進数です</strong><br>
+							<code>data = 0x000000ff;</code><strong> ← 十六進数です</strong>
+						</div></li>
+					<li>ビットごとの論理演算については次のサイトが参考になります。<br><a href="http://itpro.nikkeibp.co.jp/members/ITPro/ITBASIC/20020805/1/">【5分で覚えるIT基礎の基礎】あなたは論理演算がわかりますか？　第2回</a></li>
+				</ul>
+			</aside>
+		</section>
+	</section>
+
+	<footer>
+		<nav>
+			<ul>
+				<li><a href="../../index.html">ホーム</a></li>
+				<li><a href="../c_langtop.html#lbl_index">目次</a></li>
+				<li><a href="./section05_1.html">前のページ</a></li>
+				<li><a href="../SECTION06/section06_1.html">次のページ</a></li>
+			</ul>
+		</nav>
+		<p id="footer-author">更新日：<time datetime="2018-05-16">2018年05月16日</time> Merry</p>
+	</footer>
+</div>
+</body>
+</html>

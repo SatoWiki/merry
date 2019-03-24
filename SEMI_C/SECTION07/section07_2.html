@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initialscale=1.0">
+	<meta name="robots" content="INDEX,FOLLOW">
+	<meta name="keywords" content="文字,文字列,ヌル文字,char型の配列">
+	<meta name="description" content="Ｃ言語での文字列の取扱い方を説明します。">
+	<meta name="author" content="T.Hagiwara">
+	<link rel="stylesheet" href="../../CSS3/seminar.css" type="text/css">
+	<link rel="stylesheet" href="../../CSS3/hl_clang.css" type="text/css">
+	<link rel="prev" href="./section07_1.html">
+	<link rel="next" href="./section07_3.html">
+	<title>Ｃ言語プログラミング入門&nbsp;-&nbsp;たくさんのデータを処理するための配列（2/3）</title>
+	<style type="text/css">
+	</style>
+</head>
+<body>
+<div id="container">
+	<header>
+		<p>Linux講座にようこそ。このページは「Ｃ言語プログラミング入門&nbsp;-&nbsp;第７章．たくさんのデータを処理するための配列」です。</p>
+		<h1>Ｃ言語プログラミング入門</h1>
+		<nav>
+			<ul>
+				<li><a href="../../index.html">ホーム</a></li>
+				<li><a href="../c_langtop.html#lbl_index">目次</a></li>
+				<li><a href="./section07_1.html">前のページ</a></li>
+				<li><a href="./section07_3.html">次のページ</a></li>
+			</ul>
+		</nav>
+	</header>
+
+	<section class="contents">
+		<h1>7. たくさんのデータを処理するための配列（2/3）</h1>
+		<section>
+			<h2 id="array">7.3 文字列の取扱い</h2>
+			<p>Ｃ言語では文字の取扱いが複雑です。そもそも、用語が分かりにくいため、用語に付いて説明します。</p>
+			<dl>
+				<dt>文字</dt>
+					<dd>半角の英字・数字・記号の<strong>１文字</strong>です。char型の変数で取り扱えます。</dd>
+				<dt>文字列</dt>
+					<dd><strong>２文字以上</strong>の文字の並びです。日本語などの文字コードは１文字でも複数バイトを使用しますので、例え１文字の場合でも文字列扱いになります。char型の変数では取り扱えません。</dd>
+				<dt>ヌル（Null）文字</dt>
+					<dd>８ビット（１バイト）全て０の文字で、文字列の最後を表すために使用します。「<a href="../APPENDIX/apnd01.html">付録１．ASCIIコード表</a>」で「NUL」と表記してある文字です。文字としては\0（バックスラッシュと０）と記述します。（文字定数として指定する場合は'で括って'\0'と記述します）当講座では「ヌル文字」と呼ぶことにします。</dd>
+			</dl>
+			<figure class="left-box myphoto">
+				<dl>
+					<dt><img src="../IMAGES/sec07_2.jpg" alt="文字の取扱い"></dt>
+					<dd>【図７-２】文字の取扱い</dd>
+				</dl>
+			</figure>
+			<p>文字は既に説明したとおり、char型のデータとして取り扱えますので、char型の変数に代入したり参照したりすることができます。また、定数として記述する場合は'（アポストロフィ）で括ります。</p>
+			<p>一方、文字列は単なるchar型の変数では取り扱えませんので、<strong>char型の配列</strong>で取り扱うことになります。また、文字列の最後を表すためにヌル文字も使用します。</p>
+			<p>定数として記述する場合は"（引用符）で括りますが、ヌル文字はコンパイラが自動的に付け加えますので指定する必要はありません。（文字列の定数はprintf関数でメッセージを出力するときに使いました）</p>
+			<p>文字列の取扱いは面倒ですので、Ｃ言語では「<a href="../SECTION14/s14_02/s14_02_1.html">文字列処理ライブラリ</a>」として文字列を取り扱う関数が沢山提供されています。どのような関数があるかを確認しておくと良いでしょう。</p>
+			<section>
+				<h3>7.3.1 形式</h3>
+				<p>宣言時に初期値を指定しない場合は要素数を指定しますが、格納する文字列の文字数が確定できないことが多いと思います。その場合は予想する最大文字数を指定するしかありません。もし、最大文字数を越えてしまった場合はオーバーフローとなり、プログラム実行時に異常終了するかもしれませんので、要素数は多めに指定しておいた方が良いでしょう。（完全な対応策ではありませんが…）</p>
+				<p>宣言時に初期値を指定する場合は要素数は省略できます。省略した場合はコンパイラが適切な要素数の配列として確保してくれます。日本語を初期値として指定する場合は１文字が何バイトか調べるのも大変ですので、要素数は省略した方が良いでしょう。</p>
+				<p>char型の配列に定数の文字列を代入することは出来ません。（配列に配列を代入することになるためです）</p>
+				<div class="form-exp">
+					※ 宣言時に初期値を指定しない場合<br>
+					char 配列名[要素数];<br><br>
+
+					※ 宣言時に初期値を指定する場合<br>
+					char 配列名[] = "初期値"; <strong>← 初期値の文字列の最後にヌル文字は不要です</strong>
+				</div>
+				<p>文字列の入出力もscanf関数やprintf関数で出来ますが、変数の場合と使い方が若干異なります。具体的には例題プログラムをご覧ください。</p>
+				<p>scanf関数で入力する場合の書式制御文字列は<strong>%s</strong>になります。そして、入力した文字列を格納するchar型の配列名を指定しますが、この配列名には&amp;記号は付けませんので注意して下さい。また、入力したデータにはヌル文字が付加されて、文字列として指定した配列に格納されます。</p>
+				<p>printf関数で出力する場合の書式制御文字列も%sになります。</p>
+				<aside>
+					<h4>補足</h4>
+					<ul>
+						<li>初期値の指定は次の形式でも可能ですが、無理をしてこちらの形式を使う必要はないと思います。（こちらの形式が基本形のようです）<br><code>char 配列名[] = {'文字１', '文字２', …, '文字ｎ', '\0'};</code></li>
+						<li>配列に格納するデータ数が不明な場合は、データの数により、配列の大きさを拡張することができます。詳細は「<a href="../SECTION14/s14_06/s14_06_1.html">14. ライブラリ関数 - メモリ操作ライブラリ</a>」をご覧ください。</li>
+					</ul>
+				</aside>
+			</section>
+			<section>
+				<h3>7.3.2 例題</h3>
+				<section>
+					<h4 id="lbl_ex07_3">例題１</h4>
+					<p>入力された文字列（10文字以下の半角文字列）の文字数を数えて出力します。</p>
+					<div class="source-code">
+						<div class="c"><ol><li class="li1"><div class="de1"><span class="co2">#include &lt;stdio.h&gt;</span></div></li>
+						<li class="li1"><div class="de1"><span class="kw4">int</span> main<span class="br0">&#40;</span><span class="br0">&#41;</span></div></li>
+						<li class="li1"><div class="de1"><span class="br0">&#123;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">char</span> &nbsp; &nbsp;mojiretu<span class="br0">&#91;</span><span class="nu0">11</span><span class="br0">&#93;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">int</span> &nbsp; &nbsp; counter<span class="sy0">;</span> &nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* 添字と文字数カウンターを兼ねる */</span></div></li>
+						<li class="li1"><div class="de1">&nbsp;</div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="coMULTI">/* 文字列の入力 */</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;10文字以下の半角文字列を入力してください ==&gt; &quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">scanf</span><span class="br0">&#40;</span><span class="st0">&quot;%s&quot;</span><span class="sy0">,</span> mojiretu<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp;</div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; counter <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">while</span><span class="br0">&#40;</span> mojiretu<span class="br0">&#91;</span>counter<span class="br0">&#93;</span> <span class="sy0">!=</span> <span class="st0">'<span class="es5">\0</span>'</span><span class="br0">&#41;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="sy0">++</span>counter<span class="sy0">;</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* 添字と文字数カウンターのカウントアップ */</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="coMULTI">/* 入力文字数の出力 */</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;「%s」の文字数は%dです<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> mojiretu<span class="sy0">,</span> counter<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp;</div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">return</span> <span class="nu0">0</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1"><span class="br0">&#125;</span></div></li>
+						</ol></div>
+					</div>
+					<div class="exe-samp">
+<pre><samp>$ <kbd>./ex07_3.prg</kbd>
+10文字以下の半角文字列を入力してください ==&gt; <kbd>Hello</kbd>
+「Hello」の文字数は5です
+$</samp></pre>
+					</div>
+					<dl>
+						<dt>4行目</dt>
+							<dd>scanf関数で入力した文字列を格納するためのchar型の配列です。入力文字列の文字数は最大10文字と想定していますので、ヌル文字分を含めて要素数を11としています。</dd>
+						<dt>9行目</dt>
+							<dd>scanf関数で文字列を入力します。書式制御文字列は%sで、入力した文字列はmojiretu配列に格納します。mojiretuには&amp;を付けませんので注意してください。</dd>
+						<dt>11〜15行目</dt>
+							<dd>mojiretu配列にヌル文字が現れるまで繰り返し処理を行います。繰り返しの中で添字を進めることと、文字数を数えることを行っています。</dd>
+						<dt>17行目</dt>
+							<dd>scanf関数で入力した文字列と文字数を出力します。文字列の出力に対する書式制御文字列は%sです。</dd>
+					</dl>
+					<aside>
+						<h5>補足</h5>
+						<ul>
+							<li>11〜15行目はfor文を使うと簡略化できます。
+							<div class="source-code">
+<pre><code>for(counter = 0; mojiretu[counter] != '\0'; ++counter)
+    ;</code> <strong>← 繰り返しの処理がない場合は;（セミコロン）だけ指定します</strong></pre>
+							</div>
+							少しわかりにくくなりますが、さらに簡略化できます。mojiretu[counter]の式の値がヌル文字になると、論理値としては偽になりますので繰り返しから抜け出します。（Ｃ言語の場合、式の値が０は論理値として偽となり、０以外は真となります）
+							<div class="source-code">
+<pre><code>for(counter = 0; mojiretu[counter]; ++counter)
+    ;</code></pre>
+							</div></li>
+							<li>このプログラムの機能はライブラリ関数のstrlen関数と同じです。実際にプログラムを作る際にはstrlen関数を使うとよいでしょう。（<a href="../SECTION14/s14_02/s14_02_2.html#lbl_strlen">strlen関数</a>）</li>
+							<li>この例題プログラムで、11文字以上の文字列を入力すると結果が正しくありませんし、場合によっては異常終了します。これは、入力した文字列を格納する配列の要素数を11にしているので、ヌル文字を除いて最大10文字しか格納できないためにオーバーフローを起こしているためです。異常終了するだけなら、まだ良いのですが、これは重大なセキュリティホールに成り得ますので、一般に公開するプログラムではscanf関数で文字列を入力しない方が良いでしょう。（使い方としてはscanf関数が一番簡単なため、例題プログラムでは使っています）</li>
+						</ul>
+					</aside>
+				</section>
+				<section>
+					<h4>例題２</h4>
+					<p>入力された文字列（10文字以下の半角文字列）の最後の文字から先頭文字の順（逆順）に出力します。</p>
+					<div class="source-code">
+						<div class="c"><ol><li class="li1"><div class="de1"><span class="co2">#include &lt;stdio.h&gt;</span></div></li>
+						<li class="li1"><div class="de1"><span class="kw4">int</span> main<span class="br0">&#40;</span><span class="br0">&#41;</span></div></li>
+						<li class="li1"><div class="de1"><span class="br0">&#123;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">char</span> &nbsp; &nbsp;mojiretu<span class="br0">&#91;</span><span class="nu0">11</span><span class="br0">&#93;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">int</span> &nbsp; &nbsp; index<span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp;</div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="coMULTI">/* 文字列の入力 */</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;10文字以下の半角文字列を入力してください ==&gt; &quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">scanf</span><span class="br0">&#40;</span><span class="st0">&quot;%s&quot;</span><span class="sy0">,</span> mojiretu<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp;</div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="coMULTI">/* ヌル文字を探す */</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">for</span><span class="br0">&#40;</span>index <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">;</span> mojiretu<span class="br0">&#91;</span>index<span class="br0">&#93;</span><span class="sy0">;</span> <span class="sy0">++</span>index<span class="br0">&#41;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp;</div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="coMULTI">/* ヌル文字の前の文字（最後の文字）から先頭の文字まで */</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;逆順で出力します<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">for</span><span class="br0">&#40;</span><span class="sy0">--</span>index<span class="sy0">;</span> index <span class="sy0">&gt;=</span> <span class="nu0">0</span><span class="sy0">;</span> <span class="sy0">--</span>index<span class="br0">&#41;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;%c&quot;</span><span class="sy0">,</span> mojiretu<span class="br0">&#91;</span>index<span class="br0">&#93;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp;</div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; </div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">return</span> <span class="nu0">0</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1"><span class="br0">&#125;</span></div></li>
+						</ol></div>	
+					</div>
+					<div class="exe-samp">
+<pre><samp>$ <kbd>./ex07_4.prg</kbd>
+10文字以下の半角文字列を入力してください ==&gt; <kbd>Hello</kbd>
+逆順で出力します
+olleH
+$</samp></pre>
+					</div>
+					<dl>
+						<dt>12〜13行目</dt>
+							<dd>ヌル文字の要素まで添字を進めます。ヌル文字の１つ前が最後の文字です。</dd>
+						<dt>17〜20行目</dt>
+							<dd>ヌル文字の１つ前から先頭文字まで添字を戻しながら繰り返します。繰り返しの中で１文字ずつ出力します。１文字出力ですので書式制御文字列は%cです。</dd>
+					</dl>
+				</section>
+			</section>
+		</section>
+	</section>
+
+	<footer>
+		<nav>
+			<ul>
+				<li><a href="../../index.html">ホーム</a></li>
+				<li><a href="../c_langtop.html#lbl_index">目次</a></li>
+				<li><a href="./section07_1.html">前のページ</a></li>
+				<li><a href="./section07_3.html">次のページ</a></li>
+			</ul>
+		</nav>
+		<p id="footer-author">更新日：<time datetime="2018-12-03">2018年12月03日</time> Merry</p>
+	</footer>
+</div>
+</body>
+</html>

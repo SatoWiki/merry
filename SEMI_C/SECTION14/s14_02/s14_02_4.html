@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initialscale=1.0">
+	<meta name="robots" content="INDEX,FOLLOW">
+	<meta name="keywords" content="文字列処理ライブラリ,関数,strspn,strcspn,strcoll,strxfrm">
+	<meta name="description" content="strspn関数、strcspn関数、strcoll関数、strxfrm関数の使用法を説明します。">
+	<meta name="author" content="T.Hagiwara">
+	<link rel="stylesheet" href="../../../CSS3/seminar.css" type="text/css">
+	<link rel="stylesheet" href="../../../CSS3/hl_clang.css" type="text/css">
+	<link rel="prev" href="./s14_02_3.html">
+	<link rel="next" href="./s14_02_5.html">
+	<title>Ｃ言語プログラミング入門&nbsp;-&nbsp;ライブラリ関数&nbsp;-&nbsp;文字列処理ライブラリ（4/5）-</title>
+	<style type="text/css">
+	</style>
+</head>
+<body>
+<div id="container">
+	<header>
+		<p>Linux講座にようこそ。このページは「Ｃ言語プログラミング入門&nbsp;-&nbsp;第14章．ライブラリ関数&nbsp;-&nbsp;文字列処理ライブラリ」です。</p>
+		<h1>Ｃ言語プログラミング入門</h1>
+		<nav>
+			<ul>
+				<li><a href="../../../index.html">ホーム</a></li>
+				<li><a href="../../c_langtop.html#lbl_index">目次</a></li>
+				<li><a href="./s14_02_3.html">前のページ</a></li>
+				<li><a href="./s14_02_5.html">次のページ</a></li>
+			</ul>
+		</nav>
+	</header>
+
+	<section class="contents">
+		<h1>14. ライブラリ関数（15/36）&nbsp;-&nbsp;文字列処理ライブラリ（4/5）</h1>
+		<section>
+			<h2 id="lbl_spn">14.22 文字セットから成る文字列か否かのチェック関数</h2>
+			<section>
+				<h3 id="lbl_strspn">14.22.1 strspn関数</h3>
+				<p>strspn関数は文字列の先頭からの文字が、指定された文字の組み合わせ（文字セット）から成る文字列か否かをチェックします。</p>
+				<table>
+					<caption>【表14-2-16】 strspn関数</caption>
+					<tr><th>形式</th><td>#include &lt;string.h&gt;<br>
+										size_t strspn(const char *str, const char *keyset);</td></tr>
+					<tr><th>返り値</th><td>文字セットと一致した文字の数を返します。一致しなかった場合は０を返します。</td></tr>
+					<tr><th>引数</th>
+						<td>
+							<dl>
+								<dt>const char *str</dt>
+									<dd>チェック対象の文字列を指定します。</dd>
+								<dt>const char *keyset</dt>
+									<dd>文字セットを指定します。</dd>
+							</dl>
+						</td></tr>
+				</table>
+			</section>
+			<section>
+				<h3 id="lbl_strcspn">14.22.2 strcspn関数</h3>
+				<p>	trcspn関数は文字列の先頭からの文字が、指定された文字の組み合わせ（文字セット）<strong>以外</strong>から成る文字列か否かをチェックします。</p>
+				<table>
+					<caption>【表14-2-17】 strcspn関数</caption>
+					<tr><th>形式</th><td>#include &lt;string.h&gt;<br>
+										size_t strcspn(const char *str, const char *keyset);</td></tr>
+					<tr><th>返り値</th><td>文字セット以外と一致した文字の数を返します。一致しなかった場合は０を返します。</td></tr>
+					<tr><th>引数</th>
+						<td>
+							<dl>
+								<dt>const char *str</dt>
+									<dd>チェック対象の文字列を指定します。</dd>
+								<dt>const char *keyset</dt>
+									<dd>文字セットを指定します。</dd>
+							</dl>
+						</td></tr>
+				</table>
+			</section>
+			<section>
+				<h3>14.22.3 例題</h3>
+				<p>テキストファイル中の英字（a〜z、A〜Z、半角スペース）の部分だけを抽出して表示します。</p>
+				<div class="source-code">
+					<div class="c"><ol><li class="li1"><div class="de1"><span class="co2">#include &lt;stdio.h&gt;</span></div></li>
+					<li class="li1"><div class="de1"><span class="co2">#include &lt;string.h&gt;</span></div></li>
+					<li class="li1"><div class="de1"><span class="co2">#define LINE_MAX &nbsp; &nbsp;1024</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1"><span class="kw4">int</span> main<span class="br0">&#40;</span><span class="kw4">void</span><span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">char</span> <span class="sy0">*</span>SubStr<span class="br0">&#40;</span><span class="kw4">char</span> <span class="sy0">*</span>Str<span class="sy0">,</span> <span class="kw4">int</span> Start<span class="sy0">,</span> <span class="kw4">int</span> Length<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; FILE &nbsp; &nbsp;<span class="sy0">*</span>fp<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">char</span> &nbsp; &nbsp;in_file<span class="br0">&#91;</span><span class="br0">&#93;</span> <span class="sy0">=</span> <span class="st0">&quot;./DATA/ex14_2_6.dat&quot;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">char</span> &nbsp; &nbsp;line<span class="br0">&#91;</span>LINE_MAX<span class="br0">&#93;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">char</span> &nbsp; &nbsp;key_set<span class="br0">&#91;</span><span class="br0">&#93;</span> <span class="sy0">=</span><span class="st0">&quot;abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ &quot;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">char</span> &nbsp; &nbsp;<span class="sy0">*</span>p_line<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">int</span> &nbsp; &nbsp; len<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">if</span><span class="br0">&#40;</span><span class="br0">&#40;</span>fp <span class="sy0">=</span> <span class="kw3">fopen</span><span class="br0">&#40;</span>in_file<span class="sy0">,</span> <span class="st0">&quot;r&quot;</span><span class="br0">&#41;</span><span class="br0">&#41;</span> <span class="sy0">!=</span> NULL<span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* EOFでない間、繰り返す */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">while</span><span class="br0">&#40;</span><span class="kw3">fgets</span><span class="br0">&#40;</span>line<span class="sy0">,</span> LINE_MAX<span class="sy0">,</span> fp<span class="br0">&#41;</span> <span class="sy0">!=</span> NULL<span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* 行の最後まで */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">for</span><span class="br0">&#40;</span>p_line <span class="sy0">=</span> line<span class="sy0">;</span> <span class="sy0">*</span>p_line <span class="sy0">!=</span> <span class="st0">'<span class="es5">\0</span>'</span><span class="sy0">;</span> <span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* 英字とスペースのチェック */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; len <span class="sy0">=</span> <span class="kw3">strspn</span><span class="br0">&#40;</span>p_line<span class="sy0">,</span> key_set<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">if</span><span class="br0">&#40;</span>len <span class="sy0">&gt;</span> <span class="nu0">0</span><span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* 英字とスペースから成る文字列を表示 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;%s<span class="es1">\t</span>&quot;</span><span class="sy0">,</span> SubStr<span class="br0">&#40;</span>p_line<span class="sy0">,</span> <span class="nu0">0</span><span class="sy0">,</span> len<span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; p_line <span class="sy0">+=</span> len<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">else</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="sy0">++</span>p_line<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">fclose</span><span class="br0">&#40;</span>fp<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">else</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;%sがオープン出来ませんでした。&quot;</span><span class="sy0">,</span> in_file<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">return</span> <span class="nu0">0</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1"><span class="coMULTI">/* 文字列中の指定された位置の文字列を取り出す */</span></div></li>
+					<li class="li1"><div class="de1"><span class="kw4">char</span> <span class="sy0">*</span>SubStr<span class="br0">&#40;</span><span class="kw4">char</span> <span class="sy0">*</span>pStr<span class="sy0">,</span> <span class="kw4">int</span> pStart<span class="sy0">,</span> <span class="kw4">int</span> pLength<span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">static</span> <span class="kw4">char</span> buff<span class="br0">&#91;</span>LINE_MAX<span class="br0">&#93;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">char</span> &nbsp; &nbsp; &nbsp; <span class="sy0">*</span>p_buff <span class="sy0">=</span> buff<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">for</span><span class="br0">&#40;</span>pStr <span class="sy0">+=</span> pStart<span class="sy0">;</span> <span class="sy0">*</span>pStr <span class="sy0">!=</span> <span class="st0">'<span class="es5">\0</span>'</span> <span class="sy0">&amp;&amp;</span> pLength <span class="sy0">&gt;</span> <span class="nu0">0</span><span class="sy0">;</span> <span class="sy0">--</span>pLength<span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="sy0">*</span><span class="br0">&#40;</span>p_buff<span class="sy0">++</span><span class="br0">&#41;</span> <span class="sy0">=</span> <span class="sy0">*</span><span class="br0">&#40;</span>pStr<span class="sy0">++</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="sy0">*</span>p_buff <span class="sy0">=</span> <span class="st0">'<span class="es5">\0</span>'</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">return</span> buff<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#125;</span></div></li>
+					</ol></div>
+				</div>
+				<div class="exe-samp">
+<pre><samp>$ <kbd>cat ./DATA/ex14_2_6.dat</kbd>
+1,Merry Husky,67,188,A
+2,Kuma Mix,98,176.5
+3,Hana Shiba,43.2,156.5,AB
+4,ken Mix,55.5,167.5
+5,Taro Bull,75.7,166.5,A
+$
+$ <kbd>./ex14_2_7.prg</kbd>
+Merry Husky     A
+Kuma Mix
+Hana Shiba      AB
+ken Mix
+Taro Bull       A
+$</samp></pre>
+				</div>
+				<dl>
+					<dt>25行目</dt>
+						<dd>入力した文字列が英字とスペース（文字セット）から成る文字列かをチェックします。</dd>
+					<dt>29行目</dt>
+						<dd>文字セットと一致した文字列を表示します。</dd>
+				</dl>
+				<aside>
+					<h4>補足</h4>
+					<p>上記例題の25行目のstrspn関数をstrcspn関数に変更すると、英字（a〜z、A〜Z、半角スペース）以外の文字を表示するようになります。次の実行例では、改行文字（'\n'）も英字以外ですので表示しています。（結果として、空行を表示しています）</p>
+					<div class="exe-samp">
+<pre><samp>$ <kbd>./ex14_2_7.prg</kbd>
+1,  ,67,188,
+
+2,  ,98,176.5
+
+3,  ,43.2,156.5,
+
+4,  ,55.5,167.5
+
+5,  ,75.7,166.5,
+
+$</samp></pre>
+					</div>
+				</aside>
+			</section>
+		</section>
+
+		<section>
+			<h2 id="lbl_coll">14.23 文字列のロケールに基づく比較及び、変換関数</h2>
+			<section>
+				<h3 id="lbl_strcoll">14.23.1 strcoll関数</h3>
+				<p>strcoll関数は現在の<strong>ロケール（地域情報）</strong>に従い二つの文字列を比較します。半角文字や全角の英数字・ひらがな・カタカナの場合はstrcmp関数やstrncmp関数と結果は同じになります。これは、文字セット中での文字の順序が辞書式の文字の順序（コードの値による順序）と同じだからです。</p>
+				<p>strcoll関数は日本語の漢字のように、文字セット中での文字の順序が辞書式の文字の順序と異なる場合がありかつ、文字セット中での文字の順序により大小関係を得たい場合に使用します。単に、等しいか否かを判定したい場合は、strcmp関数やstrncmp関数を使用した方がよいでしょう。</p>
+				<p>また、ロケールのデフォルト（プログラムの起動時）は「C」が設定されており、この状態ではstrcmp関数やstrncmp関数と同じ結果になります。従って、strcoll関数を使用する前に、<a href="../s14_08/s14_08_2.html#lbl_setlocale">setlocale関数</a>でロケール（LC_COLLATEカテゴリ）を設定しておく必要が有ります。</p>
+				<table>
+					<caption>【表14-2-18】 strcoll関数</caption>
+					<tr><th>形式</th><td>#include &lt;string.h&gt;<br>
+										int strcoll(const char *str1, const char *str2);</td></tr>
+					<tr><th>返り値</th><td>strcmp関数やstrncmp関数と同じく、比較結果を次のような値で返します。
+											<ul>
+												<li>str1がstr2よりも小さい場合は負の整数値を返します。</li>
+												<li>str1とstr2が等しい場合は０を返します。</li>
+												<li>str1がstr2よりも大きい場合は正の整数値を返します。</li>
+											</ul></td></tr>
+					<tr><th>引数</th>
+						<td>
+							<dl>
+								<dt>const char *str1</dt>
+									<dd>比較する文字列を指定します。</dd>
+								<dt>const char *str2</dt>
+									<dd>比較する文字列を指定します。</dd>
+							</dl>
+						</td></tr>
+				</table>
+				<aside>
+					<h4>補足</h4>
+					<p>下表は文字コード表の一部ですが、区・点が文字セット中での文字の順序です。JIS、SJIS、EUCでは区・点の順序に従い、文字コードの値（辞書式の文字の順序）は１ずつ大きくなっていますが、UTF-8やUTF-16ではそうはなっていないところが有ります。例えば、「阿」はUTF-8の場合E998BFで、次の「哀」はE59380となっており、「哀」の方が文字コードの値が小さくなっています。</p>
+					<div class="scroll-box">
+					<table class="simple-table">
+						<caption>【表14-2-19】文字コード表の一部</caption>
+						<tr><th>区</th><th>点</th><th>JIS</th><th>SJIS</th><th>EUC</th><th>UTF-8</th><th>UTF-16</th><th>字</th></tr>
+						<tr><td>16</td><td>01</td><td>3021</td><td>889F</td><td>B0A1</td><td>E4BA9C</td><td>4E9C</td><td>亜</td></tr>
+						<tr><td>16</td><td>02</td><td>3022</td><td>88A0</td><td>B0A2</td><td>E59496</td><td>5516</td><td>唖</td></tr>
+						<tr><td>16</td><td>03</td><td>3023</td><td>88A1</td><td>B0A3</td><td>E5A883</td><td>5A03</td><td>娃</td></tr>
+						<tr><td>16</td><td>04</td><td>3024</td><td>88A2</td><td>B0A4</td><td><strong>E998BF</strong></td><td>963F</td><td><strong>阿</strong></td></tr>
+						<tr><td>16</td><td>05</td><td>3025</td><td>88A3</td><td>B0A5</td><td><strong>E59380</strong></td><td>54C0</td><td><strong>哀</strong></td></tr>
+						<tr><td>16</td><td>06</td><td>3026</td><td>88A4</td><td>B0A6</td><td>E6849B</td><td>611B</td><td>愛</td></tr>
+						<tr><td>16</td><td>07</td><td>3027</td><td>88A5</td><td>B0A7</td><td>E68CA8</td><td>6328</td><td>挨</td></tr>
+						<tr><td>16</td><td>08</td><td>3028</td><td>88A6</td><td>B0A8</td><td><strong>E5A7B6</strong></td><td>59F6</td><td>姶</td></tr>
+					</table>
+					</div>
+				</aside>
+			</section>
+			<section>
+				<h3 id="lbl_strxfrm">14.23.2 strxfrm関数</h3>
+				<p>strxfrm関数はstrcoll関数とstrcmp関数（又は、strncmp関数）で比較した結果が同じになるように文字列を変換します。変換はstrcoll関数と同じくロケールに従います。</p>
+				<table>
+					<caption>【表14-2-20】 strxfrm関数</caption>
+					<tr><th>形式</th><td>#include &lt;string.h&gt;<br>
+										size_t strxfrm(char *dest, const char *src, size_t n);</td></tr>
+					<tr><th>返り値</th><td>変換後の文字列（dest）のヌル文字を含まない文字数を返します。第３引数nより大きな値の場合は結果は不定です。</td></tr>
+					<tr><th>引数</th>
+						<td>
+							<dl>
+								<dt>char *dest</dt>
+									<dd>変換結果を格納する文字列領域を指定します。</dd>
+								<dt>const char *src</dt>
+									<dd>変換する文字列を指定します。</dd>
+								<dt>size_t n</dt>
+									<dd>変換結果の文字数を指定します。（第１引数destに代入する文字数です。）</dd>
+							</dl>
+						</td></tr>
+				</table>
+			</section>
+			<section>
+				<h3>14.23.3 例題</h3>
+				<p>２つの文字を入力して、strcoll関数とstrcmp関数で比較して、その結果を表示します。実行結果を見ていただくと分かる通り、同じ文字でも結果が異なることが有ります。</p>
+				<div class="source-code">
+					<div class="c"><ol><li class="li1"><div class="de1"><span class="co2">#include &lt;stdio.h&gt;</span></div></li>
+					<li class="li1"><div class="de1"><span class="co2">#include &lt;string.h&gt;</span></div></li>
+					<li class="li1"><div class="de1"><span class="co2">#include &lt;locale.h&gt;</span></div></li>
+					<li class="li1"><div class="de1"><span class="co2">#define BUFFSIZE &nbsp; &nbsp;10</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1"><span class="kw4">int</span> main<span class="br0">&#40;</span><span class="kw4">void</span><span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">char</span> &nbsp; &nbsp;str1<span class="br0">&#91;</span>BUFFSIZE<span class="br0">&#93;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">char</span> &nbsp; &nbsp;str2<span class="br0">&#91;</span>BUFFSIZE<span class="br0">&#93;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">int</span> &nbsp; &nbsp; cmp<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="coMULTI">/* ロケールの設定 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">if</span><span class="br0">&#40;</span><span class="kw3">setlocale</span><span class="br0">&#40;</span>LC_COLLATE<span class="sy0">,</span> <span class="st0">&quot;ja_JP.UTF-8&quot;</span><span class="br0">&#41;</span> <span class="sy0">==</span> NULL<span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;ロケールの設定が出来ませんでした。&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">return</span> <span class="nu0">1</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;１文字目を入力してください ==&gt; &quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">scanf</span><span class="br0">&#40;</span><span class="st0">&quot;%s&quot;</span><span class="sy0">,</span> str1<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;２文字目を入力してください ==&gt; &quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">scanf</span><span class="br0">&#40;</span><span class="st0">&quot;%s&quot;</span><span class="sy0">,</span> str2<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="coMULTI">/* strcoll関数で比較 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; cmp <span class="sy0">=</span> <span class="kw3">strcoll</span><span class="br0">&#40;</span>str1<span class="sy0">,</span> str2<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;strcoll : &quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">if</span> <span class="br0">&#40;</span>cmp <span class="sy0">==</span> <span class="nu0">0</span><span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;%s = %s<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> str1<span class="sy0">,</span> str2<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">else</span> <span class="kw1">if</span> <span class="br0">&#40;</span>cmp <span class="sy0">&gt;</span> <span class="nu0">0</span><span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;%s &gt; %s<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> str1<span class="sy0">,</span> str2<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">else</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;%s &lt; %s<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> str1<span class="sy0">,</span> str2<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="coMULTI">/* strcmp関数で比較 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; cmp <span class="sy0">=</span> <span class="kw3">strcmp</span><span class="br0">&#40;</span>str1<span class="sy0">,</span> str2<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;strcmp &nbsp;: &quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">if</span> <span class="br0">&#40;</span>cmp <span class="sy0">==</span> <span class="nu0">0</span><span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;%s = %s<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> str1<span class="sy0">,</span> str2<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">else</span> <span class="kw1">if</span> <span class="br0">&#40;</span>cmp <span class="sy0">&gt;</span> <span class="nu0">0</span><span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;%s &gt; %s<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> str1<span class="sy0">,</span> str2<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">else</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;%s &lt; %s<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> str1<span class="sy0">,</span> str2<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">return</span> <span class="nu0">0</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#125;</span></div></li>
+					</ol></div>
+				</div>
+				<div class="exe-samp">
+<pre><samp>$ <kbd>./ex14_2_8.prg</kbd>
+１文字目を入力してください ==&gt; <kbd>あ</kbd>
+２文字目を入力してください ==&gt; <kbd>い</kbd>
+strcoll : あ &lt; い
+strcmp  : あ &lt; い
+$
+$ <kbd>./ex14_2_8.prg</kbd>
+１文字目を入力してください ==&gt; <kbd>阿</kbd>
+２文字目を入力してください ==&gt; <kbd>哀</kbd>
+strcoll : 阿 &lt; 哀 <strong>← 「阿」の方が小さい</strong>
+strcmp  : 阿 &gt; 哀 <strong>← 「阿」の方が大きい</strong>
+$
+$ <kbd>./ex14_2_8.prg</kbd>
+１文字目を入力してください ==&gt; <kbd>哀</kbd>
+２文字目を入力してください ==&gt; <kbd>愛</kbd>
+strcoll : 哀 &lt; 愛
+strcmp  : 哀 &lt; 愛
+$
+$ <kbd>./ex14_2_8.prg</kbd>
+１文字目を入力してください ==&gt; <kbd>♂</kbd>
+２文字目を入力してください ==&gt; <kbd>♀</kbd>
+strcoll : ♂ &lt; ♀
+strcmp  : ♂ &gt; ♀
+$</samp></pre>
+				</div>
+				<dl>
+					<dt>13行目</dt>
+						<dd>ロケールの設定を行います。ここではFedoraの標準の「ja_JP.UTF-8」を指定しています。</dd>
+					<dt>25行目</dt>
+						<dd>strcoll関数で比較して、結果を変数cmpに代入します。</dd>
+					<dt>41行目</dt>
+						<dd>strcmp関数で比較して、結果を変数cmpに代入します。</dd>
+				</dl>
+			</section>
+		</section>
+	</section>
+
+	<footer>
+		<nav>
+			<ul>
+				<li><a href="../../../index.html">ホーム</a></li>
+				<li><a href="../../c_langtop.html#lbl_index">目次</a></li>
+				<li><a href="./s14_02_3.html">前のページ</a></li>
+				<li><a href="./s14_02_5.html">次のページ</a></li>
+			</ul>
+		</nav>
+		<p id="footer-author">更新日：<time datetime="2018-12-30">2018年12月30日</time> Merry</p>
+	</footer>
+</div>
+</body>
+</html>

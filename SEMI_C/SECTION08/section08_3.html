@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initialscale=1.0">
+	<meta name="robots" content="INDEX,FOLLOW">
+	<meta name="keywords" content="文字列リテラル,ポインタの配列">
+	<meta name="description" content="文字列を取り扱うのに便利な、文字列リテラルとポインタの配列を説明します。">
+	<meta name="author" content="T.Hagiwara">
+	<link rel="stylesheet" href="../../CSS3/seminar.css" type="text/css">
+	<link rel="stylesheet" href="../../CSS3/hl_clang.css" type="text/css">
+	<link rel="prev" href="../SECTION07/section07_3.html">
+	<link rel="next" href="./section08_2.html">
+	<title>Ｃ言語プログラミング入門&nbsp;-&nbsp;データをアドレスで操作するためのポインタ（3/3）</title>
+	<style type="text/css">
+	</style>
+</head>
+<body>
+<div id="container">
+	<header>
+		<p>Linux講座にようこそ。このページは「Ｃ言語プログラミング入門&nbsp;-&nbsp;第８章．データをアドレスで操作するためのポインタ」です。</p>
+		<h1>Ｃ言語プログラミング入門</h1>
+		<nav>
+			<ul>
+				<li><a href="../../index.html">ホーム</a></li>
+				<li><a href="../c_langtop.html#lbl_index">目次</a></li>
+				<li><a href="./section08_2.html">前のページ</a></li>
+				<li><a href="../SECTION09/section09_1.html">次のページ</a></li>
+			</ul>
+		</nav>
+	</header>
+
+	<section class="contents">
+		<h1>8. データをアドレスで操作するためのポインタ（3/3）</h1>
+		<section>
+			<h2>8.5 ポインタによる文字列の操作</h2>
+			<figure class="left-box myphoto">
+				<dl>
+					<dt><img src="../IMAGES/sec08_3.jpg" alt="文字列リテラル"></dt>
+					<dd>【図８-３】文字列リテラル</dd>
+				</dl>
+			</figure>
+			<p>ポインタは配列を取り扱うのに有効な手段です。特に、文字列を取り扱う場合、ポインタを使うと簡潔に記述できます。ここでは文字列を取り扱うのに便利な、文字列リテラルとポインタの配列について説明します。</p>
+			<p>今までの説明で、文字列をポインタ変数で取り扱いたい場合は、文字列用の配列を宣言して、さらに、ポインタ変数を宣言して、そのポインタ変数に配列の先頭アドレスを設定する、といったような手順になります。つまり、次のような手順です。</p>
+			<p><code>char command[] = "cat";<br>&nbsp;&nbsp;&nbsp;char *p = command;</code>	</p>
+			<p>このような面倒な手続きを<strong>文字列リテラル</strong>を使えば図8-3のように１行で記述できます。</p>
+			<p><code>char *p = "cat";</code></p>
+			<p>これにより、"cat"という文字列が自動的に確保されて、指定したポインタ変数に先頭アドレスが設定されます。文字列中の文字の参照はポインタの演算と間接参照演算子（*）で行うことができます。</p>
+			<figure class="right-box myphoto">
+				<dl>
+					<dt><img src="../IMAGES/sec08_4.jpg" alt="ポインタの配列"></dt>
+					<dd>【図８-４】ポインタの配列</dd>
+				</dl>
+			</figure>
+			<p style="clear: left;">複数の文字列を一括して取り扱う場合、２次元配列が使えることは既に説明しました。例えば、３つの文字列を初期値としてもつ２次元配列は次のように宣言します。</p>
+			<p><code>char command[][5] = {{"cat"}, {"ls"}, {"grep"}};</code></p>
+			<p>これと同じようなことをポインタを使って行うには、図8-4のように<strong>ポインタの配列</strong>を使います。考え方としては文字列リテラルを配列にしたものと思っていただくとよいでしょう。図8-4では３つの文字列を宣言しています。</p>
+			<p><code>char *p[3] = {"cat", "ls", "grep"};</code></p>
+			<p>この場合も３つの文字列が自動的に確保されて、指定したポインタの配列にそれぞれの先頭アドレスが設定されます。</p>
+			<p>２次元配列で文字列を取り扱う場合、列の長さは取り扱う文字列の中で一番長い文字列の文字数になります。従って、短い文字列と長い文字列が混在していると、不要な領域がたくさんできてしまいます。それに対して、ポインタの配列の場合は必要最低限の領域しか確保しませんので、メモリを有効に使うことになります。</p>
+			<section>
+				<h3>8.5.1 形式</h3>
+				<p>ここで説明するのは文字列を扱うための文字列リテラルとポインタの配列ですので、型名はchar型になります。また、ポインタ変数の宣言ですので変数名の前に*を付けます。初期値として指定する文字列にはヌル文字を指定する必要はありません。</p>
+				<div class="form-exp">
+					※ 文字列リテラル<br>
+					char *ポインタ変数名 = "文字列";<br><br>
+
+					※ 文字列リテラルの代入（ポインタ変数は宣言済であること）<br>
+					ポインタ変数名 = "文字列";<br><br>
+
+					※ 文字列用のポインタの配列<br>
+					char *ポインタ配列名[要素数] = {"文字列１", "文字列２", … , "文字列ｎ"};<br>
+					char **ポインタ変数名;<strong> ← ポインタの配列用変数の宣言です</strong>
+				</div>
+				<dl>
+					<dt>*ポインタ変数名</dt>
+						<dd>通常のポインタ変数と同じ形式です。</dd>
+					<dt>*ポインタ配列名[要素数]</dt>
+						<dd>文字列の先頭アドレスを格納する配列ですので、配列名の前に*を指定します。そして、配列名の後に[と]で括って要素数を指定します。ただし、初期値を指定した場合は要素数は省略できます。</dd>
+					<dt>**ポインタ変数名</dt>
+						<dd>配列名は配列の先頭アドレスを値としてもつポインタの定数と考えることができますので、ポインタの配列はポインタのポインタと考えることができます。このことにより、ポインタ変数名の前に*を２個付けることにより、ポインタの配列用のポインタ変数を宣言することができます。</dd>
+				</dl>
+				<aside>
+					<h4>補足</h4>
+					<p>文字列リテラルは定数扱いですので、文字列の変更はできません。ANSI規格では文字列リテラルの変更は未定義となっており、何が起こるか分からないということになっています。ただし、未定義ということですので、Ｃ言語の種類（処理系）によっては変更ができる物もあるようです。</p>
+				</aside>
+			</section>
+			<section>
+				<h3>8.5.2 文字列中の文字の参照</h3>
+				<figure class="left-box myphoto">
+					<dl>
+						<dt><img src="../IMAGES/sec08_5.jpg" alt="文字列中の文字の参照"></dt>
+						<dd>【図８-５】文字列中の文字の参照</dd>
+					</dl>
+				</figure>
+				<p>ポインタの配列で宣言した文字列を参照するには先頭アドレスが必要です。先頭アドレスはポインタの配列に設定されていますので、図8-5のポインタの配列pを配列として取り扱う場合は次のようになります。（単純な１次元配列です）</p>
+				<p>p[0]、p[1]</p>
+				<p>同じことをポインタを使うと次のようになります。</p>
+				<p>*pまたは*(p + 0)、*(p + 1)</p>
+				<p>さらに、ポインタの配列で宣言した文字列中の文字の参照は配列として指定する方法と、ポインタの演算を使う方法があります。</p>
+				<p>配列として指定する場合はポインタの配列の方を行、文字列の方を列とした<strong>２次元配列</strong>として取り扱います。例えば、図8-5の文字列"ls"の各文字を配列として参照するには次のように指定します。</p>
+				<p>p[1][0]、p[1][1]、p[1][2]</p>
+				<p style="clear: left;">同じく、図8-5の文字列"ls"の各文字をポインタの演算を使って参照するには次のような指定になります。</p>
+				<ol>
+					<li>文字列"ls"の先頭アドレスはポインタの配列の２番目の要素に設定されていますので、*(p + 1)の値として参照できます。</li>
+					<li>最初の文字'l'のアドレスは文字列"ls"の先頭アドレスと同じですので<code>*(p + 1)</code>です。このアドレスに設定されている値を参照しますので、間接参照演算子（*）を使って、<strong>**(p + 1)</strong>のように指定すれば最初の文字'l'を参照できます。</li>
+					<li>２番目の文字's'のアドレスは先頭アドレスに１を加算すれば取得できますので*(p + 1 ) + 1です。このアドレスに設定されている値を参照しますので<strong>*(*(p + 1) + 1)</strong>のように指定すれば２番目の文字's'を参照できます。</li>
+					<li>同じように、３番目のヌル文字は<strong>*(*(p + 1) + 2)</strong>のように指定すれば参照できます。</li>
+				</ol>
+				<aside>
+					<h4>補足</h4>
+					<p>図8-5の文字列"ls"をprintf関数を使って表示するには次のように指定します。文字列全体を表示する場合は文字列の先頭アドレスを指定します。</p>
+					<div class="source-code">
+<pre><code>printf("文字列は%sです。", p[1]);<strong> ← 配列として指定した場合です</strong>
+&nbsp;printf("文字列は%sです。", *(p + 1));<strong> ← ポインタの演算を使って指定した場合です</strong>
+
+&nbsp;printf("最初の文字は%cです。", p[1][0]);<strong> ← "l"を表示します。文字の表示ですので書式は"%c"です</strong>
+&nbsp;printf("最初の文字は%cです。", **(p + 1));<strong> ← "l"を表示します</strong>
+
+&nbsp;printf("次の文字は%cです。", p[1][1]);<strong> ← "s"を表示します</strong>
+&nbsp;printf("次の文字は%cです。", *(*(p + 1) + 1));<strong> ← "s"を表示します</strong></code></pre>
+					</div>
+				</aside>
+			</section>
+			<section>
+				<h3>8.5.3 例題</h3>
+				<section>
+					<h4>例題１</h4>
+					<p>この例題は配列の説明のときに使ったメートル単位の長さを各種単位の長さに変換表示するもの（<a href="../SECTION07/section07_3.html#lbl_ex07_5">ex07_5</a>）をポインタの配列を使って書き換えたものです。ここでは配列名を使っています。</p>
+					<div class="source-code">
+						<div class="c"><ol><li class="li1"><div class="de1"><span class="co2">#include &lt;stdio.h&gt;</span></div></li>
+						<li class="li1"><div class="de1"><span class="kw4">int</span> main<span class="br0">&#40;</span><span class="br0">&#41;</span></div></li>
+						<li class="li1"><div class="de1"><span class="br0">&#123;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">double</span> &nbsp;coefficient<span class="br0">&#91;</span><span class="br0">&#93;</span> <span class="sy0">=</span> <span class="br0">&#123;</span><span class="nu16">39.370</span><span class="sy0">,</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* インチ */</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="nu16">3.280</span><span class="sy0">,</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* フィート */</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="nu16">1.093</span><span class="sy0">,</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* ヤード */</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="nu16">3.300</span><span class="sy0">,</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* 尺 */</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="nu16">33.000</span><span class="br0">&#125;</span><span class="sy0">;</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* 寸 */</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">char</span> &nbsp; &nbsp;<span class="sy0">*</span>unit_name<span class="br0">&#91;</span><span class="br0">&#93;</span> <span class="sy0">=</span> <span class="br0">&#123;</span><span class="st0">&quot;インチ&quot;</span><span class="sy0">,</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="st0">&quot;フィート&quot;</span><span class="sy0">,</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="st0">&quot;ヤード&quot;</span><span class="sy0">,</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="st0">&quot;尺&quot;</span><span class="sy0">,</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="st0">&quot;寸&quot;</span><span class="br0">&#125;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">double</span> &nbsp;length<span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">int</span> &nbsp; &nbsp; number<span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp;</div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;長さの変換を行います<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;変換する長さを入力してください（単位はメートル） ==&gt; &quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">scanf</span><span class="br0">&#40;</span><span class="st0">&quot;%lf&quot;</span><span class="sy0">,</span> <span class="sy0">&amp;</span>length<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp;</div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;1. %s<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> unit_name<span class="br0">&#91;</span><span class="nu0">0</span><span class="br0">&#93;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;2. %s<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> unit_name<span class="br0">&#91;</span><span class="nu0">1</span><span class="br0">&#93;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;3. %s<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> unit_name<span class="br0">&#91;</span><span class="nu0">2</span><span class="br0">&#93;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;4. %s<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> unit_name<span class="br0">&#91;</span><span class="nu0">3</span><span class="br0">&#93;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;5. %s<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> unit_name<span class="br0">&#91;</span><span class="nu0">4</span><span class="br0">&#93;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;変換する単位の番号を入力してください ==&gt; &quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">scanf</span><span class="br0">&#40;</span><span class="st0">&quot;%d&quot;</span><span class="sy0">,</span> <span class="sy0">&amp;</span>number<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp;</div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">if</span> <span class="br0">&#40;</span>number <span class="sy0">&gt;=</span> <span class="nu0">1</span> <span class="sy0">&amp;&amp;</span> number <span class="sy0">&lt;=</span> <span class="nu0">5</span><span class="br0">&#41;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;%.2fメートルは%.3f%sです<span class="es1">\n</span>&quot;</span><span class="sy0">,</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; length<span class="sy0">,</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="coMULTI">/* 入力した値（変換する長さ） */</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; length <span class="sy0">*</span> coefficient<span class="br0">&#91;</span>number <span class="sy0">-</span> <span class="nu0">1</span><span class="br0">&#93;</span><span class="sy0">,</span> &nbsp;<span class="coMULTI">/* 指定された長さの単位に変換 */</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; unit_name<span class="br0">&#91;</span>number <span class="sy0">-</span> <span class="nu0">1</span><span class="br0">&#93;</span><span class="br0">&#41;</span><span class="sy0">;</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="coMULTI">/* 変換した長さの単位 */</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">else</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;番号が不当です<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp;</div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">return</span> <span class="nu0">0</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1"><span class="br0">&#125;</span></div></li>
+						</ol></div>	
+					</div>
+					<div class="exe-samp">
+<pre><samp>$ <kbd>./ex08_5.prg</kbd>
+長さの変換を行います
+変換する長さを入力してください（単位はメートル） ==&gt; <kbd>3</kbd>
+1. インチ
+2. フィート
+3. ヤード
+4. 尺
+5. 寸
+変換する単位の番号を入力してください ==&gt; <kbd>2</kbd>
+3.00メートルは9.840フィートです
+$</samp></pre>
+					</div>
+					<dl>
+						<dt>9〜13行目</dt>
+							<dd>ポインタの配列に初期値として長さの単位名を指定します。</dd>
+						<dt>21〜25行目</dt>
+							<dd>メニューとして、長さの単位名を表示します。文字列の出力ですので、書式は%sで、文字列の先頭アドレスを指定します。</dd>
+					</dl>
+				</section>
+				<section>
+					<h4>例題２</h4>
+					<p>上記例題と機能は同じですが、こちらはポインタを使っています。</p>
+					<div class="source-code">
+						<div class="c"><ol><li class="li1"><div class="de1"><span class="co2">#include &lt;stdio.h&gt;</span></div></li>
+						<li class="li1"><div class="de1"><span class="kw4">int</span> main<span class="br0">&#40;</span><span class="br0">&#41;</span></div></li>
+						<li class="li1"><div class="de1"><span class="br0">&#123;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">double</span> &nbsp;coefficient<span class="br0">&#91;</span><span class="br0">&#93;</span> <span class="sy0">=</span> <span class="br0">&#123;</span><span class="nu16">39.370</span><span class="sy0">,</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* インチ */</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="nu16">3.280</span><span class="sy0">,</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* フィート */</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="nu16">1.093</span><span class="sy0">,</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* ヤード */</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="nu16">3.300</span><span class="sy0">,</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* 尺 */</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="nu16">33.000</span><span class="br0">&#125;</span><span class="sy0">;</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* 寸 */</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">char</span> &nbsp; &nbsp;<span class="sy0">*</span>unit_name<span class="br0">&#91;</span><span class="br0">&#93;</span> <span class="sy0">=</span> <span class="br0">&#123;</span><span class="st0">&quot;インチ&quot;</span><span class="sy0">,</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="st0">&quot;フィート&quot;</span><span class="sy0">,</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="st0">&quot;ヤード&quot;</span><span class="sy0">,</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="st0">&quot;尺&quot;</span><span class="sy0">,</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="st0">&quot;寸&quot;</span><span class="br0">&#125;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">double</span> &nbsp;length<span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">int</span> &nbsp; &nbsp; number<span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp;</div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;長さの変換を行います<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;変換する長さを入力してください（単位はメートル） ==&gt; &quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">scanf</span><span class="br0">&#40;</span><span class="st0">&quot;%lf&quot;</span><span class="sy0">,</span> <span class="sy0">&amp;</span>length<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp;</div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;1. %s<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> <span class="sy0">*</span>unit_name<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;2. %s<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> <span class="sy0">*</span><span class="br0">&#40;</span>unit_name <span class="sy0">+</span> <span class="nu0">1</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;3. %s<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> <span class="sy0">*</span><span class="br0">&#40;</span>unit_name <span class="sy0">+</span> <span class="nu0">2</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;4. %s<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> <span class="sy0">*</span><span class="br0">&#40;</span>unit_name <span class="sy0">+</span> <span class="nu0">3</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;5. %s<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> <span class="sy0">*</span><span class="br0">&#40;</span>unit_name <span class="sy0">+</span> <span class="nu0">4</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;変換する単位の番号を入力してください ==&gt; &quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">scanf</span><span class="br0">&#40;</span><span class="st0">&quot;%d&quot;</span><span class="sy0">,</span> <span class="sy0">&amp;</span>number<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp;</div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">if</span> <span class="br0">&#40;</span>number <span class="sy0">&gt;=</span> <span class="nu0">1</span> <span class="sy0">&amp;&amp;</span> number <span class="sy0">&lt;=</span> <span class="nu0">5</span><span class="br0">&#41;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;%.2fメートルは%.3f%sです<span class="es1">\n</span>&quot;</span><span class="sy0">,</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; length<span class="sy0">,</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="coMULTI">/* 入力した値（変換する長さ） */</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; length <span class="sy0">*</span> <span class="sy0">*</span><span class="br0">&#40;</span>coefficient <span class="sy0">+</span> number <span class="sy0">-</span> <span class="nu0">1</span><span class="br0">&#41;</span><span class="sy0">,</span> &nbsp; &nbsp; &nbsp;<span class="coMULTI">/* 指定された長さの単位に変換 */</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="sy0">*</span><span class="br0">&#40;</span>unit_name <span class="sy0">+</span> number <span class="sy0">-</span> <span class="nu0">1</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="coMULTI">/* 変換した長さの単位 */</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">else</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;番号が不当です<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp;</div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">return</span> <span class="nu0">0</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1"><span class="br0">&#125;</span></div></li>
+						</ol></div>
+					</div>
+					<dl>
+						<dt>21〜25行目</dt>
+							<dd>メニューとして、長さの単位名を表示します。ポインタの演算を使用します。</dd>
+					</dl>
+				</section>
+			</section>
+		</section>
+	</section>
+
+	<footer>
+		<nav>
+			<ul>
+				<li><a href="../../index.html">ホーム</a></li>
+				<li><a href="../c_langtop.html#lbl_index">目次</a></li>
+				<li><a href="./section08_2.html">前のページ</a></li>
+				<li><a href="../SECTION09/section09_1.html">次のページ</a></li>
+			</ul>
+		</nav>
+		<p id="footer-author">更新日：<time datetime="2018-12-11">2018年12月11日</time> Merry</p>
+	</footer>
+</div>
+</body>
+</html>

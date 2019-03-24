@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initialscale=1.0">
+	<meta name="robots" content="INDEX,FOLLOW">
+	<meta name="keywords" content="switch,case,default,break">
+	<meta name="description" content="switch文の説明をします。">
+	<meta name="author" content="T.Hagiwara">
+	<link rel="stylesheet" href="../../CSS3/seminar.css" type="text/css">
+	<link rel="stylesheet" href="../../CSS3/hl_clang.css" type="text/css">
+	<link rel="prev" href="./section04_1.html">
+	<link rel="next" href="../SECTION05/section05_1.html">
+	<title>Ｃ言語プログラミング入門&nbsp;-&nbsp;条件を判定して処理を振り分ける条件分岐（2/2）</title>
+	<style type="text/css">
+	</style>
+</head>
+<body>
+<div id="container">
+	<header>
+		<p>Linux講座にようこそ。このページは「Ｃ言語プログラミング入門&nbsp;-&nbsp;第４章．条件を判定して処理を振り分ける条件分岐」です。</p>
+		<h1>Ｃ言語プログラミング入門</h1>
+		<nav>
+			<ul>
+				<li><a href="../../index.html">ホーム</a></li>
+				<li><a href="../c_langtop.html#lbl_index">目次</a></li>
+				<li><a href="./section04_1.html">前のページ</a></li>
+				<li><a href="../SECTION05/section05_1.html">次のページ</a></li>
+			</ul>
+		</nav>
+	</header>
+
+	<section class="contents">
+		<h1>4. 条件を判定して処理を振り分ける条件分岐（2/2）</h1>
+		<section>
+			<h2>4.3 switch文</h2>
+			<p>条件の真偽により３つ以上の処理に振り分けることはif文でもできますが、可読性がよくないため、プログラムが分かりにくいものになりがちです。そこで、switch文が使える場合はswitch文を使った方が良いでしょう。</p>
+			<section>
+				<h3>4.3.1 形式</h3>
+				<p>「switch (式)」の式の値と「case 定数:」の定数の値が等しい行以降の文を実行します。どの定数とも等しくない場合は「default:」以降の文を実行します。「default:」以降は省略可能です。</p>
+				<p>「(式)」と「定数」の式の値は<strong>整数型</strong>でなければなりません。char型は整数型ですので、半角１文字は取り扱うことが出来ます。</p>
+				<div class="form-exp"><pre>
+switch (式)
+{<strong> ← {と}で括ってブロックにします</strong>
+    case 定数１:
+        文１-１;
+        文１-２;
+        …
+        文１-ｎ;
+    case 定数２:
+        文２-１;
+        文２-２;
+        …
+        文２-ｎ;
+        …
+    case 定数ｎ:
+        文ｎ-１;
+        文ｎ-２;
+        …
+        文ｎ-ｎ;
+    default:
+        文１;
+        文２;
+        …
+        文ｎ;
+}</pre>
+				</div>
+				<dl>
+					<dt>switch (式)</dt>
+						<dd>括弧で括って整数型となる式を指定します。通常は変数や四則演算の式を指定します。</dd>
+					<dt>case 定数１:</dt>
+						<dd>上記、式の値と比較する整数型の定数を指定します。区切り記号は<strong>:</strong>（コロン）ですので注意してください。</dd>
+					<dt>default:</dt>
+						<dd>「(式)」の値がどの定数とも一致しない場合に実行する文を指定します。</dd>
+				</dl>
+				<p id="lbl_break">switch文から強制的に抜け出すには<strong>break文</strong>を使用します。例えば、上記形式の「文１-ｎ;」を実行後、switch文から抜け出すには「文１-ｎ;」の次に<code>break;</code>を指定します。（breakを指定しないと、文２-１;以降の処理も行ってしまいます）</p>
+			</section>
+			<section>
+				<h3>4.3.2 例題</h3>
+				<p>メニュー番号の入力により、該当する四則演算を行い結果を出力します。また、メニュー番号が不当な場合はメッセージを出力します。</p>
+				<div class="source-code">
+					<div class="c"><ol><li class="li1"><div class="de1"><span class="co2">#include &lt;stdio.h&gt;</span></div></li>
+					<li class="li1"><div class="de1"><span class="kw4">int</span> main<span class="br0">&#40;</span><span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">int</span> &nbsp; &nbsp; bango<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">double</span> &nbsp;atai1<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">double</span> &nbsp;atai2<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;四則演算を行います<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;１. 加算<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;２. 減算<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;３. 乗算<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;４. 除算<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;どの計算を行いますか。番号を入力してください ==&gt; &quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">scanf</span><span class="br0">&#40;</span><span class="st0">&quot;%d&quot;</span><span class="sy0">,</span> <span class="sy0">&amp;</span>bango<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;２つの値を入力してください ==&gt; &quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">scanf</span><span class="br0">&#40;</span><span class="st0">&quot;%lf%lf&quot;</span><span class="sy0">,</span> <span class="sy0">&amp;</span>atai1<span class="sy0">,</span> <span class="sy0">&amp;</span>atai2<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="coMULTI">/* 番号により、処理を振り分ける */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">switch</span> <span class="br0">&#40;</span>bango<span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; <span class="kw1">case</span> <span class="nu0">1</span><span class="sy0">:</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* 加算 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;%lf + %lf = %lf<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> atai1<span class="sy0">,</span> atai2<span class="sy0">,</span> atai1 <span class="sy0">+</span> atai2<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw2">break</span><span class="sy0">;<strong> ← switch文を抜け出します。これが無いと、次の減算処理をしてしまいます</strong></span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; <span class="kw1">case</span> <span class="nu0">2</span><span class="sy0">:</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* 減算 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;%lf - %lf = %lf<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> atai1<span class="sy0">,</span> atai2<span class="sy0">,</span> atai1 <span class="sy0">-</span> atai2<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw2">break</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; <span class="kw1">case</span> <span class="nu0">3</span><span class="sy0">:</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* 乗算 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;%lf × %lf = %lf<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> atai1<span class="sy0">,</span> atai2<span class="sy0">,</span> atai1 <span class="sy0">*</span> atai2<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw2">break</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; <span class="kw1">case</span> <span class="nu0">4</span><span class="sy0">:</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* 除算 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;%lf ÷ %lf = %lf<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> atai1<span class="sy0">,</span> atai2<span class="sy0">,</span> atai1 <span class="sy0">/</span> atai2<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw2">break</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; <span class="kw1">default</span><span class="sy0">:</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* 上記以外 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;番号が不当です<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">return</span> <span class="nu0">0</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#125;</span></div></li>
+					</ol></div>
+				</div>
+				<div class="exe-samp">
+<pre><samp>$  <kbd>./ex04_3.prg</kbd><strong> ← 上記例題を実行します</strong>
+四則演算を行います
+１. 加算
+２. 減算
+３. 乗算
+４. 除算
+どの計算を行いますか。番号を入力してください ==&gt;  <kbd>1</kbd>
+２つの値を入力してください ==&gt;  <kbd>12.34 56.78</kbd>
+12.340000 + 56.780000 = 69.120000
+$
+$  <kbd>./ex04_3.prg</kbd>
+四則演算を行います
+１. 加算
+２. 減算
+３. 乗算
+４. 除算
+どの計算を行いますか。番号を入力してください ==&gt; <kbd> 5</kbd>
+２つの値を入力してください ==&gt;  <kbd>10 20</kbd>
+番号が不当です
+$</samp></pre>
+				</div>
+				<dl>
+					<dt>8〜13行目</dt>
+						<dd>メニューを出力します。</dd>
+					<dt>14行目</dt>
+						<dd>どの演算を行うかを指定するためのメニュー番号を入力します。</dd>
+					<dt>19行目</dt>
+						<dd>入力されたメニュー番号（変数bango）により、処理を振り分けます。</dd>
+					<dt>21〜24行目</dt>
+						<dd>加算の処理を行い結果を出力します。24行目のbreak文でswitch文を抜け出します。</dd>
+					<dt>37〜39行目</dt>
+						<dd>メニュー番号（変数bango）が１〜４の値でない場合の処理で、メッセージを出力します。</dd>
+				</dl>
+			</section>
+		</section>
+	</section>
+
+	<footer>
+		<nav>
+			<ul>
+				<li><a href="../../index.html">ホーム</a></li>
+				<li><a href="../c_langtop.html#lbl_index">目次</a></li>
+				<li><a href="./section04_1.html">前のページ</a></li>
+				<li><a href="../SECTION05/section05_1.html">次のページ</a></li>
+			</ul>
+		</nav>
+		<p id="footer-author">更新日：<time datetime="2018-05-13">2018年05月13日</time> Merry</p>
+	</footer>
+</div>
+</body>
+</html>

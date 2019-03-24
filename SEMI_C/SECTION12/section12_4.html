@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initialscale=1.0">
+	<meta name="robots" content="INDEX,FOLLOW">
+	<meta name="keywords" content="定数,文字定数,文字列定数,整数定数,実数定数,八進数,十進数,十六進数,制御文字,コントロールコード,接尾語,サフィックス,const型修飾子">
+	<meta name="description" content="定数の記述の仕方を詳しく説明します。">
+	<meta name="author" content="T.Hagiwara">
+	<link rel="stylesheet" href="../../CSS3/seminar.css" type="text/css">
+	<link rel="stylesheet" href="../../CSS3/hl_clang.css" type="text/css">
+	<link rel="prev" href="./section12_3.html">
+	<link rel="next" href="../SECTION13/section13_1.html">
+	<title>Ｃ言語プログラミング入門&nbsp;-&nbsp;その他の型（4/4）</title>
+	<style type="text/css">
+	</style>
+</head>
+<body>
+<div id="container">
+	<header>
+		<p>Linux講座にようこそ。このページは「Ｃ言語プログラミング入門&nbsp;-&nbsp;第12章．その他の型」です。</p>
+		<h1>Ｃ言語プログラミング入門</h1>
+		<nav>
+			<ul>
+				<li><a href="../../index.html">ホーム</a></li>
+				<li><a href="../c_langtop.html#lbl_index">目次</a></li>
+				<li><a href="./section12_3.html">前のページ</a></li>
+				<li><a href="../SECTION13/section13_1.html">次のページ</a></li>
+			</ul>
+		</nav>
+	</header>
+
+	<section class="contents">
+		<h1>12. その他の型（4/4）</h1>
+		<section>
+			<h2>12.5 定数の取扱い</h2>
+			<p>定数に付いては既に説明しましたが、ここでは更に詳しい説明を行います。</p>
+			<section>
+				<h3>12.5.1 基本的な記述方法</h3>
+				<p>既に説明したものをまとめました。文字定数と文字列定数との相違については、特に注意して下さい。</p>
+				<table class="simple-table">
+					<caption>【表12-2】 定数の記述方法</caption>
+					<tr><th>区分</th><th>記述方法、その他</th></tr>
+					<tr><td>文字定数</td><td>半角１文字をアポストロフィで括ります。（例：'a'や'1'）</td></tr>
+					<tr><td style="white-space: nowrap;">文字列定数</td><td>複数の文字からなる文字列を引用符で括ります。（例："hello"や"今日は"）</td></tr>
+					<tr><td>整数定数</td><td>八進数、十進数、十六進数の３種類が有ります。
+											<dl>
+												<dt>八進数</dt>
+												<dd>先頭に「０」を付けて指定します。２桁目以降は０から７の数字です。（例：011や077）</dd>
+												<dt>十進数</dt>
+												<dd>先頭に「０」を付けずに、普通に指定します。（例：10や200）</dd>
+												<dt>十六進数</dt>
+												<dd>先頭に「0x」又は「0X」を付けて指定します。３桁目以降は０から９の数字か、AからFの英字（小文字も可）です。（例：0x11や0xff）</dd>
+											</dl>
+					</td></tr>
+					<tr><td>浮動小数点定数</td><td>小数点を表すピリオドを付けて指定します。（例：0.05や3.14）</td></tr>
+				</table>
+				<p id="lbl_note_1">制御文字（コントロールコード）も、文字定数として扱うことができます。（ASCIIコード表の0x00〜0x1Fと0x7Fの文字です。詳細は「<a href="../APPENDIX/apnd01.html">付録１．ASCIIコード表</a>」を参照してください）</p>
+				<ul>
+					<li>'\0' … ヌル文字（NUL）</li>
+					<li>'\a' … ベル（BEL）</li>
+					<li>'\t' … 水平タブ（HT）</li>
+					<li>'\n' … 復帰/改行（LF/NL）</li>
+					<li>'\v' … 垂直タブ（VT）</li>
+					<li>'\r' … 復帰（CR）</li>
+				</ul>
+			</section>
+			<section>
+				<h3 id="lbl_suffix">12.5.2 数値を表す定数の記述方法</h3>
+				<p>数値を表す定数には整数と浮動小数点数の２種類が有りますが、それらの記述形式について説明します。</p>
+				<p>定数は指定された値により、適切な型のデータとしてメモリ上に確保されます。例えば、整数定数の場合は<strong>int型</strong>、浮動小数点定数の場合は<strong>double型</strong>として確保されます。通常は、これであまり問題は無いと思いますが、非常に大きな値を取扱いたいような時には問題が起きてきます。例えば、int型が４バイト長の場合、表現できる最大の値は2147483647（約21億）ですので、これより大きな値は初期値として指定できないということになります。対応策としては、unsigned int型であれば倍の値まで表現できますので、int型ではなくunsigned int型として確保すればよいことになります。</p>
+				<p>数値を表す定数の場合は、数値の後ろに<strong>接尾語</strong>（サフィックス）を指定することにより、型の指定を行えるようになっています。以下に接尾語を示します。</p>
+				<table class="simple-table">
+					<caption>【表12-3】 接尾語一覧</caption>
+					<tr><th>区分</th><th>接尾語</th><th>意味</th></tr>
+					<tr><td rowspan="3" style="white-space: nowrap;">整数定数</td><td>L&nbsp;または&nbsp;l</td><td>long int型として確保します。（例：2147483648L）</td></tr>
+					<tr><td style="white-space: nowrap;">LL&nbsp;または&nbsp;ll</td><td>long long int型として確保します。（例：2147483648LL）</td></tr>
+					<tr><td>U&nbsp;または&nbsp;u</td><td>unsigned型として確保します。上記LやLLと組み合わせることもできます。（例：2147483648U）</td></tr>
+					<tr><td rowspan="2">浮動小数点定数</td><td>F&nbsp;または&nbsp;f</td><td>float型として確保します。（例：0.05F）</td></tr>
+					<tr><td>L&nbsp;または&nbsp;l</td><td>long double型として確保します。（例：3.1415926535L）</td></tr>
+				</table>
+				<aside>
+					<h4>補足</h4>
+					<p>浮動小数点定数の場合、「整数.整数E±整数」（Eは小文字も可）の形式も有ります。例えば、「1.2E+9」は「1.2×10<sup>9</sup>」で「1.2E-9」は「1.2×10<sup>-9</sup>」です。また、接尾語の指定も可能です。</p>
+				</aside>
+			</section>
+			<section>
+				<h3 id="lbl_const">12.5.3 読み込み専用領域の指定</h3>
+				<p>変数は値を設定したり、変更したりできますが、場合によっては変更を禁止したいことが有ります。この様な場合は<strong>const型修飾子</strong>を指定します。これにより、一種の定数として取り扱うことになります。</p>
+				<div class="form-exp">
+					const 型名 変数名 = 初期値; <strong>← 初期値は省略可能です</strong>
+				</div>
+				<p>const型修飾子を指定した変数に値を設定したい場合は、宣言時に初期値を指定することになります。初期値以外で、値を設定することは出来ませんし、++演算子等による値の更新も出来ません。（コンパイルエラーになります）</p>
+				<div class="source-code">
+<pre>void func(<strong>const</strong> int Arg1, int Arg2);
+
+int main(void)
+{
+    int arg1 = 0;
+    int arg2 = 0;
+
+    func(arg1, arg2);
+
+}
+
+void func(<strong>const</strong> int pArg1, int pArg2)
+{
+
+    pArg1 = pArg1 + 10; <strong>← pArg1はconst型修飾子を指定していますので、更新は出来ません</strong>
+    pArg2 = pArg2 + 10; <strong>← pArg2は更新可能です</strong>
+
+}</pre>
+				</div>
+			</section>
+		</section>
+	</section>
+
+	<footer>
+		<nav>
+			<ul>
+				<li><a href="../../index.html">ホーム</a></li>
+				<li><a href="../c_langtop.html#lbl_index">目次</a></li>
+				<li><a href="./section12_3.html">前のページ</a></li>
+				<li><a href="../SECTION13/section13_1.html">次のページ</a></li>
+			</ul>
+		</nav>
+		<p id="footer-author">更新日：<time datetime="2018-12-17">2018年12月17日</time> Merry</p>
+	</footer>
+</div>
+</body>
+</html>

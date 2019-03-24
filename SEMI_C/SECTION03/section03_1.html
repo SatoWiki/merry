@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initialscale=1.0">
+	<meta name="robots" content="INDEX,FOLLOW">
+	<meta name="keywords" content="代入,演算子,定数,加算,減算,混合演算,型変換,式,式の値">
+	<meta name="description" content="変数への値の設定と加算・減算の説明をしています。">
+	<meta name="author" content="T.Hagiwara">
+	<link rel="stylesheet" href="../../CSS3/seminar.css" type="text/css">
+	<link rel="stylesheet" href="../../CSS3/hl_clang.css" type="text/css">
+	<link rel="prev" href="../SECTION02/section02_2.html">
+	<link rel="next" href="./section03_2.html">
+	<title>Ｃ言語プログラミング入門&nbsp;-&nbsp;四則演算をするための演算子（1/2）</title>
+	<style type="text/css">
+	</style>
+</head>
+<body>
+<div id="container">
+	<header>
+		<p>Linux講座にようこそ。このページは「Ｃ言語プログラミング入門&nbsp;-&nbsp;第３章&nbsp;四則演算をするための演算子」です。</p>
+		<h1>Ｃ言語プログラミング入門</h1>
+		<nav>
+			<ul>
+				<li ><a href="../../index.html">ホーム</a></li>
+				<li><a href="../c_langtop.html#lbl_index">目次</a></li>
+				<li><a href="../SECTION02/section02_2.html">前のページ</a></li>
+				<li><a href="./section03_2.html">次のページ</a></li>
+			</ul>
+		</nav>
+	</header>
+
+	<section class="contents">
+		<h1>3. 四則演算をするための演算子（1/2）</h1>
+		<section>
+			<h2>3.1 代入演算子</h2>
+			<p>ここでは、変数に値を設定する方法を説明します。変数に値を設定するには宣言時に初期値として記述する方法があります。しかし、最初から設定する値が決まっている場合はこれでよいのですが、多くの場合は値が決まっていないでしょう。例えば、２つの値を入力して、その値の加算結果を変数に設定したいような場合があります。</p>
+			<p>変数に値を設定するには<strong>代入演算子</strong>の<strong>=</strong>（等号）を使用します。なお、変数に値を設定することを<strong>代入</strong>と呼んでいます。</p>
+			<section>
+				<h3>3.1.1 形式</h3>
+				<p>左辺に変数を、右辺に設定したい値を記述します。代入演算子としての=は右辺と左辺の値が等しいという意味ではありませんので注意してください。</p>
+				<div class="form-exp">
+					変数名 = 値;<strong> ← 文になりますので、最後に;（セミコロン）を指定します</strong>
+				</div>
+				<dl>
+					<dt>変数名</dt>
+						<dd>値を設定したい変数を指定します。変数は予め宣言しておく必要があります。また、今まで設定していた値は上書きされてしまいます。</dd>
+					<dt>=</dt>
+						<dd>代入演算子の=を指定します。=の前後に空白があっても構いません。</dd>
+					<dt>値</dt>
+						<dd>変数に設定する値を指定します。左辺の変数が整数型と浮動小数点数型の場合は数値を、文字型（char型）の場合は１文字（半角の英数字、記号、空白文字）を指定します。ここには変数を指定することもできます。（「変数名 = 変数名;」の形式も可）</dd>
+				</dl>
+			</section>
+			<section>
+				<h3>3.1.2 例題</h3>
+				<p>この例題プログラムは変数と代入演算子を使う必要性はないのですが、代入演算子の使い方を説明するために使っています。</p>
+				<div class="source-code">
+					<div class="c"><ol><li class="li1"><div class="de1"><span class="co2">#include &lt;stdio.h&gt;</span></div></li>
+					<li class="li1"><div class="de1"><span class="kw4">int</span> main<span class="br0">&#40;</span><span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">int</span> &nbsp; &nbsp; nenrei<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">double</span> &nbsp;taijyu<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">char</span> &nbsp; &nbsp;ketueki<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="coMULTI">/* 年齢、体重、血液型の設定 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; nenrei <span class="sy0">=</span> <span class="nu0">13</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; taijyu <span class="sy0">=</span> <span class="nu16">18.5</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; ketueki <span class="sy0">=</span> <span class="st0">'A'</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="coMULTI">/* プロフィルの出力 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;私のプロフィルです。<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;・年齢：%d歳<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> nenrei<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;・体重：%.1fKg<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> taijyu<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;・血液型：%c<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> ketueki<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">return</span> <span class="nu0">0</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#125;</span></div></li>
+					</ol></div>
+				</div>
+				<dl>
+					<dt>4〜6行目</dt>
+						<dd>変数を宣言します。</dd>
+					<dt>9行目</dt>
+						<dd>int型の変数nenreiniに13（整数）を代入します。</dd>
+					<dt>10行目</dt>
+						<dd>double型の変数taijyuに18.5（浮動小数点数）を代入します。</dd>
+					<dt>11行目</dt>
+						<dd>char型の変数ketuekiに半角英字の「A」を代入します。代入する文字は'（アポストロフィ）で括ります。代入できるのは半角１文字のみですので注意してください。</dd>
+				</dl>
+				<aside>
+					<h4>補足</h4>
+					<p>変数の型と異なる型の値を代入できます。このような場合はコンパイラにより自動的に変数の型に合わせられますので、コンパイルエラーにはなりません。しかし、プログラムが分かりにくくなりますし、不良の原因にもなりますので、できるだけ避けた方が良いでしょう。上記例題の変数の場合の例を示します。</p>
+					<div class="source-code">
+<pre><code>nenrei = 13.123;</code><strong> ← 変数nenreiの値は13（整数）になります</strong>
+<code>taijyu = 18;</code><strong> ← 変数taijyuの値は18.0（浮動小数点数）になります</strong></pre>
+					</div>
+				</aside>
+			</section>
+		</section>
+		<section>
+			<h2 id="lbl_plus_minus">3.2 加減算</h2>
+			<p>ここでは四則演算のうち、加算と減算について説明します。加算と減算は日常の計算で使っている<strong>+</strong>（正符号）と<strong>-</strong>（負記号）を使いますので、理解しやすいと思います。また、計算結果を変数に保存（代入）する方法に付いても説明します。</p>
+			<section>
+				<h3>3.2.1 形式</h3>
+				<p>加算は<strong>+</strong>、減算は<strong>-</strong>を演算子として使用します。演算結果は値として求まりますので、それをそのまま使用することもできますし、変数に代入演算子で代入することもできます。</p>
+				<div class="form-exp">
+					値１ + 値２<br>
+					値１ - 値２
+				</div>
+				<dl>
+					<dt>値１ + 値２</dt>
+						<dd>値１と値２の加算を行います。値１と値２には変数や定数を指定します。</dd>
+					<dt>値1 - 値2</dt>
+						<dd>値１から値２の減算を行います。値１と値２には変数や定数を指定します。</dd>
+				</dl>
+				<p>値１と値２は数値を取り扱える型であれば型名が異なっていても構いません。例えば、値１がint型で値２がdouble型の様な場合です。このような場合は自動的に同じ型に変換して演算を行います。通常、型は精度が高い方に合わせますので、int型とdouble型の混合演算の場合はint型をdouble型に変換して演算を行います。</p>
+				<p>型が異なりますと型変換のような余分なことが起こりますし、プログラムも理解しにくいものになりがちですので、できるだけ型は同じにした方が良いでしょう。</p>
+				<p>演算結果を変数に保存したい場合は代入演算子で代入します。例えば、変数kotaeに「1 + 2」の演算結果を代入したい場合は次のように記述します。</p>
+				<p><code>kotae = 1 + 2;</code></p>
+				<p>代入する場合も左辺と右辺の型が異なっていますと、型変換が起こりますので注意してください。上記例題の場合、右辺の「1 + 2」の演算結果は整数の「3」になりますが、左辺の変数kotaeが整数型であればそのまま代入します。しかし、浮動小数点数型の場合は「3」を浮動小数点数型の値に変換して代入しますので、余分な変換が内部的に行われることになります。</p>
+			</section>
+			<section>
+				<h3 id="lbl_exp_value">3.2.2 式の値</h3>
+				<figure class="left-box myphoto">
+					<dl>
+						<dt><img src="../IMAGES/sec03_1.jpg" alt="式の値"></dt>
+						<dd>【図３-１】式の値</dd>
+					</dl>
+				</figure>
+				<p>普通、「1 + 2 = 3」の様な表現を式と呼びますが、Ｃ言語でも同じく<strong>式</strong>と呼んでいます。ただし、Ｃ言語の場合は変数や定数１つだけでも式になります。また、式には値が有り、その値をここでは「<strong>式の値</strong>」と呼ぶことにします。式の値の例を【図3-1】に示します。</p>
+				<div class="form-exp">
+				<ol>
+					<li>定数の式の値は定数の値そのものになりますので、定数「1」の式の値は１、定数「2」の式の値は２になります。</li>
+					<li>「1 + 2」の式の値は定数「1」の式の値と、定数「2」の式の値を加算したものになりますので３になります。</li>
+					<li>変数「kotae」には「1 + 2」の式の値が代入演算子により代入されますので式の値は３になります。</li>
+					<li>「kotae = 1 + 2」も一つの式となり、式の値としては代入演算子で代入した値の３になります。</li>
+				</ol>
+				</div>
+			</section>
+			<section>
+				<h3>3.2.3 例題</h3>
+				<p>２つの値を入力して、加算と減算を行うプログラムです。</p>
+				<section>
+					<h4>例題１</h4>
+					<p>加算あるいは減算結果は変数に代入しておき、その変数の値を結果として出力します。</p>
+					<div class="source-code">
+						<div class="c"><ol><li class="li1"><div class="de1"><span class="co2">#include &lt;stdio.h&gt;</span></div></li>
+						<li class="li1"><div class="de1"><span class="kw4">int</span> main<span class="br0">&#40;</span><span class="br0">&#41;</span></div></li>
+						<li class="li1"><div class="de1"><span class="br0">&#123;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">int</span> &nbsp; &nbsp; atai_1<span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">int</span> &nbsp; &nbsp; atai_2<span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">int</span> &nbsp; &nbsp; kotae_1<span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">double</span> &nbsp;atai_3<span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">double</span> &nbsp;atai_4<span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">double</span> &nbsp;kotae_2<span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp;</div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="coMULTI">/* 整数の加算 */</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;整数の値を２つ入力してください ==&gt; &quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">scanf</span><span class="br0">&#40;</span><span class="st0">&quot;%d%d&quot;</span><span class="sy0">,</span> <span class="sy0">&amp;</span>atai_1<span class="sy0">,</span> <span class="sy0">&amp;</span>atai_2<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; kotae_1 <span class="sy0">=</span> atai_1 <span class="sy0">+</span> atai_2<span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;%d + %d = %d<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> atai_1<span class="sy0">,</span> atai_2<span class="sy0">,</span> kotae_1<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp;</div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="coMULTI">/* 浮動小数点数の減算 */</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;浮動小数点数の値を２つ入力してください ==&gt; &quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">scanf</span><span class="br0">&#40;</span><span class="st0">&quot;%lf%lf&quot;</span><span class="sy0">,</span> <span class="sy0">&amp;</span>atai_3<span class="sy0">,</span> <span class="sy0">&amp;</span>atai_4<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; kotae_2 <span class="sy0">=</span> atai_3 <span class="sy0">-</span> atai_4<span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;%f - %f = %f<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> atai_3<span class="sy0">,</span> atai_4<span class="sy0">,</span> kotae_2<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp;</div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">return</span> <span class="nu0">0</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1"><span class="br0">&#125;</span></div></li>
+						</ol></div>
+					</div>
+					<div class="exe-samp">
+<pre><samp>$ <kbd>./ex03_2.prg</kbd><strong> ← 上記例題を実行します</strong>
+整数の値を２つ入力してください ==&gt; <kbd>10 20</kbd>
+10 + 20 = 30<strong> ← 加算の結果です</strong>
+浮動小数点数の値を２つ入力してください ==&gt; <kbd>3.456 1.23</kbd>
+3.456000 - 1.230000 = 2.226000<strong> ← 減算の結果です</strong>
+$</samp></pre>
+					</div>
+					<dl>
+						<dt>13行目</dt>
+							<dd>scanf関数で整数を２つ入力します。int型の整数入力ですので書式制御文字は%dを使用します。</dd>
+						<dt>14行目</dt>
+							<dd>入力した値を加算して結果（式の値）を変数kotae_1に代入します。</dd>
+						<dt>15行目</dt>
+							<dd>入力した値と計算結果（kotae_1）をprintf関数で出力します。int型の整数出力ですので書式制御文字は%dを使用します。</dd>
+						<dt>19行目</dt>
+							<dd>scanf関数で浮動小数点数を２つ入力します。double型の浮動小数点数入力ですので書式制御文字は%lfを使用します。</dd>
+						<dt>20行目</dt>
+							<dd>入力した値を減算して結果（式の値）を変数kotae_2に代入します。</dd>
+						<dt>21行目</dt>
+							<dd>入力した値と計算結果（kotae_2）をprintf関数で出力します。double型の浮動小数点数出力ですので書式制御文字は%fを使用します。scanf関数と書式制御文字が異なりますので注意してください。</dd>
+					</dl>
+				</section>
+				<section>
+					<h4>例題２</h4>
+					<p>上記例題は加減算の結果（式の値）を変数に代入していますが、直接式の値を使用することもできます。</p>
+					<div class="source-code">
+						<div class="c"><ol><li class="li1"><div class="de1"><span class="co2">#include &lt;stdio.h&gt;</span></div></li>
+						<li class="li1"><div class="de1"><span class="kw4">int</span> main<span class="br0">&#40;</span><span class="br0">&#41;</span></div></li>
+						<li class="li1"><div class="de1"><span class="br0">&#123;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">int</span> &nbsp; &nbsp; atai_1<span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">int</span> &nbsp; &nbsp; atai_2<span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">double</span> &nbsp;atai_3<span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">double</span> &nbsp;atai_4<span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp;</div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="coMULTI">/* 整数の加算 */</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;整数の値を２つ入力してください ==&gt; &quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">scanf</span><span class="br0">&#40;</span><span class="st0">&quot;%d%d&quot;</span><span class="sy0">,</span> <span class="sy0">&amp;</span>atai_1<span class="sy0">,</span> <span class="sy0">&amp;</span>atai_2<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;%d + %d = %d<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> atai_1<span class="sy0">,</span> atai_2<span class="sy0">,</span> atai_1 <span class="sy0">+</span> atai_2<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp;</div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="coMULTI">/* 実数の減算 */</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;浮動小数点数の値を２つ入力してください ==&gt; &quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">scanf</span><span class="br0">&#40;</span><span class="st0">&quot;%lf%lf&quot;</span><span class="sy0">,</span> <span class="sy0">&amp;</span>atai_3<span class="sy0">,</span> <span class="sy0">&amp;</span>atai_4<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;%f - %f = %f<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> atai_3<span class="sy0">,</span> atai_4<span class="sy0">,</span> atai_3 <span class="sy0">-</span> atai_4<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp;</div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">return</span> <span class="nu0">0</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1"><span class="br0">&#125;</span></div></li>
+						</ol></div>
+					</div>
+					<dl>
+						<dt>12行目</dt>
+							<dd>「atai_1 + atai_2」の式の値を答えとして出力します。</dd>
+						<dt>17行目</dt>
+							<dd>「atai_3 - atai_4」の式の値を答えとして出力します。</dd>
+					</dl>
+				</section>
+			</section>
+		</section>
+	</section>
+
+	<footer>
+		<nav>
+			<ul>
+				<li><a href="../../index.html">ホーム</a></li>
+				<li><a href="../c_langtop.html#lbl_index">目次</a></li>
+				<li><a href="../SECTION02/section02_2.html">前のページ</a></li>
+				<li><a href="./section03_2.html">次のページ</a></li>
+			</ul>
+		</nav>
+		<p id="footer-author">更新日：<time datetime="2018-04-23">2018年04月23日</time> Merry</p>
+	</footer>
+</div>
+</body>
+</html>

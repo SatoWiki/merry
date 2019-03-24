@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initialscale=1.0">
+	<meta name="robots" content="INDEX,FOLLOW">
+	<meta name="keywords" content="メモリ操作ライブラリ,関数,malloc,calloc,realloc,free">
+	<meta name="description" content="malloc関数、calloc関数、realloc関数、free関数の使用法を説明します。">
+	<meta name="author" content="T.Hagiwara">
+	<link rel="stylesheet" href="../../../CSS3/seminar.css" type="text/css">
+	<link rel="stylesheet" href="../../../CSS3/hl_clang.css" type="text/css">
+	<link rel="prev" href="./s14_06_1.html">
+	<link rel="next" href="../s14_07/s14_07_1.html">
+	<title>Ｃ言語プログラミング入門&nbsp;-&nbsp;ライブラリ関数&nbsp;-&nbsp;メモリ操作ライブラリ（2/2）-</title>
+	<style type="text/css">
+	</style>
+</head>
+<body>
+<div id="container">
+	<header>
+		<p>Linux講座にようこそ。このページは「Ｃ言語プログラミング入門&nbsp;-&nbsp;第14章．ライブラリ関数&nbsp;-&nbsp;メモリ操作ライブラリ」です。</p>
+		<h1>Ｃ言語プログラミング入門</h1>
+		<nav>
+			<ul>
+				<li><a href="../../../index.html">ホーム</a></li>
+				<li><a href="../../c_langtop.html#lbl_index">目次</a></li>
+				<li><a href="./s14_06_1.html">前のページ</a></li>
+				<li><a href="../s14_07/s14_07_1.html">次のページ</a></li>
+			</ul>
+		</nav>
+	</header>
+
+	<section class="contents">
+		<h1>14. ライブラリ関数（27/36）&nbsp;-&nbsp;メモリ操作ライブラリ（2/2）</h1>
+		<section>
+			<h2 id="lbl_memory">14.40 メモリ操作関数</h2>
+			<section>
+				<h3 id="lbl_malloc">14.40.1 malloc関数</h3>
+				<p>malloc関数は指定した大きさのメモリ領域を確保して、その先頭アドレスを返り値として返します。返り値の型名はvoid型ですので、このままでは使えません。通常、型変換（キャスト）演算子で型変換して使用します。（具体的には例題をご覧ください）</p>
+				<table>
+					<caption>【表14-6-2】 malloc関数</caption>
+					<tr><th>形式</th><td>#include &lt;stdlib.h&gt;<br>
+										void *malloc(size_t size);</td></tr>
+					<tr><th>返り値</th><td>確保したメモリ領域の先頭アドレスを返します。エラーの場合はNULLを返します。</td></tr>
+					<tr><th>引数</th>
+						<td>
+							<dl>
+								<dt>size_t size</dt>
+									<dd>確保するメモリ領域の大きさをバイト単位で指定します。</dd>
+							</dl>
+						</td></tr>
+				</table>
+			</section>
+			<section>
+				<h3 id="lbl_calloc">14.40.2 calloc関数</h3>
+				<p>calloc関数はmalloc関数と同じく、指定した大きさのメモリ領域を確保して、その先頭アドレスを返り値として返します。malloc関数との相違は確保した領域を０（全ビット０）でクリアする事です。</p>
+				<table>
+					<caption>【表14-6-3】 calloc関数</caption>
+					<tr><th>形式</th><td>#include &lt;stdlib.h&gt;<br>
+										void *calloc(size_t nmemb, size_t size);</td></tr>
+					<tr><th>返り値</th><td>確保したメモリ領域の先頭アドレスを返します。エラーの場合はNULLを返します。</td></tr>
+					<tr><th>引数</th>
+						<td>
+							<dl>
+								<dt>size_t nmemb</dt>
+									<dd>要素の大きさをバイト単位で指定します。</dd>
+								<dt>size_t size</dt>
+									<dd>要素の数を指定します。確保する領域の大きさは「要素の大きさ×要素の数」になります。</dd>
+							</dl>
+						</td></tr>
+				</table>
+			</section>
+			<section>
+				<h3 id="lbl_realloc">14.40.3 realloc関数</h3>
+				<p>realloc関数はcalloc関数やmalloc関数で確保したメモリ領域の大きさを変更して、その先頭アドレスを返り値として返します。領域を大きくした場合は元の内容はそのまま残っています。なお、領域が別の場所に移動する場合もありますので注意してください。（第１引数のptrの値と戻り値は一致するとは限りません）</p>
+				<table>
+					<caption>【表14-6-4】 realloc関数</caption>
+					<tr><th>形式</th><td>#include &lt;stdlib.h&gt;<br>
+										void *realloc(void *ptr, size_t size);</td></tr>
+					<tr><th>返り値</th><td>変更後のメモリ領域の先頭アドレスを返します。エラーの場合はNULLを返します。なお、エラーの場合は指定した領域は元のままです。</td></tr>
+					<tr><th>引数</th>
+						<td>
+							<dl>
+								<dt>void *ptr</dt>
+									<dd>変更するメモリ領域の先頭アドレスを指定します。</dd>
+								<dt>size_t size</dt>
+									<dd>変更後のメモリ領域の大きさをバイト単位で指定します。</dd>
+							</dl>
+						</td></tr>
+				</table>
+			</section>
+			<section>
+				<h3 id="lbl_free">14.40.4 free関数</h3>
+				<p>free関数はcalloc関数やmalloc関数で確保したメモリ領域を開放します。</p>
+				<table>
+					<caption>【表14-6-5】 free関数</caption>
+					<tr><th>形式</th><td>#include &lt;stdlib.h&gt;<br>
+										void free(void *ptr);</td></tr>
+					<tr><th>返り値</th><td>ありません。</td></tr>
+					<tr><th>引数</th>
+						<td>
+							<dl>
+								<dt>void *ptr</dt>
+									<dd>開放するメモリ領域の先頭アドレスを指定します。</dd>
+							</dl>
+						</td></tr>
+				</table>
+			</section>
+			<section>
+				<h3>14.40.5 例題</h3>
+				<p>実行時引数で指定したファイルの中のタブ文字を半角スペースに置換した結果を表示します。ファイルの内容はmalloc関数で確保したメモリ領域に格納しますが、領域が一杯になった場合はrealloc関数で拡張します。領域の最初の大きさは100バイトで、一杯になった場合は100バイトずつ拡張します。</p>
+				<div class="source-code">
+					<div class="c"><ol><li class="li1"><div class="de1"><span class="co2">#include &lt;stdio.h&gt;</span></div></li>
+					<li class="li1"><div class="de1"><span class="co2">#include &lt;string.h&gt;</span></div></li>
+					<li class="li1"><div class="de1"><span class="co2">#include &lt;stdlib.h&gt;</span></div></li>
+					<li class="li1"><div class="de1"><span class="co2">#define EXPAND_SIZE &nbsp; &nbsp;100</span></div></li>
+					<li class="li1"><div class="de1"><span class="co2">#define LINE_MAX &nbsp; &nbsp; &nbsp; 1024</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1"><span class="kw4">int</span> main<span class="br0">&#40;</span><span class="kw4">int</span> argc<span class="sy0">,</span> <span class="kw4">char</span> <span class="sy0">**</span>argv<span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; FILE &nbsp; &nbsp;<span class="sy0">*</span>fp<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">int</span> &nbsp; &nbsp; buff_max <span class="sy0">=</span> EXPAND_SIZE<span class="sy0">;</span> &nbsp; &nbsp;<span class="coMULTI">/* データ格納領域の大きさ */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">int</span> &nbsp; &nbsp; buff_used <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">;</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* データ格納領域の使用量 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">char</span> &nbsp; &nbsp;<span class="sy0">*</span>p_buff_top<span class="sy0">;</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* データ格納領域の先頭 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">char</span> &nbsp; &nbsp;line<span class="br0">&#91;</span>LINE_MAX<span class="br0">&#93;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">char</span> &nbsp; &nbsp;<span class="sy0">*</span>p_line<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">int</span> &nbsp; &nbsp; line_len<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">if</span><span class="br0">&#40;</span>argc <span class="sy0">!=</span> <span class="nu0">2</span><span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;実行時引数が不当です。<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">return</span> <span class="nu0">1</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">if</span><span class="br0">&#40;</span><span class="br0">&#40;</span>fp <span class="sy0">=</span> <span class="kw3">fopen</span><span class="br0">&#40;</span><span class="sy0">*</span><span class="br0">&#40;</span>argv <span class="sy0">+</span> <span class="nu0">1</span><span class="br0">&#41;</span><span class="sy0">,</span> <span class="st0">&quot;r&quot;</span><span class="br0">&#41;</span><span class="br0">&#41;</span> <span class="sy0">==</span> NULL<span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;%sがオープンできません。<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> <span class="sy0">*</span><span class="br0">&#40;</span>argv <span class="sy0">+</span> <span class="nu0">1</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">return</span> <span class="nu0">1</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="coMULTI">/* データ格納領域を確保 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">if</span><span class="br0">&#40;</span><span class="br0">&#40;</span>p_buff_top <span class="sy0">=</span> <span class="br0">&#40;</span><span class="kw4">char</span> <span class="sy0">*</span><span class="br0">&#41;</span><span class="kw3">malloc</span><span class="br0">&#40;</span>buff_max<span class="br0">&#41;</span><span class="br0">&#41;</span> <span class="sy0">==</span> NULL<span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;データ格納領域が確保できません。<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">return</span> <span class="nu0">1</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">while</span><span class="br0">&#40;</span><span class="kw3">fgets</span><span class="br0">&#40;</span>line<span class="sy0">,</span> LINE_MAX<span class="sy0">,</span> fp<span class="br0">&#41;</span> <span class="sy0">!=</span> NULL<span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; p_line <span class="sy0">=</span> line<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">while</span><span class="br0">&#40;</span><span class="br0">&#40;</span>p_line <span class="sy0">=</span> <span class="kw3">strchr</span><span class="br0">&#40;</span>p_line<span class="sy0">,</span> <span class="st0">'<span class="es1">\t</span>'</span><span class="br0">&#41;</span><span class="br0">&#41;</span> <span class="sy0">!=</span> NULL<span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* タブ文字をスペースに置換 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="sy0">*</span>p_line <span class="sy0">=</span> <span class="st0">' '</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="sy0">++</span>p_line<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; line_len <span class="sy0">=</span> <span class="kw3">strlen</span><span class="br0">&#40;</span>line<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* 入力データがデータ格納領域に収まるかをチェック */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">if</span><span class="br0">&#40;</span><span class="br0">&#40;</span>buff_used <span class="sy0">+</span> line_len <span class="sy0">+</span> <span class="nu0">1</span><span class="br0">&#41;</span> <span class="sy0">&gt;</span> buff_max<span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* データ格納領域を拡張 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; buff_max <span class="sy0">+=</span> EXPAND_SIZE<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">if</span><span class="br0">&#40;</span><span class="br0">&#40;</span>p_buff_top <span class="sy0">=</span> <span class="br0">&#40;</span><span class="kw4">char</span> <span class="sy0">*</span><span class="br0">&#41;</span><span class="kw3">realloc</span><span class="br0">&#40;</span>p_buff_top<span class="sy0">,</span> buff_max<span class="br0">&#41;</span><span class="br0">&#41;</span> <span class="sy0">==</span> NULL<span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;データ格納領域が拡張できません。<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">return</span> <span class="nu0">1</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* スペースに置換後の入力データをデータ格納領域にコピー */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">memcpy</span><span class="br0">&#40;</span>p_buff_top <span class="sy0">+</span> buff_used<span class="sy0">,</span> line<span class="sy0">,</span> line_len<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; buff_used <span class="sy0">+=</span> line_len<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="sy0">*</span><span class="br0">&#40;</span>p_buff_top <span class="sy0">+</span> buff_used<span class="br0">&#41;</span> <span class="sy0">=</span> <span class="st0">'<span class="es5">\0</span>'</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">fclose</span><span class="br0">&#40;</span>fp<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="coMULTI">/* タブ文字をスペースに置換した結果を表示 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;%s&quot;</span><span class="sy0">,</span> p_buff_top<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="coMULTI">/* データ格納領域を開放 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">free</span><span class="br0">&#40;</span>p_buff_top<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">return</span> <span class="nu0">0</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#125;</span></div></li>
+					</ol></div>
+				</div>
+				<div class="exe-samp">
+<pre><samp>$ <kbd>wc ./DATA/ex14_2_5.dat</kbd>
+  8  19 102 ./DATA/ex14_2_5.dat<strong> ← ex14_2_5.datの容量は102バイトです</strong>
+$ <kbd>cat ./DATA/ex14_2_5.dat</kbd>
+main()
+{
+        short   bango   =       12;
+        int     nenrei;
+        float   taijyu  =       65.5;
+        double  sintyo;
+        char    ketueki =       'A';
+}
+$
+$ cat -t ex14_2_5.dat<strong> ← -tはタブ文字を見えるように（^I）表示するオプションです</strong>
+main()
+{
+^Ishort^Ibango^I=^I12;
+^Iint^Inenrei;
+^Ifloat^Itaijyu^I=^I65.5;
+^Idouble^Isintyo;
+^Ichar^Iketueki^I=^I'A';
+}
+$
+$ <kbd>./ex14_6_1.prg ./DATA/ex14_2_5.dat</kbd>
+main()
+{
+ short bango = 12;
+ int nenrei;
+ float taijyu = 65.5;
+ double sintyo;
+ char ketueki = 'A';
+}
+$</samp></pre>
+				</div>
+				<dl>
+					<dt>3行目</dt>
+						<dd>メモリ操作関数を使いますのでstdlib.hを取り込みます。</dd>
+					<dt>30行目</dt>
+					<dd>入力データを格納する100バイトの領域をmalloc関数で確保します。確保した領域のアドレスはvoid型ですので、ここでは明示的に型変換演算子でchar型のポインタに変換しています。ただし、代入先のp_buff_top変数はchar型のポインタとして宣言していますので、直接代入しても自動的に型変換して代入します。</dd>
+					<dt>52行目</dt>
+					<dd>入力データを格納する領域をrealloc関数で100バイト拡張します。malloc関数で確保した時と同様に、明示的にchar型のポインタに変換しています。</dd>
+				</dl>
+			</section>
+		</section>
+	</section>
+
+	<footer>
+		<nav>
+			<ul>
+				<li><a href="../../../index.html">ホーム</a></li>
+				<li><a href="../../c_langtop.html#lbl_index">目次</a></li>
+				<li><a href="./s14_06_1.html">前のページ</a></li>
+				<li><a href="../s14_07/s14_07_1.html">次のページ</a></li>
+			</ul>
+		</nav>
+		<p id="footer-author">更新日：<time datetime="2019-01-11">2019年01月11日</time> Merry</p>
+	</footer>
+</div>
+</body>
+</html>

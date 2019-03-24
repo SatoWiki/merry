@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initialscale=1.0">
+	<meta name="robots" content="INDEX,FOLLOW">
+	<meta name="keywords" content="入出力ライブラリ,関数,EOF,feof,ferror,clearerr,fread,fwrite,バイナリファイル,レコード">
+	<meta name="description" content="feof関数、ferror関数、clearerr関数、fread関数、fwrite関数の使い方を説明します。">
+	<meta name="author" content="T.Hagiwara">
+	<link rel="stylesheet" href="../../../CSS3/seminar.css" type="text/css">
+	<link rel="stylesheet" href="../../../CSS3/hl_clang.css" type="text/css">
+	<link rel="prev" href="./s14_01_5.html">
+	<link rel="next" href="./s14_01_7.html">
+	<title>Ｃ言語プログラミング入門&nbsp;-&nbsp;ライブラリ関数&nbsp;-&nbsp;入出力ライブラリ（6/10）-</title>
+	<style type="text/css">
+	</style>
+</head>
+<body>
+<div id="container">
+	<header>
+		<p>Linux講座にようこそ。このページは「Ｃ言語プログラミング入門&nbsp;-&nbsp;第14章．ライブラリ関数&nbsp;-&nbsp;入出力ライブラリ」です。</p>
+		<h1>Ｃ言語プログラミング入門</h1>
+		<nav>
+			<ul>
+				<li><a href="../../../index.html">ホーム</a></li>
+				<li><a href="../../c_langtop.html#lbl_index">目次</a></li>
+				<li><a href="./s14_01_5.html">前のページ</a></li>
+				<li><a href="./s14_01_7.html">次のページ</a></li>
+			</ul>
+		</nav>
+	</header>
+
+	<section class="contents">
+		<h1>14. ライブラリ関数（7/36）&nbsp;-&nbsp;入出力ライブラリ（6/10）</h1>
+		<section>
+			<h2>14.9 ファイルの終端及び、エラーの検出関数</h2>
+			<p>入出力関数の多くはファイルの終端を検出すると、EOF（end of file）やNULLを返しますし、エラーを検出した場合も同じ値を返します。従って、本当にEOFなのかエラーなのか分かりません。そこで、厳密にEOFなのかエラーなのかを調べたいような場合に、ここで紹介する関数を使うとよいでしょう。</p>
+			<section>
+				<h3 id="lbl_feof">14.9.1 feof関数</h3>
+				<p>feof関数はファイルポインタに対応したファイルのEOF（end of file）の状態を調べます。</p>
+				<table>
+					<caption>【表14-1-25】 feof関数</caption>
+					<tr><th>形式</th><td>#include &lt;stdio.h&gt;<br>
+										int feof(FILE *fp);</td></tr>
+					<tr><th>返り値</th><td>EOFであれば０以外の値を返します。</td></tr>
+					<tr><th>引数</th>
+						<td>
+							<dl>
+								<dt>FILE *fp</dt>
+									<dd>EOFかどうかを調べるファイルのファイルポインタを指定します。</dd>
+							</dl>
+						</td></tr>
+				</table>
+			</section>
+			<section>
+				<h3 id="lbl_ferror">14.9.2 ferror関数</h3>
+				<p>ferror関数はファイルポインタに対応したファイルのエラー状態を調べます。</p>
+				<table>
+					<caption>【表14-1-26】 ferror関数</caption>
+					<tr><th>形式</th><td>#include &lt;stdio.h&gt;<br>
+										int ferror(FILE *fp);</td></tr>
+					<tr><th>返り値</th><td>エラーであれば０以外の値を返します。</td></tr>
+					<tr><th>引数</th>
+						<td>
+							<dl>
+								<dt>FILE *fp</dt>
+									<dd>エラーかどうかを調べるファイルのファイルポインタを指定します。</dd>
+							</dl>
+						</td></tr>
+				</table>
+			</section>
+			<section>
+				<h3 id="lbl_clearerr">14.9.3 clearerr関数</h3>
+				<p>clearerr関数はファイルポインタに対応したファイルのEOF（end of file）とエラーの状態をクリアします。</p>
+				<table>
+					<caption>【表14-1-27】 clearerr関数</caption>
+					<tr><th>形式</th><td>#include &lt;stdio.h&gt;<br>
+										void clearerr(FILE *fp);</td></tr>
+					<tr><th>返り値</th><td>ありません。</td></tr>
+					<tr><th>引数</th>
+						<td>
+							<dl>
+								<dt>FILE *fp</dt>
+									<dd>クリアするファイルのファイルポインタを指定します。</dd>
+							</dl>
+						</td></tr>
+					<tr><th>使用法、<br>他</th>
+						<td>
+						終端まで入力したファイルを、再度入力したいような場合にも使用できます。
+						</td></tr>
+				</table>
+			</section>
+			<section>
+				<h3>14.9.4 例題</h3>
+				<p>前ページの例題と同じく、下記のような番号・体重・身長・血液型のデータが登録されているex14_1_6.datファイルを入力して標準出力に編集出力します。</p>
+				<div class="source-code">
+					1,67,188,A<br>
+					2,98,176.5,O<br>
+					3,43.2,156.5,AB<br>
+					4,55.5,167.5,B<br>
+					5,75.7,166.5,A<br>
+				</div>
+				<div class="source-code">
+					<div class="c"><ol><li class="li1"><div class="de1"><span class="co2">#include &lt;stdio.h&gt;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1"><span class="kw4">int</span> main<span class="br0">&#40;</span><span class="kw4">void</span><span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; FILE &nbsp; &nbsp; &nbsp; &nbsp;<span class="sy0">*</span>fp<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">char</span> &nbsp; &nbsp; &nbsp; &nbsp;in_file<span class="br0">&#91;</span><span class="br0">&#93;</span> <span class="sy0">=</span> <span class="st0">&quot;./DATA/ex14_1_6.dat&quot;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">short</span> <span class="kw4">int</span> &nbsp; number<span class="sy0">;</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="coMULTI">/* 番号 &nbsp;*/</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">float</span> &nbsp; &nbsp; &nbsp; weight<span class="sy0">;</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="coMULTI">/* 体重 &nbsp;*/</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">double</span> &nbsp; &nbsp; &nbsp;height<span class="sy0">;</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="coMULTI">/* 身長 &nbsp;*/</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">char</span> &nbsp; &nbsp; &nbsp; &nbsp;blood<span class="br0">&#91;</span><span class="nu0">4</span><span class="br0">&#93;</span><span class="sy0">;</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="coMULTI">/* 血液型 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">int</span> &nbsp; &nbsp; &nbsp; &nbsp; return_code <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">if</span><span class="br0">&#40;</span><span class="br0">&#40;</span>fp <span class="sy0">=</span> <span class="kw3">fopen</span><span class="br0">&#40;</span>in_file<span class="sy0">,</span> <span class="st0">&quot;r&quot;</span><span class="br0">&#41;</span><span class="br0">&#41;</span> <span class="sy0">!=</span> NULL<span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;%-4s &nbsp;%-8s %-8s %s<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> <span class="st0">&quot;番号&quot;</span><span class="sy0">,</span> <span class="st0">&quot;体重&quot;</span><span class="sy0">,</span> <span class="st0">&quot;身長&quot;</span><span class="sy0">,</span> <span class="st0">&quot;血液型&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">while</span><span class="br0">&#40;</span><span class="nu0">1</span><span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* &nbsp;番号、体重、身長、血液型を入力 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">fscanf</span><span class="br0">&#40;</span>fp<span class="sy0">,</span> <span class="st0">&quot;%hd,%f,%lf,%s&quot;</span><span class="sy0">,</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="sy0">&amp;</span>number<span class="sy0">,</span> <span class="sy0">&amp;</span>weight<span class="sy0">,</span> <span class="sy0">&amp;</span>height<span class="sy0">,</span> blood<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* EOFのチェック */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">if</span><span class="br0">&#40;</span><span class="kw3">feof</span><span class="br0">&#40;</span>fp<span class="br0">&#41;</span> <span class="sy0">==</span> <span class="nu0">0</span><span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot; %03hd %6.1f %6.1f &nbsp;%s<span class="es1">\n</span>&quot;</span><span class="sy0">,</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; number<span class="sy0">,</span> weight<span class="sy0">,</span> height<span class="sy0">,</span> blood<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">else</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw2">break</span><span class="sy0">;</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* 入力終了。繰り返しから抜ける */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">fclose</span><span class="br0">&#40;</span>fp<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">else</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;%sがオープン出来ませんでした。&quot;</span><span class="sy0">,</span> in_file<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; return_code <span class="sy0">=</span> <span class="nu0">1</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">return</span> return_code<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#125;</span></div></li>
+					</ol></div>	
+				</div>
+				<div class="exe-samp">
+<pre><samp>$ <kbd>./ex14_1_8.prg</kbd>
+番号  体重   身長   血液型
+ 001   67.0  188.0  A
+ 002   98.0  176.5  O
+ 003   43.2  156.5  AB
+ 004   55.5  167.5  B
+ 005   75.7  166.5  A
+$</samp></pre>
+				</div>
+				<dl>
+					<dt>22行目</dt>
+						<dd>feof関数でEOFかどうかを調べて、EOFでなかったら入力した値を表示します。</dd>
+					<dt>29行目</dt>
+						<dd>EOFだったら入力のための繰り返しから抜け出します。</dd>
+				</dl>
+			</section>
+		</section>
+
+		<section>
+			<h2 id="lbl_binio">14.10 バイナリファイルの入出力関数</h2>
+			<p>ファイルにはテキストファイルとバイナリファイルがありますが、今まで説明してきた関数はテキストファイルの入出力用でした。ここで説明するfread関数とfwrite関数はテキストファイルも取り扱えますが、主にバイナリファイルを取り扱う時に使用します。</p>
+			<section>
+				<h3 id="lbl_fread">14.10.1 fread関数</h3>
+				<p>fread関数はファイルポインタに対応したファイルからレコード単位に入力します。入力データの変換は行いません。</p>
+				<table>
+					<caption>【表14-1-28】 fread関数</caption>
+					<tr><th>形式</th><td>#include &lt;stdio.h&gt;<br>
+										size_t fread(void *buff, size_t rec_size, size_t rec_num, FILE *fp);</td></tr>
+					<tr><th>返り値</th><td>入力したレコードの個数を返します。ファイルの終端（EOF）やエラーを検出した場合は引数で指定したレコード数より小さな値（または０）を返します。</td></tr>
+					<tr><th>引数</th>
+						<td>
+							<dl>
+								<dt>void *buff</dt>
+									<dd>入力したデータを格納する領域を指定します。</dd>
+								<dt>size_t rec_size</dt>
+									<dd>レコード長をバイト単位で指定します。</dd>
+								<dt>size_t rec_num</dt>
+									<dd>入力するレコードの個数を指定します。</dd>
+								<dt>FILE *fp</dt>
+									<dd>入力するファイルのファイルポインタを指定します。</dd>
+							</dl>
+						</td></tr>
+					<tr><th>使用法、<br>他</th>
+						<td>
+						返り値ではEOFかエラーなのかが明確ではありませんので、明確にしたい場合はeof関数やferror関数を使用します。
+						</td></tr>
+				</table>
+			</section>
+			<section>
+				<h3 id="lbl_fwrite">14.10.2 fwrite関数</h3>
+				<p>fwrite関数はファイルポインタに対応したファイルにレコード単位に出力します。出力データの変換は行いません。</p>
+				<table>
+					<caption>【表14-1-29】 fwrite関数</caption>
+					<tr><th>形式</th><td>#include &lt;stdio.h&gt;<br>
+										size_t fwrite(const void *buff, size_t rec_size, size_t rec_num, FILE *fp);</td></tr>
+					<tr><th>返り値</th><td>出力したレコードの個数を返します。エラーを検出した場合は引数で指定したレコード数より小さな値（または０）を返します。</td></tr>
+					<tr><th>引数</th>
+						<td>
+							<dl>
+								<dt>void *buff</dt>
+									<dd>出力するデータを格納してある領域を指定します。</dd>
+								<dt>size_t rec_size</dt>
+									<dd>レコード長をバイト単位で指定します。</dd>
+								<dt>size_t rec_num</dt>
+									<dd>出力するレコードの個数を指定します。</dd>
+								<dt>FILE *fp</dt>
+									<dd>出力するファイルのファイルポインタを指定します。</dd>
+							</dl>
+						</td></tr>
+					<tr><th>使用法、<br>他</th>
+						<td>
+						返り値ではエラーが明確ではありませんので、明確にしたい場合はferror関数を使用します。
+						</td></tr>
+				</table>
+			</section>
+			<section>
+				<h3>14.10.3 例題</h3>
+				<p>下記のような番号・体重・身長・血液型のデータが登録されているex14_1_6.datファイルを入力して、バイナリのままex14_1_9_out.datファイルに出力します。</p>
+				<div class="source-code">
+					1,67,188,A<br>
+					2,98,176.5,O<br>
+					3,43.2,156.5,AB<br>
+					4,55.5,167.5,B<br>
+					5,75.7,166.5,A<br>
+				</div>
+				<div class="source-code">
+					<div class="c"><ol><li class="li1"><div class="de1"><span class="co2">#include &lt;stdio.h&gt;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1"><span class="coMULTI">/* 個人情報構造体 */</span></div></li>
+					<li class="li1"><div class="de1"><span class="kw4">struct</span> person_info <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">int</span> &nbsp; &nbsp; number<span class="sy0">;</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="coMULTI">/* 番号 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">double</span> &nbsp;weight<span class="sy0">;</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="coMULTI">/* 体重 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">double</span> &nbsp;height<span class="sy0">;</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="coMULTI">/* 身長 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">char</span> &nbsp; &nbsp;blood<span class="br0">&#91;</span><span class="nu0">4</span><span class="br0">&#93;</span><span class="sy0">;</span> &nbsp; &nbsp; &nbsp; &nbsp;<span class="coMULTI">/* 血液型 */</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#125;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1"><span class="kw4">int</span> main<span class="br0">&#40;</span><span class="kw4">void</span><span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; FILE &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="sy0">*</span>fp_in<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">char</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;in_file<span class="br0">&#91;</span><span class="br0">&#93;</span> <span class="sy0">=</span> <span class="st0">&quot;./DATA/ex14_1_6.dat&quot;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; FILE &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="sy0">*</span>fp_out<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">char</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;out_file<span class="br0">&#91;</span><span class="br0">&#93;</span> <span class="sy0">=</span> <span class="st0">&quot;./DATA/ex14_1_9_out.dat&quot;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">struct</span> person_info &nbsp;person<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">int</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; return_code <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">if</span><span class="br0">&#40;</span><span class="br0">&#40;</span>fp_in <span class="sy0">=</span> <span class="kw3">fopen</span><span class="br0">&#40;</span>in_file<span class="sy0">,</span> <span class="st0">&quot;r&quot;</span><span class="br0">&#41;</span><span class="br0">&#41;</span> <span class="sy0">!=</span> NULL<span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">if</span><span class="br0">&#40;</span><span class="br0">&#40;</span>fp_out <span class="sy0">=</span> <span class="kw3">fopen</span><span class="br0">&#40;</span>out_file<span class="sy0">,</span> <span class="st0">&quot;w&quot;</span><span class="br0">&#41;</span><span class="br0">&#41;</span> <span class="sy0">!=</span> NULL<span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* 番号、体重、身長、血液型を入力 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">while</span><span class="br0">&#40;</span><span class="kw3">fscanf</span><span class="br0">&#40;</span>fp_in<span class="sy0">,</span> <span class="st0">&quot;%d,%lf,%lf,%s*&quot;</span><span class="sy0">,</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="sy0">&amp;</span>person.<span class="me1">number</span><span class="sy0">,</span> <span class="sy0">&amp;</span>person.<span class="me1">weight</span><span class="sy0">,</span> <span class="sy0">&amp;</span>person.<span class="me1">height</span><span class="sy0">,</span> person.<span class="me1">blood</span><span class="br0">&#41;</span> <span class="sy0">!=</span> EOF<span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* personの内容を出力 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">fwrite</span><span class="br0">&#40;</span><span class="sy0">&amp;</span>person<span class="sy0">,</span> <span class="kw4">sizeof</span><span class="br0">&#40;</span>person<span class="br0">&#41;</span><span class="sy0">,</span> <span class="nu0">1</span><span class="sy0">,</span> fp_out<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">fclose</span><span class="br0">&#40;</span>fp_out<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">else</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;%sがオープン出来ませんでした。&quot;</span><span class="sy0">,</span> out_file<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; return_code <span class="sy0">=</span> <span class="nu0">1</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">fclose</span><span class="br0">&#40;</span>fp_in<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">else</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;%sがオープン出来ませんでした。&quot;</span><span class="sy0">,</span> in_file<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; return_code <span class="sy0">=</span> <span class="nu0">1</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">return</span> return_code<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#125;</span></div></li>
+					</ol></div>
+				</div>
+				<div class="exe-samp">
+<pre><samp>$ <kbd>./ex14_1_9.prg</kbd>
+$
+$ <kbd>od -x -A x -w24 ./DATA/ex14_1_9_out.dat</kbd><strong> ← odコマンドで、ファイルの内容を十六進数で表示します。</strong>
+000000 0001 0000 0000 0000 c000 4050 0000 0000 8000 4067 0041 0000
+000018 0002 0000 0000 0000 8000 4058 0000 0000 1000 4066 004f 0000
+000030 0003 0000 999a 9999 9999 4045 0000 0000 9000 4063 4241 0000
+000048 0004 0000 0000 0000 c000 404b 0000 0000 f000 4064 0042 0000
+000060 0005 0000 cccd cccc eccc 4052 0000 0000 d000 4064 0041 0000
+000078</samp></pre>
+				</div>
+				<dl>
+					<dt>29行目</dt>
+						<dd>person構造体変数の内容を、そのまま（編集しないで）fwrite関数で出力します。第２引数のsizeof(person)はsizeof演算子でperson構造体データの長さを求めています。（sizeof(person_info)でも同じです）</dd>
+				</dl>
+			</section>
+		</section>
+	</section>
+
+	<footer>
+		<nav>
+			<ul>
+				<li><a href="../../../index.html">ホーム</a></li>
+				<li><a href="../../c_langtop.html#lbl_index">目次</a></li>
+				<li><a href="./s14_01_5.html">前のページ</a></li>
+				<li><a href="./s14_01_7.html">次のページ</a></li>
+			</ul>
+		</nav>
+		<p id="footer-author">更新日：<time datetime="2018-12-23">2018年12月23日</time> Merry</p>
+	</footer>
+</div>
+</body>
+</html>

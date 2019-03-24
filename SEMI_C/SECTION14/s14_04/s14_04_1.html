@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initialscale=1.0">
+	<meta name="robots" content="INDEX,FOLLOW">
+	<meta name="keywords" content="数学ライブラリ,関数">
+	<meta name="description" content="数学ライブラリをご紹介します。">
+	<meta name="author" content="T.Hagiwara">
+	<link rel="stylesheet" href="../../../CSS3/seminar.css" type="text/css">
+	<link rel="stylesheet" href="../../../CSS3/hl_clang.css" type="text/css">
+	<link rel="prev" href="../s14_03/s14_03_3.html">
+	<link rel="next" href="./s14_04_2.html">
+	<title>Ｃ言語プログラミング入門&nbsp;-&nbsp;ライブラリ関数&nbsp;-&nbsp;数学ライブラリ（1/3）-</title>
+	<style type="text/css">
+	</style>
+</head>
+<body>
+<div id="container">
+	<header>
+		<p>Linux講座にようこそ。このページは「Ｃ言語プログラミング入門&nbsp;-&nbsp;第14章．ライブラリ関数&nbsp;-&nbsp;数学ライブラリ」です。</p>
+		<h1>Ｃ言語プログラミング入門</h1>
+		<nav>
+			<ul>
+				<li><a href="../../../index.html">ホーム</a></li>
+				<li><a href="../../c_langtop.html#lbl_index">目次</a></li>
+				<li><a href="../s14_03/s14_03_3.html">前のページ</a></li>
+				<li><a href="./s14_04_2.html">次のページ</a></li>
+			</ul>
+		</nav>
+	</header>
+
+	<section class="contents">
+		<h1>14. ライブラリ関数（20/36）&nbsp;-&nbsp;数学ライブラリ（1/3）</h1>
+		<p>数学関数を使う場合の注意点として、コンパイルコマンドのgccの引数に「-lm」を付加して、数学ライブラリファイルを指定する必要があります。これを指定しないとリンクエラーになります。</p>
+		<p>例：<samp>$ <kbd>gcc <strong>-lm</strong> -o sample.prg sample.c</kbd></samp></p>
+		<p>ここで説明する関数は次の通りです。なお、ヘッダファイルとしては<strong>math.h</strong>が必要です。</p>
+		<table class="simple-table">
+			<caption>【表14-4-1】 数学ライブラリ関数一覧</caption>
+			<thead>
+			<tr><th>区分</th><th>関数名</th><th>機能概要</th></tr>
+			</thead>
+			<tbody>
+			<tr><td rowspan="10"><a href="./s14_04_2.html#lbl_trig">三角関数</a></td><td><a href="./s14_04_2.html#lbl_trig">sin()</a></td><td>xの正弦（サイン）の値を返します。</td></tr>
+			<tr><td><a href="./s14_04_2.html#lbl_trig">asin()</a></td><td>xの逆正弦（アークサイン）の値を返します。</td></tr>
+			<tr><td><a href="./s14_04_2.html#lbl_trig">sinh()</a></td><td>双曲線正弦（ハイパボリックサイン）の値を返します。</td></tr>
+			<tr><td><a href="./s14_04_2.html#lbl_trig">cos()</a></td><td>xの余弦（コサイン）の値を返します。</td></tr>
+			<tr><td><a href="./s14_04_2.html#lbl_trig">acos()</a></td><td>xの逆余弦（アークコサイン）の値を返します。</td></tr>
+			<tr><td><a href="./s14_04_2.html#lbl_trig">cosh()</a></td><td>双曲線余弦（ハイパボリックコサイン）の値を返します。</td></tr>
+			<tr><td><a href="./s14_04_2.html#lbl_trig">tan()</a></td><td>xの正接（タンジェント）の値を返します。</td></tr>
+			<tr><td><a href="./s14_04_2.html#lbl_trig">atan()</a></td><td>xの逆正接（アークタンジェント）の値を返します。</td></tr>
+			<tr><td><a href="./s14_04_2.html#lbl_trig">atan2()</a></td><td>y/xの逆正接（アークタンジェント）の値を返します。</td></tr>
+			<tr><td><a href="./s14_04_2.html#lbl_trig">tanh()</a></td><td>xの双曲線正接（ハイパボリックタンジェント）の値を返します。</td></tr>
+			<tr><td rowspan="3"><a href="./s14_04_2.html#lbl_abs">絶対値</a></td><td><a href="./s14_04_2.html#lbl_abs">abs()</a></td><td>整数（int型）の絶対値を返します。</td></tr>
+			<tr><td><a href="./s14_04_2.html#lbl_abs">labs()</a></td><td>大きな整数（long int型）の絶対値を返します。</td></tr>
+			<tr><td><a href="./s14_04_2.html#lbl_abs">fabs()</a></td><td>浮動小数点数（double型）の絶対値を返します。</td></tr>
+			<tr><td rowspan="2"><a href="./s14_04_2.html#lbl_div">整数の除算</a></td><td><a href="./s14_04_2.html#lbl_div">div()</a></td><td>整数（int型）の除算で、商と余りを返します。</td></tr>
+			<tr><td><a href="./s14_04_2.html#lbl_div">ldiv()</a></td><td>大きな整数（long int型）の除算で、商と余りを返します。</td></tr>
+			<tr><td rowspan="2"><a href="./s14_04_2.html#lbl_ceil">最小・最大の整数値</a></td><td><a href="./s14_04_2.html#lbl_ceil">ceil()</a></td><td>指定した引数の値を下回らない最小の整数値を返します。</td></tr>
+			<tr><td><a href="./s14_04_2.html#lbl_ceil">floor()</a></td><td>指定した引数の値を越えない最大の整数値を返します。</td></tr>
+			<tr><td rowspan="2"><a href="./s14_04_3.html#lbl_powsqrt">累乗・平方根</a></td><td><a href="./s14_04_3.html#lbl_pow">pow()</a></td><td>xのn乗の値を返します。</td></tr>
+			<tr><td><a href="./s14_04_3.html#lbl_sqrt">sqrt()</a></td><td>xの平方根を返します。</td></tr>
+			<tr><td rowspan="2"><a href="./s14_04_3.html#lbl_log">対数</a></td><td><a href="./s14_04_3.html#lbl_log">log()</a></td><td>xの自然対数の値を返します。</td></tr>
+			<tr><td><a href="./s14_04_3.html#lbl_log">log10()</a></td><td>xの底が10の対数の値を返します。</td></tr>
+			<tr><td rowspan="5"><a href="./s14_04_3.html#lbl_other">その他</a></td><td><a href="./s14_04_3.html#lbl_exp">exp()</a></td><td>自然対数の底がeのx乗の値を返します。</td></tr>
+			<tr><td><a href="./s14_04_3.html#lbl_fmod">fmod()</a></td><td>浮動小数点数の除算の余りの値を返します。</td></tr>
+			<tr><td><a href="./s14_04_3.html#lbl_frexp">frexp()</a></td><td>浮動小数点数を小数成分と整数成分に分解し、それぞれの値を返します。</td></tr>
+			<tr><td><a href="./s14_04_3.html#lbl_ldexp">ldexp()</a></td><td>浮動小数点数と２の整数乗との積の値を返します。</td></tr>
+			<tr><td><a href="./s14_04_3.html#lbl_modf">modf()</a></td><td>浮動小数点数を整数部分と小数部分に分解し、それぞれの値を返します。</td></tr>
+			</tbody>
+		</table>
+	</section>
+
+	<footer>
+		<nav>
+			<ul>
+				<li><a href="../../../index.html">ホーム</a></li>
+				<li><a href="../../c_langtop.html#lbl_index">目次</a></li>
+				<li><a href="../s14_03/s14_03_3.html">前のページ</a></li>
+				<li><a href="./s14_04_2.html">次のページ</a></li>
+			</ul>
+		</nav>
+		<p id="footer-author">更新日：<time datetime="2019-01-06">2019年01月06日</time> Merry</p>
+	</footer>
+</div>
+</body>
+</html>

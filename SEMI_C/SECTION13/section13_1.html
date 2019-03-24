@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initialscale=1.0">
+	<meta name="robots" content="INDEX,FOLLOW">
+	<meta name="keywords" content="プリプロセッサ,コンパイラ,コンパイル,翻訳,リンク,結合,マシン語,機械語,プリプロセス,前処理,include,マクロ定義,ヘッダファイル">
+	<meta name="description" content="プリプロセッサとヘッダファイルの取り込み方法を説明します。">
+	<meta name="author" content="T.Hagiwara">
+	<link rel="stylesheet" href="../../CSS3/seminar.css" type="text/css">
+	<link rel="prev" href="../SECTION12/section12_4.html">
+	<link rel="next" href="./section13_2.html">
+	<title>Ｃ言語プログラミング入門&nbsp;-&nbsp;プリプロセッサ（1/2）</title>
+	<style type="text/css">
+	</style>
+</head>
+<body>
+<div id="container">
+	<header>
+		<p>Linux講座にようこそ。このページは「Ｃ言語プログラミング入門&nbsp;-&nbsp;第13章．プリプロセッサ」です。</p>
+		<h1>Ｃ言語プログラミング入門</h1>
+		<nav>
+			<ul>
+				<li><a href="../../index.html">ホーム</a></li>
+				<li><a href="../c_langtop.html#lbl_index">目次</a></li>
+				<li><a href="../SECTION12/section12_4.html">前のページ</a></li>
+				<li><a href="./section13_2.html">次のページ</a></li>
+			</ul>
+		</nav>
+	</header>
+
+	<section class="contents">
+		<h1>13. プリプロセッサ（1/2）</h1>
+		<section>
+			<h2>13.1 プリプロセッサとは</h2>
+			<figure class="left-box myphoto">
+				<dl>
+					<dt><img src="../IMAGES/sec13_1.jpg" alt="プリプロセッサとは"></dt>
+					<dd>【図１３-１】プリプロセッサとは</dd>
+				</dl>
+			</figure>
+			<p>Ｃ言語でプログラムを作るときにはソースファイルから実行可能ファイルを作る作業が必要です。この作業はコンパイラと呼ぶツールを使用しますが、コンパイラはコンパイル（翻訳）とリンク（結合）という作業を行います。（必要でしたら、<a href="../SECTION01/section01_1.html#lbl_compile">コンパイルと実行</a>を参照してください）</p>
+			<p>コンパイラはソースファイルに記述されている内容をマシン語（機械語）と呼ぶコンピュータ用の言語に翻訳しますが、翻訳作業の前に行う作業のことをプリプロセス（前処理）と呼んでおり、プリプロセスを行う部分を<strong>プリプロセッサ</strong>と呼んでいます。従って、コンパイラは図13-1に示すようにプリプロセッサ、コンパイル、リンクの３つの機能から構成されています。（実際にはＣ言語からアセンブラに翻訳するといったような沢山の機能があると思いますが、ここでは主な機能として３つとしています）</p>
+			<p>プリプロセッサに対して作業指示を与えることができますが、その指示を与えるもののことを、ここでは<strong>プリプロセッサ・コマンド</strong>と呼ぶことにします。今までで出てきたプリプロセッサ・コマンドとしては「<code>#include &lt;stdio.h&gt;;</code>」があります。このように行の先頭が<strong>#</strong>（番号記号）のものがプリプロセッサ・コマンドです。</p>
+			<p>プリプロセッサは主に、次の事を行います。</p>
+			<div class="form-exp">
+				<ul>
+					<li>ファイルをソースファイルに取り込みます。</li>
+					<li>ソースファイル中の文字列を指定された文字列で置換します。</li>
+				</ul>
+			</div>
+			<p>文字列の置換はプリプロセッサ・コマンドで置換対象の文字列と、置換する文字列を指定しますが、これを当講座では<strong>マクロ定義</strong>と呼ぶことにします。マクロ定義はいろいろな目的で使えますが、定数を定義するのによく利用します。</p>
+		</section>
+		<section>
+			<h2 id="lbl_include">13.2 ファイルの取り込み</h2>
+			<p>ソースファイルに他のファイルを取り込むには#includeプリプロセッサ・コマンドを使用します。取り込むファイルは通常はヘッダファイルと呼ぶファイルで、関数を使用するのに必要な情報や定数等が定義されているファイルです。ヘッダファイルの拡張子は「.h」ですが、これは習慣であって、これ以外でも構いません。（特別な理由が無い限りは習慣に従っておいた方が良いでしょう）また、ライブラリ用のヘッダファイルのように、Ｃ言語の仕様として提供しているものについては、ファイル名を&lt;（より小）と&gt;（より大）で括り、ユーザー定義のものは"（引用符）で括ります。</p>
+			<p>ヘッダファイルはUNIX系OSの場合は/usr/include/以降に用意されていますので、興味のある方は確認しておくとよいでしょう。また、ユーザ定義のヘッダファイルを作ることも出来ますが、これらはソースファイルと同じ所（ディレクトリ）に入れておくのが一番手軽です。また、ファイルの管理上、ソースファイルとは別の所で管理したいということであれば、それも可能です。</p>
+			<section>
+				<h3>13.2.1 形式</h3>
+				<p>取り込むファイルを<strong>&lt;</strong>と<strong>&gt;</strong>で括った場合は/usr/include/（UNIX系OSの場合）を探しにいき、見つかったら取り込みます。また、"（引用符）で括った場合はカレントディレクトリを探しに行き、そこに無かった場合は引き続き/usr/include/を探します。</p>
+				<div class="form-exp">
+					※ システム（コンパイラ）提供のファイルの場合<br>
+					#include &lt;ファイル名&gt;<br><br>
+
+					※ ユーザ作成のファイルの場合<br>
+					#include "ファイル名"
+				</div>
+				<p>プリプロセッサ・コマンドは#（番号記号）で始まりますが、最後は；（セミコロン）ではありません。；は不要で、Ｃ言語の文と異なりますので注意してください。ちなみに、最後は改行文字です。</p>
+				<p>ユーザ定義のヘッダファイルがソースファイルとは別の所にある場合は、ソースファイルのあるディレクトリからの相対パス名で指定しておくとよいでしょう。例えば、ソースファイルが$HOME/source1/にあり、ヘッダファイルが$HOME/source1/include/にある場合は、次の様な指定になります。</p>
+				<p><code>#include "./include/mylib.h"</code></p>
+				<aside>
+					<h4>補足</h4>
+					<p>コンパイル時に取り込むファイルの場所を指定することができます。gccコマンドの実行時引数として「-Iパス名」を指定すると、ファイル検索場所として、指定したパス名の場所を追加します。また、この場合はユーザ作成ファイルが&lt;と&gt;で括ってあっても取り込みます。</p>
+				</aside>
+			</section>
+		</section>
+	</section>
+
+	<footer>
+		<nav>
+			<ul>
+				<li><a href="../../index.html">ホーム</a></li>
+				<li><a href="../c_langtop.html#lbl_index">目次</a></li>
+				<li><a href="../SECTION12/section12_4.html">前のページ</a></li>
+				<li><a href="./section13_2.html">次のページ</a></li>
+			</ul>
+		</nav>
+		<p id="footer-author">更新日：<time datetime="2012-05-20">2012年05月20日</time> Merry</p>
+	</footer>
+</div>
+</body>
+</html>

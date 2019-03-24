@@ -1,0 +1,113 @@
+@charset "UTF-8";
+
+/* メリーおばさんのLInux講座サイト共通 */
+@import "./common.css";
+/* ハイライト表示（C言語用）*/
+
+h4:before {
+	content: "■ ";
+	}
+h5	{
+	width: 70%;
+	}
+h5:before {
+	content: "● ";
+	}
+h6	{
+	width: 65%;
+	}
+h6:before {
+	content: "◎ ";
+	}
+table	{
+	width: 100%;
+	}
+	table th	{
+		white-space: nowrap;
+		}
+
+header h1 	{
+	color: white;
+	font-size: 28px;
+	font-weight: bold;
+	text-align: center;
+	margin: 6px auto 0 auto;
+	border: 3px solid olive;
+	padding-top: 0.5em;
+	padding-bottom: 0.5em;
+	text-shadow: 3px 3px 1px black;
+	background: -moz-linear-gradient(lightgoldenrodyellow, olive);
+	background: -webkit-gradient(linear, left top, left bottom, from(lightgoldenrodyellow), to(olive));
+	background: linear-gradient(lightgoldenrodyellow, olive);
+	border-radius: 10% / 50%;
+	box-shadow: 8px 6px 10px rgba(0,0,0,0.4);
+	}
+aside	{
+	width: auto;
+	border: 2px dashed olive;
+	margin-top: 12px;
+	margin-bottom: 6px;
+	padding: 6px 0.5em 6px 1em;
+	background-color: transparent;
+	border-radius: 1em;
+	overflow: hidden;
+	}
+	aside h3,
+	aside h4,
+	aside h5,
+	aside h6	{
+		width: auto;
+		margin: 0;
+		padding: 0;
+		border: none;
+		}
+	aside h3:before,
+	aside h4:before,
+	aside h5:before,
+	aside h6:before	{
+		content: "§";
+		}
+	aside ul	{
+		}
+	aside ul li	{
+		margin-left: 1em;
+		margin-bottom: 8px;
+		}
+/* 索引 */
+div.index-row	{
+	float: left;
+	width: 32%;
+	height: auto;
+	margin-left: 0.5%;
+	}
+	div.index-row  dl	{
+	}
+		div.index-row  dl dt	{
+			margin: 4px 0;
+			border: 1px solid #004000;
+			background-color: lavender;
+			text-align: center;
+		}
+		div.index-row  dl dd	{
+/*			padding-left: 1em; */
+		}
+/* 継続リスト番号 */
+ol.continue-decimal	{
+	list-style-type: none;
+	}
+	ol.continue-decimal > li:before	{
+		content: counter(item) ". ";
+		counter-increment: item;
+		}
+
+/* スクリーン幅が768px以下 */
+@media screen and (max-width : 768px)  {
+	}
+/* スクリーン幅が768px以下。ここまで */
+/* スクリーン幅が540px以下 */
+@media screen and (max-width : 540px)  {
+	table th	{
+		white-space: normal;
+		}
+	}
+/* スクリーン幅が540px以下。ここまで */

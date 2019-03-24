@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initialscale=1.0">
+	<meta name="robots" content="INDEX,FOLLOW">
+	<meta name="keywords" content="シェルスクリプト,制御演算,条件判定,比較演算子,ファイル演算子,論理演算子,if,case">
+	<meta name="description" content="シェルスクリプトでの条件判定や繰り返し処理の方法をご紹介します。ここでは条件判定について説明します。">
+	<meta name="author" content="T.Hagiwara">
+	<link rel="stylesheet" href="../../CSS3/seminar.css" type="text/css">
+	<link rel="stylesheet" href="../../CSS3/hl_bash.css" type="text/css">
+	<link rel="prev" href="./section6_4.html">
+	<link rel="next" href="./section6_6.html">
+	<title>Linuxの使い方 - シェルスクリプトの作り方（5/8）</title>
+	<style type="text/css">
+	</style>
+</head>
+<body>
+<div id="container">
+	<header>
+		<p>Linux講座にようこそ。このページは「Linuxの使い方&nbsp;-&nbsp;第６章&nbsp;シェルスクリプトの作り方」です。</p>
+		<h1>Linuxの使い方</h1>
+		<nav>
+			<ul>
+				<li><a href="../../index.html">ホーム</a></li>
+				<li><a href="../cmdtop.html#lbl_index">目次</a></li>
+				<li><a href="./section6_4.html">前のページ</a></li>
+				<li><a href="./section6_6.html">次のページ</a></li>
+			</ul>
+		</nav>
+	</header>
+
+	<section class="contents">
+		<h1>6. シェルスクリプトの作り方（5/8）</h1>
+		<section>
+			<!-- 制御演算 -->
+			<h2 id="cntl">6.7 制御演算（1/2）</h2>
+			<p>ここでの制御演算とは条件判定や繰り返し制御を意味します。条件判定は指定した条件の成立（真）や、不成立（偽）により処理を振り分けます。また、繰り返しは指定した条件が成立（真）している間や、不成立（偽）の間、特定の処理を繰り返し実行します。</p>
+			<p>ここで説明する内容は次のものです。</p>
+			<ul>
+				<li><a href="#lbl_cmp">比較演算子</a></li>
+				<li><a href="#if">ifコマンド</a></li>
+				<li><a href="#case">caseコマンド</a></li>
+				<li><a href="./section6_6.html#for">forコマンド</a></li>
+				<li><a href="./section6_6.html#while">whileとuntilコマンド</a></li>
+			</ul>
+
+			<section>
+				<!-- 比較演算子 -->
+				<h3 id="lbl_cmp">6.7.1 比較演算子</h3>
+				<p>条件の記述形式は数値の比較の場合は<strong>(( 式 ))</strong>で、文字列の比較とファイル演算子の場合は<strong>[[ 式 ]]</strong>になり型式が異ります。また、(( 式 ))の場合は「式」の前後に空白があってもなくても構いませんが、[[ 式 ]]の場合は「式」の前後に空白が１個以上必要ですので注意してください。</p>
+				<p>「式」には変数や下表に示す比較演算子を使って、条件判定のための条件や、繰り返し制御のための条件を記述します。</p>
+				<table class="simple-table">
+					<caption>【表6-12】数値の比較演算子一覧</caption>
+					<tr><th>演算子</th><th>意味</th></tr>
+					<tr><td>数値１ &gt; 数値２</td><td>数値１は数値２より大きい。</td></tr>
+					<tr><td>数値１ &lt; 数値２</td><td>数値１は数値２より小さい。</td></tr>
+					<tr><td>数値１ &gt;= 数値２</td><td>数値１は数値２以上。（等しいか大きい）</td></tr>
+					<tr><td>数値１ &lt;= 数値２</td><td>数値１は数値２以下。（等しいか小さい）</td></tr>
+					<tr><td>数値１ <strong>==</strong> 数値２</td><td>数値１と数値２は等しい。</td></tr>
+					<tr><td>数値１ != 数値２</td><td>数値１と数値２は異なる。</td></tr>
+				</table>
+				<table class="simple-table">
+					<caption>【表6-13】文字列の比較演算子一覧</caption>
+					<tr><th>演算子</th><th>意味</th></tr>
+					<tr><td>文字列１ &gt; 文字列２</td><td>文字列１は文字列２より辞書順で後ろにある。（大きい）</td></tr>
+					<tr><td>文字列１ &lt; 文字列２</td><td>文字列１は文字列２より辞書順で前にある。（小さい）</td></tr>
+					<tr><td>文字列１ = 文字列２</td><td>文字列１と文字列２は等しい。（==でも可）</td></tr>
+					<tr><td>文字列１ != 文字列２</td><td>文字列１と文字列２は異なる。</td></tr>
+					<tr><td>-n 文字列</td><td>文字列が空ではない。</td></tr>
+					<tr><td>-z 文字列</td><td>文字列が空である。</td></tr>
+				</table>
+				<table class="simple-table">
+					<caption>【表6-14】ファイル演算子一覧</caption>
+					<tr><th>ファイル演算子</th><th>意味</th></tr>
+					<tr><td>-d ファイル</td><td>ファイルが存在しかつ、ディレクトリである。</td></tr>
+					<tr><td>-e ファイル</td><td>ファイルが存在する。（ディレクトリもファイルとして認識する）</td></tr>
+					<tr><td>-f ファイル</td><td>ファイルが存在しかつ、通常ファイルである。</td></tr>
+					<tr><td>-r ファイル</td><td>読み込み（read）保護モードが設定されている。</td></tr>
+					<tr><td>-w ファイル</td><td>書き出し（write）保護モードが設定されている。</td></tr>
+					<tr><td>-x ファイル</td><td>実行（excute）保護モードが設定されている。</td></tr>
+					<tr><td>-s ファイル</td><td>ファイルが存在し、かつ空ではない。</td></tr>
+					<tr><td>ファイル１ -nt ファイル２</td><td>ファイル１がファイル２よりも新しい。</td></tr>
+					<tr><td>ファイル１ -ot ファイル２</td><td>ファイル１がファイル２よりも古い。</td></tr>
+				</table>
+				<p>複数の条件を指定したい場合は論理演算子を使用します。条件としては上記演算子を使用した式や変数を指定できます。</p>
+				<table class="simple-table">
+					<caption>【表6-15】論理演算子一覧</caption>
+					<tr><th>論理演算子</th><th>意味</th></tr>
+					<tr><td>条件１ &amp;&amp; 条件２</td><td>全ての条件が真のとき真になる。（論理積、AND）</td></tr>
+					<tr><td>条件１ || 条件２</td><td>条件が真のものが１つ以上あれば真になる。（論理和、OR）</td></tr>
+					<tr><td>! 条件</td><td>真・偽を反転する。（論理否定、NOT）</td></tr>
+				</table>
+				<aside>
+					<h3>補足</h3>
+						<p><strong>[ -n &amp;変数名 ]</strong>とした場合は指定した変数が存在しており、かつ空ではないという意味になります。また、<strong>[ -z &amp;変数名 ]</strong>とした場合は指定した変数が存在していないか、存在していても空であるという意味になります。</p>
+				</aside>
+				<aside>
+					<h3>補足</h3>
+						<p>標準で提供されるコマンドは終了ステータスと呼ぶ値を設定しており、この値は正常終了したときは0、異常終了したときは0以外であるということは「<a href="../SECTION2/section2_2.html#lbl_other">2.4 その他の知っておくと便利な機能</a>」で説明しました。比較演算子も比較結果を終了ステータス（返却ステータス）に設定します。</p>
+						<p>比較演算子の場合の終了ステータスの値は、条件が成立したときは<strong>0（真）</strong>、成立しなかったときは<strong>0以外（偽）</strong>が設定されます。終了ステータスは<code>echo $?</code>で表示できます。</p>
+						<p>比較演算子の使い方と終了ステータスの値を確認します。</p>
+						<p></p>
+						<div class="exe-samp">
+<pre><samp>$ <kbd>((10&gt;9))</kbd>
+$ <kbd>echo $?</kbd><strong> ← 終了ステータスを表示します</strong>
+0<strong> ← 条件成立（真）です</strong>
+$
+$ <kbd>((10&lt;9))</kbd>
+$ <kbd>echo $?</kbd>
+1<strong> ← 条件不成立（偽）です</strong>
+$
+$ <kbd>(( 10 &lt; 9 ))</kbd><strong> ← 空白があっても構いません</strong>
+$ <kbd>echo $?</kbd>
+1
+$ <kbd>num=10</kbd><strong> ← 変数を用意します</strong>
+$ <kbd>(( $num &gt; 9 ))</kbd>
+$ <kbd>echo $?</kbd>
+0
+$ <kbd>(( num &gt; 9 ))</kbd><strong> ← 数値の比較の場合は変数の先頭の&amp;を省略できます</strong>
+$ <kbd>echo $?</kbd>
+0
+$ <kbd>(( $num == 1.08 ))</kbd><strong> ← 使用できるのは整数のみです（小数点付きの値は使用できません）</strong>
+bash: ((: 10 == 1.08 : 構文エラー: 無効な計算演算子です (エラーのあるトークンは ".08 ")
+$
+$ <kbd>[[abc=abc]]</kbd><strong> ← abc=abcの前後に空白がありません</strong>
+bash: [[abc=abc]]: コマンドが見つかりません
+$ 
+$ <kbd>[[ abc=abc ]]</kbd>
+$ <kbd>echo $?</kbd>
+0
+$ <kbd>str='My Documents'</kbd>
+$ <kbd>[[ $str = 'My Documents' ]]</kbd><strong> ← $strは自動的にエスケープされます</strong>
+$ <kbd>echo $?</kbd>
+0
+$ <kbd>[[ $str = 'My Document' ]]</kbd>
+$ <kbd>echo $?</kbd>
+1
+$ <kbd>[[ str = 'My Documents' ]]</kbd><strong> ← strは単なる文字列です（&amp;がないため）</strong>
+$ <kbd>echo $?</kbd>
+1
+$ <kbd>[[ -n $str ]]</kbd>
+$ <kbd>echo $?</kbd>
+0
+$ <kbd>[[ -n $string ]]</kbd><strong> ← string変数は存在しません</strong>
+$ <kbd>echo $?</kbd>
+1
+$</samp></pre>
+						</div>
+				</aside>
+			</section>
+			
+			<section>
+				<!-- ifコマンド -->
+				<h3 id="if">6.7.2 ifコマンド</h3>
+				<p>ifコマンドは条件判定のコマンドで、条件が<strong>成立（真）</strong>か<strong>不成立（偽）</strong>により処理を振り分けます。</p>
+				<section>
+					<h4>形式</h4>
+					<p>ifコマンドには２つの形式が有ります。条件が２つの場合（真か偽か）は形式１を使い、複数のときは形式２を使います。また、条件不成立時に実行するコマンドが無い場合はelse以下を省略できます。（fiは必要です）</p>
+					<div class="form-exp">
+						※&nbsp;形式１<br>
+						if 条件<br>
+						then<strong> ← ifとthenを１行で記述するときは;（セミコロン）で区切ります（if 条件 ; then）</strong><br>
+						&nbsp;&nbsp;コマンドリスト<strong> ← 条件成立時に実行するコマンドを指定します</strong><br>
+						else<br>
+						&nbsp;&nbsp;コマンドリスト<strong> ← 条件不成立時に実行するコマンドを指定します</strong><br>
+						fi<strong> ← ifコマンドの最後を表します</strong><br>
+						<br>
+						※&nbsp;形式２<br>
+						if 条件<br>
+						then<br>
+						&nbsp;&nbsp;コマンドリスト<br>
+						elif 条件<strong> ← else ifの意味です。elifに対するfiはありません</strong><br>
+						then<br>
+						&nbsp;&nbsp;コマンドリスト<br>
+						elif 条件<strong> ← else ifは複数の指定ができます</strong><br>
+						then<br>
+						&nbsp;&nbsp;コマンドリスト<br>
+						else<br>
+						&nbsp;&nbsp;コマンドリスト<strong> ← else if条件不成立時に実行するコマンドを指定します</strong><br>
+						fi
+					</div>
+				</section>
+				<section>
+					<h4>例題</h4>
+					<section>
+						<h5>例題１</h5>
+						<p>引数あるいは、キーボードから入力されたディレクトリの下のファイルやディレクトリの数を表示します。（ex50.sh）</p>
+						<div class="exe-samp">
+<pre class="bash"><span class="co0">#!/bin/bash</span>
+<span class="co0"># 機能  :  指定されたディレクトリの下のファイルやディレクトリの数を表示します</span>
+<span class="co0"># 作成  :  メリー</span>
+&nbsp;
+<span class="kw1">if</span> <span class="br0">&#91;</span><span class="br0">&#91;</span> <span class="re5">-z</span> <span class="st0">&quot;$1&quot;</span> <span class="br0">&#93;</span><span class="br0">&#93;</span>           <span class="co0"># 第１引数の有無をチェック</span>
+<span class="kw1">then</span>
+    <span class="kw2">read</span> <span class="re5">-p</span> <span class="st0">&quot;ディレクトリのパス名を入力して下さい --&gt; &quot;</span> <span class="kw2">dir</span>
+<span class="kw1">else</span>
+    <span class="re2">dir</span>=<span class="st0">&quot;$1&quot;</span>
+<span class="kw1">fi</span>
+&nbsp;
+<span class="kw1">if</span> <span class="br0">&#91;</span><span class="br0">&#91;</span> <span class="sy0">!</span> <span class="re5">-d</span> <span class="st0">&quot;<span class="es2">$dir</span>&quot;</span> <span class="br0">&#93;</span><span class="br0">&#93;</span>
+<span class="kw1">then</span>
+    <span class="kw3">echo</span> <span class="st0">&quot;<span class="es3">${dir}</span>は存在しないかまたは、ディレクトリではありません&quot;</span>
+    <span class="kw3">exit</span> <span class="nu0">1</span>               <span class="co0"># 終了ステータス１で終了</span>
+<span class="kw1">fi</span>
+&nbsp;
+<span class="re2">kazu</span>=$<span class="br0">&#40;</span><span class="kw2">ls</span> <span class="st0">&quot;<span class="es2">$dir</span>&quot;</span> <span class="sy0">|</span> <span class="kw2">wc</span> -l<span class="br0">&#41;</span>  <span class="co0"># wcコマンドで行数を求める</span>
+&nbsp;
+<span class="kw3">echo</span> <span class="st0">&quot;<span class="es3">${dir}</span>には<span class="es3">${kazu}</span>個のファイルやディレクトリがあります&quot;</span></pre>											</div>
+						<p>if [[ <strong>!</strong> -d "$dir" ]]の<strong>!</strong>は真・偽を反転しますので、「ディレクトリで<strong>ない</strong>」という条件になります。</p>
+						<div class="exe-samp">
+<pre><samp>$ <kbd>ex50.sh ../KANRI</kbd>
+../KANRIには6個のファイルやディレクトリがあります
+$ <kbd>echo $?</kbd><strong> ← 終了ステータスを表示します</strong>
+0
+$
+$ <kbd>ex50.sh</kbd>
+ディレクトリのパス名を入力して下さい --&gt; ../KANRI
+../KANRIには4個のファイルやディレクトリがあります
+$
+$ <kbd>ex50.sh</kbd>
+ディレクトリのパス名を入力して下さい --&gt; ../DUMMY
+../DUMMYは存在しないかまたは、ディレクトリではありません
+$ <kbd>echo $?</kbd>
+1<strong> ← ex50.shがエラー終了したので、終了ステータスは1です</strong>
+$
+$ <kbd>ex50.sh ../DUMMY</kbd>
+../DUMMYは存在しないかまたは、ディレクトリではありません
+$</samp></pre>
+						</div>
+					</section>
+					<section>
+						<h5>例題２</h5>
+						<p>メニューにより四則演算を行います。メニュー番号により四則演算の種類を指定します。（ex51.sh）</p>
+						<div class="exe-samp">
+<pre class="bash"><span class="co0">#!/bin/bash</span>
+<span class="co0"># 機能  :  四則演算を行います</span>
+<span class="co0"># 作成  :  メリー</span>
+&nbsp;
+<span class="kw3">echo</span> <span class="re5">-e</span> <span class="st0">&quot;(1)加算<span class="es1">\n</span>(2)減算<span class="es1">\n</span>(3)乗算<span class="es1">\n</span>(4)除算&quot;</span>
+<span class="kw2">read</span> <span class="re5">-p</span> <span class="st0">&quot;番号を入力して下さい --&gt; &quot;</span> bango
+&nbsp;
+<span class="kw1">if</span> <span class="br0">&#91;</span><span class="br0">&#91;</span> <span class="re5">-n</span> <span class="st0">&quot;<span class="es2">$bango</span>&quot;</span> <span class="br0">&#93;</span><span class="br0">&#93;</span>
+<span class="kw1">then</span>
+    <span class="kw2">read</span> <span class="re5">-p</span> <span class="st0">&quot;数値を２つ入力して下さい --&gt; &quot;</span> atai1 atai2
+    <span class="kw1">if</span> <span class="br0">&#91;</span><span class="br0">&#91;</span> <span class="re5">-n</span> <span class="st0">&quot;<span class="es2">$atai1</span>&quot;</span> <span class="br0">&#93;</span><span class="br0">&#93;</span> <span class="sy0">&amp;&amp;</span> <span class="br0">&#91;</span><span class="br0">&#91;</span> <span class="re5">-n</span> <span class="st0">&quot;<span class="es2">$atai2</span>&quot;</span> <span class="br0">&#93;</span><span class="br0">&#93;</span>
+    <span class="kw1">then</span>
+        <span class="kw1">if</span> <span class="br0">&#40;</span><span class="br0">&#40;</span> <span class="st0">&quot;<span class="es2">$bango</span>&quot;</span> == <span class="nu0">1</span> <span class="br0">&#41;</span><span class="br0">&#41;</span>         <span class="co0"># 加算</span>
+        <span class="kw1">then</span>
+             <span class="kw3">echo</span> <span class="st0">&quot;<span class="es3">${atai1}</span> + <span class="es3">${atai2}</span> = &quot;</span> $<span class="br0">&#40;</span><span class="br0">&#40;</span> <span class="re1">$atai1</span> + <span class="re1">$atai2</span> <span class="br0">&#41;</span><span class="br0">&#41;</span>
+        <span class="kw1">elif</span> <span class="br0">&#40;</span><span class="br0">&#40;</span> <span class="st0">&quot;<span class="es2">$bango</span>&quot;</span> == <span class="nu0">2</span> <span class="br0">&#41;</span><span class="br0">&#41;</span>       <span class="co0"># 減算</span>
+        <span class="kw1">then</span>
+             <span class="kw3">echo</span> <span class="st0">&quot;<span class="es3">${atai1}</span> - <span class="es3">${atai2}</span> = &quot;</span> $<span class="br0">&#40;</span><span class="br0">&#40;</span> <span class="re1">$atai1</span> - <span class="re1">$atai2</span> <span class="br0">&#41;</span><span class="br0">&#41;</span>
+        <span class="kw1">elif</span> <span class="br0">&#40;</span><span class="br0">&#40;</span> <span class="st0">&quot;<span class="es2">$bango</span>&quot;</span> == <span class="nu0">3</span> <span class="br0">&#41;</span><span class="br0">&#41;</span>       <span class="co0"># 乗算</span>
+        <span class="kw1">then</span>
+             <span class="kw3">echo</span> <span class="st0">&quot;<span class="es3">${atai1}</span> * <span class="es3">${atai2}</span> = &quot;</span> $<span class="br0">&#40;</span><span class="br0">&#40;</span> <span class="re1">$atai1</span> <span class="sy0">*</span> <span class="re1">$atai2</span> <span class="br0">&#41;</span><span class="br0">&#41;</span>
+        <span class="kw1">elif</span> <span class="br0">&#40;</span><span class="br0">&#40;</span> <span class="st0">&quot;<span class="es2">$bango</span>&quot;</span> == <span class="nu0">4</span> <span class="br0">&#41;</span><span class="br0">&#41;</span>       <span class="co0"># 除算</span>
+        <span class="kw1">then</span>
+            <span class="kw3">echo</span> <span class="st0">&quot;<span class="es3">${atai1}</span> / <span class="es3">${atai2}</span> = &quot;</span> $<span class="br0">&#40;</span><span class="br0">&#40;</span> <span class="re1">$atai1</span> <span class="sy0">/</span> <span class="re1">$atai2</span> <span class="br0">&#41;</span><span class="br0">&#41;</span>
+        <span class="kw1">else</span>                           <span class="co0"># それ以外</span>
+            <span class="kw3">echo</span> <span class="st0">&quot;番号が不当です&quot;</span>
+        <span class="kw1">fi</span>
+    <span class="kw1">else</span>
+        <span class="kw3">echo</span> <span class="st0">&quot;数値が入力されませんでした&quot;</span>
+    <span class="kw1">fi</span>
+<span class="kw1">else</span>
+    <span class="kw3">echo</span> <span class="st0">&quot;番号が入力されませんでした&quot;</span>
+<span class="kw1">fi</span></pre>
+						</div>
+						<div class="exe-samp">
+<pre><samp>$ <kbd>ex51.sh</kbd>
+(1)加算
+(2)減算
+(3)乗算
+(4)除算
+番号を入力して下さい --&gt; <kbd>1</kbd>
+数値を2つ入力して下さい --&gt; <kbd>10 20</kbd>
+10 + 20 =  30
+$
+$ <kbd>ex51.sh</kbd>
+(1)加算
+(2)減算
+(3)乗算
+(4)除算
+番号を入力して下さい --&gt; <kbd>5</kbd>
+数値を2つ入力して下さい --&gt; <kbd>10 20</kbd>
+番号が不当です
+$
+$ <kbd>ex51.sh</kbd>
+(1)加算
+(2)減算
+(3)乗算
+(4)除算
+番号を入力して下さい --&gt; <kbd>2</kbd>
+数値を2つ入力して下さい --&gt; <kbd>10</kbd>
+数値が入力されませんでした
+$</samp></pre>
+						</div>
+					</section>
+					<aside>
+						<h5>補足</h5>
+							<p>exitコマンドはプロセスを終了するコマンドです。シェルスクリプト中で使用しますと、シェルスクリプトの実行を直ちに終了させます。明示的に終了ステータスを指定したいときはexitコマンドの引数に値を指定します。なお、シェルスクリプトがexitコマンドで終了していない場合は、最後に実行したコマンドの終了ステータスがシェルスクリプトの終了ステータスになります。</p>
+					</aside>
+				</section>
+			</section>
+			<section>
+				<!-- caseコマンド -->
+				<h3 id="case">6.7.3 caseコマンド</h3>
+				<p>caseコマンドは複数の条件により処理を振り分けます。ifコマンドと似ていますが、条件が多いときにはifコマンドより処理を分りやすく記述できます。</p>
+				<section>
+					<h4>形式</h4>
+					<p>「式」の値と一致するパターンの所のコマンドを実行します。コマンドリストの最後にはセミコロンを２個指定します。パターンにはワイルドカード（*、?、[ ]、等）が指定できますし、複数のパターンを<strong>|</strong>（縦線）で区切って指定できます。</p>
+					<div class="form-exp">
+						case 式 in<strong> ← 式には変数や位置パラメータを指定できます</strong><br>
+						&nbsp;&nbsp;パターン１)<br>
+						&nbsp;&nbsp;&nbsp;&nbsp;コマンドリスト;;<strong> ← コマンドリストの最後は;;（セミコロン２個）です</strong><br>
+						&nbsp;&nbsp;パターン２)<br>
+						&nbsp;&nbsp;&nbsp;&nbsp;コマンドリスト;;<br>
+						<br>
+						&nbsp;&nbsp;・・・<br>
+						<br>
+						&nbsp;&nbsp;パターンn)<br>
+						&nbsp;&nbsp;&nbsp;&nbsp;コマンドリスト;;<br>
+						esac<strong> ← caseコマンドの最後を表します</strong>
+					</div>
+					<p>複数のパターンを指定した例を示します。変数nameの値がMまたはmの場合は「Merry」を、Kまたはkの場合は「Ken」を、それ以外の場合は「?」を表示します。</p>
+					<div class="exe-samp">
+<pre class="bash"><span class="kw1">case</span> <span class="st0">&quot;<span class="es2">$name</span>&quot;</span> <span class="kw1">in</span>
+    <span class="st0">&quot;M&quot;</span> <span class="sy0">|</span> <span class="st0">&quot;m&quot;</span> <span class="br0">&#41;</span> <span class="kw3">echo</span> <span class="st0">&quot;Merry&quot;</span><span class="sy0">;;</span>
+    <span class="st0">&quot;K&quot;</span> <span class="sy0">|</span> <span class="st0">&quot;k&quot;</span> <span class="br0">&#41;</span> <span class="kw3">echo</span> <span class="st0">&quot;Ken&quot;</span><span class="sy0">;;</span>
+    <span class="sy0">*</span> <span class="br0">&#41;</span> <span class="kw3">echo</span> <span class="st0">&quot;?&quot;</span><span class="sy0">;;</span>
+<span class="kw1">esac</span></pre>
+					</div>
+				</section>
+				<section>
+					<h4>例題</h4>
+					<p>四則演算を行います。メニューに表示された記号により四則演算の種類を指定します。（ex52.sh）</p>
+					<div class="exe-samp">
+<pre class="bash"><span class="co0">#!/bin/bash</span>
+<span class="co0"># 機能  :  四則演算を行います</span>
+<span class="co0"># 作成  :  メリー</span>
+&nbsp;
+<span class="kw3">echo</span> <span class="re5">-e</span> <span class="st0">&quot;(+)加算<span class="es1">\n</span>(-)減算<span class="es1">\n</span>(*)乗算<span class="es1">\n</span>(/)除算&quot;</span>
+<span class="kw2">read</span> <span class="re5">-p</span> <span class="st0">&quot;演算子を入力して下さい --&gt; &quot;</span> enzansi
+&nbsp;
+<span class="kw1">if</span> <span class="br0">&#91;</span><span class="br0">&#91;</span> <span class="re5">-n</span> <span class="st0">&quot;<span class="es2">$enzansi</span>&quot;</span> <span class="br0">&#93;</span><span class="br0">&#93;</span>
+<span class="kw1">then</span>
+    <span class="kw2">read</span> <span class="re5">-p</span> <span class="st0">&quot;数値を２つ入力して下さい --&gt; &quot;</span> atai1 atai2
+    <span class="kw1">if</span> <span class="br0">&#91;</span><span class="br0">&#91;</span> <span class="re5">-n</span> <span class="st0">&quot;<span class="es2">$atai1</span>&quot;</span> <span class="br0">&#93;</span><span class="br0">&#93;</span> <span class="sy0">&amp;&amp;</span> <span class="br0">&#91;</span><span class="br0">&#91;</span> <span class="re5">-n</span> <span class="st0">&quot;<span class="es2">$atai2</span>&quot;</span> <span class="br0">&#93;</span><span class="br0">&#93;</span>
+    <span class="kw1">then</span>
+        <span class="kw1">case</span> <span class="st0">&quot;<span class="es2">$enzansi</span>&quot;</span> <span class="kw1">in</span>                  <span class="co0"># 変数enzansiの値により処理を振り分ける</span>
+            <span class="st_h">'+'</span> <span class="br0">&#41;</span> <span class="kw3">echo</span> <span class="st0">&quot;<span class="es3">${atai1}</span> + <span class="es3">${atai2}</span> = &quot;</span> $<span class="br0">&#40;</span><span class="br0">&#40;</span> <span class="re1">$atai1</span> + <span class="re1">$atai2</span> <span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;;</span>
+            <span class="st_h">'-'</span> <span class="br0">&#41;</span> <span class="kw3">echo</span> <span class="st0">&quot;<span class="es3">${atai1}</span> - <span class="es3">${atai2}</span> = &quot;</span> $<span class="br0">&#40;</span><span class="br0">&#40;</span> <span class="re1">$atai1</span> - <span class="re1">$atai2</span> <span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;;</span>
+            <span class="st_h">'*'</span> <span class="br0">&#41;</span> <span class="kw3">echo</span> <span class="st0">&quot;<span class="es3">${atai1}</span> * <span class="es3">${atai2}</span> = &quot;</span> $<span class="br0">&#40;</span><span class="br0">&#40;</span> <span class="re1">$atai1</span> <span class="sy0">*</span> <span class="re1">$atai2</span> <span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;;</span>
+            <span class="st_h">'/'</span> <span class="br0">&#41;</span> <span class="kw3">echo</span> <span class="st0">&quot;<span class="es3">${atai1}</span> / <span class="es3">${atai2}</span> = &quot;</span> $<span class="br0">&#40;</span><span class="br0">&#40;</span> <span class="re1">$atai1</span> <span class="sy0">/</span> <span class="re1">$atai2</span> <span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;;</span>
+            <span class="sy0">*</span> <span class="br0">&#41;</span> <span class="kw3">echo</span> <span class="st0">&quot;演算子が不当です&quot;</span><span class="sy0">;;</span>    <span class="co0"># ＊は上記パターン以外の全てに一致</span>
+        <span class="kw1">esac</span>
+    <span class="kw1">else</span>
+        <span class="kw3">echo</span> <span class="st0">&quot;数値が入力されませんでした&quot;</span>
+    <span class="kw1">fi</span>
+<span class="kw1">else</span>
+    <span class="kw3">echo</span> <span class="st0">&quot;演算子が入力されませんでした&quot;</span>
+<span class="kw1">fi</span></pre>
+					</div>
+					<div class="exe-samp">
+<pre><samp>$ <kbd>ex52.sh</kbd>
+(+)加算
+(-)減算
+(*)乗算
+(/)除算
+演算子を入力して下さい --&gt; <kbd>+</kbd>
+数値を２つ入力して下さい --&gt; <kbd>100 200</kbd>
+100 + 200 =  300
+$ <kbd>ex52.sh</kbd>
+(+)加算
+(-)減算
+(*)乗算
+(/)除算
+演算子を入力して下さい --&gt; <kbd>*</kbd>
+数値を２つ入力して下さい --&gt; <kbd>100 3</kbd>
+100 * 3 =  300
+$ <kbd>ex52.sh</kbd>
+(+)加算
+(-)減算
+(*)乗算
+(/)除算
+演算子を入力して下さい --&gt; <kbd>@</kbd>
+数値を２つ入力して下さい --&gt; <kbd>100 200</kbd>
+演算子が不当です
+$</samp></pre>
+					</div>
+				</section>
+			</section>
+		</section>
+	</section>
+
+	<footer>
+		<nav>
+			<ul>
+				<li><a href="../../index.html">ホーム</a></li>
+				<li><a href="../cmdtop.html#lbl_index">目次</a></li>
+				<li><a href="./section6_4.html">前のページ</a></li>
+				<li><a href="./section6_6.html">次のページ</a></li>
+			</ul>
+		</nav>
+		<p id="footer-author">更新日：<time datetime="2018-02-08">2018年02月08日</time> Merry</p>
+	</footer>
+</div>
+</body>
+</html>

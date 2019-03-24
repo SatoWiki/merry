@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initialscale=1.0">
+	<meta name="robots" content="INDEX,FOLLOW">
+	<meta name="keywords" content="繰り返し,while文,do文">
+	<meta name="description" content="繰り返し処理のためのwhile文とdo文を説明します。">
+	<meta name="author" content="T.Hagiwara">
+	<link rel="stylesheet" href="../../CSS3/seminar.css" type="text/css">
+	<link rel="stylesheet" href="../../CSS3/hl_clang.css" type="text/css">
+	<link rel="prev" href="../SECTION05/section05_2.html">
+	<link rel="next" href="./section06_2.html">
+	<title>Ｃ言語プログラミング入門&nbsp;-&nbsp;繰り返し処理の制御（1/2）</title>
+	<style type="text/css">
+	</style>
+</head>
+<body>
+<div id="container">
+	<header>
+		<p>Linux講座にようこそ。このページは「Ｃ言語プログラミング入門&nbsp;-&nbsp;第６章．繰り返し処理の制御」です。</p>
+		<h1>Ｃ言語プログラミング入門</h1>
+		<nav>
+			<ul>
+				<li><a href="../../index.html">ホーム</a></li>
+				<li><a href="../c_langtop.html#lbl_index">目次</a></li>
+				<li><a href="../SECTION05/section05_2.html">前のページ</a></li>
+				<li><a href="./section06_2.html">次のページ</a></li>
+			</ul>
+		</nav>
+	</header>
+
+	<section class="contents">
+		<h1>6. 繰り返し処理の制御（1/2）</h1>
+		<section>
+			<h2 id="lbl-loop">6.1 繰り返し処理とは</h2>
+			<figure class="left-box myphoto">
+				<dl>
+					<dt><img src="../IMAGES/sec06_1.jpg" alt="繰り返し処理の制御"></dt>
+					<dd>【図６-１】繰り返し処理の制御</dd>
+				</dl>
+			</figure>
+			<p>３章の<a href="../SECTION03/section03_2.html#lbl-ex-other">3.4.4 例題</a>として、３人の肥満度（BMI）を計算するプログラムを掲載しましたが、そのプログラムでは身長と体重を入力して肥満度を計算して、結果を表示するという処理を３人分、つまり、同じ処理を３回記述していました。</p>
+			<p>３人分なので、まだよいのですが、これが100人分になったらソースファイルを作るだけでも大変な作業になりますし、現実的ではありません。このような場合は、人数分の繰り返しの中で肥満度の計算処理を行うようにすれば、１回記述するだけで済みます。</p>
+			<p>データが沢山あっても個々のデータに対して行う処理が同じ場合は、繰り返し処理の制御文を使うとプログラムが簡素化できて読みやすくなります。</p>
+			<p>繰り返し処理の実行は繰り返し条件により制御します。通常、繰り返し条件が成立（真）している間は繰り返しの処理を続行します。</p>
+		</section>
+		<section>
+			<h2 id="lbl_while_do">6.2 while文とdo文</h2>
+			<p>while文とdo文は<strong>条件が成立（真）している間は繰り返しの処理を続行</strong>します。そのため、繰り返しの処理の中で条件を不成立（偽）にする処理が必要です。これがないと永久に繰り返しを続行（永久ループ）してしまいます。</p>
+			<p>while文とdo文の相違は繰り返しの条件判定を行うタイミングです。while文は繰り返し処理に<strong>入る前</strong>に行い、do文は繰り返し処理の<strong>最後</strong>に行います。このことにより、繰り返しの条件が最初から不成立の場合、while文では繰り返し処理を行わないのに対して、do文では繰り返し処理が１回行われます。</p>
+			<section>
+				<h3>6.2.1 形式</h3>
+				<p>do文の場合はwhile(式)を後に記述します。</p>
+				<div class="form-exp">
+					※ while文<br>
+					while(式)<br>
+					&nbsp;&nbsp;&nbsp;&nbsp;繰り返し実行する処理;<br><br>
+					※ do文<br>
+					do<br>
+					&nbsp;&nbsp;&nbsp;&nbsp;繰り返し実行する処理;<br>
+					while(式); <strong>← ;（セミコロン）が必要です</strong>
+				</div>
+				<dl>
+					<dt>while(式)</dt>
+						<dd>「式」には繰り返しの条件を指定します。条件が成立（真）している間は繰り返しの処理を続行し、不成立（偽）になると繰り返しから抜け出します。</dd>
+					<dt>繰り返し実行する処理</dt>
+						<dd>処理が１文のみの場合はブロックにする必要はありませんが、複数の場合は{と}で括ってブロックにします。</dd>
+				</dl>
+			</section>
+			<section>
+				<h3>6.2.2 例題</h3>
+				<section>
+					<h4>例題１</h4>
+					<p>肥満度（BMI）の計算を行います。「繰り返し肥満度の計算をしますか（Y/N）」メッセージに対して「Y」を入力すると、再度、肥満度の計算を行い、それ以外を入力すると終了します。</p>
+					<div class="source-code">
+						<div class="c"><ol><li class="li1"><div class="de1"><span class="co2">#include &lt;stdio.h&gt;</span></div></li>
+						<li class="li1"><div class="de1"><span class="kw4">int</span> main<span class="br0">&#40;</span><span class="br0">&#41;</span></div></li>
+						<li class="li1"><div class="de1"><span class="br0">&#123;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">char</span> &nbsp; &nbsp;cont<span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">double</span> &nbsp;taijyu<span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">double</span> &nbsp;sinchyo<span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp;</div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;肥満度(BMI)の計算を行います<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; cont <span class="sy0">=</span> <span class="st0">'Y'</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">while</span><span class="br0">&#40;</span>cont <span class="sy0">==</span> <span class="st0">'Y'</span> <span class="sy0">||</span> cont <span class="sy0">==</span> <span class="st0">'y'</span><span class="br0">&#41;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;体重(kg)と身長(m)を入力してください ==&gt; &quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">scanf</span><span class="br0">&#40;</span><span class="st0">&quot;%lf%lf&quot;</span><span class="sy0">,</span> <span class="sy0">&amp;</span>taijyu<span class="sy0">,</span> <span class="sy0">&amp;</span>sinchyo<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* 肥満度(BMI) = 体重(kg) / 身長(m) / 身長(m) */</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;肥満度は%.2fです<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> taijyu <span class="sy0">/</span> sinchyo <span class="sy0">/</span> sinchyo<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp;</div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;繰り返し肥満度の計算をしますか（Y/N） ==&gt; &quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">scanf</span><span class="br0">&#40;</span><span class="st0">&quot;%*c%c&quot;</span><span class="sy0">,</span> <span class="sy0">&amp;</span>cont<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp;</div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;終了します<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp;</div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">return</span> <span class="nu0">0</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1"><span class="br0">&#125;</span></div></li>
+						</ol></div>
+					</div>
+					<div class="exe-samp">
+<pre><samp>$ <kbd>./ex06_1.prg</kbd>
+肥満度(BMI)の計算を行います
+体重(kg)と身長(m)を入力してください ==&gt; <kbd>68.5 1.75</kbd>
+肥満度は22.37です
+繰り返し肥満度の計算をしますか（Y/N） ==&gt; <kbd>Y</kbd> <strong>← 再度計算を行いたいので「Y」を入力します</strong>
+体重(kg)と身長(m)を入力してください ==&gt; <kbd>54.5 1.63</kbd>
+肥満度は20.51です
+繰り返し肥満度の計算をしますか（Y/N） ==&gt; <kbd>Y</kbd>
+体重(kg)と身長(m)を入力してください ==&gt; <kbd>32.5 1.3</kbd>
+肥満度は19.23です
+繰り返し肥満度の計算をしますか（Y/N） ==&gt; <kbd>N</kbd> <strong>← 終了したいので「N」を入力します</strong>
+終了します
+$</samp></pre>
+					</div>
+					<dl>
+						<dt>9行目</dt>
+							<dd>繰り返し制御用の変数contに初期値として「Y」を代入します。</dd>
+						<dt>10行目</dt>
+							<dd>while文により繰り返しの制御を行います。変数contの値が「Y」または「y」の間、繰り返しの処理（肥満度の計算）を実行します。</dd>
+						<dt>18行目</dt>
+							<dd>繰り返しの処理を行うか否かの指示を変数contに入力します。この処理により、繰り返し制御条件が変わります。</dd>
+					</dl>
+					<aside>
+						<h5>補足</h5>
+						<p>18行目のscanf関数の書式制御文字が「%*c%c」になっていますが、「<strong>%*c</strong>」は入力１文字を読み飛ばすための指定です。%c書式は空白文字（スペース、タブ、改行、等）も入力しますが、この例題では体重と身長を入力したときの改行文字を入力したくないので読み飛ばしています。</p>
+					</aside>
+				</section>
+				<section>
+					<h4>例題２</h4>
+					<p>機能は上記例題と同じですが、こちらはdo文で繰り返しの制御を行っています。この例題は最低１回は肥満度の計算を行いたいので、do文が適しています。</p>
+					<div class="source-code">
+						<div class="c"><ol><li class="li1"><div class="de1"><span class="co2">#include &lt;stdio.h&gt;</span></div></li>
+						<li class="li1"><div class="de1"><span class="kw4">int</span> main<span class="br0">&#40;</span><span class="br0">&#41;</span></div></li>
+						<li class="li1"><div class="de1"><span class="br0">&#123;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">char</span> &nbsp; &nbsp;cont<span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">double</span> &nbsp;taijyu<span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">double</span> &nbsp;sinchyo<span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp;</div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;肥満度(BMI)の計算を行います<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp;</div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">do</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;体重(kg)と身長(m)を入力してください ==&gt; &quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">scanf</span><span class="br0">&#40;</span><span class="st0">&quot;%lf%lf&quot;</span><span class="sy0">,</span> <span class="sy0">&amp;</span>taijyu<span class="sy0">,</span> <span class="sy0">&amp;</span>sinchyo<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* 肥満度(BMI) = 体重(kg) / 身長(m) / 身長(m) */</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;肥満度は%.2fです<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> taijyu <span class="sy0">/</span> sinchyo <span class="sy0">/</span> sinchyo<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp;</div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;繰り返し肥満度の計算をしますか（Y/N） ==&gt; &quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">scanf</span><span class="br0">&#40;</span><span class="st0">&quot;%*c%c&quot;</span><span class="sy0">,</span> <span class="sy0">&amp;</span>cont<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span> <span class="kw1">while</span><span class="br0">&#40;</span>cont <span class="sy0">==</span> <span class="st0">'Y'</span> <span class="sy0">||</span> cont <span class="sy0">==</span> <span class="st0">'y'</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp;</div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;終了します<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp;</div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">return</span> <span class="nu0">0</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1"><span class="br0">&#125;</span></div></li>
+						</ol></div>	
+					</div>
+					<dl>
+						<dt>10、19行目</dt>
+							<dd>do文により繰り返しの制御を行います。繰り返し制御用の変数contの初期化は不要です。</dd>
+					</dl>
+				</section>
+			</section>
+		</section>
+	</section>
+
+	<footer>
+		<nav>
+			<ul>
+				<li><a href="../../index.html">ホーム</a></li>
+				<li><a href="../c_langtop.html#lbl_index">目次</a></li>
+				<li><a href="../SECTION05/section05_2.html">前のページ</a></li>
+				<li><a href="./section06_2.html">次のページ</a></li>
+			</ul>
+		</nav>
+		<p id="footer-author">更新日：<time datetime="2018-05-17">2018年05月17日</time> Merry</p>
+	</footer>
+</div>
+</body>
+</html>

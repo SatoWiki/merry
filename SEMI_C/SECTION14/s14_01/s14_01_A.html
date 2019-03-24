@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initialscale=1.0">
+	<meta name="robots" content="INDEX,FOLLOW">
+	<meta name="keywords" content="入出力ライブラリ,関数,ファイル,ディレクトリ,削除,名称変更,remove,rename,一時ファイル,tmpfile,tmpnam">
+	<meta name="description" content="remove関数,rename関数,tmpfile関数,tmpnam関数の使い方を説明します。">
+	<meta name="author" content="T.Hagiwara">
+	<link rel="stylesheet" href="../../../CSS3/seminar.css" type="text/css">
+	<link rel="stylesheet" href="../../../CSS3/hl_clang.css" type="text/css">
+	<link rel="prev" href="./s14_01_9.html">
+	<link rel="next" href="../s14_02/s14_02_1.html">
+	<title>Ｃ言語プログラミング入門&nbsp;-&nbsp;ライブラリ関数&nbsp;-&nbsp;入出力ライブラリ（10/10）-</title>
+	<style type="text/css">
+	</style>
+</head>
+<body>
+<div id="container">
+	<header>
+		<p>Linux講座にようこそ。このページは「Ｃ言語プログラミング入門&nbsp;-&nbsp;第14章．ライブラリ関数&nbsp;-&nbsp;入出力ライブラリ」です。</p>
+		<h1>Ｃ言語プログラミング入門</h1>
+		<nav>
+			<ul>
+				<li><a href="../../../index.html">ホーム</a></li>
+				<li><a href="../../c_langtop.html#lbl_index">目次</a></li>
+				<li><a href="./s14_01_9.html">前のページ</a></li>
+				<li><a href="../s14_02/s14_02_1.html">次のページ</a></li>
+			</ul>
+		</nav>
+	</header>
+
+	<section class="contents">
+		<h1>14. ライブラリ関数（11/36）&nbsp;-入出力ライブラリ（10/10）</h1>
+		<section>
+			<h2>14.14 ファイル削除及び、名称変更関数</h2>
+			<p>ここで紹介する関数はファイルやディレクトリ（フォルダ）の削除と名称変更を行いますが、次のような前提条件があります。</p>
+			<ul>
+				<li>実行プロセスが削除や名称変更を行える権限を持っていること。（通常、ファイルやディレクトリの所有者及び、システム管理者は権限を持っています）</li>
+				<li>他のプロセスがファイルやディレクトリを使用中でないこと。</li>
+				<li>ディレクトリを削除する場合は当該ディレクトリは空であること。</li>
+			</ul>
+			<section>
+				<h3 id="lbl_remove">14.14.1 remove関数</h3>
+				<p>remove関数はファイルやディレクトリを削除します。</p>
+				<table>
+					<caption>【表14-1-40】 remove関数</caption>
+					<tr><th>形式</th><td>#include &lt;stdio.h&gt;<br>
+										int remove(const char *pathname);</td></tr>
+					<tr><th>返り値</th><td>正常に処理ができた場合は０を返します。エラーの場合は-1を返します。</td></tr>
+					<tr><th>引数</th>
+						<td>
+							<dl>
+								<dt>const char *pathname</dt>
+									<dd>削除するファイルやディレクトリのパス名を指定します。</dd>
+							</dl>
+						</td></tr>
+				</table>
+			</section>
+			<section>
+				<h3 id="lbl_rename">14.14.2 rename関数</h3>
+				<p>rename関数はファイルやディレクトリの名称（パス名）を変更します。</p>
+				<table>
+					<caption>【表14-1-41】 rename関数</caption>
+					<tr><th>形式</th><td>#include &lt;stdio.h&gt;<br>
+										int rename(const char *oldpath, const char *newpath);</td></tr>
+					<tr><th>返り値</th><td>正常に処理ができた場合は０を返します。エラーの場合は-1を返します。</td></tr>
+					<tr><th>引数</th>
+						<td>
+							<dl>
+								<dt>const char *oldpath</dt>
+									<dd>変更前のパス名を指定します。</dd>
+								<dt>const char *newpath</dt>
+									<dd>変更後のパス名を指定します。</dd>
+							</dl>
+						</td></tr>
+					<tr><th>使用法、<br>他</th>
+						<td>第２引数のnewpathの指定場所により、意味合いが多少変わります。第１引数のoldpathと同じ場所の場合は、名前の変更になりますし、異なる場所の場合は移動になります。</td></tr>
+				</table>
+			</section>
+			<section>
+				<h3>14.14.3 例題</h3>
+				<p>実行時引数で指定されたファイルまたは、ディレクトリの名称を変更します。実行時引数の第１引数が変更前のパス名で、第２引数が変更後のパス名です。</p>
+				<div class="source-code">
+					<div class="c"><ol><li class="li1"><div class="de1"><span class="co2">#include &lt;stdio.h&gt;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1"><span class="kw4">int</span> main<span class="br0">&#40;</span><span class="kw4">int</span> argc<span class="sy0">,</span> <span class="kw4">char</span> <span class="sy0">**</span>argv<span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">char</span> &nbsp; &nbsp;ans<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">if</span><span class="br0">&#40;</span>argc <span class="sy0">==</span> <span class="nu0">3</span><span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;%sを%sにリネームします。よろしいですか ==&gt; &quot;</span><span class="sy0">,</span> <span class="sy0">*</span><span class="br0">&#40;</span>argv <span class="sy0">+</span> <span class="nu0">1</span><span class="br0">&#41;</span><span class="sy0">,</span> <span class="sy0">*</span><span class="br0">&#40;</span>argv <span class="sy0">+</span> <span class="nu0">2</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">scanf</span><span class="br0">&#40;</span><span class="st0">&quot;%c&quot;</span><span class="sy0">,</span> <span class="sy0">&amp;</span>ans<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">if</span><span class="br0">&#40;</span>ans <span class="sy0">==</span> <span class="st0">'y'</span> <span class="sy0">||</span> ans <span class="sy0">==</span> <span class="st0">'Y'</span><span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">if</span><span class="br0">&#40;</span><span class="kw3">rename</span><span class="br0">&#40;</span><span class="sy0">*</span><span class="br0">&#40;</span>argv <span class="sy0">+</span> <span class="nu0">1</span><span class="br0">&#41;</span><span class="sy0">,</span> <span class="sy0">*</span><span class="br0">&#40;</span>argv <span class="sy0">+</span> <span class="nu0">2</span><span class="br0">&#41;</span><span class="br0">&#41;</span> <span class="sy0">==</span> <span class="nu0">0</span><span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;正常終了。<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">else</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;異常終了。<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">else</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;キャンセルします。<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">else</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;実行時引数が不当です。<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">return</span> <span class="nu0">0</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#125;</span></div></li>
+					</ol></div>
+				</div>
+				<div class="exe-samp">
+<pre><samp>$ <kbd>ls -l ./t*</kbd>
+-rw-r--r-- 1 merry merry 48 2008-10-16 11:14 ./temp_1.txt
+$
+$ <kbd>./ex14_1_13.prg ./temp_1.txt ./temp.txt</kbd><strong> ← 名前の変更</strong>
+./temp_1.txtを./temp.txtにリネームします。よろしいですか ==&gt; <kbd>y</kbd>
+正常終了。
+$ <kbd>ls -l ./t*</kbd>
+-rw-r--r-- 1 merry merry 48 2008-10-16 11:14 ./temp.txt
+$
+$
+$ <kbd>ls -l ~/TMP/log.csv</kbd>
+-rw-rw-r-- 1 merry merry 32869 2009-03-19 16:52 /home/merry/TMP/log.csv
+$
+$ <kbd>./ex14_1_13.prg ~/TMP/log.csv ./my_log.csv</kbd><strong> ← 移動</strong>
+/home/merry/TMP/log.csvを./my_log.csvにリネームします。よろしいですか ==&gt; <kbd>y</kbd>
+正常終了。
+$ <kbd>ls -l ~/TMP/log.csv</kbd>
+ls: cannot access /home/merry/TMP/log.csv: そのようなファイルやディレクトリはありません
+$ <kbd>ls -l ./my*</kbd>
+-rw-rw-r-- 1 merry merry 32869 2009-03-19 16:52 ./my_log.csv
+$
+$ <kbd>ls -ld ./DATA*</kbd>
+drwxr-xr-x 2 merry merry 4096 2008-08-10 11:06 ./DATA_BK
+$
+$ <kbd>./ex14_1_13.prg ./DATA_BK ./DATA</kbd><strong> ← ディレクトリ名の変更</strong>
+./DATA_BKを./DATAにリネームします。よろしいですか ==&gt; <kbd>y</kbd>
+正常終了。
+$ <kbd>ls -ld ./DATA*</kbd>
+drwxr-xr-x 2 merry merry 4096 2008-08-10 11:06 ./DATA
+$</samp></pre>
+				</div>
+				<dl>
+					<dt>14行目</dt>
+						<dd>rename関数でファイルまたは、ディレクトリの名称を変更します。*(argv + 1)は実行時引数の第１引数の値（変更前のパス名）で、*(argv + 2)は第２引数の値（変更後のパス名）です。</dd>
+				</dl>
+			</section>
+		</section>
+
+		<section>
+			<h2 id="lbl_tmp">14.15 一時ファイルの操作</h2>
+			<p>一時的に使用するユニークな名称（パス名）のファイルが必要な場合は、ここでご紹介する関数を使ってファイルを生成するとよいでしょう。ただし、tmpnam関数は名称を生成した時と実際に使用する間に、同じ名称のものが使われてしまう可能性があり、これは重大なセキュリティ上の問題になる可能性がありますので、なるべく使わない方がよいでしょう。</p>
+			<section>
+				<h3 id="lbl_tmpfile">14.15.1 tmpfile関数</h3>
+				<p>tmpfile関数はユニークな名称（パス名）の一時ファイルを作成します。作成したファイルはクローズ時または、プログラム終了時に自動的に削除されます。なお、ファイルはバイナリ・更新モード（w+b）でオープンしますので、Windows系OSでバイナリファイルを取り扱う場合も使用できます。</p>
+				<table>
+					<caption>【表14-1-42】 tmpfile関数</caption>
+					<tr><th>形式</th><td>#include &lt;stdio.h&gt;<br>
+										FILE *tmpfile(void);</td></tr>
+					<tr><th>返り値</th><td>正常に処理ができた場合は作成したファイルのファイルポインタを返します。ファイルが作成できなかったり、オープン出来なかった場合はNULLを返します。</td></tr>
+					<tr><th>引数</th><td>なし。</td></tr>
+				</table>
+			</section>
+			<section>
+				<h3 id="lbl_tmpnam">14.15.2 tmpnam関数</h3>
+				<p>tmpnam関数は一時ファイルの名前（パス名）を生成します。パス名を生成するだけで実際のファイルは作りません。（この関数の使用はできるだけ避けた方がよいでしょう）</p>
+				<table>
+					<caption>【表14-1-43】 tmpnam関数</caption>
+					<tr><th>形式</th><td>#include &lt;stdio.h&gt;<br>
+										char *tmpnam(char *s);</td></tr>
+					<tr><th>返り値</th><td>正常に処理ができた場合は生成したパス名を返します。エラーの場合はNULLを返します。</td></tr>
+					<tr><th>引数</th>
+						<td>
+							<dl>
+								<dt>char *s</dt>
+									<dd>生成したパス名を格納する領域を指定します。NULLを指定すると内部的な領域を使用します。</dd>
+							</dl>
+						</td></tr>
+				</table>
+			</section>
+			<section>
+				<h3>14.15.3 例題</h3>
+				<p>実行時引数で指定された複数のファイルを連結して行番号を付加して表示します。１回の実行で同じ内容を複数回表示することができます。</p>
+				<div class="source-code">
+					<div class="c"><ol><li class="li1"><div class="de1"><span class="co2">#include &lt;stdio.h&gt;</span></div></li>
+					<li class="li1"><div class="de1"><span class="co2">#define BUFFSIZE &nbsp; &nbsp;1024</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1"><span class="kw4">int</span> main<span class="br0">&#40;</span><span class="kw4">int</span> argc<span class="sy0">,</span> <span class="kw4">char</span> <span class="sy0">**</span>argv<span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; FILE &nbsp; &nbsp;<span class="sy0">*</span>tmp_fp<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; FILE &nbsp; &nbsp;<span class="sy0">*</span>in_fp<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">int</span> &nbsp; &nbsp; arg_idx<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">int</span> &nbsp; &nbsp; line_num<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">char</span> &nbsp; &nbsp;buff<span class="br0">&#91;</span>BUFFSIZE<span class="br0">&#93;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">char</span> &nbsp; &nbsp;ans<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">if</span><span class="br0">&#40;</span>argc <span class="sy0">&gt;=</span> <span class="nu0">2</span><span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* 一時ファイル作成 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">if</span><span class="br0">&#40;</span><span class="br0">&#40;</span>tmp_fp <span class="sy0">=</span> <span class="kw3">tmpfile</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span> <span class="sy0">==</span> NULL<span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;一時ファイルが作成出来ませんでした。<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">return</span> <span class="nu0">1</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* 実行時引数で指定されたファイルを一時ファイルにマージ */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">for</span><span class="br0">&#40;</span>arg_idx <span class="sy0">=</span> <span class="nu0">1</span><span class="sy0">;</span> arg_idx <span class="sy0">&lt;</span> argc<span class="sy0">;</span> <span class="sy0">++</span>arg_idx<span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">if</span> <span class="br0">&#40;</span><span class="br0">&#40;</span>in_fp <span class="sy0">=</span> <span class="kw3">fopen</span><span class="br0">&#40;</span><span class="sy0">*</span><span class="br0">&#40;</span>argv <span class="sy0">+</span> arg_idx<span class="br0">&#41;</span><span class="sy0">,</span> <span class="st0">&quot;r&quot;</span><span class="br0">&#41;</span><span class="br0">&#41;</span> <span class="sy0">!=</span> NULL<span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">while</span> <span class="br0">&#40;</span><span class="kw3">fgets</span><span class="br0">&#40;</span>buff<span class="sy0">,</span> BUFFSIZE<span class="sy0">,</span> in_fp<span class="br0">&#41;</span> <span class="sy0">!=</span> NULL<span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">fputs</span><span class="br0">&#40;</span>buff<span class="sy0">,</span> tmp_fp<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">fclose</span><span class="br0">&#40;</span>in_fp<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">else</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;%sファイルがオープンできません。<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> <span class="sy0">*</span><span class="br0">&#40;</span>argv <span class="sy0">+</span> arg_idx<span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* 一時ファイルの内容を表示 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;##### 行番を付加して表示します。 #####<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">do</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* 一時ファイルのファイルオフセットをファイルの先頭に戻す */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">rewind</span><span class="br0">&#40;</span>tmp_fp<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; line_num <span class="sy0">=</span> <span class="nu0">1</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">while</span> <span class="br0">&#40;</span><span class="kw3">fgets</span><span class="br0">&#40;</span>buff<span class="sy0">,</span> BUFFSIZE<span class="sy0">,</span> tmp_fp<span class="br0">&#41;</span> <span class="sy0">!=</span> NULL<span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;%.3d : %s&quot;</span><span class="sy0">,</span> line_num<span class="sy0">++,</span> buff<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;<span class="es1">\n</span>表示終了。再度表示しますか（y/n） ==&gt; &quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">scanf</span><span class="br0">&#40;</span><span class="st0">&quot;%c%*c&quot;</span><span class="sy0">,</span> <span class="sy0">&amp;</span>ans<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#125;</span> <span class="kw1">while</span><span class="br0">&#40;</span>ans <span class="sy0">==</span> <span class="st0">'y'</span> <span class="sy0">||</span> ans <span class="sy0">==</span> <span class="st0">'Y'</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">fclose</span><span class="br0">&#40;</span>tmp_fp<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">else</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;実行時引数が不当です。<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">return</span> <span class="nu0">0</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#125;</span></div></li>
+					</ol></div>
+				</div>
+				<div class="exe-samp">
+<pre><samp>$ <kbd>cat /etc/issue</kbd>
+Fedora release 10 (Cambridge)
+Kernel \r on an \m (\l)
+
+$ <kbd>cat ./temp.txt</kbd>
+Hello.
+Bye.
+$
+$ <kbd>./ex14_1_14.prg /etc/issue ./temp.txt</kbd>
+##### 行番を付加して表示します。 #####
+001 : Fedora release 10 (Cambridge)
+002 : Kernel \r on an \m (\l)
+003 :
+004 : Hello.
+005 : Bye.
+
+表示終了。再度表示しますか（y/n） ==&gt; <kbd>y</kbd>
+001 : Fedora release 10 (Cambridge)
+002 : Kernel \r on an \m (\l)
+003 :
+004 : Hello.
+005 : Bye.
+
+表示終了。再度表示しますか（y/n） ==&gt; <kbd>n</kbd>
+$</samp></pre>
+				</div>
+				<dl>
+					<dt>16行目</dt>
+						<dd>tmpfile関数で一時ファイルを作成して、tmp_fpにファイルポインタを代入します。</dd>
+					<dt>28行目</dt>
+						<dd>一時ファイルに実行時引数で指定されたファイルを出力します。</dd>
+					<dt>46行目</dt>
+						<dd>一時ファイルから入力します。</dd>
+					<dt>55行目</dt>
+						<dd>一時ファイルをクローズします。一時ファイルは自動的に削除されます。</dd>
+				</dl>
+			</section>
+		</section>
+	</section>
+
+	<footer>
+		<nav>
+			<ul>
+				<li><a href="../../../index.html">ホーム</a></li>
+				<li><a href="../../c_langtop.html#lbl_index">目次</a></li>
+				<li><a href="./s14_01_9.html">前のページ</a></li>
+				<li><a href="../s14_02/s14_02_1.html">次のページ</a></li>
+			</ul>
+		</nav>
+		<p id="footer-author">更新日：<time datetime="2018-12-24">2018年12月24日</time> Merry</p>
+	</footer>
+</div>
+</body>
+</html>

@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initialscale=1.0">
+	<meta name="robots" content="INDEX,FOLLOW">
+	<meta name="keywords" content="日付および時間ライブラリ,関数,ctime,asctime,strftime,clock,difftime,変換指定文字">
+	<meta name="description" content="ctime関数、asctime関数、strftime関数、clock関数、difftime関数の使用法を説明します。">
+	<meta name="author" content="T.Hagiwara">
+	<link rel="stylesheet" href="../../../CSS3/seminar.css" type="text/css">
+	<link rel="stylesheet" href="../../../CSS3/hl_clang.css" type="text/css">
+	<link rel="prev" href="./s14_05_2.html">
+	<link rel="next" href="../s14_06/s14_06_1.html">
+	<title>Ｃ言語プログラミング入門&nbsp;-&nbsp;ライブラリ関数&nbsp;-&nbsp;日付および時間ライブラリ（3/3）-</title>
+	<style type="text/css">
+	</style>
+</head>
+<body>
+<div id="container">
+	<header>
+		<p>Linux講座にようこそ。このページは「Ｃ言語プログラミング入門&nbsp;-&nbsp;第14章．ライブラリ関数&nbsp;-&nbsp;日付および時間ライブラリ」です。</p>
+		<h1>Ｃ言語プログラミング入門</h1>
+		<nav>
+			<ul>
+				<li><a href="../../../index.html">ホーム</a></li>
+				<li><a href="../../c_langtop.html#lbl_index">目次</a></li>
+				<li><a href="./s14_05_2.html">前のページ</a></li>
+				<li><a href="../s14_06/s14_06_1.html">次のページ</a></li>
+			</ul>
+		</nav>
+	</header>
+
+	<section class="contents">
+		<h1>14. ライブラリ関数（25/36）&nbsp;-&nbsp;日付および時間ライブラリ（3/3）</h1>
+		<section>
+			<h2 id="lbl_edit">14.38 日時を文字形式に変換・編集関数</h2>
+			<section>
+				<h3 id="lbl_ctime">14.38.1 ctime関数</h3>
+				<p>ctime関数は紀元からの経過秒数（1970年1月1日00:00:00 UTCからの経過秒数）を文字形式の日時に変換します。日時はローカル時間に変換しますので明示的に変換する必要は有りません。</p>
+				<p>変換結果は英語表現で次のような形式です。最後に改行文字が付加されますので注意してください。</p>
+				<p><code>曜日 月 日 時:分:秒 西暦\n</code></p>
+				<table>
+					<caption>【表14-5-7】 ctime関数</caption>
+					<tr><th>形式</th><td>#include &lt;time.h&gt;<br>
+										char *ctime(const time_t *timep);</td></tr>
+					<tr><th>返り値</th><td>文字形式の日時を返します。エラーの場合はNULLを返します。</td></tr>
+					<tr><th>引数</th>
+						<td>
+							<dl>
+								<dt>const time_t *timep</dt>
+									<dd>紀元からの経過秒数を指定します。</dd>
+							</dl>
+						</td></tr>
+				</table>
+			</section>
+			<section>
+				<h3 id="lbl_asctime">14.38.2 asctime関数</h3>
+				<p>asctime関数は日時構造体（tm構造体）から文字形式の日時に変換します。日時はローカル時間に変換しますので明示的に変換する必要は有りません。また、変換結果はctime関数と同じです。</p>
+				<table>
+					<caption>【表14-5-8】 asctime関数</caption>
+					<tr><th>形式</th><td>#include &lt;time.h&gt;<br>
+										char *asctime(const struct tm *tm);</td></tr>
+					<tr><th>返り値</th><td>文字形式の日時を返します。エラーの場合はNULLを返します。</td></tr>
+					<tr><th>引数</th>
+						<td>
+							<dl>
+								<dt>const struct tm *tm</dt>
+									<dd>日時構造体を指定します。</dd>
+							</dl>
+						</td></tr>
+				</table>
+			</section>
+			<section>
+				<h3 id="lbl_strftime">14.38.3 strftime関数</h3>
+				<p>strftime関数は日時構造体（tm構造体）を書式に従い編集します。書式には表14-5-10の変換指定文字が使用できます。</p>
+				<table>
+					<caption>【表14-5-9】 strftime関数</caption>
+					<tr><th>形式</th><td>#include &lt;time.h&gt;<br>
+										size_t strftime(char *s, size_t max, const char *format, const struct tm *tm);</td></tr>
+					<tr><th>返り値</th><td>編集結果の文字数（ヌル文字は含まない）を返します。書式の内容により、０が返る可能性が有りますがエラーとは限りません。</td></tr>
+					<tr><th>引数</th>
+						<td>
+							<dl>
+								<dt>char *s</dt>
+									<dd>編集結果の日時を格納する文字列を指定します。</dd>
+								<dt>size_t max</dt>
+									<dd>編集結果の日時を格納する文字列（第１引数のs）の長さを指定します。</dd>
+								<dt>const char *format</dt>
+									<dd>編集のための書式を指定します。</dd>
+								<dt>const struct tm *tm</dt>
+									<dd>編集する日時情報を格納した日時構造体（tm構造体）を指定します。</dd>
+							</dl>
+						</td></tr>
+				</table>
+				<p>書式には次の変換指定文字を指定します。変換指定文字以外の文字はそのまま編集結果に反映します。</p>
+				<table class="simple-table">
+					<caption>【表14-5-10】 変換指定文字</caption>
+					<tr><th>変換指定文字</th><th>意味</th></tr>
+					<tr><td>%a</td><td>現在のロケールにおける曜日の省略名です。</td></tr>
+					<tr><td>%A</td><td>現在のロケールにおける曜日の完全な名前です。</td></tr>
+					<tr><td>%b</td><td>現在のロケールにおける月の省略名です。</td></tr>
+					<tr><td>%B</td><td>現在のロケールにおける月の完全な名前です。</td></tr>
+					<tr><td>%c</td><td>現在のロケールにおける一般的な日付・時刻の表記です。</td></tr>
+					<tr><td>%d</td><td>日です。（01〜31）</td></tr>
+					<tr><td>%H</td><td>24時間表記での時です。（00〜23）</td></tr>
+					<tr><td>%I</td><td>12時間表記での時です。（01〜12）</td></tr>
+					<tr><td>%j</td><td>年の初めから通算の日数です。（001〜366）</td></tr>
+					<tr><td>%m</td><td>月です。（01〜12）</td></tr>
+					<tr><td>%M</td><td>分です。（00〜59）</td></tr>
+					<tr><td>%p</td><td>現在のロケールにおける「午前」と「午後」に相当する文字列です。英語の場合には'AM'または'PM'です。正午は午後、真夜中は午前として扱われます。</td></tr>
+					<tr><td>%S</td><td>秒です。（00〜60）</td></tr>
+					<tr><td>%U</td><td>年の初めからの通算の週数です。（00〜53）その年の最初の日曜日を第１週の始まりとして計算します。</td></tr>
+					<tr><td>%W</td><td>年の初めからの通算の週数です。（00〜53）その年の最初の月曜日を第１週の始まりとして計算します。</td></tr>
+					<tr><td>%x</td><td>現在のロケールにおける一般的な日付表記です。時刻は含みません。</td></tr>
+					<tr><td>%X</td><td>現在のロケールにおける一般的な時刻表記です。日付は含みません。</td></tr>
+					<tr><td>%y</td><td>西暦の下２桁（世紀部分を含まない年）です。（00〜99）</td></tr>
+					<tr><td>%Y</td><td>世紀部分を含めた（４桁の）西暦年です。</td></tr>
+					<tr><td>%Z</td><td>タイムゾーンまたは、ゾーン名または、それらの省略名です。</td></tr>
+				</table>
+			</section>
+			<section>
+				<h3>14.38.4 例題</h3>
+				<p>ctime関数で英語表現の日時を表示し、strftime関数で日本語表現で日時を表示します。</p>
+				<div class="source-code">
+					<div class="c"><span class="co2">#include &lt;stdio.h&gt;</span><br />
+					<span class="co2">#include &lt;time.h&gt;</span><br />
+					<span class="co2">#include &lt;locale.h&gt;</span><br />
+					<br />
+					<span class="kw4">int</span> main<span class="br0">&#40;</span><span class="kw4">void</span><span class="br0">&#41;</span><br />
+					<span class="br0">&#123;</span><br />
+					&nbsp; &nbsp; time_t &nbsp; &nbsp; &nbsp;timep<span class="sy0">;</span><br />
+					&nbsp; &nbsp; <span class="kw4">struct</span> tm &nbsp; <span class="sy0">*</span>time_inf<span class="sy0">;</span><br />
+					&nbsp; &nbsp; <span class="kw4">char</span> &nbsp; &nbsp; &nbsp; &nbsp;buff<span class="br0">&#91;</span><span class="nu0">100</span><span class="br0">&#93;</span><span class="sy0">;</span><br />
+					<br />
+					&nbsp; &nbsp; <span class="coMULTI">/* 紀元からの経過秒数を得る */</span><br />
+					&nbsp; &nbsp; timep <span class="sy0">=</span> <span class="kw3">time</span><span class="br0">&#40;</span>NULL<span class="br0">&#41;</span><span class="sy0">;</span><br />
+					<br />
+					&nbsp; &nbsp; <span class="coMULTI">/* 英語表現の日時 */</span><br />
+					&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;ctime関数<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span><br />
+					&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;%s&quot;</span><span class="sy0">,</span> <span class="kw3">ctime</span><span class="br0">&#40;</span><span class="sy0">&amp;</span>timep<span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span><br />
+					<br />
+					&nbsp; &nbsp; <span class="coMULTI">/* ローカル標準時へ変換 */</span><br />
+					&nbsp; &nbsp; time_inf <span class="sy0">=</span> <span class="kw3">localtime</span><span class="br0">&#40;</span><span class="sy0">&amp;</span>timep<span class="br0">&#41;</span><span class="sy0">;</span><br />
+					&nbsp; &nbsp; <span class="coMULTI">/* ロケールの設定 */</span><br />
+					&nbsp; &nbsp; <span class="kw3">setlocale</span><span class="br0">&#40;</span>LC_TIME<span class="sy0">,</span> <span class="st0">&quot;ja_JP.UTF-8&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span><br />
+					&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;<span class="es1">\n</span>strftime関数<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span><br />
+					&nbsp; &nbsp; <span class="coMULTI">/* 一般的な日時 */</span><br />
+					&nbsp; &nbsp; <span class="kw3">strftime</span><span class="br0">&#40;</span>buff<span class="sy0">,</span> <span class="kw4">sizeof</span><span class="br0">&#40;</span>buff<span class="br0">&#41;</span><span class="sy0">,</span> <span class="st0">&quot;%c&quot;</span><span class="sy0">,</span> time_inf<span class="br0">&#41;</span><span class="sy0">;</span><br />
+					&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;%s<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> buff<span class="br0">&#41;</span><span class="sy0">;</span><br />
+					&nbsp; &nbsp; <span class="coMULTI">/* 午前と午後及び、タイムゾーン */</span><br />
+					&nbsp; &nbsp; <span class="kw3">strftime</span><span class="br0">&#40;</span>buff<span class="sy0">,</span> <span class="kw4">sizeof</span><span class="br0">&#40;</span>buff<span class="br0">&#41;</span><span class="sy0">,</span> <span class="st0">&quot;%x %p%X %Z&quot;</span><span class="sy0">,</span> time_inf<span class="br0">&#41;</span><span class="sy0">;</span><br />
+					&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;%s<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> buff<span class="br0">&#41;</span><span class="sy0">;</span><br />
+					<br />
+					&nbsp; &nbsp; <span class="kw1">return</span> <span class="nu0">0</span><span class="sy0">;</span><br />
+					<span class="br0">&#125;</span></div>
+				</div>
+				<div class="exe-samp">
+<pre><samp>$ <kbd>date</kbd>
+2009年  8月 25日 火曜日 09:25:19 JST
+$
+$ <kbd>./ex14_5_2.prg</kbd>
+ctime関数
+Tue Aug 25 09:25:21 2009
+
+strftime関数
+2009年08月25日 09時25分21秒
+2009年08月25日 午前09時25分21秒 JST
+$</samp></pre>
+				</div>
+				<dl>
+					<dt>16行目</dt>
+						<dd>紀元からの経過秒数をctime関数で英語表現の日時として表示します。</dd>
+					<dt>24行目</dt>
+						<dd>日時構造体の日時情報をstrftime関数で現在のロケールにおける一般的な日時表現に編集して表示します。</dd>
+					<dt>27行目</dt>
+						<dd>日時構造体の日時情報をstrftime関数で午前と午後及び、タイムゾーンを付加して表示します。</dd>
+				</dl>
+			</section>
+		</section>
+
+		<section>
+			<h2 id="lbl_other">14.39 その他の関数</h2>
+			<section>
+				<h3 id="lbl_clock">14.39.1 clock関数</h3>
+				<p>clock関数はプログラムのCPU使用時間の近似値をclock_t単位の時間で取得します。秒単位でのCPU使用時間はCLOCKS_PER_SECで割ることで算出できます。また、clock_t単位の時間は桁あふれをする可能性がありますので注意してください。例えばCLOCKS_PER_SECが1000000である32ビットシステムでは、約72分毎に同じ値を返すことになります。</p>
+				<p>この関数の標準規格では、最初の呼び出しではどのような値が返ってきても構わないことになっています。移植性を確保するためには、計測開始時にclock関数を呼び出してCPU使用時間を取得しておき、この値を差し引くことで実際のCPU使用時間を求めた方がよいでしょう。</p>
+				<table>
+					<caption>【表14-5-11】 clock関数</caption>
+					<tr><th>形式</th><td>#include &lt;time.h&gt;<br>
+										clock_t clock(void);</td></tr>
+					<tr><th>返り値</th><td>clock_t単位のCPU使用時間を返します。エラーの場合は<code>((clock_t) -1)</code>を返します。</td></tr>
+					<tr><th>引数</th>
+						<td>ありません。</td></tr>
+				</table>
+			</section>
+			<section>
+				<h3 id="lbl_difftime">14.39.2 difftime関数</h3>
+				<p>difftime関数は２つの紀元からの経過秒数から経過時間を算出します。</p>
+				<table>
+					<caption>【表14-5-12】 difftime関数</caption>
+					<tr><th>形式</th><td>#include &lt;time.h&gt;<br>
+										double difftime(time_t time1, time_t time0);</td></tr>
+					<tr><th>返り値</th><td>秒単位の経過時間を返します。</td></tr>
+					<tr><th>引数</th>
+						<td>
+							<dl>
+								<dt>time_t time1</dt>
+									<dd>計測開始時刻を紀元からの経過秒数で指定します。</dd>
+								<dt>time_t time0</dt>
+									<dd>計測終了時刻を紀元からの経過秒数で指定します。</dd>
+							</dl>
+						</td></tr>
+				</table>
+			</section>
+			<section>
+				<h3>14.39.3 例題</h3>
+				<p>プログラムのCPU使用時間と実行時間（経過時間）を表示します。</p>
+				<div class="source-code">
+					<div class="c"><ol><li class="li1"><div class="de1"><span class="co2">#include &lt;stdio.h&gt;</span></div></li>
+					<li class="li1"><div class="de1"><span class="co2">#include &lt;time.h&gt;</span></div></li>
+					<li class="li1"><div class="de1"><span class="co2">#include &lt;unistd.h&gt;</span></div></li>
+					<li class="li1"><div class="de1"><span class="co2">#define MAXLOOP 100000000</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1"><span class="kw4">int</span> main<span class="br0">&#40;</span><span class="kw4">void</span><span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; time_t &nbsp; &nbsp; &nbsp;start_timep<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; clock_t &nbsp; &nbsp; start_cpu<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">int</span> &nbsp; &nbsp; &nbsp; &nbsp; loop_1<span class="sy0">,</span> loop_2<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="coMULTI">/* 開始時刻を得る */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; start_timep <span class="sy0">=</span> <span class="kw3">time</span><span class="br0">&#40;</span>NULL<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="coMULTI">/* CPU使用時間を取得 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; start_cpu <span class="sy0">=</span> <span class="kw3">clock</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="coMULTI">/* CPUを消費 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">for</span> <span class="br0">&#40;</span>loop_1 <span class="sy0">=</span> <span class="nu0">1</span><span class="sy0">;</span> loop_1 <span class="sy0">&lt;=</span> <span class="nu0">5</span><span class="sy0">;</span> <span class="sy0">++</span>loop_1<span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">for</span> <span class="br0">&#40;</span>loop_2 <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">;</span> loop_2 <span class="sy0">&lt;</span> MAXLOOP<span class="sy0">;</span> <span class="sy0">++</span>loop_2<span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* 休憩 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; sleep<span class="br0">&#40;</span><span class="nu0">1</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="coMULTI">/* CPU使用時間の表示 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;CPU使用時間：%.1f秒<span class="es1">\n</span>&quot;</span><span class="sy0">,</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="br0">&#40;</span><span class="kw4">double</span><span class="br0">&#41;</span><span class="br0">&#40;</span><span class="kw3">clock</span><span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="sy0">-</span> start_cpu<span class="br0">&#41;</span> <span class="sy0">/</span> <span class="br0">&#40;</span><span class="kw4">double</span><span class="br0">&#41;</span>CLOCKS_PER_SEC<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="coMULTI">/* 経過時間の表示 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;経過時間：%.1f秒<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> <span class="kw3">difftime</span><span class="br0">&#40;</span><span class="kw3">time</span><span class="br0">&#40;</span>NULL<span class="br0">&#41;</span><span class="sy0">,</span> start_timep<span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">return</span> <span class="nu0">0</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#125;</span></div></li>
+					</ol></div>
+				</div>
+				<div class="exe-samp">
+<pre><samp>$ <kbd>./ex14_5_3.prg</kbd>
+CPU使用時間：1.1秒
+経過時間：6.0秒
+$</samp></pre>
+				</div>
+				<dl>
+					<dt>13行目</dt>
+						<dd>実行開始時刻をtime関数で求めます。</dd>
+					<dt>15行目</dt>
+						<dd>実行開始時点のCPU使用時間をclock関数で求めます。</dd>
+					<dt>28行目</dt>
+						<dd>この時点でのCPU使用時間から実行開始時点のCPU使用時間を引いて、CPU使用時間を求めます。時間はCLOCKS_PER_SECで除算して秒単位で求めます。</dd>
+					<dt>31行目</dt>
+						<dd>この時点での時刻と実行開始時刻からdifftime関数で実行時間（経過時間）を求めます。</dd>
+				</dl>
+			</section>
+		</section>
+	</section>
+
+	<footer>
+		<nav>
+			<ul>
+				<li><a href="../../../index.html">ホーム</a></li>
+				<li><a href="../../c_langtop.html#lbl_index">目次</a></li>
+				<li><a href="./s14_05_2.html">前のページ</a></li>
+				<li><a href="../s14_06/s14_06_1.html">次のページ</a></li>
+			</ul>
+		</nav>
+		<p id="footer-author">更新日：<time datetime="2019-01-11">2019年01月11日</time> Merry</p>
+	</footer>
+</div>
+</body>
+</html>

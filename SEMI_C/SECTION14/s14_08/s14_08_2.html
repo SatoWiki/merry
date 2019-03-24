@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initialscale=1.0">
+	<meta name="robots" content="INDEX,FOLLOW">
+	<meta name="keywords" content="ライブラリ,関数,デバッグ支援,assert,ロケール,localeconv,lconv,setlocale,locale.h">
+	<meta name="description" content="assert関数、localeconv関数、setlocale関数の使い方を説明します。">
+	<meta name="author" content="T.Hagiwara">
+	<link rel="stylesheet" href="../../../CSS3/seminar.css" type="text/css">
+	<link rel="stylesheet" href="../../../CSS3/hl_clang.css" type="text/css">
+	<link rel="prev" href="./s14_08_1.html">
+	<link rel="next" href="./s14_08_3.html">
+	<title>Ｃ言語プログラミング入門&nbsp;-&nbsp;ライブラリ関数&nbsp;-&nbsp;その他のライブラリ（2/4）-</title>
+	<style type="text/css">
+	</style>
+</head>
+<body>
+<div id="container">
+	<header>
+		<p>Linux講座にようこそ。このページは「Ｃ言語プログラミング入門&nbsp;-&nbsp;第14章．ライブラリ関数&nbsp;-&nbsp;その他のライブラリ」です。</p>
+		<h1>Ｃ言語プログラミング入門</h1>
+		<nav>
+			<ul>
+				<li><a href="../../../index.html">ホーム</a></li>
+				<li><a href="../../c_langtop.html#lbl_index">目次</a></li>
+				<li><a href="./s14_08_1.html">前のページ</a></li>
+				<li><a href="./s14_08_3.html">次のページ</a></li>
+			</ul>
+		</nav>
+	</header>
+
+	<section class="contents">
+		<h1>14. ライブラリ関数（34/36）&nbsp;-&nbsp;その他のライブラリ（2/4）</h1>
+		<section>
+			<h2>14.46 デバッグ支援</h2>
+			<section>
+				<h3 id="lbl_assert">14.46.1 assert関数</h3>
+				<p>assert関数はプログラムのデバッグを支援するためのものです。具体的には引数の値が偽（0）の場合、標準エラー出力にメッセージを出力した後、<a href="../s14_07/s14_07_2.html#lbl_abort">abort関数</a>を呼び出してプロセスを異常終了します。なお、ヘッダファイルassert.hのインクルード前に、NDEBUGマクロが定義されていた場合はassert関数は何の動作も行いません。</p>
+				<p>assert関数はマクロとして定義されていますが、ここでは関数と記述します。</p>
+				<table>
+					<caption>【表14-8-2】 assert関数</caption>
+					<tr><th>形式</th><td>#include &lt;assert.h&gt;<br>
+										void assert(scalar expression);</td></tr>
+					<tr><th>返り値</th><td>ありません。</td></tr>
+					<tr><th>引数</th>
+						<td>
+							<dl>
+								<dt>scalar expression</dt>
+									<dd>デバッグのための式を指定します。</dd>
+							</dl>
+						</td></tr>
+				</table>
+			</section>
+			<section>
+				<h3>14.46.2 例題</h3>
+				<p>実行時引数で指定したファイルの内容を標準出力に出力します。ただし、指定したファイルのオープンに失敗した場合はassert関数により異常終了します。</p>
+				<div class="source-code">	<!-- ex14_8_1.c -->
+					<div class="c"><ol><li class="li1"><div class="de1"><span class="co2">#include &lt;stdio.h&gt;</span></div></li>
+					<li class="li1"><div class="de1"><span class="coMULTI">/* #define NDEBUG */</span></div></li>
+					<li class="li1"><div class="de1"><span class="co2">#include &lt;assert.h&gt;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1"><span class="kw4">int</span> main<span class="br0">&#40;</span><span class="kw4">int</span> argc<span class="sy0">,</span> <span class="kw4">char</span> <span class="sy0">**</span>argv<span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; FILE &nbsp; &nbsp;<span class="sy0">*</span>fp<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">int</span> &nbsp; &nbsp; one_char<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">if</span><span class="br0">&#40;</span>argc <span class="sy0">==</span> <span class="nu0">2</span><span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; fp <span class="sy0">=</span> <span class="kw3">fopen</span><span class="br0">&#40;</span><span class="sy0">*</span><span class="br0">&#40;</span>argv <span class="sy0">+</span> <span class="nu0">1</span><span class="br0">&#41;</span><span class="sy0">,</span> <span class="st0">&quot;r&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* オープン出来なかった場合は、異常終了 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">assert</span><span class="br0">&#40;</span>fp <span class="sy0">==</span> NULL <span class="sy0">?</span> <span class="nu0">0</span> <span class="sy0">:</span> <span class="nu0">1</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* ファイルから１文字ずつ入力 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">while</span><span class="br0">&#40;</span><span class="br0">&#40;</span>one_char <span class="sy0">=</span> <span class="kw3">fgetc</span><span class="br0">&#40;</span>fp<span class="br0">&#41;</span><span class="br0">&#41;</span> <span class="sy0">!=</span> EOF<span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">putchar</span><span class="br0">&#40;</span>one_char<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">fclose</span><span class="br0">&#40;</span>fp<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">else</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* 実行時引数が不当 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;実行時引数が不当です。<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">return</span> <span class="nu0">1</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">return</span> <span class="nu0">0</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#125;</span></div></li>
+					</ol></div>
+				</div>
+				<div class="exe-samp">
+<pre><samp>$ <kbd>ls /etc/issue aaa.txt</kbd>
+ls: cannot access aaa.txt: そのようなファイルやディレクトリはありません
+/etc/issue
+$
+$ <kbd>./ex14_8_1.prg /etc/issue</kbd>
+Fedora release 10 (Cambridge)
+Kernel \r on an \m (\l)
+
+$
+$ <kbd>./ex14_8_1.prg aaa.txt</kbd>
+ex14_8_1.prg: ex14_8_1.c:14: main: Assertion `fp == ((void *)0) ? 0 : 1' failed.
+アボートしました
+$</samp></pre>
+				</div>
+				<dl>
+					<dt>2行目</dt>
+						<dd>NDEBUGマクロ定義をコメントにしていますのでassert関数は有効になります。（コメントを取るとassert関数は無効になります）</dd>
+					<dt>3行目</dt>
+						<dd>assert関数を使いますのでassert.hファイルを取り込みます。</dd>
+					<dt>14行目</dt>
+						<dd>ファイルポインタ（fp）がNULLの場合、assert関数により異常終了します。</dd>
+				</dl>
+			</section>
+		</section>
+
+		<section>
+			<h2 id="lbl_locale">14.47 ロケール情報の取得と設定</h2>
+			<p>ロケール（locale）はメッセージ出力に使用する言語や文字集合および、表記に関する慣習といったような言語や文化ルールの集合です。プログラムをいろいろな国や文化に対応可能とするには、ロケールに応じて適切な動作ができるように作成しなければなりません。</p>
+			<section>
+				<h3 id="lbl_localeconv">14.47.1 localeconv関数</h3>
+				<p>localeconv関数は現在のロケールの数値に関する書式情報を格納してあるlconv構造体へのポインタを取得します。lconv構造体はロケール・カテゴリのLC_NUMERIC（数値情報）と、LC_MONETARY（通貨情報）に関連する値を保持しています。</p>
+				<table>
+					<caption>【表14-8-3】 localeconv関数</caption>
+					<tr><th>形式</th><td>#include &lt;locale.h&gt;<br>
+										struct lconv *localeconv(void);</td></tr>
+					<tr><th>返り値</th><td>lconv構造体へのポインタを返します。</td></tr>
+					<tr><th>引数</th>
+						<td>ありません。</td></tr>
+				</table>
+				<p>lconv構造体の内容は次の通りです。この構造体はヘッダファイルのlocale.hに宣言されています。なお、下表の最初から３つは通貨以外の数値情報で、４つ目以降は通貨情報です。</p>
+				<table class="simple-table">
+					<caption>【表14-8-4】 lconv構造体のメンバー</caption>
+					<tr><th>メンバー名</th><th>型名</th><th>内容</th></tr>
+					<tr><td>decimal_point</td><td>char&nbsp;*</td><td>小数点を表す文字です。</td></tr>
+					<tr><td>thousands_sep</td><td>char&nbsp;*</td><td>整数部の区切り文字です。</td></tr>
+					<tr><td>grouping</td><td>char&nbsp;*</td><td>区切り文字で区切る整数部の桁数です。</td></tr>
+					<tr><td>int_curr_symbol</td><td>char&nbsp;*</td><td>最初の三つの文字はISO 4217の通貨記号、四番目の文字は区切り文字、五番目は半角スペースです。</td></tr>
+					<tr><td>currency_symbol</td><td>char&nbsp;*</td><td>通貨記号です。</td></tr>
+					<tr><td>mon_decimal_point</td><td>char&nbsp;*</td><td>小数点を表す文字です。</td></tr>
+					<tr><td>mon_thousands_sep</td><td>char&nbsp;*</td><td>thousands_sepと同じです。</td></tr>
+					<tr><td>mon_grouping</td><td>char&nbsp;*</td><td>groupingと同じです。</td></tr>
+					<tr><td>positive_sign</td><td>char&nbsp;*</td><td>正の値を表す符号です。</td></tr>
+					<tr><td>negative_sign</td><td>char&nbsp;*</td><td>負の値を表す符号です。</td></tr>
+					<tr><td>int_frac_digits</td><td>char</td><td>国際的な小数部の数字です。</td></tr>
+					<tr><td>frac_digits</td><td>char</td><td>ローカルな小数部の数字です。</td></tr>
+					<tr><td>p_cs_precedes</td><td>char</td><td>正の値の前に通貨記号を置く場合は１、後ろに置く場合は０です。</td></tr>
+					<tr><td>p_sep_by_space</td><td>char</td><td>正の値と通貨記号の間にスペースを入れる場合は１です。</td></tr>
+					<tr><td>n_cs_precedes</td><td>char</td><td>負の値の前に通貨記号を置く場合は１、後ろに置く場合は０です。</td></tr>
+					<tr><td>n_sep_by_space</td><td>char</td><td>負の値と通貨記号の間にスペースを入れる場合は１です。</td></tr>
+					<tr><td>p_sign_posn</td><td>char</td><td>正の値に対して、値と通貨記号を括弧で囲む場合は０、符号を値と通貨記号の前に置く場合は１、符号を値と通貨記号の後に置く場合は２、符号を通貨記号の直後に置く場合は３、符号を通貨記号の直前に置く場合は４です。</td></tr>
+					<tr><td>n_sign_posn</td><td>char</td><td>負の値に対して、値と通貨記号を括弧で囲む場合は０、符号を値と通貨記号の前に置く場合は１、符号を値と通貨記号の後に置く場合は２、符号を通貨記号の直後に置く場合は３、符号を通貨記号の直前に置く場合は４です。</td></tr>
+				</table>
+			</section>
+			<section>
+				<h3 id="lbl_setlocale">14.47.2 setlocale関数</h3>
+				<p>setlocale関数はロケールの設定と取得を行います。</p>
+				<table>
+					<caption>【表14-8-5】 setlocale関数</caption>
+					<tr><th>形式</th><td>#include &lt;locale.h&gt;<br>
+										char *setlocale(int category, const char *locale);</td></tr>
+					<tr><th>返り値</th><td>設定したロケールに対応する内部文字列を返します。エラーの場合はNULLを返します。</td></tr>
+					<tr><th>引数</th>
+						<td>
+							<dl>
+								<dt>int category</dt>
+									<dd>カレントロケール（現在設定してあるロケール）に設定するロケール・カテゴリを指定します。指定できる値は表14-8-6の通りです。</dd>
+								<dt>const char *locale</dt>
+									<dd>設定するロケールの名前を指定します。ヌル文字（""）を指定した場合は、環境変数に設定されているロケール名を使用しますが、処理系により環境変数名等は異なります。setlocale関数の返り値を指定することもできます。また、NULLを指定した場合は設定は行わずに、カレントロケールを返り値として返します。</dd>
+							</dl>
+						</td></tr>
+				</table>
+				<p>第１引数のcategoryには下表の値を指定できます。</p>
+				<table class="simple-table">
+					<caption>【表14-8-6】 ロケール・カテゴリ一覧</caption>
+					<tr><th>カテゴリ名</th><th>内容</th></tr>
+					<tr><td>LC_ALL</td><td>全てのカテゴリです。</td></tr>
+					<tr><td>LC_COLLATE</td><td>正規表現のマッチング（範囲表現と等価クラスのマッチングを決定する）と文字列の照合です。</td></tr>
+					<tr><td>LC_CTYPE</td><td>正規表現のマッチング、文字の分類、文字の変換、大文字小文字比較、ワイド文字関数です。</td></tr>
+					<tr><td>LC_MESSAGES</td><td>地域化可能な自然言語メッセージです。</td></tr>
+					<tr><td>LC_MONETARY</td><td>通貨の書式です。</td></tr>
+					<tr><td>LC_NUMERIC</td><td>数値の書式（小数点や３桁ごとの区切り等）です。</td></tr>
+					<tr><td>LC_TIME</td><td>時刻と日付けの書式です。</td></tr>
+				</table>
+				<aside>
+					<h4>補足</h4>
+					<p>第２引数のlocaleで指定するロケール名は、通常、language[_territory][.codeset][@modifier] という形式です。languageはISO&nbsp;639の言語コードで、territoryはISO&nbsp;3166の国名コードで、codesetはISO-8859-1やUTF-8のような文字集合や文字符号化識別子です。これらのコードに付いては、Wikipedia等で検索すれば詳細を調べることができるでしょう。</p>
+					<p>また、ヌル文字（""）を指定した場合は処理系により異なりますが、gccの場合は最初にLC_ALL、次に第１引数のcategoryと同じ名前の環境変数、最後にLANGの順序で環境変数を検索して、最初に見つかった環境変数に設定してある値を使用します。なお、システムに登録されているロケールは<code>locale -a</code>コマンドで調べることができます。</p>
+				</aside>
+			</section>
+			<section>
+				<h3>14.47.3 例題</h3>
+				<p>入力した値をロケールに従い通貨表現形式に編集して標準出力に出力します。なお、ここで使用しているstrfmon関数はANSI&nbsp;Cの標準ライブラリではないため、詳細な説明は省略します。</p>
+				<div class="source-code">	<!-- ex14_8_2.c -->
+					<div class="c"><ol><li class="li1"><div class="de1"><span class="co2">#include &lt;stdio.h&gt;</span></div></li>
+					<li class="li1"><div class="de1"><span class="co2">#include &lt;locale.h&gt;</span></div></li>
+					<li class="li1"><div class="de1"><span class="co2">#include &lt;monetary.h&gt;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1"><span class="kw4">int</span> main<span class="br0">&#40;</span><span class="kw4">void</span><span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">char</span> &nbsp; &nbsp;<span class="sy0">*</span>p_locale<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">char</span> &nbsp; &nbsp;buff<span class="br0">&#91;</span><span class="nu0">50</span><span class="br0">&#93;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">double</span> &nbsp;in_data<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="coMULTI">/* ロケールを環境変数から取得して設定 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">if</span> <span class="br0">&#40;</span><span class="br0">&#40;</span>p_locale <span class="sy0">=</span> <span class="kw3">setlocale</span><span class="br0">&#40;</span>LC_ALL<span class="sy0">,</span> <span class="st0">&quot;&quot;</span><span class="br0">&#41;</span><span class="br0">&#41;</span> <span class="sy0">==</span> NULL<span class="br0">&#41;</span> <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">fprintf</span><span class="br0">&#40;</span>stderr<span class="sy0">,</span> <span class="st0">&quot;ロケールが設定できませんでした。<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">return</span> <span class="nu0">1</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;ロケール : %s<span class="es1">\n</span><span class="es1">\n</span>&quot;</span><span class="sy0">,</span> p_locale<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">while</span><span class="br0">&#40;</span><span class="nu0">1</span><span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;数値を入力してください（０で終了）==&gt; &quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">scanf</span><span class="br0">&#40;</span><span class="st0">&quot;%lf&quot;</span><span class="sy0">,</span> <span class="sy0">&amp;</span>in_data<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">if</span><span class="br0">&#40;</span>in_data <span class="sy0">!=</span> <span class="nu16">0.0</span><span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* 国内通貨フォーマットに編集 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; strfmon<span class="br0">&#40;</span>buff<span class="sy0">,</span> <span class="kw4">sizeof</span><span class="br0">&#40;</span>buff<span class="br0">&#41;</span><span class="sy0">,</span> <span class="st0">&quot;%n&quot;</span><span class="sy0">,</span> in_data<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;%s<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> buff<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">else</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw2">break</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">return</span> <span class="nu0">0</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#125;</span></div></li>
+					</ol></div>
+				</div>
+				<div class="exe-samp">
+<pre><samp>$ <kbd>./ex14_8_2.prg</kbd>
+ロケール : ja_JP.UTF-8<strong> ← 設定したロケールです</strong>
+
+数値を入力してください（０で終了）==&gt; <kbd>123</kbd>
+￥123
+数値を入力してください（０で終了）==&gt; <kbd>1234</kbd>
+￥1,234
+数値を入力してください（０で終了）==&gt; <kbd>1234567890</kbd>
+￥1,234,567,890
+数値を入力してください（０で終了）==&gt; <kbd>-1234567890</kbd>
+￥-1,234,567,890
+数値を入力してください（０で終了）==&gt; <kbd>0</kbd>
+$
+$ <kbd>export LANG='da_DK'</kbd><strong> ← LANG環境変数の値をda_DKに変更します</strong>
+$ <kbd>echo $LANG</kbd>
+da_DK
+$ <kbd>./ex14_8_2.prg</kbd>
+ロケール : da_DK<strong> ← 設定したロケールです</strong>
+
+数値を入力してください（０で終了）==&gt; <kbd>123</kbd>
+kr 123,00
+数値を入力してください（０で終了）==&gt; <kbd>1234</kbd>
+kr 1.234,00
+数値を入力してください（０で終了）==&gt; <kbd>1234567890</kbd>
+kr 1.234.567.890,00
+数値を入力してください（０で終了）==&gt; <kbd>-1234567890</kbd>
+kr -1.234.567.890,00
+数値を入力してください（０で終了）==&gt; <kbd>0</kbd>
+$</samp></pre>
+				</div>
+				<dl>
+					<dt>2行目</dt>
+						<dd>setlocale関数を使用しますのでlocale.hファイルを取り込みます。</dd>
+					<dt>12行目</dt>
+						<dd>setlocale関数でロケールを設定します。設定するロケールは環境変数に設定されているものです。</dd>
+					<dt>16行目</dt>
+						<dd>12行目で設定したロケールを表示します。</dd>
+					<dt>26行目</dt>
+						<dd>入力した数値をstrfmon関数で現在のロケールの通貨表現形式に編集します。</dd>
+				</dl>
+			</section>
+		</section>
+	</section>
+
+	<footer>
+		<nav>
+			<ul>
+				<li><a href="../../../index.html">ホーム</a></li>
+				<li><a href="../../c_langtop.html#lbl_index">目次</a></li>
+				<li><a href="./s14_08_1.html">前のページ</a></li>
+				<li><a href="./s14_08_3.html">次のページ</a></li>
+			</ul>
+		</nav>
+		<p id="footer-author">更新日：<time datetime="2019-01-13">2019年01月13日</time> Merry</p>
+	</footer>
+</div>
+</body>
+</html>

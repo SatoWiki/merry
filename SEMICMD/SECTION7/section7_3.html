@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initialscale=1.0">
+	<meta name="robots" content="INDEX,FOLLOW">
+	<meta name="keywords" content="パッケージ,パッケージ管理,dnf,apper,yumレポジトリ,/etc/yum.repos.d/">
+	<meta name="description" content="システム管理のうち、パッケージ管理方法をご紹介します。">
+	<meta name="author" content="T.Hagiwara">
+	<link rel="stylesheet" href="../../CSS3/seminar.css" type="text/css">
+	<link rel="prev" href="./section7_2.html">
+	<title>Linuxの使い方 - システム管理（4/4）</title>
+	<style type="text/css">
+	</style>
+</head>
+<body>
+<div id="container">
+	<header>
+		<p>Linux講座にようこそ。このページは「Linuxの使い方&nbsp;-&nbsp;第７章&nbsp;システム管理」です。</p>
+		<h1>Linuxの使い方</h1>
+		<nav>
+			<ul>
+				<li><a href="../../index.html">ホーム</a></li>
+				<li><a href="../cmdtop.html#lbl_index">目次</a></li>
+				<li><a href="./section7_2.html">前のページ</a></li>
+			</ul>
+		</nav>
+	</header>
+
+	<section class="contents">
+		<h1>7. システム管理（3/3）</h1>
+		<section>
+			<h2 id="pakage">7.3 パッケージ管理</h2>
+			<p>システムのインストール後に、使用しているソフトウェアにセキュリティホール等の不具合が見つかることがよく有ります。この様な時には対策済みのバージョンに更新する必要が有ります。Fedora等の多くのディストリビューションではソフトウェアはRPMパッケージと呼ばれる形式のファイルで提供されていますので、ソフトウェアの更新は最新のRPMパッケージを入手して、それをインストールするということになります。</p>
+			<p>RPMパッケージの管理ツールはいくつか有りますが、ここではFedoraの標準パッケージ管理のdnfコマンドをご紹介します。</p>
+			<figure class="left-box myphoto">
+				<dl>
+					<dt><img src="../IMAGES/sec07_3.jpg" alt="apper（パッケージ管理ツール）"></dt>
+					<dd>【図７-３】</dd>
+					<dd>apper（パッケージ管理ツール）</dd>
+				</dl>
+			</figure>
+			<p>パッケージ管理ツールにはGUIツールもありますので、デスクトップ環境の場合はGUIツールを使うと良いでしょう。</p>
+			<p>図7-3はKDEデスクトップ環境のapperというパッケージ管理ツールですが、このようなGUIツールを使えばパッケージの検索、インストール、削除、最新パッケージへの更新、等が行えます。</p>
+			<aside>
+				<h3>補足</h3>
+				<p>パッケージ管理ツールはディストリビューションやバージョンにより異なります。例えば、RedHat系（CentOSやFedora等）はyumやdnfコマンド等で、Debian系（DebianやUbuntuなど）はapt-getやaptコマンド等になります。</p>
+			</aside>
+			<section>
+				<!-- dnfコマンド -->
+				<h3 id="dnf">7.3.1 dnfコマンド</h3>
+				<p>dnfコマンドはRPMパッケージのインストールや削除（アンインストール）はもちろん、パッケージの検索等も行えます。</p>
+				<p>パッケージには他のパッケージとの依存関係がありますが、dnfコマンドは依存関係にあるパッケージをチェックして、インストールされていなければ自動的にインストールします。</p>
+				<p>RPMパッケージはyumレポジトリサーバーと呼ぶサーバーで管理されており、通常はFedoraプロジェクトの公式レポジトリからダウンロードしてインストールを行います。レポジトリの設定は/etc/yum.repos.d/以下に用意してあります。公式レポジトリだけを利用するのであれば、設定を追加・修正する必要はありません。しかし、非公式レポジトリを使用する場合は、設定ファイルを取得してインストールする必要があります。例えば、ウェブブラウザのFlash&nbsp;Playerプラグインはアドビ・システムズ株式会社のダウンロードサイトに用意されているyumの設定ファイルをあらかじめインストールしておき、それからFlashをインストールすることになります。</p>
+				<p>dnfコマンドはインターネット上のレポジトリにアクセスしますので、インターネットにアクセスできる環境が必要です。また、パッケージの新規インストール、更新、削除はシステム管理者（root）の権限が必要ですが、検索・表示は一般ユーザの権限で行えます。</p>
+				<section>
+					<h4>一般形式</h4>
+					<p>使用目的別にオプションを説明します。</p>
+					<div class="form-exp">
+						※ パッケージの新規インストール<br>
+						# dnf install パッケージ名１ パッケージ名２ …<br>
+						<br>
+						※ パッケージの更新<br>
+						# dnf upgrade パッケージ名１ パッケージ名２ …<br>
+						# dnf upgrade<strong> ← インストール済パッケージで更新可能な全パッケージを更新します</strong><br>
+						<br>
+						※ パッケージの削除<br>
+						# dnf remove パッケージ名１ パッケージ名２ …<br>
+						<br>
+						※ パッケージの検索・表示<br>
+						$ dnf check-update<strong> ← 実際のアップデートはしないで、アップデート可能なパッケージを表示します</strong><br>
+						$ dnf search キーワード<strong> ← キーワードでパッケージを検索します</strong><br>
+						$ dnf list パッケージ名<strong> ← パッケージの利用状況（インストール済み／未インストール）を表示します</strong><br>
+						$ dnf info パッケージ名<strong> ← パッケージの内容情報を表示します</strong><br>
+						$ dnf provides ファイルパス名<strong> ← ファイルがどのパッケージに含まれるかを表示します</strong><br>
+						<br>
+						※ その他<br>
+						# dnf clean all<strong> ← ダウンロードしたパッケージのキャッシュを削除します</strong>
+					</div>
+					<table class="simple-table">
+						<caption>【表7-2】 dnfコマンドのオプション一覧</caption>
+						<tr><th>オプション</th><th>意味</th></tr>
+						<tr><td>-y, --assumeyes</td><td>問い合わせのメッセージに対して、全て「y（yes）」で答えます。</td></tr>
+					</table>
+				</section>
+				<section>
+					<h4>実行例</h4>
+					<p>nkfパッケージを検索し、パッケージの情報を表示ます。</p>
+					<div class="exe-samp">
+<pre><samp>$ <kbd>dnf search 'nkf'</kbd><strong> ← 検索キーとしてnkfを指定します</strong>
+メタデータの期限切れの確認は、1 day, 1:56:18 時間前の Fri Mar 24 09:27:40 2017 に実施しました。
+=================================== N/S Matched: nkf ===================================
+nkf.x86_64 : A Kanji code conversion filter
+perl-NKF.x86_64 : Perl extension for Network Kanji Filter
+thinkfan.x86_64 : A simple fan control program 
+$
+$ <kbd>dnf list nkf</kbd><strong> ← nkfパッケージのインストール状況を表示します</strong>
+メタデータの期限切れの確認は、1 day, 2:10:00 時間前の Fri Mar 24 09:27:40 2017 に実施しました。
+利用可能なパッケージ<strong> ← 未インストールですが、インストール可能なパッケージを表します</strong>
+nkf.x86_64                             1:2.1.4-3.fc25                             fedora
+$
+$ <kbd>dnf info nkf</kbd><strong> ← nkfパッケージの情報を表示します</strong>
+メタデータの期限切れの確認は、1 day, 2:10:42 時間前の Fri Mar 24 09:27:40 2017 に実施しました。
+利用可能なパッケージ
+名前        : nkf
+アーキテク  : x86_64
+エポック    : 1
+バージョン  : 2.1.4
+リリース    : 3.fc25
+容量        : 141 k
+リポジトリ  : fedora
+概要        : A Kanji code conversion filter
+URL         : http://nkf.osdn.jp/
+ライセンス  : BSD
+説明        : Nkf is a Kanji code converter for terminals, hosts, and networks. Nkf
+            : converts input Kanji code to 7-bit JIS, MS-kanji (shifted-JIS) or
+            : EUC.
+
+$</samp></pre>
+					</div>
+					<p>nkfパッケージを新規インストールします。</p>
+					<div class="exe-samp">
+<pre><samp># <kbd>dnf install nkf</kbd>
+メタデータの期限切れの確認は、0:49:51 時間前の Sat Mar 25 10:50:54 2017 に実施しました。
+依存性が解決されました。
+========================================================================================
+ Package         アーキテクチャ     バージョン                 リポジトリ          容量
+========================================================================================
+インストール:
+ nkf             x86_64             1:2.1.4-3.fc25             fedora             141 k
+
+トランザクションの要約
+========================================================================================
+インストール  1 パッケージ
+
+総ダウンロード容量: 141 k
+インストールされる容量: 293 k
+これでいいですか? [y/N]: y <strong> ← 「y」を応答します</strong>
+パッケージをダウンロードしています:
+nkf-2.1.4-3.fc25.x86_64.rpm                             809 kB/s | 141 kB     00:00
+----------------------------------------------------------------------------------------
+合計                                                     87 kB/s | 141 kB     00:01
+トランザクションの確認を実行中...
+トランザクションの確認に成功しました。
+トランザクションのテストを実行中...
+トランザクションのテストに成功しました。
+トランザクションを実行中...
+  インストール  : nkf-1:2.1.4-3.fc25.x86_64                                         1/1
+  検証中        : nkf-1:2.1.4-3.fc25.x86_64                                         1/1
+
+インストール済み:
+  nkf.x86_64 1:2.1.4-3.fc25
+
+完了しました!
+#</samp></pre>
+					</div>
+					<p>上記実行例でインストールしたnkfパッケージを削除します。</p>
+					<div class="exe-samp">
+<pre><samp># <kbd>dnf remove nkf</kbd>
+依存性が解決されました。
+========================================================================================
+ Package        アーキテクチャ    バージョン                   リポジトリ          容量
+========================================================================================
+削除:
+ nkf            x86_64            1:2.1.4-3.fc25               @fedora            293 k
+
+トランザクションの要約
+========================================================================================
+削除  1 パッケージ
+
+インストールされる容量: 293 k
+これでいいですか? [y/N]: y <strong> ← 「y」を応答します</strong>
+トランザクションの確認を実行中...
+トランザクションの確認に成功しました。
+トランザクションのテストを実行中...
+トランザクションのテストに成功しました。
+トランザクションを実行中...
+  削除中        : nkf-1:2.1.4-3.fc25.x86_64                                         1/1
+  検証中        : nkf-1:2.1.4-3.fc25.x86_64                                         1/1
+
+削除しました:
+  nkf.x86_64 1:2.1.4-3.fc25
+
+完了しました!
+#</samp></pre>
+					</div>
+					<p>インストール済の全パッケージに対して更新状況を確認します。</p>
+					<div class="exe-samp">
+<pre><samp>$ <kbd>dnf check-update</kbd><strong> ← 更新パッケージが有るかを確認します</strong>
+Fedora 25 - x86_64 - Updates                            6.9 MB/s |  21 MB     00:03
+メタデータの期限切れの確認は、0:00:08 時間前の Fri Mar 24 09:27:40 2017 に実施しました。
+
+apper.x86_64                         0.9.3-0.7.20170226.fc25                     updates
+iproute.x86_64                       4.10.0-1.fc25                               updates
+iproute-tc.x86_64                    4.10.0-1.fc25                               updates
+$</samp></pre>
+					</div>
+					<p>最新パッケージへの更新を行います。</p>
+					<div class="exe-samp">
+<pre><samp># <kbd>dnf upgrade -y</kbd><strong> ← -yオプションにより、全て「ｙ」を応答します</strong>
+メタデータの期限切れの確認は、0:20:10 時間前の Fri Mar 24 09:08:21 2017 に実施しました。
+依存性が解決されました。
+========================================================================================
+ Package           アーキテクチャ
+                                 バージョン                        リポジトリ      容量
+========================================================================================
+アップグレード:
+ apper             x86_64        0.9.3-0.7.20170226.fc25           updates        598 k
+ iproute           x86_64        4.10.0-1.fc25                     updates        472 k
+ iproute-tc        x86_64        4.10.0-1.fc25                     updates        357 k
+
+トランザクションの要約
+========================================================================================
+アップグレード  3 パッケージ
+
+総ダウンロード容量: 1.4 M
+パッケージをダウンロードしています:
+(1/3): apper-0.9.3-0.5.20161109.fc25_0.9.3-0.7.20170226 1.4 MB/s | 227 kB     00:00
+(2/3): iproute-tc-4.10.0-1.fc25.x86_64.rpm              2.1 MB/s | 357 kB     00:00
+(3/3): iproute-4.10.0-1.fc25.x86_64.rpm                 2.1 MB/s | 472 kB     00:00
+[DRPM] apper-0.9.3-0.5.20161109.fc25_0.9.3-0.7.20170226.fc25.x86_64.drpm: done
+----------------------------------------------------------------------------------------
+合計                                                    558 kB/s | 1.0 MB     00:01
+Delta RPMs reduced 1.4 MB of updates to 1.0 MB (26.1% saved)
+トランザクションの確認を実行中...
+トランザクションの確認に成功しました。
+トランザクションのテストを実行中...
+トランザクションのテストに成功しました。
+トランザクションを実行中...
+  アップグレード: iproute-4.10.0-1.fc25.x86_64                                      1/6
+  アップグレード: iproute-tc-4.10.0-1.fc25.x86_64                                   2/6
+  アップグレード: apper-0.9.3-0.7.20170226.fc25.x86_64                              3/6
+  整理中        : iproute-tc-4.6.0-6.fc25.x86_64                                    4/6
+  整理中        : iproute-4.6.0-6.fc25.x86_64                                       5/6
+  整理中        : apper-0.9.3-0.5.20161109.fc25.x86_64                              6/6
+  検証中        : apper-0.9.3-0.7.20170226.fc25.x86_64                              1/6
+  検証中        : iproute-4.10.0-1.fc25.x86_64                                      2/6
+  検証中        : iproute-tc-4.10.0-1.fc25.x86_64                                   3/6
+  検証中        : iproute-4.6.0-6.fc25.x86_64                                       4/6
+  検証中        : iproute-tc-4.6.0-6.fc25.x86_64                                    5/6
+  検証中        : apper-0.9.3-0.5.20161109.fc25.x86_64                              6/6
+
+アップグレード済み:
+  apper.x86_64 0.9.3-0.7.20170226.fc25           iproute.x86_64 4.10.0-1.fc25
+  iproute-tc.x86_64 4.10.0-1.fc25
+
+完了しました!
+#</samp></pre>
+					</div>
+					<p>ダウンロードしたパッケージのキャッシュは/var/cache/dnf/以下にありますので、現在の容量を表示後削除します。</p>
+					<div class="exe-samp">
+<pre><samp># <kbd>du -sh /var/cache/dnf</kbd><strong> ← キャッシュの容量を表示します</strong>
+164M    /var/cache/dnf
+#
+# <kbd>dnf clean all</kbd><strong> ← キャッシュの内容を削除します</strong>
+52 files removed
+#
+# <kbd>du -sh /var/cache/dnf</kbd><strong> ← 削除後の容量を表示します</strong>
+7.0M    /var/cache/dnf
+#</samp></pre>
+					</div>
+				</section>
+			</section>
+		</section>
+	</section>
+
+	<footer>
+		<nav>
+			<ul>
+				<li><a href="../../index.html">ホーム</a></li>
+				<li><a href="../cmdtop.html#lbl_index">目次</a></li>
+				<li><a href="./section7_2.html">前のページ</a></li>
+			</ul>
+		</nav>
+		<p id="footer-author">更新日：<time datetime="2018-03-06">2018年03月06日</time> Merry</p>
+	</footer>
+</div>
+</body>
+</html>

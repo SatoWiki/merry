@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initialscale=1.0">
+	<meta name="robots" content="INDEX,FOLLOW">
+	<meta name="keywords" content="行の並べ替え,sort,文字列の検索,文字列の切り出し,容量表示,ファイルのバックアップ,grep,cut,df,du,tar,cpio">
+	<meta name="description" content="一般的に良く使われているディレクトリやファイルを取り扱うコマンドの使い方をご紹介します。">
+	<meta name="author" content="T.Hagiwara">
+	<link rel="stylesheet" href="../../CSS3/seminar.css" type="text/css">
+	<link rel="prev" href="./section4_2.html">
+	<link rel="next" href="./section4_4.html">
+	<title>Linuxの使い方&nbsp;-&nbsp;ファイル操作のコマンド２（3/5）</title>
+	<style type="text/css">
+	</style>
+</head>
+<body>
+<div id="container">
+	<header>
+		<p>Linux講座にようこそ。このページは「Linuxの使い方&nbsp;-&nbsp;第４章&nbsp;ファイル操作のコマンド２」です。</p>
+		<h1>Linuxの使い方</h1>
+		<nav>
+			<ul>
+				<li><a href="../../index.html">ホーム</a></li>
+				<li><a href="../cmdtop.html#lbl_index">目次</a></li>
+				<li><a href="./section4_2.html">前のページ</a></li>
+				<li><a href="./section4_4.html">次のページ</a></li>
+			</ul>
+		</nav>
+	</header>
+
+	<section class="contents">
+		<h1>4. ファイル操作のコマンド２（3/5）</h1>
+		<section>
+			<h2>4.3 コマンドのご紹介２（2/4）</h2>
+			<section>
+				<!-- sortコマンドの説明 -->
+				<h3 id="sort">4.3.5 行の並べ替え（sortコマンド）</h3>
+				<p>sortコマンドはテキストファイルの内容をフィールドをキーとして昇順または、降順に並べ替えます。フィールドは１個のスペースを区切りとする文字列ですが、オプションにより変更可能です。</p>
+				<section>
+					<h4>一般形式</h4>
+					<p>キーフィールドは-kオプションで指定します。「位置２」を省略しますと「位置１」以降、全てがキーとなります。また、-kオプションを省略した場合は全てのフィールドがキーになります。</p>
+					<div class="form-exp">
+						$ sort -bfnr -t 記号 -k 位置１,位置２ -o 出力ファイルパス名 ファイルパス名１ ファイルパス名２ …
+					</div>
+					<table class="simple-table">
+						<caption>【表4-10】sortコマンド・オプション</caption>
+						<tr><th>オプション</th><th>意味</th></tr>
+						<tr><td>-b, --ignore-leading-blanks</td><td>キーフィールドの先頭のスペースを無視します。</td></tr>
+						<tr><td>-f, --ignore-case</td><td>キーフィールドの大文字と小文字を同じ文字として取り扱います。</td></tr>
+						<tr><td>-n, --numeric-sort</td><td>キーフィールドの数字文字列を数値として取り扱います。</td></tr>
+						<tr><td>-r, --reverse</td><td>降順（大→小）に並べ替えます。</td></tr>
+						<tr><td>-t 記号, --field-separator=記号</td><td>フィールドの区切り記号を指定します。</td></tr>
+						<tr><td>-k 位置１,位置２,<br>--key=位置１,位置２</td><td>先頭のフィールドを１としたときのキーフィールドの位置を指定します。</td></tr>
+						<tr><td>-o 出力ファイルパス名,<br>--output=出力ファイルパス名</td><td>出力ファイルを指定します。入力ファイルと同じファイルに出力したいときに指定するとよいでしょう。（入力ファイルと同じファイルを出力ファイルとしてリダイレクトで指定すると、ファイルの内容が壊れる可能性が有ります）</td></tr>
+					</table>
+				</section>
+				<section>
+					<h4>実行例</h4>
+					<figure class="left-box myphoto">
+						<dl>
+							<dt><img src="../IMAGES/sec04_2.jpg" alt="passwdファイルの形式"></dt>
+							<dd>【図４-２】passwdファイルの形式</dd>
+							<dd>:（コロン）が区切り記号で、７つの項目からなっています</dd>
+						</dl>
+					</figure>
+					<p>以降の例題では入力ファイルとしてユーザ登録簿（/etc/passwd）を使用しますので、passwdファイルの形式について簡単に説明します。図4-2の例はシステム管理者（ユーザ名はroot）の登録内容です。</p>
+					<p>:（コロン）が区切り記号で、先頭からユーザ名、パスワード、ユーザID、グループID、コメント、ホームディレクトリ、ログイン時に起動するプロセスの順で記述されています。実際のパスワードはこのファイルには入っていません。</p>
+					<p style="clear: left;">ユーザ名の小さなものから順（昇順）に並べ替えます。</p>
+					<div class="exe-samp">
+<pre><samp>$ <kbd>sort -t : -k 1,1 /etc/passwd</kbd>
+adm:x:3:4:adm:/var/adm:
+apache:x:48:48:Apache:/var/www:/bin/false
+bin:x:1:1:bin:/bin:
+daemon:x:2:2:daemon:/sbin:
+ftp:x:14:50:FTP User:/var/ftp:
+（以下省略）
+$
+</samp></pre>
+					</div>
+					<p>ユーザIDの小さなものから順（昇順）に並べ替えます。</p>
+					<div class="exe-samp">
+<pre><samp>$ <kbd>sort -n -t : -k 3,3 /etc/passwd</kbd>
+root:x:0:0:root:/root:/bin/bash
+bin:x:1:1:bin:/bin:
+daemon:x:2:2:daemon:/sbin:
+adm:x:3:4:adm:/var/adm:
+lp:x:4:7:lp:/var/spool/lpd:
+（以下省略）
+$
+</samp></pre>
+					</div>
+				</section>
+			</section>
+			<section>
+				<!-- grepコマンドの説明 -->
+				<h3 id="grep">4.3.6 文字列の検索（grepコマンド）</h3>
+				<p>grepコマンドはテキストファイル中から指定した文字列を含む行を検索します。</p>
+				<section>
+					<h4>一般形式</h4>
+					<p>「検索文字列」はシェルの解析を抑止するためにアポストロフィまたは、引用符で括ったほうがよいでしょう。</p>
+					<p>「検索文字列」中にシェルのワイルドカードと同じような特殊な意味を持つ記号を指定できます。よく使うもののみ挙げておきますと、^（アクサンシルコンフレックス）は行の先頭、$（ドル記号）は行末、.（ピリオド）は任意の１文字、[文字列]（左大括弧と右大括弧で文字列を括る）は文字列中の１文字を意味します。</p>
+					<div class="form-exp">
+						$ grep -cinrv --exclude=GLOB --include=GLOB 検索文字列 ファイルパス名１ ファイルパス名２ …
+					</div>
+					<table class="simple-table">
+						<caption>【表4-11】grepコマンド・オプション</caption>
+						<tr><th>オプション</th><th>意味</th></tr>
+						<tr><td>-c, --count</td><td>結果として行数のみを出力します。</td></tr>
+						<tr><td>--exclude=GLOB</td><td>パスなしのファイル名がGLOBにマッチするファイルを処理対外にします。GLOBで指定するファイル名には、*、 ?、[]がワイルドカードとして使用できます。（ワイルドカードに付いては「<a href="./section4_1.html#wild_card">4.1 ファイルやディレクトリをまとめて指定するワイルドカード</a>」をご覧ください）</td></tr>
+						<tr><td>-i, --ignore-case</td><td>大文字と小文字を同じ文字として取り扱います。</td></tr>
+						<tr><td>--include=GLOB</td><td>パスなしのファイル名がGLOBにマッチするファイルのみを処理対象とします。GLOBに付いては--excludeと同じです。</td></tr>
+						<tr><td>-n, --line-number</td><td>出力に行番号を付加します。</td></tr>
+						<tr><td>-R, -r,<br>--recursive </td><td>ファイルパス名の代わりにディレクトリパス名を指定します。ディレクトリ以下、全てのファイルを検索します。</td></tr>
+						<tr><td>-v, --invert-match</td><td>結果として一致しなかった行を出力します。</td></tr>
+					</table>
+				</section>
+				<section>
+					<h4>実行例</h4>
+					<p>/etc/passwdファイルから「merry」を含む行を表示します。</p>
+					<div class="exe-samp">
+<pre><samp>$ <kbd>grep "merry" /etc/passwd</kbd>
+merry:x:1001:100:Email.merry@xxxx.com:/home/merry:/bin/bash
+$
+</samp></pre>
+					</div>
+					<p>/etc/passwdファイルから行頭１文字が「a」の行を行番号を付加して表示します。</p>
+					<div class="exe-samp">
+<pre><samp>$ <kbd>grep -n "^a" /etc/passwd</kbd><strong>　← ＾記号は行頭を意味します</strong>
+4:adm:x:3:4:adm:/var/adm:<strong>　← 先頭の「4:」は行番号です</strong>
+17:apache:x:48:48:Apache:/var/www:/bin/false
+$
+</samp></pre>
+					</div>
+					<p>カレントディレクトリ以下のファイルから「Fedora」を含む行を行番号を付加して表示します。ただし、「Fedora」は大文字と小文字を同じ文字として取り扱います。</p>
+					<div class="exe-samp">
+<pre><samp>$ <kbd>grep 'fedora' -inr .</kbd><strong>　← .でカレントディレクトリを指定します</strong>
+./ETC/issue:1:Fedora release 16 (Verne)
+$
+</samp></pre>
+					</div>
+					<p>カレントディレクトリ以下のファイルで拡張子が「.html」のファイルから「grep」を含む行を表示します。</p>
+					<div class="exe-samp">
+<pre><samp>$ <kbd>grep --include=*.html -r 'grep' .</kbd>
+./DIR1/grep_1.html:grep_1.html
+./DIR1/cmdtop.html:    &lt;li&gt;&lt;a href="./SECTION4/section4_3.html#grep"&gt;文字列の検索（grepコマンド）&lt;/a&gt;&lt;/li&gt;
+$
+</samp></pre>
+					</div>
+					<p>カレントディレクトリ以下のファイルで拡張子が「.html」以外のファイルから「grep」を含む行を表示します。</p>
+					<div class="exe-samp">
+<pre><samp>$ <kbd>grep --exclude=*.html -r 'grep' .</kbd>
+./grep_3html:grep_3html
+./DIR1/common.css:/* grepコマンド */
+./DIR1/grep_2.htm:grep_2.htm
+$
+</samp></pre>
+					</div>
+				</section>
+			</section>
+			<section>
+			<!-- cutコマンドの説明 -->
+				<h3 id="cut">4.3.7 文字列の切り出し（cutコマンド）</h3>
+				<p>cutコマンドはテキストファイル中からフィールドまたは、カラム単位で文字列を切り出します。</p>
+				<section>
+					<h4>一般形式</h4>
+					<p>カラムやフィールドが複数の場合は,（コンマ）で、連続の場合は-（負記号）で指定できます。また、-nと指定した場合は先頭からnまで、n-と指定した場合はnから最後までの指定になります。</p>
+					<div class="form-exp">
+						$ cut -c カラム１,カラム２,… ファイルパス名１ ファイルパス名２ …<br>
+						$ cut -f フィールド１,フィールド２,… -d 記号 ファイルパス名１ ファイルパス名２ …
+					</div>
+					<table class="simple-table">
+						<caption>【表4-12】cutコマンド・オプション</caption>
+						<tr><th>オプション</th><th>意味</th></tr>
+						<tr><td>-c, --characters=カラム</td><td>カラム単位で切り出します。</td></tr>
+						<tr><td>-f, --fields=フィールド</td><td>フィールド単位で切り出します。</td></tr>
+						<tr><td>-d, --delimiter=記号</td><td>フィールドの区切り記号を指定します。指定しないときはタブ記号が仮定されます。</td></tr>
+					</table>
+				</section>
+				<section>
+					<h4>実行例</h4>
+					<p>/etc/passwdファイルからホームディレクトリ情報（フィールド６）を切り出します。</p>
+					<div class="exe-samp">
+<pre><samp>$ <kbd>cut -f 6 -d : /etc/passwd</kbd><strong>　← -dオプションで区切り記号を指定します</strong>
+/root
+/bin
+/sbin
+/var/adm
+（以下省略）
+$
+</samp></pre>
+					</div>
+					<p>/etc/passwdファイルからユーザID（フィールド３）からホームディレクトリ（フィールド６）までの連続情報を切り出します。</p>
+					<div class="exe-samp">
+<pre><samp>$ <kbd>cut -f 3-6 -d : /etc/passwd</kbd>
+0:0:root:/root
+1:1:bin:/bin
+2:2:daemon:/sbin
+3:4:adm:/var/adm
+（以下省略）
+$
+</samp></pre>
+					</div>
+					<p>meibo2ファイルから名前（カラム４～13）と犬種（カラム15～最後）を切り出します。</p>
+					<div class="exe-samp">
+<pre><samp>$ <kbd>cat meibo2</kbd>
+001Merry     FHusky
+002Kuma      MMix
+003Hana      FShiba
+004ken       MMix
+005Taro      MBull
+$
+$ <kbd>cut -c 4-13,15- meibo2</kbd>
+Merry     Husky
+Kuma      Mix
+Hana      Shiba
+ken       Mix
+Taro      Bull
+$
+</samp></pre>
+					</div>
+				</section>
+			</section>
+			<section>
+				<!-- dfコマンドとduコマンドの説明 -->
+				<h3 id="df_du">4.3.8 ファイルシステムとディレクトリの容量表示（dfとduコマンド）</h3>
+				<p>dfコマンドはファイルシステムの容量情報を、duコマンドはディレクトリ単位の容量情報を表示します。</p>
+				<section>
+					<h4>一般形式</h4>
+					<p>dfコマンドでファイルシステム名を省略した場合はマウントしてあるもの全てを対象とし、duコマンドでディレクトリパス名を省略した場合はカレントディレクトリを仮定します。</p>
+					<div class="form-exp">
+						$ df -h ファイルシステム名<br>
+						$ du -ahs ディレクトリパス名１ ディレクトリパス名２ …
+					</div>
+					<table class="simple-table">
+						<caption>【表4-13】dfとduコマンド・オプション</caption>
+						<tr><th>オプション</th><th>意味</th></tr>
+						<tr><td>-h, --human-readable</td><td>人間が分かりやすい単位で表示します。</td></tr>
+						<tr><td>-a, --all</td><td>対象となるファイルやディレクトリを全て表示します。</td></tr>
+						<tr><td>-s, --summarize</td><td>最終結果だけを１行で表示します。</td></tr>
+					</table>
+				</section>
+				<section>
+					<h4>実行例</h4>
+					<p>現在マウント中の全ファイルシステムの情報を表示します。</p>
+					<div class="exe-samp">
+<pre><samp>$ <kbd>df</kbd>
+Filesystem           1K-ブロック    使用   使用可 使用% マウント位置
+/dev/sda5             10317828   3787200   6006512  39% /
+tmpfs                   508976       900    508076   1% /dev/shm
+/dev/sda6              5162796   1073508   3827032  22% /var
+/dev/sda7             30470144  12388760  16508624  43% /home
+/dev/sda2              5245220   2425720   2819500  47% /mnt/win
+$
+$ <kbd>df -h</kbd>
+Filesystem          サイズ  使用  残り 使用% マウント位置
+/dev/sda5             9.9G  3.7G  5.8G  39% /
+tmpfs                 498M  900K  497M   1% /dev/shm
+/dev/sda6             5.0G  1.1G  3.7G  22% /var
+/dev/sda7              30G   12G   16G  43% /home
+/dev/sda2             5.1G  2.4G  2.7G  47% /mnt/win
+$
+</samp></pre>
+					</div>
+					<p>WORKディレクトリ以下の容量を表示します。</p>
+					<div class="exe-samp">
+<pre><samp>$ <kbd>du WORK</kbd>
+292     WORK/BKUP<strong> ← BKUPディレクトリ以下の容量（292×1024Bytes)です</strong>
+320     WORK
+$
+$ <kbd>du -h WORK</kbd>
+292K    WORK/BKUP
+320K    WORK
+$
+$ <kbd>du -ah WORK</kbd><strong> ← 全て表示します</strong>
+96K     WORK/BKUP/file_1.xcf
+192K    WORK/BKUP/merry01.xcf
+292K    WORK/BKUP
+16K     WORK/file_1.jpg
+8.0K    WORK/merry01.jpg
+320K    WORK
+$
+$ <kbd>du -sh WORK</kbd><strong> ← 最終結果のみ表示します</strong>
+320K    WORK
+$
+</samp></pre>
+					</div>
+				</section>
+			</section>
+			<section>
+				<!-- tar、cpioコマンドの説明 -->
+				<h3 id="lbl_backup">4.3.9 ファイルのバックアップ（tarコマンドとcpioコマンド）</h3>
+				<p>tarコマンドとcpioコマンドは複数のファイルやディレクトリを１つのファイルに連結（アーカイブ）します。tarコマンドにはgzipコマンドを使ってアーカイブファイルを圧縮・回復する機能がありますので、手軽にバックアップを取りたいという場合はtarコマンドを使うとよいでしょう。</p>
+				<p>cpioコマンドは標準入力からパス名のリストを入力して、そのファイルやディレクトリのアーカイブファイルを作成したりコピーを行いますので、findコマンドで検索した結果を使ってバックアップを取るという様な使い方もできます。</p>
+				<section>
+					<h4>一般形式</h4>
+					<p>tarコマンドは-fオプションでアーカイブファイル名を指定します。また、標準入出力を使いたい場合は-（負記号）記号を指定します。</p>
+					<p>cpioコマンドでアーカイブファイルを作成する場合、出力は標準出力ですので標準出力をファイルに切り替えます。また、回復する場合はカレントディレクトリの下に回復します。</p>
+					<div class="form-exp">
+						※ アーカイブファイルの新規作成<br>
+						$ tar -cz -C ディレクトリパス名 -f アーカイブファイルパス名 ファイルパス名１ ファイルパス名２ …<br>
+						※ アーカイブファイルへの追加<br>
+						$ tar -rz -C ディレクトリパス名 -f アーカイブファイルパス名 ファイルパス名１ ファイルパス名２ …<br>
+						※ アーカイブファイルから回復<br>
+						$ tar -xz -C ディレクトリパス名 -f アーカイブファイルパス名<br>
+						※ アーカイブファイルの内容表示<br>
+						$ tar -tzf アーカイブファイルパス名<br>
+						<br>
+						※ アーカイブファイルの新規作成<br>
+						$ cpio -o &gt; アーカイブファイルパス名 &lt; パス名リスト<br>
+						※ アーカイブファイルから回復<br>
+						$ cpio -idm &lt; アーカイブファイルパス名<br>
+						※ ファイルのコピー<br>
+						$ cpio -pdm コピー先ディレクトリパス名 &lt; パス名リスト<br>
+						※ アーカイブファイルの内容表示<br>
+						$ cpio -tv &lt; アーカイブファイルパス名<br>
+					</div>
+					<p>tarコマンドのオプションには、次のようなものがあります。（各オプションの-は省略できます）</p>
+					<table class="simple-table">
+						<caption>【表4-14】tarコマンド・オプション</caption>
+						<tr><th>オプション</th><th>意味</th></tr>
+						<tr><td>-c, --create</td><td>新規にアーカイブファイルを作成します。</td></tr>
+						<tr><td>-f, --file</td><td>アーカイブファイルのパス名を指定します。</td></tr>
+						<tr><td>-r, --append</td><td>アーカイブファイルに追加出力します。</td></tr>
+						<tr><td>-x, --extract, --get </td><td>アーカイブファイルから回復します。</td></tr>
+						<tr><td>-C, --directory</td><td>指定したディレクトリにカレントディレクトリを変更してtarコマンドを実行します。</td></tr>
+						<tr><td>-z, --gzip, --ungzip</td><td>アーカイブファイルをgzipで圧縮します。また、gzipで圧縮したアーカイブファイルから回復（ungzip）します。</td></tr>
+						<tr><td>-j, --bzip2</td><td>アーカイブファイルをbzip2で圧縮します。また、bzip2で圧縮したアーカイブファイルから回復します。（古いバージョンではサポートしていませんので注意して下さい）</td></tr>
+						<tr><td>-t, --list </td><td>アーカイブファイルの内容を表示します。</td></tr>
+					</table>
+					<p>cpioコマンドのオプションには、次のようなものがあります。</p>
+					<table class="simple-table">
+						<caption>【表4-15】cpioコマンド・オプション</caption>
+						<tr><th>オプション</th><th>意味</th></tr>
+						<tr><td>-o, --create</td><td>新規にアーカイブファイルを作成します。</td></tr>
+						<tr><td>-i, --extract</td><td>アーカイブファイルから回復します。</td></tr>
+						<tr><td>-p, --pass-through</td><td>ファイルのコピーを行います。</td></tr>
+						<tr><td>-d, --make-directories</td><td>必要に応じてディレクトリを作成します。当オプションを指定しないと回復時にディレクトリを作成しません。</td></tr>
+						<tr><td>-m,<br>--preserve-modification-time</td><td>コピー元のファイルの更新日時を保持します。当オプションを指定しないと回復時にファイルの更新日時は実行時の日時になります。</td></tr>
+						<tr><td>-t, --list</td><td>アーカイブファイルに登録されているファイル名の一覧を表示します。</td></tr>
+						<tr><td>-v, --verbose</td><td>-tオプションが同時に指定されている場合には、lsコマンド形式の詳細情報を表示します。</td></tr>
+					</table>
+				</section>
+				<section>
+					<h4>実行例</h4>
+					<p>tarコマンドでアーカイブファイルを作成します。</p>
+					<div class="exe-samp">
+<pre><samp>$ <kbd>ls ./DEVELOP</kbd>
+Hello.c    ex02_1.c    ex02_2.c    ex02_3.c    include   loop.o
+Hello.exe  ex02_1.exe  ex02_2.exe  ex02_3.exe  loop.c    makefile
+Hello.o    ex02_1.o    ex02_2.o    ex02_3.o    loop.exe
+$
+$ <kbd>tar -cf ~/TMP/BACKUP/bk01.tar ./DEVELOP</kbd><strong> ← DEVELOPディレクトリを含めてアーカイブファイルを作成します</strong>
+$ <kbd>tar -tf ~/TMP/BACKUP/bk01.tar</kbd><strong> ← アーカイブファイブの内容を表示します</strong>
+./DEVELOP/
+./DEVELOP/Hello.exe
+./DEVELOP/ex02_3.c
+./DEVELOP/ex02_3.exe
+./DEVELOP/ex02_2.exe
+./DEVELOP/Hello.o
+./DEVELOP/loop.o
+./DEVELOP/loop.c
+./DEVELOP/ex02_1.c
+./DEVELOP/ex02_2.c
+./DEVELOP/ex02_2.o
+./DEVELOP/include/
+./DEVELOP/include/ex13_1.h
+./DEVELOP/makefile
+./DEVELOP/ex02_3.o
+./DEVELOP/ex02_1.o
+./DEVELOP/Hello.c
+./DEVELOP/ex02_1.exe
+./DEVELOP/loop.exe
+$
+$ <kbd>cd ./DEVELOP</kbd><strong> ← DEVELOPディレクトリをカレントディレクトリに変更します</strong>
+$ <kbd>tar -cf ~/TMP/BACKUP/bk02.tar ./*.c</kbd><strong> ← カレントディレクトリの下の拡張子が.cのファイルのみのアーカイブファイルを作成します</strong>
+$ <kbd>tar -tf ~/TMP/BACKUP/bk02.tar</kbd>
+./Hello.c
+./ex02_1.c
+./ex02_2.c
+./ex02_3.c
+./loop.c
+$
+</samp></pre>
+					</div>
+					<p>前の例題で取ったアーカイブファイル（bk02.tar）から~/RESTORE/に回復します。</p>
+					<div class="exe-samp">
+<pre><samp>$ <kbd>tar -xC ~/RESTORE -f ~/TMP/BACKUP/bk02.tar</kbd><strong> ← ~/RESTOREにカレントディレクトリを変更して回復します</strong>
+$ <kbd>ls ~/RESTORE</kbd>
+Hello.c  ex02_1.c  ex02_2.c  ex02_3.c  loop.c
+$
+$ <kbd>cd ~/RESTORE; tar -xf ~/TMP/BACKUP/bk02.tar</kbd><strong> ← こちらの方法でも同じです</strong>
+$
+</samp></pre>
+					</div>
+					<p>gzipで圧縮したアーカイブファイル（bk03.tar.gz）を作り、それから回復します。</p>
+					<div class="exe-samp">
+<pre><samp>$ <kbd>tar -czf ~/TMP/BACKUP/bk03.tar.gz ./*.c</kbd><strong> ← -zオプションを指定します</strong>
+$ <kbd>tar -tzf ~/TMP/BACKUP/bk03.tar.gz</kbd>
+./Hello.c
+./ex02_1.c
+./ex02_2.c
+./ex02_3.c
+./loop.c
+$
+$ <kbd>tar -xzC ~/RESTORE -f ~/TMP/BACKUP/bk03.tar.gz</kbd><strong> ← 回復します</strong>
+$ <kbd>ls ~/RESTORE</kbd>
+Hello.c  ex02_1.c  ex02_2.c  ex02_3.c  loop.c
+$
+</samp></pre>
+					</div>
+					<p>cpioコマンドでカレントディレクトリ以下のファイルで、更新日付が１日前のファイルのアーカイブファイルを作成します。</p>
+					<div class="exe-samp">
+<pre><samp>$ <kbd>find . -type f -and -mtime -1 | cpio -o &gt; ~/TMP/BACKUP/bk03.bk</kbd><strong> ← findの検索結果をcpioに渡します</strong>
+27 blocks
+$ <kbd>cpio -vt &lt; ~/TMP/BACKUP/bk03.bk</kbd><strong> ← アーカイブファイブの内容を表示します</strong>
+-rw-r--r--   1 merry    merry         702 May 19 14:21 ex02_3.c
+-rwxr-xr-x   1 merry    merry        5483 May 19 14:21 ex02_3.exe
+-rw-r--r--   1 merry    merry         132 May 19 14:20 ex02_1.c
+-rw-r--r--   1 merry    merry        1472 May 19 14:21 ex02_3.o
+-rw-r--r--   1 merry    merry         703 May 19 14:21 ex02_1.o
+-rwxr-xr-x   1 merry    merry        4820 May 19 14:21 ex02_1.exe
+27 blocks
+$
+</samp></pre>
+					</div>
+					<p>前の例題で作成したアーカイブファイル（bk03.bk）から~/RESTORE/に回復します。（dmオプションにより、回復するファイルの日時は元の日時になりディレクトリも作成します）</p>
+					<div class="exe-samp">
+<pre><samp>$ <kbd>cd ~/RESTORE; cpio -idm &lt; ~/TMP/BACKUP/bk03.bk</kbd>
+27 blocks
+$ ls -l
+合計 32
+-rw-r--r-- 1 merry merry  132 2010-05-19 14:20 ex02_1.c
+-rwxr-xr-x 1 merry merry 4820 2010-05-19 14:21 ex02_1.exe
+-rw-r--r-- 1 merry merry  703 2010-05-19 14:21 ex02_1.o
+-rw-r--r-- 1 merry merry  702 2010-05-19 14:21 ex02_3.c
+-rwxr-xr-x 1 merry merry 5483 2010-05-19 14:21 ex02_3.exe
+-rw-r--r-- 1 merry merry 1472 2010-05-19 14:21 ex02_3.o
+$
+</samp></pre>
+					</div>
+					<p>~/DEVELOP/以下のファイルで、更新日付が１日前のファイルを~/RESTOREにコピーします。</p>
+					<div class="exe-samp">
+<pre><samp>$ <kbd>cd ~/DEVELOP</kbd>
+$ <kbd>find . -type f -and -mtime -1 | cpio -pdm ~/RESTORE</kbd>
+26 blocks
+$
+$ <kbd>ls ~/RESTORE</kbd>
+ex02_1.c  ex02_1.exe  ex02_1.o  ex02_3.c  ex02_3.exe  ex02_3.o
+$
+</samp></pre>
+					</div>
+				</section>
+			</section>
+		</section>
+	</section>
+
+	<footer>
+		<nav>
+			<ul>
+				<li><a href="../../index.html">ホーム</a></li>
+				<li><a href="../cmdtop.html#lbl_index">目次</a></li>
+				<li><a href="./section4_2.html">前のページ</a></li>
+				<li><a href="./section4_4.html">次のページ</a></li>
+			</ul>
+		</nav>
+		<p id="footer-author">更新日：<time datetime="2015-10-05">2015年10月05日</time> Merry</p>
+	</footer>
+</div>
+</body>
+</html>

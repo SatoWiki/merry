@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initialscale=1.0">
+	<meta name="robots" content="INDEX,FOLLOW">
+	<meta name="keywords" content="シェルスクリプト,位置パラメータ,エスケープ">
+	<meta name="description" content="シェルスクリプトを作成するための事項を説明します。ここでは位置パラメータと文字列のエスケープについて説明します。">
+	<meta name="author" content="T.Hagiwara">
+	<link rel="stylesheet" href="../../CSS3/seminar.css" type="text/css">
+	<link rel="stylesheet" href="../../CSS3/hl_bash.css" type="text/css">
+	<link rel="prev" href="./section6_2.html">
+	<link rel="next" href="./section6_4.html">
+	<title>Linuxの使い方 - シェルスクリプトの作り方（3/8）</title>
+	<style type="text/css">
+	</style>
+</head>
+<body>
+<div id="container">
+	<header>
+		<p>Linux講座にようこそ。このページは「Linuxの使い方&nbsp;-&nbsp;第６章&nbsp;シェルスクリプトの作り方」です。</p>
+		<h1>Linuxの使い方</h1>
+		<nav>
+			<ul>
+				<li><a href="../../index.html">ホーム</a></li>
+				<li><a href="../cmdtop.html#lbl_index">目次</a></li>
+				<li><a href="./section6_2.html">前のページ</a></li>
+				<li><a href="./section6_4.html">次のページ</a></li>
+			</ul>
+		</nav>
+	</header>
+
+	<section class="contents">
+		<h1>6. シェルスクリプトの作り方（3/8）</h1>
+		<section>
+			<!-- 位置パラメータ（引数の取り扱い） -->
+			<h2 id="param">6.4 位置パラメータ（引数の取り扱い）</h2>
+			<p>UNIX系OSのコマンドは引数としてオプションやパス名を指定できますが、シェルスクリプトでも同じように引数を指定できます。引数で指定した値はシェルスクリプト中では位置パラメータとして受け取ります。位置パラメータは前述した通り、1〜ｎの数字で表し、$n又は${n}の形式で値を参照します。</p>
+			<p>位置パラメータと関連する特殊パラメータには次のものがあります。</p>
+			<table class="simple-table">
+				<caption>【表6-9】特殊パラメータ一覧</caption>
+				<tr><th style="white-space:nowrap;">変数</th><th>内容</th></tr>
+				<tr><td>$0</td><td>コマンド名または、シェルスクリプト名（パス名）を値として持っています。</td></tr>
+				<tr><td>$#</td><td>引数の数を値として持っています。</td></tr>
+				<tr><td>$*</td><td>全ての引数を空白で区切り、まとめて１つの文字列とした値を持っています。</td></tr>
+				<tr><td>$@</td><td>全ての引数を個別の値として持っています。</td></tr>
+			</table>
+			<section>
+				<h3>6.4.1 例題</h3>
+				<section>
+					<h4>例題１</h4>
+					<p>位置パラメータの値を確認します。</p>
+					<div class="exe-samp">
+<pre><samp>$ <kbd>set Param1 Param2 Param3 Param4</kbd><strong> ← 位置パラメータ１から４に値を設定します</strong>
+$ <kbd>echo $0</kbd>
+/bin/bash<strong> ← コマンド名（bash）です</strong>
+$ <kbd>echo $1</kbd><strong> ← 位置パラメータ１の値を表示します</strong>
+Param1
+$ <kbd>echo $2</kbd>
+Param2
+$ <kbd>echo $3</kbd>
+Param3
+$ <kbd>echo $4</kbd>
+Param4
+$ <kbd>echo $#</kbd><strong> ← 値が設定されている位置パラメータの数を表示します</strong>
+4
+$ <kbd>echo $*</kbd>
+Param1 Param2 Param3 Param4<strong> ← 全ての位置パラメータの値です</strong>
+$ <kbd>echo $@</kbd>
+Param1 Param2 Param3 Param4<strong> ← 全ての位置パラメータの値です</strong>
+$ <kbd>set "$*"</kbd><strong> ← set "$1 $2 $3 $4"と同じです</strong>
+$ <kbd>echo $1</kbd>
+Param1 Param2 Param3 Param4<strong> ← 位置パラメータ１に全ての位置パラメータの値が設定されています</strong>
+$ <kbd>set Param1 Param2 Param3 Param4</kbd>
+$ <kbd>set "$@"</kbd><strong> ← set "$1" "$2" "$3" "$4"と同じです</strong>
+$ <kbd>echo $1</kbd>
+Param1<strong> ←  位置パラメータ１には"$1"の値が設定されています</strong>
+$ <kbd>echo $2</kbd>
+Param2
+$</samp></pre>
+					</div>
+				</section>
+				<section>
+					<h4>例題２</h4>
+					<p>引数で指定したディレクトリのバックアップを取ります。（ex20.sh）</p>
+					<div class="exe-samp">
+<pre class="bash"><span class="co0">#!/bin/bash</span>
+<span class="co0"># 機能  :  引数で指定したディレクトリの下のバックアップを~/BACKUPに取ります</span>
+<span class="co0"># 作成  :  メリー</span>
+&nbsp;
+<span class="kw3">cd</span> <span class="re4">$1</span>                                           <span class="co0"># 第１引数の値をカレントディレクトリに設定</span>
+<span class="kw2">tar</span> -cjvf ~<span class="sy0">/</span>BACKUP<span class="sy0">/</span>backup.tar.bz2 .              <span class="co0"># バックアップ取得</span>
+&nbsp;
+<span class="kw3">echo</span> <span class="st0">&quot;バックアップ完了&quot;</span></pre>
+					</div>
+					<div class="exe-samp">
+<pre><samp>$ <kbd>ex20.sh $HOME/KANRI</kbd><strong> ← 引数を指定します</strong>
+./
+./manpo.ksp
+./kakei.ksp
+バックアップ完了
+$</samp></pre>
+					</div>
+				</section>
+				<section>
+					<h4>例題３</h4>
+					<p>ディレクトリ（位置パラメータ１）の指定が無かったらメッセージを出力して中止します。（ex21.sh）</p>
+					<div class="exe-samp">
+<pre class="bash"><span class="co0">#!/bin/bash</span>
+<span class="co0"># 機能  :  引数で指定したディレクトリの下のバックアップを~/BACKUPに取ります</span>
+<span class="co0"># 作成  :  メリー</span>
+&nbsp;
+<span class="re2">bkdir</span>=<span class="co1">${1:?&quot;バックアップするディレクトリの指定がありません。中止します。&quot;}</span>
+&nbsp;
+<span class="kw3">cd</span> <span class="re1">$bkdir</span>
+<span class="kw2">tar</span> -cjvf ~<span class="sy0">/</span>BACKUP<span class="sy0">/</span>backup.tar.bz2 .              <span class="co0"># バックアップ取得</span>
+&nbsp;
+<span class="kw3">echo</span> <span class="st0">&quot;バックアップ完了&quot;</span></pre>
+					</div>
+					<div class="exe-samp">
+<pre><samp>$ <kbd>ex21.sh</kbd><strong> ← ディレクトリの指定をしないで実行します</strong>
+バックアップするディレクトリの指定がありません。中止します。<strong> ← エラーメッセージです</strong>
+$</samp></pre>
+					</div>
+				</section>
+			</section>
+		</section>
+
+		<section>
+			<!-- 文字列のエスケープ  -->
+			<h2 id="esc">6.5 文字列のエスケープ</h2>
+			<p>シェルはユーザが入力した文字列を解釈して、さまざまなことを行っていますが、文字には特別な意味を持つ記号がいくつかあります。例えば、次のような記号が該当します。（全てではありません）</p>
+			<div class="form-exp">
+				半角スペース　タブ　*　?　[　]　&gt;　&lt;　;　|　&amp;　$　{　}　(　)　#
+			</div>
+			<p>これらの記号を単なる文字として扱いたい場合は特別な指定が必要です。例えば、「* Hello *」のメッセージを出力したい場合、単に<kbd>echo * Hello *</kbd>では期待した結果になりません。</p>
+			<div class="exe-samp">
+<pre><samp>$ <kbd>ls *</kbd><strong> ← カレントディレクトリの下の全ファイルとディレクトリを表示します（単に、<code>ls</code>だけでも同じです）</strong>
+ex01.sh  ex02.sh  ex03.sh  ex10.sh  ex20.sh  ex21.sh  loop.c  loop.prg
+$
+$ <kbd>echo *</kbd><strong> ← 引数の*はシェルにより、カレントディレクトリの下の全ファイルとディレクトリに置き換えられます</strong>
+ex01.sh ex02.sh ex03.sh ex10.sh ex20.sh ex21.sh loop.c loop.prg
+$ 
+$ <kbd>echo * Hello *</kbd>
+ex01.sh ex02.sh ex03.sh ex10.sh ex20.sh ex21.sh loop.c loop.prg Hello 
+ex01.sh ex02.sh ex03.sh ex10.sh ex20.sh ex21.sh loop.c loop.prg
+$</samp></pre>
+			</div>
+			<p>単に「*」だけを指定したのでは、シェルは「*」を「任意の長さの任意の文字列」と解釈してしまいます。ここでは「*」を単なる文字として扱いたいので、その旨、シェルに伝える必要があります。このことを<strong>エスケープ</strong>と呼んでおり、次のようなエスケープを表す記号があります。</p>
+			<div class="form-exp">
+				<dl>
+					<dt>"（引用符）</dt>
+						<dd>変数を認識します。</dd>
+					<dt>'（アポストロフィ）</dt>
+						<dd>変数を認識しません。（全ての文字を単なる文字として取り扱います）</dd>
+					<dt>\（バックスラッシュ）</dt>
+						<dd>後ろの１文字を文字として認識します。</dd>
+				</dl>
+			</div>
+			<p>先程の、<kbd>echo * Hello *</kbd>の場合であれば、引用符かアポストロフィで括ります。</p>
+			<div class="exe-samp">
+<pre><samp>$ <kbd>echo '* Hello *'</kbd><strong> ← アポストロフィで括ってエスケープします</strong>
+* Hello *
+$</samp></pre>
+			</div>
+			<p>また、半角スペースはコマンド引数の区切り記号ですので、単に半角スペースを含むパス名を指定すると、その半角スペースは区切り記号として解釈されてしまいますので、この場合もエスケープが必要です。</p>
+			<div class="exe-samp">
+<pre><samp>$ <kbd>ls</kbd>
+'My Documents'  'Program Files'   SCRIPT<strong> ← 半角スペースを含むディレクトリがあります</strong>
+$
+$ <kbd>cd My Documents</kbd><strong> ← エスケープしていません</strong>
+bash: cd: 引数が多すぎます<strong> ← cdコマンドのエラーメッセージです</strong>
+$
+$ <kbd>cd 'My Documents'</kbd><strong> ← アポストロフィで括ってエスケープします</strong>
+$ <kbd>pwd</kbd>
+/home/merry/TMP/WORK/DOC/My Documents
+$</samp></pre>
+			</div>
+			<section>
+				<h3>6.5.1 例題</h3>
+				<section>
+					<h4>例題１</h4>
+					<p>アポストロフィと引用符の相違を確認します。</p>
+					<div class="exe-samp">
+<pre><samp>$ <kbd>name=メリー</kbd>
+$
+$ <kbd>echo '*** 今日は${name}さん ***'</kbd><strong> ← アポストロフィで括ります</strong>
+*** 今日は${name}さん ***
+$
+$ <kbd>echo "*** 今日は${name}さん ***"</kbd><strong> ← 引用符で括ります</strong>
+*** 今日はメリーさん ***
+$
+$ <kbd>echo \* Hello \*</kbd><strong> ← *をバックスラッシュでエスケープします</strong>
+* Hello *
+$</samp></pre>
+					</div>
+				</section>
+				<section>
+					<h4>例題２</h4>
+					<p>バックアップしたディレクトリのパス名をメッセージとして表示します。（ex30.sh）</p>
+					<div class="exe-samp">
+<pre class="bash"><span class="co0">#!/bin/bash</span>
+<span class="co0"># 機能  :  引数で指定したディレクトリの下のバックアップを~/BACKUPに取ります</span>
+<span class="co0"># 作成  :  メリー</span>
+&nbsp;
+<span class="re2">bkdir</span>=<span class="co1">${1:?&quot;バックアップするディレクトリの指定がありません。中止します。&quot;}</span>
+&nbsp;
+<span class="kw3">cd</span> <span class="st0">&quot;<span class="es2">$bkdir</span>&quot;</span>                                            <span class="co0"># 引用符で括ってエスケープ</span>
+<span class="kw2">tar</span> -cjvf ~<span class="sy0">/</span>BACKUP<span class="sy0">/</span>backup.tar.bz2 .                     <span class="co0"># バックアップ取得</span>
+&nbsp;
+<span class="kw3">echo</span> <span class="st0">&quot;*** <span class="es3">${bkdir}</span>以下のバックアップをとりました ***&quot;</span>  <span class="co0"># 引用符で括ってエスケープ</span></pre>	
+					</div>
+					<div class="exe-samp">
+<pre><samp>$ <kbd>ls</kbd>
+'My Documents'  'Program Files'   SCRIPT
+$
+$ <kbd>ex30.sh ./SCRIPT</kbd>
+./
+./loop.prg
+./ex02.sh
+./ex10.sh
+./loop.c
+./ex20.sh
+./ex03.sh
+./ex21.sh
+./ex01.sh
+*** ./SCRIPT以下のバックアップをとりました ***
+$
+$ <kbd>ex30.sh './My Documents'</kbd>
+./
+./財産目録.ods
+./精算表.ods
+./貸借対照表.ods
+./合計残高資産表.ods
+./総勘定元帳.ods
+*** ./My Documents以下のバックアップをとりました ***
+$</samp></pre>
+					</div>
+				</section>
+				<section>
+					<h4>例題３</h4>
+					<p>コマンドを実行するときにもエスケープが必要な場合があります。</p>
+					<div class="exe-samp">
+<pre><samp>$ <kbd>grep #! *.sh</kbd><strong> ← 拡張子が".sh"のファイルから、「#!」を含む行を表示します</strong>
+使用法: grep [オプション]‥‥ 文字列パターン [ファイル]‥‥<strong> ← grepの構文エラーです</strong>
+詳しくは`grep --help'を実行してください。
+$
+$ <kbd>grep '#!' *.sh</kbd><strong> ← アポストロフィで括ってエスケープします</strong>
+ex01.sh:#!/bin/bash
+ex02.sh:#!/bin/bash
+ex03.sh:#!/bin/bash
+ex10.sh:#!/bin/bash
+ex20.sh:#!/bin/bash
+ex21.sh:#!/bin/bash
+ex30.sh:#!/bin/bash
+$</samp></pre>
+					</div>
+				</section>
+				<aside>
+					<h4>補足</h4>
+					<p>例題２のex30.shでは変数bkdirの参照は"（引用符）で括ってエスケープをしていますが、エスケープをしないとどうなるかを確認します。（ex31.sh）</p>
+					<div class="exe-samp">
+<pre class="bash"><span class="co0">#!/bin/bash</span>
+<span class="co0"># 機能  :  引数で指定したディレクトリの下のバックアップを~/BACKUPに取ります</span>
+<span class="co0"># 作成  :  メリー</span>
+&nbsp;
+<span class="re2">bkdir</span>=<span class="co1">${1:?&quot;バックアップするディレクトリの指定がありません。中止します。&quot;}</span>
+&nbsp;
+<span class="kw3">cd</span> <span class="re1">$bkdir</span>                                              <span class="co0"># エスケープしていない</span>
+<span class="kw2">tar</span> -cjvf ~<span class="sy0">/</span>BACKUP<span class="sy0">/</span>backup.tar.bz2 .                     <span class="co0"># バックアップ取得</span>
+&nbsp;
+<span class="kw3">echo</span> <span class="st0">&quot;*** <span class="es3">${bkdir}</span>以下のバックアップをとりました ***&quot;</span>  <span class="co0"># 引用符で括ってエスケープ</span></pre>
+					</div>
+					<div class="exe-samp">
+<pre><samp>$ <kbd>ls</kbd>
+'My Documents'  'Program Files'   SCRIPT
+$
+$ <kbd>ex31.sh ./SCRIPT</kbd>
+./
+./loop.prg
+./ex02.sh
+./ex10.sh
+./loop.c
+./ex20.sh
+./ex03.sh
+./ex21.sh
+./ex01.sh
+*** ./SCRIPT以下のバックアップをとりました ***
+$
+$ <kbd>ex31.sh './My Documents'</kbd>
+/home/merry/mybin/ex31.sh: 7 行: cd: 引数が多すぎます<strong> ← cdコマンドのエラーメッセージです</strong>
+./
+./SCRIPT/
+./SCRIPT/loop.prg
+./SCRIPT/ex02.sh
+./SCRIPT/ex10.sh
+./SCRIPT/loop.c
+./SCRIPT/ex20.sh
+./SCRIPT/ex03.sh
+./SCRIPT/ex21.sh
+./SCRIPT/ex01.sh
+./My Documents/
+./My Documents/財産目録.ods
+./My Documents/精算表.ods
+./My Documents/貸借対照表.ods
+./My Documents/合計残高資産表.ods
+./My Documents/総勘定元帳.ods
+./Program Files/
+./Program Files/hello.prg
+./Program Files/hello.c
+*** ./My Documents以下のバックアップをとりました ***
+$</samp></pre>
+					</div>
+					<p>cdコマンドでエラーが起きていますが、原因はエスケープをしていないため<code>cd My Documents</code>のように、引数を２個指定しているからです。cdコマンドがエラーになり、カレントディレクトリの変更を行っていないため、ex31.sh実行時のカレントディレクトリ以下のバックアップを取得しています。</p>
+					<p>ディレクトリの存在の確認については「<a href="./section6_5.html#if">6.7.2 ifコマンド</a>」をご覧ください。</p>
+				</aside>
+			</section>
+		</section>
+	</section>
+
+	<footer>
+		<nav>
+			<ul>
+				<li><a href="../../index.html">ホーム</a></li>
+				<li><a href="../cmdtop.html#lbl_index">目次</a></li>
+				<li><a href="./section6_2.html">前のページ</a></li>
+				<li><a href="./section6_4.html">次のページ</a></li>
+			</ul>
+		</nav>
+		<p id="footer-author">更新日：<time datetime="2018-02-05">2018年02月05日</time> Merry</p>
+	</footer>
+</div>
+</body>
+</html>

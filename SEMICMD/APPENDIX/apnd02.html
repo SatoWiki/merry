@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initialscale=1.0">
+	<meta name="robots" content="INDEX,FOLLOW">
+	<meta name="keywords" content="パッケージ,パッケージ管理,rpm,yum,KPakageKit,yumレポジトリ,/etc/yum.repos.d/">
+	<meta name="description" content="システム管理のうち、rpmとyumコマンドによるパッケージ管理方法をご紹介します。">
+	<meta name="author" content="T.Hagiwara">
+	<link rel="stylesheet" href="../../CSS3/seminar.css" type="text/css">
+	<link rel="prev" href="../../index.html">
+	<title>Linuxの使い方 - 付録２. パッケージ管理（rpmとyumコマンド）</title>
+	<style type="text/css">
+	</style>
+</head>
+<body>
+<div id="container">
+	<header>
+		<p>Linux講座にようこそ。このページは「Linuxの使い方&nbsp;-&nbsp;付録２.&nbsp;パッケージ管理（rpmとyumコマンド）です。</p>
+		<h1>Linuxの使い方</h1>
+		<nav>
+			<ul>
+				<li><a href="../../index.html">ホーム</a></li>
+				<li><a href="../cmdtop.html#lbl_index">目次</a></li>
+			</ul>
+		</nav>
+	</header>
+
+	<section class="contents">
+		<h1>付録</h1>
+		<section>
+			<h2 id="lbl_rpm_yum">付録２. パッケージ管理（rpmとyumコマンド）</h2>
+			<p>システムのインストール後に、使用しているソフトウェアにセキュリティホールが見つかることが良く有ります。この様な時には対策済みのバージョンにアップデートする必要が有ります。Fedora等の多くのディストリビューションではソフトウェアはRPMパッケージと呼ばれる形式のファイルで提供されていますので、ソフトウェアのバージョンアップはRPMパッケージを入手して、それをインストールするということになります。</p>
+			<p>RPMパッケージの管理ツールはいくつか有りますが、ここでは次のツールをご紹介します。</p>
+			<ul>
+				<li><a href="#lbl_rpm">rpmコマンド</a></li>
+				<li><a href="#lbl_yum">yumコマンド</a></li>
+			</ul>
+			<p>パッケージ管理ツールにはGUIツールもありますので、デスクトップ環境の場合はGUIツールを使うと良いでしょう。</p>
+			<figure class="left-box myphoto">
+				<dl>
+					<dt><img src="../IMAGES/apnd02_1.jpg" alt="Apper（Software Management）"></dt>
+					<dd>【付図２-１】</dd>
+					<dd>Apper（Software Management）</dd>
+				</dl>
+			</figure>
+			<p>付図２-１はApper（Software Management）というソフトウェア管理ツールで、パッケージの検索・インストール・削除・最新パッケージへの更新、等が行えます。</p>
+			<section>
+				<!-- rpmコマンド -->
+				<h3 id="lbl_rpm">付録2.1 rpmコマンド</h3>
+				<p>rpmコマンドはRPMパッケージのインストールやアンインストール（削除）はもちろん、インストール済みパッケージの検索等も行えます。</p>
+				<p>このコマンドの特徴はパッケージの依存関係をチェックして、前堤となるパッケージがインストールされていない場合はメッセージを出力してエラー終了します。また、削除のときにも削除しようとしているパッケージを前堤としているものが有ればエラー終了します。これにより、必要なパッケージが無いために動作しないとか、必要なパッケージを誤って削除してしまうというようなトラブルを防ぐことが出来ます。</p>
+				<section>
+					<h4>一般形式</h4>
+					<p>使用目的別にオプションを説明します。処理内容を指定するオプション（-i、-U、-e、-q）以外のオプションは省略可能です。</p>
+					<div class="form-exp">
+						※パッケージの新規インストール<br>
+						# rpm -ivh --test rpmファイルパス名１ rpmファイルパス名２ …<br>
+						<br>
+						※パッケージのアップデート<br>
+						# rpm -Uvh --test rpmファイルパス名１ rpmファイルパス名２ …<br>
+						<br>
+						※パッケージの削除<br>
+						# rpm -e --nodeps --test パッケージ名１ パッケージ名２ …<br>
+						<br>
+						※パッケージの検索表示<br>
+						# rpm -qailR -p rpmファイルパス名
+					</div>
+					<table class="simple-table">
+						<caption>【付表2-1】rpmコマンドのオプション一覧（処理内容を指定するオプション以外）</caption>
+						<tr><th>オプション</th><th>意味</th></tr>
+						<tr><td>-v</td><td>進捗状態等の詳細メッセージを表示します。</td></tr>
+						<tr><td>-h, --hash</td><td>進捗状態を"#"とパーセントで表示します。</td></tr>
+						<tr><td>-a, --all</td><td>インストール済みの全てのパッケージを表示します。</td></tr>
+						<tr><td>-i, --info</td><td>名前やバージョン等のパッケージ情報を表示します。</td></tr>
+						<tr><td>-l, --list</td><td>パッケージに含まれるファイルを表示します。</td></tr>
+						<tr><td>-R, --requires</td><td>パッケージが依存する（前堤となる）パッケージを表示します。</td></tr>
+						<tr><td>-p, --package</td><td>検索するrpmファイルを指定します。（URLの指定も可能です）パッケージ名で検索する場合は、このオプションは不要です。</td></tr>
+						<tr><td>--test</td><td>実際のインストールやアップデートは行なわず、依存関係等のチェックを行ないます。</td></tr>
+						<tr><td>--nodeps</td><td>依存関係のチェックを行なわず、削除を行ないます。</td></tr>
+					</table>
+				</section>
+				<section>
+					<h4>実行例</h4>
+					<p>カレントディレクトリにあるxpenguins-2.2-1.i386.rpmを新規にインストールします。</p>
+					<div class="exe-samp">
+<pre><samp># <kbd>rpm -ivh xpenguins-2.2-1.i386.rpm</kbd><strong> ← インストールします</strong>
+準備中...                ########################################### [100%]
+   1:xpenguins              ########################################### [100%]
+#</samp></pre>
+					</div>
+					<p>インストール済みのMySQL関連のパッケージを表示します。引数にパッケージ名称を指定すれば検索して表示しますが、通常、パッケージ名は不明だと思います。そこで、インストール済みパッケージを全て検索して、その中から目的のものを表示します。（検索は一般ユーザでも行えます）</p>
+					<div class="exe-samp">
+<pre><samp>$ <kbd>rpm -qa | grep mysql</kbd><strong> ← 全て検索して、grepで目的のものを表示します</strong>
+mysql-server-5.1.48-2.fc13.i686
+mod_auth_mysql-3.0.0-10.fc12.i686
+mysql-libs-5.1.48-2.fc13.i686
+mysql-embedded-5.1.48-2.fc13.i686
+qt-mysql-4.6.3-8.fc13.i686
+mysql-5.1.48-2.fc13.i686
+php-mysql-5.3.3-1.fc13.i686
+$</samp></pre>
+					</div>
+					<p>インストール済みのmysqlの情報を表示します。</p>
+					<div class="exe-samp">
+<pre><samp>$ <kbd>rpm -qi mysql</kbd><strong> ← 詳細情報を表示します</strong>
+Name        : mysql                        Relocations: (not relocatable)
+Version     : 5.1.48                            Vendor: Fedora Project
+Release     : 2.fc13                        Build Date: 2010年07月14日 11時57分45秒
+   …
+ 以下省略
+   …
+$
+$ <kbd>rpm -qR mysql</kbd><strong> ← 依存するパッケージを表示します</strong>
+/bin/sh
+/usr/bin/perl
+bash
+fileutils
+grep
+libc.so.6
+   …
+ 以下省略
+   …
+$
+$ <kbd>rpm -ql mysql</kbd><strong> ← パッケージ内のファイルを表示します</strong>
+/usr/bin/msql2mysql
+/usr/bin/my_print_defaults
+/usr/bin/mysql
+/usr/bin/mysql_config
+   …
+ 以下省略
+   …
+$</samp></pre>
+					</div>
+				</section>
+			</section>
+			<section>
+				<!-- yumコマンド -->
+				<h3 id="lbl_yum">付録2.2 yumコマンド</h3>
+				<p>rpmコマンドでインストールやアップデートを行った場合、依存関係にあるパッケージがインストールされていないと、エラーメッセージを出力して終了してしまいます。そこで、依存関係にあるパッケージをインストールしなければいけないわけですが、それをインストールすると、こちらからも依存関係のエラーが出力されるようなこともあります。</p>
+				<p>yumコマンドの場合は依存関係にあるパッケージをチェックして、インストールされていなければ自動的にインストールします。これにより、上記のような煩わしさから開放されます。また、yumコマンドはrpmコマンドの機能をほぼ包含していますので、RPMパッケージの管理コマンドとしてはyumコマンドの方がよく使われています。</p>
+				<p>RPMパッケージはyumレポジトリサーバーと呼ぶサーバーで管理されており、通常はFedoraプロジェクトの公式レポジトリからダウンロードしてインストールを行います。レポジトリの設定は/etc/yum.repos.d/以下に用意してあります。公式レポジトリだけを利用するのであれば、設定を追加・修正する必要はありません。しかし、非公式レポジトリを使用する場合は、設定ファイルを取得してインストールする必要があります。例えば、ウェブブラウザのFlash&nbsp;Playerプラグインはアドビ・システムズ株式会社のダウンロードサイトに用意されているyumの設定ファイルをあらかじめインストールしておき、それからFlashをインストールすることになります。</p>
+					<p>yumコマンドはインターネット上のレポジトリにアクセスしますので、インターネットにアクセスできる環境が必要です。また、パッケージの検索・表示は一般ユーザの権限で行えますが、その他の操作（新規インストール、アップデート、削除）はシステム管理者（root）の権限が必要です。</p>
+				<section>
+					<h4>一般形式</h4>
+					<p>使用目的別にオプションを説明します。</p>
+					<div class="form-exp">
+						※ パッケージの新規インストール<br>
+						# yum install -y パッケージ名１ パッケージ名２ …<br>
+						<br>
+						※ パッケージのアップデート<br>
+						# yum update -y パッケージ名１ パッケージ名２ …<br>
+						# yum update -y<strong> ← アップデート可能な全パッケージをアップデートします</strong><br>
+						<br>
+						※ パッケージの削除<br>
+						# yum remove パッケージ名１ パッケージ名２ …<br>
+						<br>
+						※ パッケージの検索・表示<br>
+						$ yum check-update<strong> ← 実際のアップデートはしないで、アップデート可能なパッケージを表示します</strong><br>
+						$ yum list installed<strong> ← インストール済みのパッケージを表示します</strong><br>
+						$ yum search キーワード<strong> ← キーワードでパッケージを検索します</strong><br>
+						$ yum info パッケージ名<strong> ← パッケージの情報を表示します</strong><br>
+						$ yum provides ファイルパス名<strong> ← ファイルがどのパッケージに含まれるかを表示します</strong><br>
+						<br>
+						※ その他<br>
+						# yum clean all<strong> ← ダウンロードしたパッケージのキャッシュを削除します</strong>
+					</div>
+					<table class="simple-table">
+						<caption>【付表2-2】yumコマンドのオプション一覧</caption>
+						<tr><th>オプション</th><th>意味</th></tr>
+						<tr><td>-y, --assumeyes</td><td>問い合わせのメッセージに対して、全て「y（yes）」で答えます。</td></tr>
+					</table>
+				</section>
+				<section>
+					<h4>実行例</h4>
+					<p>KDEのゲームパッケージを検索し、パッケージの情報を表示ます。</p>
+					<div class="exe-samp">
+<pre><samp>$ <kbd>yum search 'kde game'</kbd><strong> ← 検索キーとしてkdeとgameを指定します</strong>
+読み込んだプラグイン:fastestmirror, presto, refresh-packagekit
+Loading mirror speeds from cached hostfile
+ * fedora: ftp.iij.ad.jp
+ * rpmfusion-free: mirrors.163.com
+ * rpmfusion-free-updates: mirrors.163.com
+ * rpmfusion-nonfree: mirrors.163.com
+ * rpmfusion-nonfree-updates: mirrors.163.com
+ * updates: ftp.tsukuba.wide.ad.jp
+================================ 一致: kde game ================================
+games-menus.noarch : Catagorized submenus for the GNOME/KDE Games menu
+kdegames.i686 : KDE Games
+kdegames-minimal.i686 : Minimal set of KDE Games
+$
+$ <kbd>yum info kdegames</kbd><strong> ← kdegamesパッケージの情報を表示します</strong>
+読み込んだプラグイン:fastestmirror, presto, refresh-packagekit
+Loading mirror speeds from cached hostfile
+ * fedora: ftp.iij.ad.jp
+ * rpmfusion-free: mirrors.163.com
+ * rpmfusion-free-updates: mirrors.163.com
+ * rpmfusion-nonfree: mirrors.163.com
+ * rpmfusion-nonfree-updates: mirrors.163.com
+ * updates: ftp.riken.jp
+利用可能なパッケージ
+Name        : kdegames
+Arch        : i686
+Epoch       : 6
+Version     : 4.4.5
+Release     : 1.fc13
+Size        : 45 M
+リポジトリー  : updates
+Summary     : KDE Games
+URL           : http://www.kde.org/
+License     : GPLv2
+説明          : Games for KDE 4, including:
+              : * bomber
+              : * bovo
+   …
+ 以下省略
+   …
+$</samp></pre>
+					</div>
+					<p>kdegamesパッケージを新規インストールします。</p>
+					<div class="exe-samp">
+<pre><samp># <kbd>yum install kdegames</kbd>
+読み込んだプラグイン:fastestmirror, presto, refresh-packagekit
+Loading mirror speeds from cached hostfile
+ * fedora: ftp.riken.jp
+ * rpmfusion-free: mirrors.163.com
+ * rpmfusion-free-updates: mirrors.163.com
+ * rpmfusion-nonfree: mirrors.163.com
+ * rpmfusion-nonfree-updates: mirrors.163.com
+ * updates: ftp.riken.jp
+インストール処理の設定をしています
+依存性の解決をしています
+--&gt; トランザクションの確認を実行しています
+---&gt; パッケージ kdegames.i686 6:4.4.5-1.fc13 をインストールに設定しました
+--&gt; 依存性の処理をしています: gnugo のパッケージ: 6:kdegames-4.4.5-1.fc13.i686
+--&gt; トランザクションの確認を実行しています
+---&gt; パッケージ gnugo.i686 0:3.8-2.fc12 をインストールに設定しました
+--&gt; 依存性解決を終了しました
+
+依存性を解決しました
+
+================================================================================
+ パッケージ        アーキテクチャ
+                                 バージョン              リポジトリー      容量
+================================================================================
+インストールしています:
+ kdegames          i686          6:4.4.5-1.fc13          updates           45 M
+依存性関連でのインストールをします:
+ gnugo             i686          3.8-2.fc12              fedora           1.1 M
+
+トランザクションの要約
+================================================================================
+Install       2 Package(s)
+
+総ダウンロード容量: 47 M
+インストール済み容量: 75 M
+これでいいですか? [y/N]<kbd>y</kbd><strong> ← 「y」を応答します</strong>
+パッケージをダウンロードしています:
+Setting up and reading Presto delta metadata
+Processing delta metadata
+Package(s) data still to download: 47 M
+(1/2): gnugo-3.8-2.fc12.i686.rpm                         | 1.1 MB     00:00
+(2/2): kdegames-4.4.5-1.fc13.i686.rpm                    |  45 MB     00:10
+--------------------------------------------------------------------------------
+合計                                            4.2 MB/s |  47 MB     00:11
+rpm_check_debug を実行しています
+トランザクションのテストを実行しています
+トランザクションのテストを成功しました
+トランザクションを実行しています
+  インストールし : gnugo-3.8-2.fc12.i686                                    1/2
+  インストールし : 6:kdegames-4.4.5-1.fc13.i686                             2/2
+
+インストールしました:
+  kdegames.i686 6:4.4.5-1.fc13
+
+依存性関連をインストールしました:
+  gnugo.i686 0:3.8-2.fc12
+
+完了しました!
+#</samp></pre>
+					</div>
+					<p>上記実行例でインストールしたkdegamesパッケージを削除します。</p>
+					<div class="exe-samp">
+<pre><samp># <kbd>yum remove gnugo kdegames</kbd>
+読み込んだプラグイン:fastestmirror, presto, refresh-packagekit
+削除処理の設定をしています
+依存性の解決をしています
+--&gt; トランザクションの確認を実行しています
+---&gt; パッケージ gnugo.i686 0:3.8-2.fc12 を削除に設定しました
+---&gt; パッケージ kdegames.i686 6:4.4.5-1.fc13 を削除に設定しました
+--&gt; 依存性解決を終了しました
+
+依存性を解決しました
+
+================================================================================
+ パッケージ       アーキテクチャ
+                               バージョン                リポジトリー      容量
+================================================================================
+削除:
+ gnugo            i686         3.8-2.fc12                @fedora          6.7 M
+ kdegames         i686         6:4.4.5-1.fc13            @updates          68 M
+
+トランザクションの要約
+================================================================================
+Remove        2 Package(s)
+
+インストール済み容量: 75 M
+これでいいですか? [y/N]<kbd>y</kbd><strong> ← 「y」を応答します</strong>
+パッケージをダウンロードしています:
+rpm_check_debug を実行しています
+トランザクションのテストを実行しています
+トランザクションのテストを成功しました
+トランザクションを実行しています
+  削除中         : 6:kdegames-4.4.5-1.fc13.i686                             1/2
+  削除中         : gnugo-3.8-2.fc12.i686                                    2/2
+
+削除しました:
+  gnugo.i686 0:3.8-2.fc12              kdegames.i686 6:4.4.5-1.fc13
+
+完了しました!
+#</samp></pre>
+					</div>
+					<p>インストール済の全パッケージに対してアップデートを確認後アップデートを行います。</p>
+					<div class="exe-samp">
+<pre><samp># <kbd>yum check-update</kbd><strong> ← アップデート・パッケージが有るかを確認します</strong>
+読み込んだプラグイン:fastestmirror, presto, refresh-packagekit
+Loading mirror speeds from cached hostfile
+ * fedora: ftp.iij.ad.jp
+ * rpmfusion-free: mirrors.163.com
+ * rpmfusion-free-updates: mirrors.163.com
+ * rpmfusion-nonfree: mirrors.163.com
+ * rpmfusion-nonfree-updates: mirrors.163.com
+ * updates: ftp.riken.jp
+
+ebook-tools-libs.i686                        0.2.0-1.fc13                updates
+ghostscript.i686                             8.71-16.fc13                updates
+ghostscript-cups.i686                        8.71-16.fc13                updates
+gnupg2.i686                                  2.0.14-7.fc13               updates
+iproute.i686                                 2.6.33-4.fc13               updates
+jwhois.i686                                  4.0-21.fc13                 updates
+kdegraphics.i686                             7:4.4.5-4.fc13              updates
+   …
+ 以下省略
+   …
+#
+# <kbd>yum update -y</kbd><strong> ← -yオプションにより、全て「ｙ」を応答します</strong>
+読み込んだプラグイン:fastestmirror, presto, refresh-packagekit
+Loading mirror speeds from cached hostfile
+ * fedora: ftp.riken.jp
+ * rpmfusion-free: mirrors.163.com
+ * rpmfusion-free-updates: mirrors.163.com
+ * rpmfusion-nonfree: mirrors.163.com
+ * rpmfusion-nonfree-updates: mirrors.163.com
+ * updates: ftp.riken.jp
+更新処理の設定をしています
+依存性の解決をしています
+--&gt; トランザクションの確認を実行しています
+---&gt; パッケージ ebook-tools-libs.i686 0:0.2.0-1.fc13 を更新に設定しました
+   …
+ 以下省略
+   …
+#</samp></pre>
+					</div>
+					<p>ダウンロードしたパッケージのキャッシュは/var/cache/yum/以下にありますので、現在の容量を表示後削除します。</p>
+					<div class="exe-samp">
+<pre><samp># <kbd>du -sh /var/cache/yum</kbd><strong> ← キャッシュの容量を表示します</strong>
+151M    /var/cache/yum
+#
+# <kbd>yum clean all</kbd><strong> ← キャッシュの内容を削除します</strong>
+読み込んだプラグイン:fastestmirror, presto, refresh-packagekit
+Cleaning repos: adobe-linux-i386 fedora rpmfusion-free rpmfusion-free-updates
+              : rpmfusion-nonfree rpmfusion-nonfree-updates updates
+すべて掃除しています
+Cleaning up list of fastest mirrors
+0 delta-package files removed, by presto
+#
+# <kbd>du -sh /var/cache/yum</kbd><strong> ← 削除後の容量を表示します</strong>
+248K    /var/cache/yum
+#</samp></pre>
+					</div>
+				</section>
+			</section>
+		</section>
+	</section>
+
+	<footer>
+		<nav>
+			<ul>
+				<li><a href="../../index.html">ホーム</a></li>
+				<li><a href="../cmdtop.html#lbl_index">目次</a></li>
+			</ul>
+		</nav>
+		<p id="footer-author">更新日：<time datetime="2017-06-12">2017年06月12日</time> Merry</p>
+	</footer>
+</div>
+</body>
+</html>

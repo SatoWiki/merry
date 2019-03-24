@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initialscale=1.0">
+	<meta name="robots" content="INDEX,FOLLOW">
+	<meta name="keywords" content="シェルスクリプト,四則演算,式,加算,減算,乗算,除算,剰余">
+	<meta name="description" content="シェルスクリプトを作成するための事項を説明します。ここでは四則演算を説明します。">
+	<meta name="author" content="T.Hagiwara">
+	<link rel="stylesheet" href="../../CSS3/seminar.css" type="text/css">
+	<link rel="stylesheet" href="../../CSS3/hl_bash.css" type="text/css">
+	<link rel="prev" href="./section6_3.html">
+	<link rel="next" href="./section6_5.html">
+	<title>Linuxの使い方 - シェルスクリプトの作り方（4/8）</title>
+	<style type="text/css">
+	</style>
+</head>
+<body>
+<div id="container">
+	<header>
+		<p>Linux講座にようこそ。このページは「Linuxの使い方&nbsp;-&nbsp;第６章&nbsp;シェルスクリプトの作り方」です。</p>
+		<h1>Linuxの使い方</h1>
+		<nav>
+			<ul>
+				<li><a href="../../index.html">ホーム</a></li>
+				<li><a href="../cmdtop.html#lbl_index">目次</a></li>
+				<li><a href="./section6_3.html">前のページ</a></li>
+				<li><a href="./section6_5.html">次のページ</a></li>
+			</ul>
+		</nav>
+	</header>
+
+	<section class="contents">
+		<h1>6. シェルスクリプトの作り方（4/8）</h1>
+		<section>
+			<!-- 四則演算 -->
+			<h2 id="comp">6.6 四則演算</h2>
+			<p>四則演算は「<strong>$(( 式 ))</strong>」の形式で行うことが出来ます。（「式」の前後には空白が有っても無くても構いません）「式」の部分には次に示す演算子を使って計算式を指定します。演算は整数で行われますので、除算（/）は<strong>商</strong>が求まり、剰余（%）は<strong>余り</strong>が求まります。また、四則演算以外にビットのシフトや論理演算も可能です。</p>
+			<p>計算式には変数を使うことも出来ますが、数値演算の場合は変数の値の参照のための$を省略出来ます。</p>
+			<table class="simple-table">
+				<caption>【表6-10】四則演算子一覧</caption>
+				<tr><th>演算子</th><th>意味</th></tr>
+				<tr><td>+</td><td>加算</td></tr>
+				<tr><td>-</td><td>減算</td></tr>
+				<tr><td>*</td><td>乗算</td></tr>
+				<tr><td>/</td><td>除算（商）</td></tr>
+				<tr><td>%</td><td>剰余（余り）</td></tr>
+			</table>
+			<p>$(( 式 ))とよく似た指定に、$(コマンドリスト)がありますが、こちらはコマンド置換の指定です。コマンド置換に付いては「<a href="../SECTION5/section5_1.html#lbl_cmd_rep">コマンド置換機能の使い方</a>」をご覧下さい。</p>
+			<aside>
+				<h3>補足</h3>
+				<ul>
+					<li>bashでは「<strong>let 変数=式</strong>」の形式でも変数に演算結果を求めることが出来ますが、「式」を記述するときにエスケープが必要です。なお、$(( 式 ))やlet 変数=式はbashでサポートされたものです。Bシェルの場合はexprコマンドを使用します。</li>
+					<li>次のような演算子があります。これらはC言語の演算子と同じです。
+						<table class="simple-table">
+							<caption>【表6-11】四則演算子以外の演算子一覧</caption>
+							<tr><th>演算子</th><th>意味</th></tr>
+							<tr><td>&lt;&lt;</td><td>左ビットシフト</td></tr>
+							<tr><td>&gt;&gt;</td><td>右ビットシフト</td></tr>
+							<tr><td>&amp;</td><td>論理積（AND）</td></tr>
+							<tr><td>|</td><td>論理和（OR）</td></tr>
+							<tr><td>!</td><td>論理否定（NOT）</td></tr>
+							<tr><td>^</td><td>排他的論理和</td></tr>
+						</table></li>
+				</ul>
+			</aside>
+			<section>
+				<h3>6.6.1 例題</h3>
+				<section>
+					<h4>例題１</h4>
+					<p>四則演算を確認します。（この例題では式の内容が見やすいように半角スペースで区切っていますが、区切らなくてもかまいません）</p>
+					<div class="exe-samp">
+<pre><samp>$ <kbd>v1=$(( 10 + 20 ))</kbd><strong> ← 変数v1に結果を求めます。$((10+20))でも同じです</strong>
+$ <kbd>echo $v1</kbd>
+30
+$ <kbd>echo $(( 10 - 5 ))</kbd><strong> ← echoコマンドで演算結果を表示します</strong>
+5
+$ <kbd>echo $(( 5 * 5 ))</kbd>
+25
+$ <kbd>echo $(( 10 / 3 ))</kbd><strong> ← 商を求めます</strong>
+3
+$ <kbd>echo $(( 10 % 3 ))</kbd><strong> ← 余りを求めます</strong>
+1
+$ <kbd>echo $(( 10 - 5.5 ))</kbd><strong> ← 5.5のような実数は使用できません</strong>
+bash: 10 - 5.5 : syntax error: invalid arithmetic operator (error token is ".5 ")
+$
+$ <kbd>echo $(( $v1 + 5 ))</kbd>
+35
+$ <kbd>echo $(( v1 + 5 ))</kbd><strong> ← 変数v1の参照のための$を省略します</strong>
+35
+$</samp></pre>
+					</div>
+				</section>
+				<section>
+					<h4>例題２</h4>
+					<p>引数で指定した値を加算します。（ex40.sh）</p>
+					<div class="exe-samp">
+<pre class="bash"><span class="co0">#!/bin/bash</span>
+<span class="co0"># 機能  :  引数で指定された２つの値を加算します</span>
+<span class="co0"># 作成  :  メリー</span>
+&nbsp;
+<span class="re2">atai1</span>=<span class="co1">${1:?&quot;値がありません。中止します。&quot;}</span>
+<span class="re2">atai2</span>=<span class="co1">${2:?&quot;２つめの値がありません。中止します。&quot;}</span>
+&nbsp;
+<span class="kw3">echo</span> <span class="re1">$atai1</span> + <span class="re1">$atai2</span> = $<span class="br0">&#40;</span><span class="br0">&#40;</span><span class="re1">$atai1</span> + <span class="re1">$atai2</span><span class="br0">&#41;</span><span class="br0">&#41;</span></pre>
+					</div>
+					<div class="exe-samp">
+<pre><samp>$ <kbd>ex40.sh 10 20</kbd>
+10 + 20 = 30
+$ <kbd>ex40.sh</kbd>
+/home/merry/mybin/ex40.sh: 1: 値がありません。中止します。
+$ <kbd>ex40.sh 10</kbd>
+/home/merry/mybin/ex40.sh: 2: 2つめの値がありません。中止します。
+$</samp></pre>
+					</div>
+				</section>
+				<section>
+					<h4>例題３</h4>
+					<p>引数で指定されたディレクトリの下のファイルとディレクトリの数を表示します。（ex41.sh）</p>
+					<div class="exe-samp">
+<pre class="bash"><span class="co0">#!/bin/bash</span>
+<span class="co0"># 機能  :  引数で指定されたディレクトリの下のディレクトリとファイルの数を表示します</span>
+<span class="co0"># 作成  :  メリー</span>
+&nbsp;
+<span class="re2">dir</span>=<span class="co1">${1:?&quot;ディレクトリの指定がありません。中止します。&quot;}</span>
+&nbsp;
+<span class="re2">dir_kazu</span>=$<span class="br0">&#40;</span><span class="kw2">find</span> <span class="st0">&quot;<span class="es2">$dir</span>&quot;</span> <span class="re5">-type</span> d <span class="sy0">|</span> <span class="kw2">wc</span> -l<span class="br0">&#41;</span>   <span class="co0"># findコマンドでディレクトリを検索し、wcコマンドで出力行数を数える</span>
+<span class="re2">dir_kazu</span>=$<span class="br0">&#40;</span><span class="br0">&#40;</span> <span class="re1">$dir_kazu</span> - <span class="nu0">1</span> <span class="br0">&#41;</span><span class="br0">&#41;</span>             <span class="co0"># 引数で指定されたディレクトリ分を除く</span>
+&nbsp;
+<span class="re2">file_kazu</span>=$<span class="br0">&#40;</span><span class="kw2">find</span> <span class="st0">&quot;<span class="es2">$dir</span>&quot;</span> <span class="re5">-type</span> f <span class="sy0">|</span> <span class="kw2">wc</span> -l<span class="br0">&#41;</span>  <span class="co0"># findコマンドでファイルを検索し、wcコマンドで出力行数を数える</span>
+&nbsp;
+<span class="kw3">echo</span> <span class="st0">&quot;<span class="es3">${dir}</span>の下には<span class="es3">${dir_kazu}</span>個のディレクトリと<span class="es3">${file_kazu}</span>個のファイルがあります&quot;</span></pre>
+					</div>
+					<div class="exe-samp">
+<pre><samp>$ <kbd>tree ./DATA</kbd><strong> ← DATAディレクトリの木構造を表示します</strong>
+./DATA
+├── DIR01
+│   ├── SUBDIR
+│   ├── Screenshot.png
+│   ├── command.txt
+│   ├── mousikomi.odt
+│   └── mozilla.pdf
+└── DIR02
+    ├── Screenshot
+    ├── command
+    ├── mousikomi
+    └── mozilla
+
+3 directories, 8 files
+$
+$ <kbd>ex41.sh ./DATA</kbd>
+./DATAの下には3個のディレクトリと8個のファイルがあります
+$</samp></pre>
+					</div>
+				</section>
+			</section>
+		</section>
+	</section>
+
+	<footer>
+		<nav>
+			<ul>
+				<li><a href="../../index.html">ホーム</a></li>
+				<li><a href="../cmdtop.html#lbl_index">目次</a></li>
+				<li><a href="./section6_3.html">前のページ</a></li>
+				<li><a href="./section6_5.html">次のページ</a></li>
+			</ul>
+		</nav>
+		<p id="footer-author">更新日：<time datetime="2017-12-06">2017年12月06日</time> Merry</p>
+	</footer>
+</div>
+</body>
+</html>

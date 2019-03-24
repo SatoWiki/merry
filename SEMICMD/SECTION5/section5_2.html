@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initialscale=1.0">
+	<meta name="robots" content="INDEX,FOLLOW">
+	<meta name="keywords" content="環境変数,export,プロファイル,ジョブ番号,ps,kill,fg,bg,jobs,xclock,xcalc">
+	<meta name="description" content="シェルのより高度な使い方をご紹介します。">
+	<meta name="author" content="T.Hagiwara">
+	<link rel="stylesheet" href="../../CSS3/seminar.css" type="text/css">
+	<link rel="prev" href="./section5_1.html">
+	<link rel="next" href="../SECTION6/section6_1.html">
+	<title>Linuxの使い方 - より高度なシェルの使い方（2/2）</title>
+	<style type="text/css">
+	</style>
+</head>
+<body>
+<div id="container">
+	<header>
+		<p>Linux講座にようこそ。このページは「Linuxの使い方&nbsp;-&nbsp;第５章&nbsp;より高度なシェルの使い方」です。</p>
+		<h1>Linuxの使い方</h1>
+		<nav>
+			<ul>
+				<li><a href="../../index.html">ホーム</a></li>
+				<li><a href="../cmdtop.html#lbl_index">目次</a></li>
+				<li><a href="./section5_1.html">前のページ</a></li>
+				<li><a href="../SECTION6/section6_1.html">次のページ</a></li>
+			</ul>
+		</nav>
+	</header>
+
+	<section class="contents">
+		<h1>5. より高度なシェルの使い方（2/2）</h1>
+		<section>
+			<!-- ユーザ環境の設定 -->
+			<h2 id="environ">5.5 ユーザ環境の設定</h2>
+			<p>ヒストリ機能やエイリアス機能は作業環境をより快適なものにしますが、環境変数の設定を行うと更に快適になります。また、環境を設定するためのコマンドを自動実行する機能もあります。</p>
+			<section>
+				<h3 id="lbl_env">5.5.1 環境変数</h3>
+				<p>シェルやアプリケーションソフトの環境を制御するための変数を環境変数と呼んでおり、ユーザが値を変更できるものもあります。ここでは、Bashの環境変数を説明します。（主なもの）</p>
+				<p>なお、引数無しのenvコマンドで全ての環境変数の内容を表示出来ます。また、特定の環境変数の内容を表示するにはechoコマンドを使用します。</p>
+				<table class="simple-table">
+					<caption>【表5-6】 環境変数一覧</caption>
+					<tr><th>変数名</th><th>内容</th></tr>
+					<tr><td>BASH</td><td>Bashコマンドファイルの絶対パス名です。</td></tr>
+					<tr><td>CDPATH</td><td>cdコマンドが検索に使用するディレクトリのリストです。標準では未設定ですので、必要に応じて設定します。</td></tr>
+					<tr><td>IFS</td><td>コマンドの区切り記号です。</td></tr>
+					<tr><td>HISTFILE</td><td>実行したコマンドの登録ファイルの絶対パス名です。標準ではホームディレクトリの下の「.bash_history」です。</td></tr>
+					<tr><td>HISTSIZE</td><td>記憶されるコマンドの最大数です。</td></tr>
+					<tr><td><strong>HOME</strong></td><td>ホームディレクトリの絶対パス名です。</td></tr>
+					<tr><td>HOSTNAME</td><td>ホスト名です。</td></tr>
+					<tr><td>LANG</td><td>地域情報です。Fedoraの場合の標準値は「ja_JP.UTF-8」です。</td></tr>
+					<tr><td>OLDPWD</td><td>１つ前のカレントディレクトリの絶対パス名です。</td></tr>
+					<tr><td><strong>PATH</strong></td><td>コマンドを検索するディレクトリ（検索パス名）のリストです。</td></tr>
+					<tr><td>PS1</td><td>プロンプトの内容です。</td></tr>
+					<tr><td>PWD</td><td>カレントディレクトリの絶対パス名です。</td></tr>
+					<tr><td>SHELL</td><td>シェルコマンドファイルの絶対パス名（BASHと同じ）です。</td></tr>
+					<tr><td>USER</td><td>ログインユーザ名です。</td></tr>
+				</table>
+				<p id="export">コマンドやアプリケーションを実行すると、シェルは子供のシェル（<strong>サブシェル</strong>と呼びます）をつくり出して、サブシェルでコマンドやアプリケーションを実行します。環境変数はサブシェルにも引き継がれますが、親シェルで変更されたものは引き継がれないことがあります。サブシェルに引き継ぎたい場合は、exportコマンドで登録します。環境変数を変更した場合はexportコマンドで登録しておくとよいでしょう。</p>
+				<div class="form-exp">
+					$ export 環境変数名="値"<strong> ← =の前後には空白を入れてはいけません</strong>
+				</div>
+				<aside>
+					<h4>補足</h4>
+					<ul>
+						<li>引数を指定しないでcdコマンドを実行するとカレントディレクトリがホームディレクトリに戻りますが、このときにHOMEを参照しています。従って、HOMEの値を変えてしまいますとホームディレクトリに戻れなくなります。</li>
+						<li>UNIX系OSのコマンドはコマンドファイルとして存在し、複数のディレクトリにより管理されていますので、コマンド実行時に探し出す必要があります。シェルはPATHに登録されている順番にコマンドファイルを探しに行きます。PATHには絶対パス名で登録し、区切りは<strong>:</strong>（コロン）です。</li>
+					</ul>
+				</aside>
+			</section>
+			<section>
+				<h3>5.5.2 環境変数の利用と設定</h3>
+				<p>環境変数を参照するときは変数名の前に<strong>$</strong>（ドル記号）をつけます。</p>
+				<p>HOME環境変数を使って、ホームディレクトリの下のファイルをコピーします。</p>
+				<div class="exe-samp">
+<pre><samp>$ <kbd>pwd</kbd><strong> ← カレントディレクトリを確認します</strong>
+/home/merry/TMP/TMP1
+$ <kbd>cp <strong>$</strong>HOME/.bashrc bashrc.bkup</kbd><strong> ← $HOMEが絶対パス名に置き換わって実行されます</strong>
+$
+$ <kbd>ll bashrc.bkup</kbd><strong> ← 確認します（llコマンドはaliasで登録済とします）</strong>
+-rw-r--r--    1  merry    users    360  4月 28 23:13 bashrc.bkup
+$
+</samp></pre>
+				</div>
+				<p>自作のプログラムを置いてあるディレクトリもコマンドファイルの検索対象にします。</p>
+				<div class="exe-samp">
+<pre><samp>$ <kbd>cc -o hello.prg hello.c</kbd><strong> ← 実行可能プログラムファイルをhello.prgとして作成します</strong>
+$ <kbd>hello.prg</kbd><strong> ← hello.prgを実行します</strong>
+bash: hello.prg: command not found<strong> ← プログラムファイルが見つからないというエラーメッセージです</strong>
+$
+$ <kbd>pwd</kbd><strong> ← カレントディレクトリを確認します</strong>
+/home/merry/mybin
+$ <kbd>echo $PATH</kbd><strong> ← 環境変数PATHの値を確認します</strong>
+/usr/bin:/bin:/usr/X11R6/bin:/usr/local/bin
+$
+$ <kbd>PATH=$PATH:$PWD</kbd><strong> ← PATHにカレントディレクトリの絶対パス名を追加します</strong>
+$ <kbd>echo $PATH</kbd><strong> ← PATHの値を確認します</strong>
+/usr/bin:/bin:/usr/X11R6/bin:/usr/local/bin<strong>:/home/merry/mybin</strong>
+$
+$ <kbd>hello.prg</kbd><strong> ← hello.prgを実行します</strong>
+Hello!!
+Hello!!
+Hello!!
+Hello!!
+Hello!!
+$
+</samp></pre>
+				</div>
+				<p>カレントディレクトリをプロンプトとして表示します。</p>
+				<div class="exe-samp">
+<pre><samp>$ <kbd>PS1="[\w]　"</kbd><strong> ← \wはカレントディレクトリを意味します</strong>
+[~]<strong> ← ~（チルダ）はホームディレクトリを表します</strong>
+[~] <kbd>cd TMP</kbd><strong> ← カレントディレクトリを変更します</strong>
+[~/TMP] <kbd>cd TMP1</kbd><strong> ← さらに、カレントディレクトリを変更します</strong>
+[~/TMP/TMP1]
+[~/TMP/TMP1] <kbd>PS1="$　"</kbd><strong> ← 元のプロンプトに戻します</strong>
+$
+</samp></pre>
+				</div>
+				<aside>
+					<h4>補足</h4>
+					<ul>
+						<li>環境変数PATHに検索パス名が登録されていなくても、プログラムファイルを絶対パス名で指定すれば実行できます。また、カレントディレクトリの下にあるのであれば、次の形式で実行できます。<br><kbd>$ ./hello.prg</kbd></li>
+						<li>環境変数PATHにカレントディレクトリを登録すればカレントディレクトリの下も検索対象になりますが、機密保護上問題がありますので避けたほうよいでしょう。<br><kbd>$ PATH=$PATH:.</kbd></li>
+						<li>ホームディレクトリは<strong>~</strong>（オーバーライン）でも指定できます。例えば、「<kbd>$HOME/.bashrc</kbd>」と「<kbd>~/.bashrc</kbd>」は同じです。</li>
+						<li>プロンプトを表すエスケープ文字には、"\w"以外に次のようなものがあります。（主なもの）
+							<table class="simple-table">
+								<caption>【表5-7】 エスケープ文字</caption>
+								<tr><th>エスケープ文字</th><th>意味</th></tr>
+								<tr><td><code>\d</code></td><td>日付を表示します。</td></tr>
+								<tr><td><code>\H</code></td><td>ホスト名を表示します。</td></tr>
+								<tr><td><code>\t</code></td><td>時刻（\Tもあり）を表示します。</td></tr>
+								<tr><td><code>\W</code></td><td>カレントディレクトリを表示します。</td></tr>
+								<tr><td><code>\$</code></td><td>ユーザがrootのときは"#&nbsp;"を、一般ユーザのときは"$&nbsp;"を表示します。</td></tr>
+							</table></li>
+					</ul>
+				</aside>
+			</section>
+			<section>
+				<h3 id="lbl_envsetting">5.5.3 環境の自動設定</h3>
+				<p>aliasコマンドで登録した内容や環境変数の内容は、ログアウトすると取り消されてしまいます。そこで、次のログイン時にも有効にしたい場合は、再度、設定コマンドを実行することになります。このような無駄を省くために、ログイン時に自動的にコマンドを実行する手段が用意されています。自動実行したいコマンドがある場合は、次に示す<strong>ユーザ・プロファイル</strong>にコマンドを追加しておきます。</p>
+				<p>ユーザ・プロファイルを変更して、変更内容を有効にするには再度ログインする必要があります。（~/.bashrcの場合は、次のサブシェルから有効になります）</p>
+				<p>ユーザ・プロファイルはユーザ登録時に作成されるため、通常は作成する必要はありませんが、もし無い場合はホームディレクトリの下にエディタで作成します。また、ファイル名が<code>.</code>（ピリオド）で始まっていますので、lsコマンドで表示する場合は「-a」オプションを指定します。</p>
+				<table class="simple-table">
+					<caption>【表5-8】 ユーザ・プロファイル一覧</caption>
+					<tr><th style="text-align:left;">ユーザ・<br>プロファイル名</th><th style="text-align:left; white-space:nowrap;">起動の<br>タイミング</th><th>内容</th></tr>
+					<tr><td>~/.bash_profile</td><td>ログイン時</td>
+						<td>システム・プロファイルの/etc/profileの次に実行されます。当ファイルが無い場合は~/.bash_loginを探し、これもない場合は~/.profileを探します。</td></tr>
+					<tr><td>~/.bashrc</td><td>Bash起動時</td>
+						<td>bashコマンドの実行、或はviエディタの「:sh」コマンドやシェルスクリプトを実行するとシェルが起動されます。このシェルを<strong>サブシェル</strong>と呼んでおり、~/.bashrcはサブシェル起動時に実行されます。また、当然のことながら、ログイン時にはBashを起動しますので、ログイン時にも起動されます。</td></tr>
+					<tr><td>~/.logout</td><td>ログアウト時</td><td>標準ではファイルは用意されないようです。必要ならば作成します。</td></tr>
+				</table>
+			</section>
+			<section>
+				<h3>5.5.4 ユーザ・プロファイル例</h3>
+				<p>ユーザ・プロファイルに既に記述されている内容は変更や削除をしないほうがよいでしょう。（少なくとも内容が理解できるまでは）削除する場合は行の先頭に"#"をつけてコメントにしておくと、間違えたときに簡単にもとに戻せます。</p>
+				<p>.bashrcで環境変数の設定を行います。</p>
+				<div class="exe-samp">
+<pre><samp>$ <kbd>cat .bashrc</kbd>
+# .bashrc
+
+# Source global definitions
+if [ -f /etc/bashrc ]; then
+    /etc/bashrc
+fi
+
+# User specific aliases and functions
+export PATH=$PATH:$HOME/mybin<strong> ← コマンド検索パスに~/mybinを追加します</strong>
+export PS1='\$ '<strong> ← プロンプトを変更します</strong>
+$
+</samp></pre>
+				</div>
+			</section>
+		</section>
+
+		<!-- プロセスの操作 -->
+		<section>
+			<h2 id="proc">5.6 プロセスの操作</h2>
+			<p>プロセスとはプログラムの実行環境（CPUやメモリ等のリソースを含む）のことです。プログラム（コマンドやアプリケーション）を起動するとシェルによりサブシェルが作られて、そこで実行します。このサブシェルは１つのプロセスで、親のシェルがカーネルに依頼して作ります。プロセスには、プロセスIDと呼ぶユニークな番号が割り当てられており、プロセスの操作を行う場合に使います。</p>
+			<p>通常、コマンドはターミナル・エミュレータ上で実行します。コマンドプロンプトが表示されている状態の時にコマンドを指定して実行し、実行が終了したらコマンドプロンプトが表示されますが、この実行方法がフォアグラウンドプロセスです。フォアグラウンドプロセスはひとつひとつのコマンドを順番に直線的に実行することになります。一方、複数のコマンドを並列的に実行するのがバックグラウンドプロセスで、バックグラウンドプロセスにはジョブ番号と呼ぶ番号が割り当てられます。</p>
+			<p>プロセスの操作として、ここでは次のことについて説明します。</p>
+			<ul>
+				<li>プロセスの表示（psコマンド）</li>
+				<li>バックグラウンドプロセスの強制終了（killコマンド）</li>
+				<li>フォアグラウンドプロセスからバックグラウンドプロセス、バックグラウンドプロセスからフォアグラウンドプロセスへの移動（fgコマンド、bgコマンド、jobsコマンド）</li>
+			</ul>
+			<section>
+				<h3>5.6.1 形式</h3>
+				<p>プロセスIDはpsコマンドで、ジョブ番号はjobsコマンドで表示することが出来ます。</p>
+				<div class="form-exp">
+					$ ps -el<br>
+					$ kill -l<br>
+					$ kill -シグナル名 %ジョブ番号またはプロセスID<br>
+					$ fg %ジョブ番号<br>
+					$ bg %ジョブ番号<br>
+					$ jobs -l %ジョブ番号
+				</div>
+				<p>psコマンドは引数を指定しないと、psコマンドを実行したターミナルから起動したプロセスのみを表示します。</p>
+				<table class="simple-table">
+					<caption>【表5-9】 psコマンド・オプション</caption>
+					<tr><th>オプション</th><th>意味</th></tr>
+					<tr><td>-e</td><td>システムで起動しているプロセスの全てを表示します。（-Aも同じです）</td></tr>
+					<tr><td>-l</td><td>詳細情報を表示します。</td></tr>
+				</table>
+				<table class="simple-table">
+					<caption>【表5-10】 killコマンド・オプション</caption>
+					<tr><th>オプション</th><th>意味</th></tr>
+					<tr><td>-l</td><td>シグナルの一覧を表示します。</td></tr>
+					<tr><td>-シグナル名</td><td>プロセスに送るシグナルを指定します。省略した場合はSIGTERMシグナルを送り、プロセスを強制終了させます。</td></tr>
+					<tr><td>%ジョブ番号</td><td>シグナルを送るプロセスのジョブ番号を指定します。ジョブ番号はバックグラウンドプロセスに付けられた番号です。</td></tr>
+					<tr><td>プロセスID</td><td>シグナルを送るプロセスのIDを指定します。プロセスIDは全てのプロセスに付けられた番号です。</td></tr>
+				</table>
+				<p>fgコマンドは引数を指定しないと、一番最近起動したバックグラウンドプロセスを対象にします。</p>
+				<table class="simple-table">
+					<caption>【表5-11】 fgコマンド・オプション</caption>
+					<tr><th>オプション</th><th>意味</th></tr>
+					<tr><td>%ジョブ番号</td><td>ジョブ番号で指定したバックグラウンドプロセスをフォアグラウンドプロセスに移動します。</td></tr>
+				</table>
+				<p>bgコマンドは引数を指定しないと、サスペンド（停止中）プロセスをバックグラウンドプロセスに移動します。</p>
+				<table class="simple-table">
+					<caption>【表5-12】 bgコマンド・オプション</caption>
+					<tr><th>オプション</th><th>意味</th></tr>
+					<tr><td>%ジョブ番号</td><td>ジョブ番号で指定したサスペンド（停止中）プロセスをバックグラウンドプロセスに移動します。</td></tr>
+				</table>
+				<p>jobsコマンドは引数を指定しないと、現在起動中のバックグラウンドプロセスを全て表示します。</p>
+				<table class="simple-table">
+					<caption>【表5-13】 jobsマンド・オプション</caption>
+					<tr><th>オプション</th><th>意味</th></tr>
+					<tr><td>-l</td><td>プロセスIDも表示します。</td></tr>
+					<tr><td>%ジョブ番号</td><td>指定したバックグラウンドプロセスのみを表示します。</td></tr>
+				</table>
+			</section>
+			<section>
+				<h3 id="proc_ex">5.6.2 実行例</h3>
+				<p>ここで実行するxclockは時計、xeyesはマウスポインターを見ているアプリケーションで、X&nbsp;Windowシステムの標準的なアプリケーションです。（xclockとxeyesが実行できない場合は「2.4 その他の知っておくと便利な機能」の<a href="../SECTION2/section2_2.html#lbl_sup_xclock">補足</a>をご覧ください）</p>
+				<p>xclockとxeyesをバックグラウンドプロセスで実行します。</p>
+				<div class="exe-samp">
+<pre><samp>$ <kbd>xclock &amp; xeyes &amp;</kbd><strong> ← バックグラウンドプロセスで実行します</strong>
+[1] 1172<strong> ← [1]がジョブ番号で1172がプロセスIDです</strong>
+[2] 1173
+$<strong> ← ジョブ番号とプロセスIDを表示後、すぐにプロンプトが表示されます</strong>
+$ <kbd>ps</kbd><strong> ← プロセスを表示します</strong>
+PID   TTY        TIME  CMD<strong> ← PID欄がプロセスIDです</strong>
+1012  pts/1  00:00:00  bash
+1172  pts/1  00:00:00  xclock
+1173  pts/1  00:00:00  xeyes
+1177  pts/1  00:00:00  ps
+$
+$ <kbd>jobs</kbd><strong> ← ジョブ番号を調べます</strong>
+[1]- Running    xclock &amp;
+[2]+ Running    xeyes &amp;
+$
+$ <kbd>kill 1172</kbd><strong> ← プロセスIDが1172のxclockを強制終了します</strong>
+$ <kbd>ps</kbd><strong> ← 確認します</strong>
+PID   TTY        TIME  CMD
+1012  pts/1  00:00:00  bash
+1173  pts/1  00:00:00  xeyes
+1177  pts/1  00:00:00  ps
+[1]- 終了しました     xclock<strong> ← 終了後、最初のコマンド実行後に表示します</strong>
+$
+$ <kbd>fg %2</kbd><strong> ← ジョブ番号2のxeyesをフォアグラウンドプロセスに移動します</strong>
+xcalc
+<strong> ← フォアグラウンドプロセスが実行中なのでプロンプトは出て来ません。
+    Ctrl+Z（サスペンド）を入力するとフォアグラウンドプロセスが一時停止します</strong>
+[2]+ Stopped     xeyes
+$ <kbd>bg</kbd><strong> ← プロンプトが出て来るので、停止中のプロセスをバックグラウンドプロセスとして再開します</strong>
+[2]+ xeyes &amp;
+$
+</samp></pre>
+				</div>
+			</section>
+		</section>
+	</section>
+
+	<footer>
+		<nav>
+			<ul>
+				<li><a href="../../index.html">ホーム</a></li>
+				<li><a href="../cmdtop.html#lbl_index">目次</a></li>
+				<li><a href="./section5_1.html">前のページ</a></li>
+				<li><a href="../SECTION6/section6_1.html">次のページ</a></li>
+			</ul>
+		</nav>
+		<p id="footer-author">更新日：<time datetime="2015-11-12">2015年11月12日</time> Merry</p>
+	</footer>
+</div>
+</body>
+</html>

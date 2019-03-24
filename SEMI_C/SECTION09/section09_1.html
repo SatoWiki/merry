@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initialscale=1.0">
+	<meta name="robots" content="INDEX,FOLLOW">
+	<meta name="keywords" content="関数,部品,ライブラリ関数,ユーザ定義関数,main関数,関数プロトタイプ宣言,関数呼び出し,関数定義,引数,返り値,戻り値,実引数,仮引数,void,return,肥満度,BMI">
+	<meta name="description" content="関数を作るための基本的な事柄を説明します。">
+	<meta name="author" content="T.Hagiwara">
+	<link rel="stylesheet" href="../../CSS3/seminar.css" type="text/css">
+	<link rel="stylesheet" href="../../CSS3/hl_clang.css" type="text/css">
+	<link rel="prev" href="../SECTION08/section08_3.html">
+	<link rel="next" href="./section09_2.html">
+	<title>Ｃ言語プログラミング入門&nbsp;-&nbsp;プログラムの部品化のための関数（1/3）</title>
+	<style type="text/css">
+	</style>
+</head>
+<body>
+<div id="container">
+	<header>
+		<p>Linux講座にようこそ。このページは「Ｃ言語プログラミング入門&nbsp;-&nbsp;第９章．プログラムの部品化のための関数」です。</p>
+		<h1>Ｃ言語プログラミング入門</h1>
+		<nav>
+			<ul>
+				<li><a href="../../index.html">ホーム</a></li>
+				<li><a href="../c_langtop.html#lbl_index">目次</a></li>
+				<li><a href="../SECTION08/section08_3.html">前のページ</a></li>
+				<li><a href="./section09_2.html">次のページ</a></li>
+			</ul>
+		</nav>
+	</header>
+
+	<section class="contents">
+		<h1>9. プログラムの部品化のための関数（1/3）</h1>
+		<section>
+			<h2>9.1 関数とは</h2>
+			<figure class="left-box myphoto">
+				<dl>
+					<dt><img src="../IMAGES/sec09_1.jpg" alt="関数とは"></dt>
+					<dd>【図９-１】関数とは</dd>
+				</dl>
+			</figure>
+			<p>関数とはプログラムを構成する「<strong>部品プログラム</strong>」です。少し複雑なプログラムになりますと、ソースプログラムの行数が多くなり、プログラム全体の見通しが悪くなるため、理解しにくいプログラムになってしまいます。そこで、プログラムを機能単位に部品化して、その部品を組み合わせることにより、１つのプログラムを作成することが行われています。</p>
+			<p>Ｃ言語では大別すると、<strong>ライブラリ関数</strong>と<strong>ユーザ定義関数</strong>の２つの関数があります。ライブラリ関数はOSやコンパイラの一部として提供される関数で、ユーザ定義関数は我々が作成する関数です。ここではユーザ定義関数に付いて説明します。</p>
+			<p>図9-1では１つのプログラムが４つの関数で作られています。このプログラムを起動すると、OSから制御が関数１に渡って来ますが、Ｃ言語では、この関数の名前は<strong>main</strong>（main関数）と決まっています。その他の関数の名前は自由に付けることが出来ます。今までの例題プログラムはmain関数１つで構成されていました。</p>
+			<p>関数１が関数２を呼び出しますと、制御は関数２に渡り、関数２に定義されている一連の命令を実行し、最後まで実行したら制御は関数１に戻ります。同じように、関数１が関数３を呼び出しますと、関数３を実行し、最後まで実行したら関数１に戻ります。また、関数３が関数４を呼び出すように、関数から関数を呼び出すことも出来ます。関数１が最後まで実行したらOSに制御が戻り、プログラムが終了します。一般的に、関数１（main関数）は関数を呼び出すことによりプログラムの実行を制御する関数になります。</p>
+			<p>なお、ライブラリ関数には例題プログラムで使っているprintf関数やscanf関数がありますが、これらライブラリ関数の種類や使い方については「<a href="../SECTION14/section14_1.html">14. ライブラリ関数</a>」で説明します。</p>
+		</section>
+		<section>
+			<h2 id="lbl_dec">9.2 関数の宣言</h2>
+			<p>関数を使う場合は、次の宣言および、定義が必要です。</p>
+			<ul>
+				<li>関数プロトタイプ宣言</li>
+				<li>関数呼び出し</li>
+				<li>関数定義</li>
+			</ul>
+			<p>関数プロトタイプ宣言は変数の宣言と同じように、関数の型名や関数名を宣言します。また、関数は定義しただけでは実行しませんので、実行するには関数呼び出しという手続きが必要です。</p>
+			<p>関数を呼び出すときに、呼び出す関数に値を渡すことができます。この値を<strong>引数</strong>と呼んでいます。また、関数の実行終了時に、呼び出し元に値を返すことも出来ます。この値のことを「戻り値」とか「返り値」と呼んでいますが、当講座では<strong>返り値</strong>と呼ぶことにします。</p>
+			<section>
+				<h3 id="lbl_format">9.2.1 形式</h3>
+				<p>引数は関数呼び出しでは<strong>実引数</strong>、関数定義では<strong>仮引数</strong>と表記して区別していますが、実際には区別する必要はあまりないでしょう。引数ということで認識していれば問題はないと思います。</p>
+				<p>返り値の型名や引数の型名は変数や配列の型名と同じく、int型やdouble型などを指定しますが、返り値や引数がないことを表す<strong>void型</strong>という型名があります。</p>
+				<p>関数定義で<strong>return文</strong>を指定すると呼び出し元に返り値を返すことができます。また、return文を省略すると制御が呼び出し元に戻るだけになります。</p>
+				<div class="form-exp">
+					※ 関数プロトタイプ宣言<br>
+					返り値の型名 関数名(引数の型名１ 引数名１, 引数の型名２ 引数名２, …);<br><br>
+
+					※ 関数呼び出し<br>
+					関数名(実引数名１, 実引数名２, …);<br><br>
+
+					※ 関数定義<br>
+					返り値の型名 関数名(仮引数の型名１ 仮引数名１, 仮引数の型名２ 仮引数名２, …)<br>
+					{<br>&nbsp;&nbsp;関数内で使用する変数や配列の宣言;<br><br>
+
+					&nbsp;&nbsp;実行文;<br><br>
+
+					&nbsp;&nbsp;return 値;<br>
+					}
+				</div>
+				<dl>
+					<dt>返り値の型名</dt>
+						<dd>この関数の返り値の型名を指定します。省略するとint型を仮定します。また、返り値がない場合は<strong>void</strong>型を指定します。なお、返り値がポインタの場合は*（アステリスク）を付けて「返り値の型名 <strong>*</strong>関数名」のように指定します。</dd>
+					<dt>関数名</dt>
+						<dd>命名規則は変数の場合と同じで、先頭１文字は英字（アンダライン含む）で、２文字目以降は英数字の組み合わせです。</dd>
+					<dt>引数の型名１ 引数名１</dt>
+						<dd>変数の宣言と同じ要領で、引数の型名と引数名を指定します。引数が複数ある場合は,（コンマ）で区切って指定し、引数がない場合は<strong>void</strong>を指定します。</dd>
+					<dt>実引数名１</dt>
+						<dd>呼び出す関数に引数として渡す値（通常は変数や定数）を指定します。複数ある場合は,（コンマ）で区切って指定します。また、引数がない場合は<strong>何も指定しません</strong>。</dd>
+					<dt>仮引数の型名１ 仮引数名１</dt>
+						<dd>呼び出された時に引数として渡ってくる値の型名と引数名を指定します。これにより、呼出し時に指定した実引数の値を仮引数名で参照できます。引数が複数ある場合は,（コンマ）で区切って指定し、引数がない場合は<strong>void</strong>を指定します。</dd>
+					<dt>return 値</dt>
+						<dd>呼び出し元に制御を戻します。「値」を指定すると、その値が返り値として呼び出し元に返り、省略すると返り値を返しません。なお、return文を指定しない場合は関数定義の最後の}の直前で呼び出し元に制御を戻します。</dd>
+				</dl>
+				<p>関数プロトタイプ宣言、関数呼び出し、関数定義にそれぞれ引数を指定しますが、引数は指定した<strong>順番</strong>により対応を取ります。引数名は関係ありませんので、引数名は一致させる必要はありません。（それぞれ、異なっていてもかまいません。通常は異なっていると思います）</p>
+				<p>次の例は、第１引数が体重で第２引数が身長のCalcBmi関数です。体重と身長の順に指定する必要はありますが、引数名は異なっていても構いません。</p>
+				<div class="source-code">
+<pre> double CalcBmi(double BmiWeight, double BmiHeight); <strong>← 関数プロトタイプ宣言です</strong>
+
+ CalcBmi(weight, height); <strong>← 関数呼び出しです</strong>
+
+ double CalcBmi(double pWeight, double pHeight) <strong>← 関数定義です</strong></pre>
+				</div>
+				<p>関数呼び出しも１つの式となり、返り値が式の値になります。従って、返り値を代入演算子で変数に代入したり、if文で比較することが出来ます。</p>
+				<div class="source-code">
+<pre>atai = func1(10); <strong>← 関数func1の返り値を変数ataiに代入します</strong>
+
+if(func2(atai) == 0) <strong>← 関数func2の返り値が０かどうかを判定します</strong></pre>
+				</div>
+				<aside>
+					<h4>補足</h4>
+					<ul>
+						<li>関数プロトタイプ宣言で指定した引数の型名と引数の数は、関数呼び出しの実引数の型名と数および、関数定義の仮引数の型名と数と一致するかどうかをコンパイラがチェックします。一致しない場合はコンパイルエラーとなります。このことにより、プログラムの不良をコンパイル時に摘出できます。<br>上記チェックでは引数名は無関係ですので、関数プロトタイプ宣言の引数名は省略することができます。ただし、省略してしまいますと、引数の意味が分かりにくくなりますので、指定しておいたほうが良いでしょう。</li>
+						<li>関数呼び出しより前に関数定義を記述した場合は、関数プロトタイプ宣言は省略出来ます。この場合、main関数を一番最後に記述することになりますので、プログラムの見通しが悪くなりがちですし、メンテナンスなどもしにくくなると思いますので、関数プロトタイプ宣言は必ず記述するようにした方がよいでしょう。</li>
+						<li>今までの例題プログラムでもprintf関数やscanf関数を使っていましたが、関数プロトタイプ宣言は行っていませんでした。これは<code>#include &lt;stdio.h&gt;;</code>で取り込んだstdio.hファイル中に宣言されているためです。また、これらの関数はライブラリ関数の一種ですので、関数定義は必要ありません。リンク時にその他のライブラリ関数やユーザ定義関数と連結して、１つの実行可能プログラムファイルを作成します。</li>
+					</ul>
+				</aside>
+			</section>
+			<section>
+				<h3>9.2.2 例題</h3>
+				<section>
+					<h4>例題１</h4>
+					<p>お馴染みの肥満度（BMI）を求めるプログラムですが、肥満度の計算を関数（CalcBmi関数）で行います。CalcBmi関数はdouble型の体重と身長を引数として受け取り、計算結果の肥満度を返り値として返します。</p>
+					<div class="source-code">
+<div class="c"><ol><li class="li1"><div class="de1"><span class="co2">#include &lt;stdio.h&gt;</span></div></li>
+<li class="li1"><div class="de1"><span class="kw4">int</span> main<span class="br0">&#40;</span><span class="kw4">void</span><span class="br0">&#41;</span></div></li>
+<li class="li1"><div class="de1"><span class="br0">&#123;</span></div></li>
+<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">double</span> &nbsp;weight<span class="sy0">;</span></div></li>
+<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">double</span> &nbsp;height<span class="sy0">;</span></div></li>
+<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">double</span> &nbsp;bmi<span class="sy0">;</span></div></li>
+<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">int</span> &nbsp; &nbsp; return_code<span class="sy0">;</span></div></li>
+<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="coMULTI">/* CalcBmi関数のプロトタイプ宣言 */</span></div></li>
+<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">double</span> CalcBmi<span class="br0">&#40;</span><span class="kw4">double</span> BmiWeight<span class="sy0">,</span> <span class="kw4">double</span> BmiHeight<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+<li class="li1"><div class="de1">&nbsp;</div></li>
+<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;肥満度(BMI)の計算を行います<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;体重(kg)と身長(cm)を入力してください ==&gt; &quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">scanf</span><span class="br0">&#40;</span><span class="st0">&quot;%lf%lf&quot;</span><span class="sy0">,</span> <span class="sy0">&amp;</span>weight<span class="sy0">,</span> <span class="sy0">&amp;</span>height<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+<li class="li1"><div class="de1">&nbsp;</div></li>
+<li class="li1"><div class="de1">&nbsp; &nbsp; bmi <span class="sy0">=</span> CalcBmi<span class="br0">&#40;</span>weight<span class="sy0">,</span> height<span class="br0">&#41;</span><span class="sy0">;</span> &nbsp; &nbsp; <span class="coMULTI">/* 肥満度(BMI)を返り値として取得 */</span></div></li>
+<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">if</span><span class="br0">&#40;</span>bmi <span class="sy0">&gt;</span> <span class="nu16">0.0</span><span class="br0">&#41;</span></div></li>
+<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;肥満度は%.2fです<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> bmi<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; return_code <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">;</span></div></li>
+<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">else</span></div></li>
+<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;入力した値が不当です<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; return_code <span class="sy0">=</span> <span class="nu0">1</span><span class="sy0">;</span></div></li>
+<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+<li class="li1"><div class="de1">&nbsp;</div></li>
+<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">return</span> return_code<span class="sy0">;</span><strong> ← この関数の返り値はint型のため、変数return_codeはint型です</strong></div></li>
+<li class="li1"><div class="de1"><span class="br0">&#125;</span></div></li>
+<li class="li1"><div class="de1">&nbsp;</div></li>
+<li class="li1"><div class="de1"><span class="coMULTI">/* 体重と身長を元に肥満度(BMI)の計算を行う */</span></div></li>
+<li class="li1"><div class="de1"><span class="kw4">double</span> CalcBmi<span class="br0">&#40;</span><span class="kw4">double</span> pWeight<span class="sy0">,</span> <span class="kw4">double</span> pHeight<span class="br0">&#41;</span></div></li>
+<li class="li1"><div class="de1"><span class="br0">&#123;</span></div></li>
+<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">double</span> &nbsp;bmi<span class="sy0">;</span></div></li>
+<li class="li1"><div class="de1">&nbsp;</div></li>
+<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="coMULTI">/* 体重と身長の値をチェック */</span></div></li>
+<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">if</span> <span class="br0">&#40;</span>pWeight <span class="sy0">&gt;</span> <span class="nu16">0.0</span> <span class="sy0">&amp;&amp;</span> pHeight <span class="sy0">&gt;</span> <span class="nu16">0.0</span><span class="br0">&#41;</span></div></li>
+<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* 身長をセンチメートルからメートルに変換 */</span></div></li>
+<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; pHeight <span class="sy0">=</span> pHeight <span class="sy0">/</span> <span class="nu16">100.0</span><span class="sy0">;</span></div></li>
+<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* 肥満度(BMI) = 体重(kg) / 身長(m) / 身長(m) */</span></div></li>
+<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; bmi <span class="sy0">=</span> pWeight <span class="sy0">/</span> pHeight <span class="sy0">/</span> pHeight<span class="sy0">;</span></div></li>
+<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">else</span></div></li>
+<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; bmi <span class="sy0">=</span> <span class="nu16">0.0</span><span class="sy0">;</span></div></li>
+<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+<li class="li1"><div class="de1">&nbsp;</div></li>
+<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">return</span> bmi<span class="sy0">;</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="coMULTI">/* 肥満度(BMI)を返り値として返す */</span></div></li>
+<li class="li1"><div class="de1"><span class="br0">&#125;</span></div></li>
+</ol></div>	
+					</div>
+					<div class="exe-samp">
+<pre><samp>$ <kbd>./ex09_1.prg</kbd>
+肥満度(BMI)の計算を行います
+体重(kg)と身長(cm)を入力してください ==&gt; <kbd>83.5 184.5</kbd>
+肥満度は24.53です
+$ <kbd>echo $?</kbd> <strong>← ex09_1.prgの返り値をechoコマンドで表示します</strong>
+0 <strong>← 肥満度の計算が出来ましたので、返り値は０です</strong>
+$
+$ <kbd>./ex09_1.prg</kbd>
+肥満度(BMI)の計算を行います
+体重(kg)と身長(cm)を入力してください ==&gt; <kbd>83.5 -184.5</kbd>
+入力した値が不当です
+$ <kbd>echo $?</kbd>
+1 <strong>← 肥満度の計算が出来ませんでしたので、返り値は１です</strong>
+$</samp></pre>
+					</div>
+					<dl>
+						<dt>2行目</dt>
+							<dd>main関数の返り値の型名をint型として明示的に指定します。これにより、main関数から整数の値がOSに返ることを宣言したことになります。また、引数を受け取らないため、仮引数の型名としてvoid型を指定します。</dd>
+						<dt>9行目</dt>
+							<dd>肥満度の計算を行うCalcBmi関数の関数プロトタイプ宣言です。返り値はdouble型で、第１引数がdouble型のBmiWeigh（体重）、第２引数がdouble型のBmiHeight（身長）です。</dd>
+						<dt>15行目</dt>
+							<dd>CalcBmi関数の呼び出しを行います。第１引数が体重の値、第２引数が身長の値です。CalcBmi関数の実行結果である肥満度は返り値として返ってきて、式の値となりますので、それを変数bmiに代入します。</dd>
+						<dt>16行目</dt>
+							<dd>変数bmi（CalcBmi関数の返り値）の値が０より大きいかをチェックします。０の時は入力データ（体重と身長の値）が不当です。</dd>
+						<dt>18〜19行目</dt>
+							<dd>肥満度を出力して、このプログラムの返り値０（正常終了の意味）を変数return_codeに代入します。</dd>
+						<dt>23〜24行目</dt>
+							<dd>入力データの値が不当なため、その旨のメッセージを出力して、このプログラムの返り値１（異常終了の意味）を変数return_codeに代入します。</dd>
+						<dt>27行目</dt>
+							<dd>main関数を終了し、呼出し元（OS）に返り値（変数return_codeの値）を返します。これにより、当プログラムが終了します。</dd>
+						<dt>31行目</dt>
+							<dd>ここからCalcBmi関数の定義です。返り値の型名はdouble型で、第１引数がdouble型のpWeight（体重）、第２引数がdouble型のpHeight（身長）です。</dd>
+						<dt>36行目</dt>
+							<dd>引数として渡ってきた体重と身長の値をチェックします。０より小さい場合はエラーとします。</dd>
+						<dt>41行目</dt>
+							<dd>肥満度の計算を行い、結果を変数bmiに代入します。</dd>
+						<dt>45行目</dt>
+							<dd>引数として渡ってきた体重と身長の値の両方あるいは、一方が不当で肥満度の計算が出来なかったため、変数bmiに０を代入します。</dd>
+						<dt>48行目</dt>
+							<dd>CalcBmi関数を終了し、呼出し元（main関数）に返り値（変数bmiの値）を返します。</dd>
+					</dl>
+					<aside>
+						<h5>補足</h5>
+						<ul>
+							<li>関数呼び出しにも式の値がありますので、それを直接使うことも出来ます。<br>例１：<code>if((bmi = CalcBmi(weight, height)) &gt; 0.0)</code> <strong>← 代入演算子（=）の方の優先順位を上げる必要があります</strong><br>例２：<code>printf("肥満度は%.2fです\n", CalcBmi(weight, height));</code></li>
+							<li>main関数とCalcBmi関数で同じ名前の変数bmiが宣言されていますが、別の関数内で宣言しているため、別の変数となります。</li>
+							<li>実行例で<code>echo $?</code>コマンドを実行していますが、「$?」はシェルが持っている特殊パラメータで、直前のコマンド（プログラム）の終了状態（正常終了か異常終了か）を表す「終了ステータス」や「リターンコード」と呼ばれている値を持っています。従って、このechoコマンドはex09_1.prgのリターンコードを表示していることになりますが、この値はmain関数がreturn文で返した値です。</li>
+						</ul>
+					</aside>
+				</section>
+				<section>
+					<h4>例題２</h4>
+					<p>上記と同じ肥満度(BMI)を求めるプログラムですが、CalcBmi関数はdouble型の体重と身長を引数として受け取り肥満度を出力します。この為、肥満度を返す必要はありませんので、返り値はありません。</p>
+					<div class="source-code">
+						<div class="c"><ol><li class="li1"><div class="de1"><span class="co2">#include &lt;stdio.h&gt;</span></div></li>
+						<li class="li1"><div class="de1"><span class="kw4">int</span> main<span class="br0">&#40;</span><span class="kw4">void</span><span class="br0">&#41;</span></div></li>
+						<li class="li1"><div class="de1"><span class="br0">&#123;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">double</span> &nbsp;weight<span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">double</span> &nbsp;height<span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="coMULTI">/* CalcBmi関数のプロトタイプ宣言 */</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">void</span> CalcBmi<span class="br0">&#40;</span><span class="kw4">double</span> BmiWeight<span class="sy0">,</span> <span class="kw4">double</span> BmiHeifht<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp;</div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;肥満度(BMI)の計算を行います<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;体重(kg)と身長(cm)を入力してください ==&gt; &quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">scanf</span><span class="br0">&#40;</span><span class="st0">&quot;%lf%lf&quot;</span><span class="sy0">,</span> <span class="sy0">&amp;</span>weight<span class="sy0">,</span> <span class="sy0">&amp;</span>height<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp;</div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; CalcBmi<span class="br0">&#40;</span>weight<span class="sy0">,</span> height<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp;</div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">return</span> <span class="nu0">0</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1"><span class="br0">&#125;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp;</div></li>
+						<li class="li1"><div class="de1"><span class="coMULTI">/* 体重と身長を元に肥満度(BMI)の計算を行い出力する */</span></div></li>
+						<li class="li1"><div class="de1"><span class="kw4">void</span> CalcBmi<span class="br0">&#40;</span><span class="kw4">double</span> pWeight<span class="sy0">,</span> <span class="kw4">double</span> pHeight<span class="br0">&#41;</span></div></li>
+						<li class="li1"><div class="de1"><span class="br0">&#123;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="coMULTI">/* 体重と身長の値をチェック */</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">if</span> <span class="br0">&#40;</span>pWeight <span class="sy0">&gt;</span> <span class="nu16">0.0</span> <span class="sy0">&amp;&amp;</span> pHeight <span class="sy0">&gt;</span> <span class="nu16">0.0</span><span class="br0">&#41;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* 身長をセンチメートルからメートルに変換 */</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; pHeight <span class="sy0">=</span> pHeight <span class="sy0">/</span> <span class="nu16">100.0</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* 肥満度(BMI) = 体重(kg) / 身長(m) / 身長(m) */</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;肥満度は%.2fです<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> pWeight <span class="sy0">/</span> pHeight <span class="sy0">/</span> pHeight<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">else</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;入力した値が不当です<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp;</div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">return</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1"><span class="br0">&#125;</span></div></li>
+						</ol></div>
+					</div>
+					<div class="exe-samp">
+<pre><samp>$ <kbd>./ex09_2.prg</kbd>
+肥満度(BMI)の計算を行います
+体重(kg)と身長(cm)を入力してください ==&gt; <kbd>88.2 185.8</kbd>
+肥満度は25.55です
+$</samp></pre>
+					</div>
+					<dl>
+						<dt>7行目</dt>
+							<dd>肥満度の計算を行うCalcBmi関数の関数プロトタイプ宣言です。返り値は有りませんのでvoid型で、第１引数がdouble型のBmiWeigh（体重）、第２引数がdouble型のBmiHeight（身長）です。</dd>
+						<dt>13行目</dt>
+							<dd>CalcBmi関数の呼び出しです。第１引数が体重の値、第２引数が身長の値です。</dd>
+						<dt>19行目</dt>
+							<dd>ここからCalcBmi関数の定義です。返り値は有りませんのでvoid型で、第１引数がdouble型のpWeight（体重）、第２引数がdouble型のpHeight（身長）です。</dd>
+						<dt>27行目</dt>
+							<dd>肥満度の計算を行い、結果を出力します。</dd>
+						<dt>34行目</dt>
+							<dd>CalcBmi関数を終了します。返り値として返す値はありません。</dd>
+					</dl>
+				</section>
+				<section>
+					<h4>例題３</h4>
+					<p>例題１のプログラムを関数毎にソースファイルを分けました。main関数はex09_3_1.cファイル、CalcBmi関数はex09_3_2.cファイルです。</p>
+					<div class="source-code">
+						<div class="c"><ol><li class="li1"><div class="de1"><span class="coMULTI">/* ソースファイル名：ex09_3_1.c */</span></div></li>
+						<li class="li1"><div class="de1"><span class="co2">#include &lt;stdio.h&gt;</span></div></li>
+						<li class="li1"><div class="de1"><span class="kw4">int</span> main<span class="br0">&#40;</span><span class="kw4">void</span><span class="br0">&#41;</span></div></li>
+						<li class="li1"><div class="de1"><span class="br0">&#123;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">double</span> &nbsp;weight<span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">double</span> &nbsp;height<span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">double</span> &nbsp;bmi<span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">int</span> &nbsp; &nbsp; return_code<span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="coMULTI">/* CalcBmi関数のプロトタイプ宣言 */</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">double</span> CalcBmi<span class="br0">&#40;</span><span class="kw4">double</span> BmiWeight<span class="sy0">,</span> <span class="kw4">double</span> BmiHeifht<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp;</div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;肥満度(BMI)の計算を行います<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;体重(kg)と身長(cm)を入力してください ==&gt; &quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">scanf</span><span class="br0">&#40;</span><span class="st0">&quot;%lf%lf&quot;</span><span class="sy0">,</span> <span class="sy0">&amp;</span>weight<span class="sy0">,</span> <span class="sy0">&amp;</span>height<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp;</div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="coMULTI">/* 肥満度(BMI)を返り値として取得 */</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">if</span><span class="br0">&#40;</span><span class="br0">&#40;</span>bmi <span class="sy0">=</span> CalcBmi<span class="br0">&#40;</span>weight<span class="sy0">,</span> height<span class="br0">&#41;</span><span class="br0">&#41;</span> <span class="sy0">&gt;</span> <span class="nu16">0.0</span><span class="br0">&#41;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;肥満度は%.2fです<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> bmi<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; return_code <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">else</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;入力した値が不当です<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; return_code <span class="sy0">=</span> <span class="nu0">1</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp;</div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">return</span> return_code<span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1"><span class="br0">&#125;</span></div></li>
+						</ol></div>
+					</div>
+					<div class="source-code" id="lbl_ex09_3_2">
+						<div class="c"><ol><li class="li1"><div class="de1"><span class="coMULTI">/* ソースファイル名：ex09_3_2.c */</span> <strong>← CalcBmi関数を定義しているソースファイルです</strong></div></li>
+						<li class="li1"><div class="de1"><span class="coMULTI">/* 体重と身長を元に肥満度(BMI)の計算を行う */</span></div></li>
+						<li class="li1"><div class="de1"><span class="kw4">double</span> CalcBmi<span class="br0">&#40;</span><span class="kw4">double</span> pWeight<span class="sy0">,</span> <span class="kw4">double</span> pHeight<span class="br0">&#41;</span></div></li>
+						<li class="li1"><div class="de1"><span class="br0">&#123;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">double</span> &nbsp;bmi<span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp;</div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="coMULTI">/* 体重と身長の値をチェック */</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">if</span> <span class="br0">&#40;</span>pWeight <span class="sy0">&gt;</span> <span class="nu16">0.0</span> <span class="sy0">&amp;&amp;</span> pHeight <span class="sy0">&gt;</span> <span class="nu16">0.0</span><span class="br0">&#41;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* 身長をセンチメートルからメートルに変換 */</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; pHeight <span class="sy0">=</span> pHeight <span class="sy0">/</span> <span class="nu16">100.0</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* 肥満度(BMI) = 体重(kg) / 身長(m) / 身長(m) */</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; bmi <span class="sy0">=</span> pWeight <span class="sy0">/</span> pHeight <span class="sy0">/</span> pHeight<span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">else</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; bmi <span class="sy0">=</span> <span class="nu16">0.0</span><span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+						<li class="li1"><div class="de1">&nbsp;</div></li>
+						<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">return</span> bmi<span class="sy0">;</span></div></li>
+						<li class="li1"><div class="de1"><span class="br0">&#125;</span></div></li></ol></div>
+					</div>
+					<div class="exe-samp">
+<pre><samp>$ <kbd>gcc -o ex09_3.prg ex09_3_1.c ex09_3_2.c</kbd> <strong>← ２つのソースファイルを指定してコンパイルを行います</strong>
+$
+$ <kbd>./ex09_3.prg</kbd>
+肥満度(BMI)の計算を行います
+体重(kg)と身長(cm)を入力してください ==&gt; <kbd>66.6 166.6</kbd>
+肥満度は24.00です
+$ <kbd>./ex09_3.prg</kbd>
+肥満度(BMI)の計算を行います
+体重(kg)と身長(cm)を入力してください ==&gt; <kbd>0 166.6</kbd>
+入力した値が不当です
+$</samp></pre>
+					</div>
+				</section>
+			</section>
+		</section>
+	</section>
+
+	<footer>
+		<nav>
+			<ul>
+				<li><a href="../../index.html">ホーム</a></li>
+				<li><a href="../c_langtop.html#lbl_index">目次</a></li>
+				<li><a href="../SECTION08/section08_3.html">前のページ</a></li>
+				<li><a href="./section09_2.html">次のページ</a></li>
+			</ul>
+		</nav>
+		<p id="footer-author">更新日：<time datetime="2018-12-11">2018年12月11日</time> Merry</p>
+	</footer>
+</div>
+</body>
+</html>

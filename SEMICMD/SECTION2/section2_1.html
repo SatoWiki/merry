@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initialscale=1.0">
+	<meta name="robots" content="INDEX,FOLLOW">
+	<meta name="keywords" content="シェル,Bash,Bシェル,Cシェル,Kシェル,リダイレクション,パイプライン,シェルスクリプト">
+	<meta name="description" content="UNIX系のOSの大きな特徴として、シェルと呼ばれるユーザー・インターフェースがあります。シェルの基本機能はキーボードから入力されたコマンドを受け取り、それを解析して実行することです。">
+	<meta name="author" content="T.Hagiwara">
+	<link rel="stylesheet" href="../../CSS3/seminar.css" type="text/css">
+	<link rel="prev" href="../SECTION1/section1_2.html">
+	<link rel="next" href="./section2_2.html">
+	<title>Linuxの使い方&nbsp;-&nbsp;シェルの基本機能（1/2）</title>
+	<style type="text/css">
+	</style>
+</head>
+<body>
+<div id="container">
+	<header>
+		<p>Linux講座にようこそ。このページは「Linuxの使い方&nbsp;-&nbsp;第２章&nbsp;シェルの基本機能」です。</p>
+		<h1>Linuxの使い方</h1>
+		<nav>
+			<ul>
+				<li><a href="../../index.html">ホーム</a></li>
+				<li><a href="../cmdtop.html#lbl_index">目次</a></li>
+				<li><a href="../SECTION1/section1_2.html">前のページ</a></li>
+				<li><a href="./section2_2.html">次のページ</a></li>
+			</ul>
+		</nav>
+	</header>
+
+	<section class="contents">
+		<h1>2. シェルの基本機能（1/2）</h1>
+		<section>
+			<h2>2.1 概要</h2>
+			<figure class="left-box myphoto">
+				<dl>
+					<dt><img src="../IMAGES/sec02_1.jpg" alt="シェルとカーネル"></dt>
+					<dd>【図２-１】シェルとカーネル</dd>
+					<dd>複数のシェルが同時に存在できますし、異なるシェルの混在も可能です</dd>
+				</dl>
+			</figure>
+			<p>UNIX系OSの大きな特徴として、シェルと呼ばれるユーザー・インターフェースがあります。シェルの基本機能はキーボードから入力されたコマンドを受け取り、それを解析し、カーネルの機能を使って実行することです。このような機能はどのOSにもありますが、UNIXシェルの特徴はカーネルから独立している点にあります。</p>
+			<p>カーネルからシェルを見た場合、１つのアプリケーションプログラムとなります。このことにより、複数のシェルが同時に存在できますし、さらに異なるシェルの混在もできます。</p>
+			<p>シェルは表2-1に示すように多くの種類がありますので、使用者の好みのシェルを選んで使用できます。なお、Linuxディストリビューションの多くは標準シェルとしてBashを採用しています。</p>
+			<table class="simple-table">
+				<caption>【表2-1】シェル一覧（代表的なもの）</caption>
+				<tr><th>名称</th><th>説明</th></tr>
+				<tr><td>Bシェル<br>（Bourneシェル）</td><td>Steven Bourne氏が開発したシェルで、UNIXの標準的なシェルとなっています。</td></tr>
+				<tr><td>Cシェル</td><td>Bill Joy氏が開発したシェルで、Bシェルよりも高機能でジョブ制御やエイリアス等の機能を持っています。名前の由来はBシェルの次に作られたからとか、文法がC言語に似ているからとか云われています。</td></tr>
+				<tr><td>Kシェル<br>（Kornシェル）</td><td>David Korn氏が開発したシェルで、IEEE1003.2 POSIXシェル標準への準拠が強化されています。Kシェルは商用プロダクトです。</td></tr>
+				<tr><td style="white-space:nowrap;">Bash<br>（Bourne Again Shell）</td><td>GNUシステム用の標準シェルとしてBrian Fox氏やChet Ramey氏が開発したシェルで、機能的にはKシェルとよく似ていますがBashはオープンソースです。</td></tr>
+			</table>
+			<p>このように、いくつかのシェルがあり機能も異なりますが、UNIXシェルの特徴である、次の基本的な機能は上記の全てのシェルが持っています。</p>
+			<div class="form-exp">
+				<ul>
+					<li>入出力先を簡単に切替えることができる<strong>リダイレクション</strong>機能</li>
+					<li>複数のコマンドを接続し連続的に実行する<strong>パイプライン</strong>機能</li>
+					<li>予めファイルにコマンドを記述しておき、ファイル名を指定することでコマンドを実行する<strong>シェルスクリプト</strong></li>
+				</ul>
+			</div>
+			<p>UNIX系OSのコマンドはコマンド・ファイル（１つのコマンドが１つのコマンド・ファイルに対応）として存在しているものと、シェル組み込みの２種類があります。</p>
+			<p>コマンド・ファイルは/bin/や/usr/bin/等の複数の場所（ディレクトリ）に用意されており、コマンド実行時にシェルが探し出して実行します。一方、シェル組み込みのコマンドはシェル機能の一部として実装されています。</p>
+			<p>通常、このことは意識する必要はありませんが、manコマンドでコマンドの仕様を調べるときに、シェル組み込みのコマンドはシェルの名前を指定することになります。例えば、後程説明するcdやpwdコマンドを調べる場合は、次のようになります。</p>
+			<div class="form-exp">
+				$ man bash<strong>　← シェルがBashの場合</strong>
+			</div>
+			<p>この講座ではLinuxの標準シェルであるBashの説明を行います。そして、ここでは上記特徴のうち、リダイレクションとパイプラインとその他の説明を行い、シェルスクリプトに付いては別途行います。</p>
+			<ul>
+				<li><a href="./section2_2.html#redirect">リダイレクション</a></li>
+				<li><a href="./section2_2.html#pipeline">パイプライン</a></li>
+				<li><a href="./section2_2.html#lbl_other">その他の知っておくと便利な機能</a></li>
+			</ul>
+			<aside>
+				<h3>補足</h3>
+				<ul>
+					<li>ここでのUNIX系OSとは、UNIX同様の操作性と機能を有するOS全般を指しており、オープンソースの代表的なUNIX系OSとしてはLinuxやFreeBSDがあります。また、商用のUNIX系OSとしてはIBM社のAIXや、HP（ヒューレット・パッカード）社のHP-UX等が有名です。</li>
+					<li>カーネルとはOSの核となる部分で、メモリ管理・デバイス管理・プロセス管理等を行います。</li>
+					<li>KシェルやBashはBシェルの上位互換シェルです。従って、Bシェルの機能は全て含んでいます。</li>
+					<li>/bin/や/usr/bin/はディレクトリと呼ばれているもので、WindowsやMacでフォルダと呼ばれているものと同じようなものです。詳細に付いては次章で説明します。</li>
+					<li>コマンドにはシェル組み込みとコマンド・ファイルの両方の形式で存在しているものがあります。（例えば、cdやpwdコマンドなど）この場合、通常はシェル組み込みのコマンドが実行されます。なお、manコマンドではコマンド・ファイルのマニュアルが表示されます。（たぶん、英文です）</li>
+				</ul>
+			</aside>
+		</section>
+	</section>
+
+	<footer>
+		<nav>
+			<ul>
+				<li><a href="../../index.html">ホーム</a></li>
+				<li><a href="../cmdtop.html#lbl_index">目次</a></li>
+				<li><a href="../SECTION1/section1_2.html">前のページ</a></li>
+				<li><a href="./section2_2.html">次のページ</a></li>
+			</ul>
+		</nav>
+		<p id="footer-author">更新日：<time datetime="2017-10-29">2017年10月29日</time> Merry</p>
+	</footer>
+</div>
+</body>
+</html>

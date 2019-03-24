@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initialscale=1.0">
+	<meta name="robots" content="INDEX,FOLLOW">
+	<meta name="keywords" content="ポインタ,アドレス,番地,ポインタ変数,先頭アドレス,アドレス演算子">
+	<meta name="description" content="ポインタの基本事項を説明します。">
+	<meta name="author" content="T.Hagiwara">
+	<link rel="stylesheet" href="../../CSS3/seminar.css" type="text/css">
+	<link rel="stylesheet" href="../../CSS3/hl_clang.css" type="text/css">
+	<link rel="prev" href="../SECTION07/section07_3.html">
+	<link rel="next" href="./section08_2.html">
+	<title>Ｃ言語プログラミング入門&nbsp;-&nbsp;データをアドレスで操作するためのポインタ（1/3）</title>
+	<style type="text/css">
+	</style>
+</head>
+<body>
+<div id="container">
+	<header>
+		<p>Linux講座にようこそ。このページは「Ｃ言語プログラミング入門&nbsp;-&nbsp;第８章．データをアドレスで操作するためのポインタ」です。</p>
+		<h1>Ｃ言語プログラミング入門</h1>
+		<nav>
+			<ul>
+				<li><a href="../../index.html">ホーム</a></li>
+				<li><a href="../c_langtop.html#lbl_index">目次</a></li>
+				<li><a href="../SECTION07/section07_3.html">前のページ</a></li>
+				<li><a href="./section08_2.html">次のページ</a></li>
+			</ul>
+		</nav>
+	</header>
+
+	<section class="contents">
+		<h1>8. データをアドレスで操作するためのポインタ（1/3）</h1>
+		<section>
+			<h2>8.1 ポインタとは</h2>
+			<figure class="left-box myphoto">
+				<dl>
+					<dt><img src="../IMAGES/sec08_1.jpg" alt="ポインタとは"></dt>
+					<dd>【図８-１】ポインタとは</dd>
+				</dl>
+			</figure>
+			<p>Ｃ言語でのポインタとは、データが格納されている場所の位置情報です。通常、データは変数や配列に格納されていて、それらはメモリに有りますので、メモリ上のアドレス（番地）ということになります。</p>
+			<p>ポインタを扱う場合、ポインタの値を記憶しておくための変数が必要になります。この変数を当講座では「<strong>ポインタ変数</strong>」と呼ぶことにします。ポインタ変数には変数や配列の<strong>先頭アドレス</strong>を格納します。このことにより、ポインタ変数が変数や配列を指し示すことが出来るようになり、ポインタ変数を使って変数や配列の操作を行うことができます。</p>
+			<p>図8-1の例ではポインタ変数pとint型変数aが有り、変数pには変数aの先頭アドレスを設定（代入）します。この操作により、変数pの値は変数aの先頭アドレスになります。（変数aの値は100のままです）以降、ポインタ変数pを使って、int型変数aの値を操作することが出来るようになります。（もちろん、変数aの名前で値を操作することも出来ます）</p>
+			<p>ポインタを使うメリットとしてはプログラム実行の高速化が有ると思います。ポインタ変数を使ってデータを操作するということはアドレスを指定してデータを操作することになりますので、余計な命令を実行することなく直接的にデータの操作を行うことになります。一方、デメリットとしてはプログラムが複雑になりがちですので、不良が入り込む確率が高くなりますし、理解しにくいプログラムになる可能性があります。</p>
+		</section>
+		<section>
+			<h2 id="lbl_dec">8.2 ポインタ変数の宣言</h2>
+			<p>ポインタ変数も変数の一種ですので、使用するには宣言が必要ですし、宣言をするには型名が必要になります。Ｃ言語ではポインタ用の型名が用意されているわけではなく、ポインタ変数が値として持つアドレスにある変数や配列の型名を型名とします。図8-1の例では変数aはint型ですので、ポインタ変数pの型名はint型になります。</p>
+			<section>
+				<h3>8.2.1 形式</h3>
+				<p>ポインタ変数の宣言をするときには変数名の前に<strong>*</strong>（アステリスク）を付けます。他の変数の宣言と大きく異なりますので注意してください。</p>
+				<p>ポインタ変数の設定は変数のアドレスを求めるための<strong>アドレス演算子</strong>（&amp;）を変数名の前に付けて先頭アドレスを取得して、それを代入します。ただし、配列の場合は内部的に配列名自体がポインタとして定義されているため、アドレス演算子を付けません。</p>
+				<div class="form-exp">
+					※ 宣言<br>
+					型名 <strong>*</strong>ポインタ変数名;<br><br>
+
+					※ ポインタ値の設定（代入）<br>
+					ポインタ変数名 = <strong>&amp;</strong>変数名;<br>
+					ポインタ変数名 = 配列名;
+				</div>
+				<dl>
+					<dt>型名</dt>
+						<dd>ポインタ変数が指し示す先の変数や配列の型名を指定します。</dd>
+					<dt>*ポインタ変数名</dt>
+						<dd>ポインタ変数であることを示すために、変数名の前に*を付けますので注意してください。命名規則は変数や配列と同じです。</dd>
+					<dt>&amp;変数名</dt>
+						<dd>変数名の前にアドレス演算子を付けることにより、変数の先頭アドレスを値として取得することができますので、これをポインタ変数に代入します。</dd>
+					<dt>配列名</dt>
+						<dd>配列名は内部的にはポインタとして定義されているため、配列名を指定すれば配列の先頭アドレスをポインタ変数に代入できます。</dd>
+				</dl>
+				<p>scanf関数で変数に入力する場合、変数名の前に&amp;を指定しますが、これはアドレス演算子を指定して、変数の先頭アドレスを指定したことになります。また、配列に入力する場合は、配列名の前に&amp;を指定しませんが、配列名を指定すれば配列の先頭アドレスを指定したことになるためです。</p>
+				<aside>
+					<h4>補足</h4>
+					<p>配列名は配列の先頭アドレスを値として持っている<strong>定数</strong>と思っていただくと理解しやすいかもしれません。定数ですので参照はできますが更新はできません。</p>
+				</aside>
+			</section>
+			<section>
+				<h3>8.2.2 例題</h3>
+				<p>この例題は宣言と代入しか行っていませんので、実行しても何も表示しません。</p>
+				<div class="source-code">
+					<div class="c"><ol><li class="li1"><div class="de1"><span class="kw4">int</span> main<span class="br0">&#40;</span><span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">short</span> &nbsp; number <span class="sy0">=</span> <span class="nu0">1</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">int</span> &nbsp; &nbsp; age<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">float</span> &nbsp; weight<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">double</span> &nbsp;bmi<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">char</span> &nbsp; &nbsp;blood_type <span class="sy0">=</span> <span class="st0">'A'</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">char</span> &nbsp; &nbsp;message<span class="br0">&#91;</span><span class="br0">&#93;</span> <span class="sy0">=</span> <span class="st0">&quot;Hello.&quot;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="coMULTI">/* ポインタ変数の宣言 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">short</span> &nbsp; &nbsp;<span class="sy0">*</span>p_number<span class="sy0">;</span><strong>← ポインタ変数の宣言ですので、変数名の前に<code>*</code>を付けます</strong></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">int</span> &nbsp; &nbsp; &nbsp;<span class="sy0">*</span>p_age<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">float</span> &nbsp; &nbsp;<span class="sy0">*</span>p_weight<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">double</span> &nbsp; <span class="sy0">*</span>p_bmi<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">char</span> &nbsp; &nbsp; <span class="sy0">*</span>p_blood_type<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">char</span> &nbsp; &nbsp; <span class="sy0">*</span>p_message<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="coMULTI">/* ポインタ変数への設定（代入） */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; p_number <span class="sy0">=</span> <span class="sy0">&amp;</span>number<span class="sy0">;</span><strong>← ポインタ変数への代入ですので、ポインタ変数名の前に<code>*</code>を付けません</strong></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; p_age <span class="sy0">=</span> <span class="sy0">&amp;</span>age<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; p_weight <span class="sy0">=</span> <span class="sy0">&amp;</span>weight<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; p_bmi <span class="sy0">=</span> <span class="sy0">&amp;</span>bmi<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; p_blood_type <span class="sy0">=</span> <span class="sy0">&amp;</span>blood_type<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; p_message <span class="sy0">=</span> message<span class="sy0">;</span><strong>← messageは配列ですので&amp;は不要です</strong></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">return</span> <span class="nu0">0</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#125;</span></div></li></ol></div>
+				</div>
+				<dl>
+					<dt>11〜16行目</dt>
+						<dd>ポインタ変数の宣言を行います。</dd>
+					<dt>19〜23行目</dt>
+						<dd>ポインタ変数にアドレス演算子を使って取得した変数の先頭アドレスを代入します。</dd>
+					<dt>24行目</dt>
+						<dd>ポインタ変数p_messageに文字列配列messageの先頭アドレスを代入します。配列の場合はアドレス演算子は不要です。</dd>
+				</dl>
+			</section>
+		</section>
+	</section>
+
+	<footer>
+		<nav>
+			<ul>
+				<li><a href="../../index.html">ホーム</a></li>
+				<li><a href="../c_langtop.html#lbl_index">目次</a></li>
+				<li><a href="../SECTION07/section07_3.html">前のページ</a></li>
+				<li><a href="./section08_2.html">次のページ</a></li>
+			</ul>
+		</nav>
+		<p id="footer-author">更新日：<time datetime="2018-12-08">2018年12月08日</time> Merry</p>
+	</footer>
+</div>
+</body>
+</html>

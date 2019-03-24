@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initialscale=1.0">
+	<meta name="robots" content="INDEX,FOLLOW">
+	<meta name="keywords" content="リダイレクション,パイプライン,標準入出力,標準入力,標準出力,標準エラー出力,テキストファイル,バックグラウンド,xclock">
+	<meta name="description" content="リダイレクション、パイプライン等の使い方を説明します。">
+	<meta name="author" content="T.Hagiwara">
+	<link rel="stylesheet" href="../../CSS3/seminar.css" type="text/css">
+	<link rel="prev" href="./section2_1.html">
+	<link rel="next" href="../SECTION3/section3_1.html">
+	<title>Linuxの使い方&nbsp;-&nbsp;シェルの基本機能（2/2）</title>
+	<style type="text/css">
+	</style>
+</head>
+<body>
+<div id="container">
+	<header>
+		<p>Linux講座にようこそ。このページは「Linuxの使い方&nbsp;-&nbsp;第２章&nbsp;シェルの基本機能」です。</p>
+		<h1>Linuxの使い方</h1>
+		<nav>
+			<ul>
+				<li><a href="../../index.html">ホーム</a></li>
+				<li><a href="../cmdtop.html#lbl_index">目次</a></li>
+				<li><a href="./section2_1.html">前のページ</a></li>
+				<li><a href="../SECTION3/section3_1.html">次のページ</a></li>
+			</ul>
+		</nav>
+	</header>
+
+	<section class="contents">
+		<h1>2. シェルの基本機能（2/2）</h1>
+		<section>
+			<!-- リダイレクションの説明 -->
+			<h2 id="redirect">2.2 リダイレクション（入出力の切替え）</h2>
+			<figure class="left-box myphoto">
+				<dl>
+					<dt><img src="../IMAGES/sec02_2.jpg" alt="標準入出力"></dt>
+					<dd>【図２-２】標準入出力</dd>
+					<dd></dd>
+				</dl>
+			</figure>
+			<p>シェルは入出力先として、<strong>標準入力</strong>、<strong>標準出力</strong>、<strong>標準エラー出力</strong>の３種類を持っており、これを<strong>標準入出力</strong>と呼んでいます。標準入出力ではデフォルトの入出力先として、標準入力はキーボード、標準出力はターミナル、標準エラー出力もターミナルと決まっています。（従って、ターミナルにコマンドの出力結果とエラーメッセージが一緒に出力されます）</p>
+			<p>リダイレクションは、これらのデフォルトの入出力先を別の入出力先に変更する機能です。</p>
+			<section>
+				<h3>2.2.1 一般形式</h3>
+				<p>入出力先を切替えるための記号と使い方は次の通りです。（これらの記号の前後に空白文字が有っても無くても構いません）</p>
+				<div class="form-exp">
+					$ コマンド &lt; ファイル名<br>
+					$ コマンド &gt; ファイル名<br>
+					$ コマンド &gt;&gt; ファイル名<br>
+					$ コマンド &amp;&gt; ファイル名<br>
+					$ コマンド 2&gt; ファイル名
+				</div>
+				<div class="form-exp">
+					<dl>
+						<dt>&lt;</dt>
+						<dd>標準入力を切替えるための記号です。ただし、ほとんどのコマンドは引数に入力ファイルを指定できるようになっているため、この記号を使って切替えることは少ないでしょう。</dd>
+						<dt>&gt;</dt>
+						<dd>標準出力を切替えるための記号です。指定したファイルが存在しないときは新規に作成し、存在したときには上書きになります。</dd>
+						<dt>&gt;&gt;</dt>
+						<dd>標準出力を切替えるための記号です。指定したファイルが存在しない場合は新規に作成しますが、存在したときには<strong>追加書き</strong>になります。</dd>
+						<dt>&amp;&gt;</dt>
+						<dd>標準出力と標準エラー出力を切替えるための記号です。コマンド実行時に表示されたエラーメッセージをファイルに保存したいようなときに使います。</dd>
+						<dt>2&gt;</dt>
+						<dd>標準エラー出力を切替えるための記号です。エラーメッセージだけをファイルに保存したいようなときに使います。</dd>
+					</dl>
+				</div>
+			</section>
+			<section>
+				<h3>2.2.2 実行例</h3>
+				<p>ここで使用しているcatコマンドは、標準入力から入力して標準出力に出力します。引数に入力ファイルを指定できますので、テキストファイルの内容を見たいときによく使います。（catコマンドの詳細は<a href="../SECTION3/section3_2.html#cat">「テキストファイルの連結（catコマンド）」</a>をご覧ください）</p>
+				<p>catコマンドで/etc/issueファイルの内容を２つの方法で出力（標準出力）します。ファイルの指定方法は異なりますが結果は同じです。</p>
+				<div class="exe-samp">
+<pre><samp>$ <kbd>cat &lt; /etc/issue</kbd><strong> ← &lt;で標準入力を/etc/issueに切り替えます</strong>
+Fedora release 16 (Verne)
+Kernel \r on an \m (\l)
+
+$ <kbd>cat /etc/issue</kbd><strong> ← 引数に/etc/issueを指定します（こちらの方法で実行するほうが多いと思います）</strong>
+Fedora release 16 (Verne)
+Kernel \r on an \m (\l)
+
+$
+</samp></pre>
+				</div>
+				<p id="lbl_eof">簡単な内容のテキストファイルを作ります。（内容は「Hello World」の１行のみです）</p>
+				<div class="exe-samp">
+<pre><samp>$ <kbd>cat &gt; file1.txt</kbd>
+Hello World<strong> ← キーボード入力待ちの状態になるので１行入力（最後はEnterキー）します</strong>
+<strong>← ここで、CtrlとDキーを同時に押します（E.O.Fの入力）</strong>
+$
+$ <kbd>cat file1.txt</kbd><strong> ← file1.txtファイルの内容を表示します</strong>
+Hello World
+$
+</samp></pre>
+				</div>
+				<p>dateコマンドの出力（標準出力）結果をファイルに出力します。（ファイルの内容はcatコマンドで表示して確認します）</p>
+				<div class="exe-samp">
+<pre><samp>$ <kbd>date "+%c"</kbd>
+2000年12月24日 19時47分03秒<strong> ← 出力の切替えを行っていないのでターミナルに出力します</strong>
+$ <kbd>date "+%c" &gt; file2.txt</kbd>
+$ <kbd>cat file2.txt</kbd><strong> ← 結果を確認します</strong>
+2000年12月24日 19時48分34秒
+$ <kbd>date "+%c" &gt;&gt; file2.txt</kbd><strong> ← 追加出力を指定します</strong>
+$ <kbd>cat file2.txt</kbd><strong> ← 結果を確認します</strong>
+2000年12月24日 19時48分34秒
+2000年12月24日 19時49分51秒
+$
+</samp></pre>
+				</div>
+				<p>findコマンドでHello.cファイルを検索して、エラーメッセージ（標準エラー出力）をファイルに出力します。（findコマンドの詳細は<a href="../SECTION4/section4_2.html#find">「4.3.5 ファイルの検索（findコマンド）」</a>をご覧ください）</p>
+				<div class="exe-samp">
+<pre><samp>$ <kbd>find . -name "Hello.c"</kbd>
+find: ‘./TMP/WORK’: Permission denied<strong> ← エラーメッセージです</strong>
+./MYHOMEPAGE/SEMICMD/EXSAMPLE/BACKUP/Hello.c<strong> ← 検索結果です</strong>
+./MYHOMEPAGE/C_LANG/Hello.c<strong> ← 検索結果です</strong>
+$
+$ <kbd>find . -name "Hello.c" &amp;&gt; err.txt</kbd><strong> ← 標準出力と標準エラー出力を切替えます</strong>
+$
+$ <kbd>cat err.txt</kbd><strong> ← 結果を確認します</strong>
+find: ‘./TMP/WORK’: Permission denied
+./MYHOMEPAGE/SEMICMD/EXSAMPLE/BACKUP/Hello.c
+./MYHOMEPAGE/C_LANG/Hello.c
+$
+$ <kbd>find . -name "Hello.c" 2&gt; err.txt</kbd><strong> ← 標準エラー出力だけを切替えます</strong>
+./MYHOMEPAGE/SEMICMD/EXSAMPLE/BACKUP/Hello.c
+./MYHOMEPAGE/C_LANG/Hello.c
+$
+$ <kbd>cat err.txt</kbd>
+find: ‘./TMP/WORK’: Permission denied<strong> ← エラーメッセージ（標準エラー出力）だけです</strong>
+$
+</samp></pre>
+				</div>
+				<aside>
+					<h4>補足</h4>
+					<p>テキストファイルとは、文字コードと改行コードのみからなるファイルです。catやlessコマンドで内容を見ることが出来ます。テキストファイル以外はバイナリファイルと呼んでいますが、こちらは文字コード以外を含んでいますので、内容を見るときには八進数や十六進数の文字列として見ます。</p>
+				</aside>
+			</section>
+		</section>
+
+		<section>
+			<!-- パイプラインの説明 -->
+			<h2 id="pipeline">2.3 パイプライン</h2>
+			<figure class="left-box myphoto">
+				<dl>
+					<dt><img src="../IMAGES/sec02_3.jpg" alt="パイプライン"></dt>
+					<dd>【図２-３】パイプライン</dd>
+					<dd>標準出力から出力して、標準入力から入力していきます</dd>
+				</dl>
+			</figure>
+			<p>UNIX流の考え方に「単機能なコマンドを組み合わせて高度な作業を行なおう」ということがあり、これを実現する手段の一つがパイプラインです。</p>
+			<p>パイプラインでは前に指定したコマンドの実行結果が次のコマンドに渡って行きます。このとき、前のコマンドの標準出力が次のコマンドの標準入力に渡ります。従って、パイプラインの途中のコマンドは標準入力と標準出力の両方を持っている必要があります。パイプラインの途中で使えるコマンドをフィルタと呼んでおり、標準で提供されるコマンドの多くがフィルタです。</p>
+			<p>ファイルの内容を加工するような場合、通常は先頭のコマンドでファイルを入力します。そして、途中のコマンド（フィルタ）は標準入力・標準出力で入出力を行いますので、ファイルを指定する必要はありません。結果をファイルに保存する場合は、最後のコマンドで出力ファイルとして指定します。（多分、標準出力の切り替え（&lt;または&lt;&lt;）を指定することが多いと思います）</p>
+			<p>パイプラインでは、それぞれのコマンドは並列的に実行しますし、標準入力・標準出力はメモリ間でデータの受け渡しを行いますので、コマンドを単独で実行するより効率的に作業を行えます。</p>
+			<section>
+				<h3>2.3.1 一般形式</h3>
+				<p>コマンドとコマンドの区切りに<strong>|</strong>（縦線）を使用します。（|の前後に空白文字が有っても無くても構いません）</p>
+				<div class="form-exp">
+					$ コマンド１ | コマンド２ | コマンド３ …
+				</div>
+			</section>
+			<section>
+				<h3>2.3.2 実行例</h3>
+				<p>lsコマンドの実行結果をlessコマンドに送って、lessコマンドで実行結果を確認します。</p>
+				<div class="exe-samp">
+<pre><samp>$ <kbd>ls -l /usr/bin | less</kbd>
+（以降にlsコマンドの実行結果が表示されます）
+</samp></pre>
+				</div>
+				<p>date_list.txtファイルの日時情報を新しいものから古いものの順（降順）に並べ替えて、行番号を付加して表示します。並べ替えはsortコマンドに-rオプションを、行番号の付加はcatコマンドに-nオプションを指定します。</p>
+				<div class="exe-samp">
+<pre><samp>$ <kbd>cat date_list.txt</kbd><strong> ← date_list.txtファイルの内容を表示します</strong>
+2015年09月06日 09時29分07秒
+2015年09月06日 09時58分26秒
+2015年09月06日 10時00分48秒
+2015年09月07日 08時49分18秒
+2015年09月07日 09時18分37秒
+$ 
+$ <kbd>sort -r date_list.txt | cat -n</kbd><strong> ← sortコマンドで降順に並べ替えて、catコマンドで行番号を付加して表示します</strong>
+     1  2015年09月07日 09時18分37秒
+     2  2015年09月07日 08時49分18秒
+     3  2015年09月06日 10時00分48秒
+     4  2015年09月06日 09時58分26秒
+     5  2015年09月06日 09時29分07秒
+$
+</samp></pre>
+				</div>
+				<aside>
+					<h4>補足</h4>
+					<ul>
+						<li>lessコマンドはmanコマンドでも使っています。１画面分スクロールがスペースキー、１行スクロールがEnterキー、終了がqキーです。</li>
+						<li>lsコマンドはファイルやディレクトリの情報を表示し、lessコマンドは標準入力の内容を画面単位に表示するページャーと呼ばれているものの一種です。lsコマンドは画面制御を行っていませんので、出力が１画面以上の行数になると出力が画面から流れてしまいます。（コマンドの詳細は<a href="../SECTION3/section3_2.html#more_less">「テキストファイルの内容表示（moreコマンドとlessコマンド）」</a>と<a href="../SECTION3/section3_2.html#ls">「ディレクトリとファイルの情報表示（lsコマンド）」</a>をご覧ください）</li>
+						<li>sortコマンドはテキストファイルの内容をフィールドをキーとして昇順または、降順に並べ替えます。（コマンドの詳細は<a href="../SECTION4/section4_3.html#sort">「4.3.5 行の並べ替え（sortコマンド）」</a>をご覧ください）</li>
+					</ul>
+				</aside>
+			</section>
+		</section>
+
+		<section>
+			<!-- その他の知っておくと便利な機能 -->
+			<h2 id="lbl_other">2.4 その他の知っておくと便利な機能</h2>
+			<p>ここではコマンドの実行の仕方で、上記以外で知っておくと便利な、次の方法をご紹介します。</p>
+			<ul>
+				<li>連続実行</li>
+				<li>バックグラウンド実行（バックグラウンドプロセス）</li>
+				<li>実行結果の判別実行</li>
+			</ul>
+			<p>連続実行はパイプラインと似ていますが、こちらは、ただ単に複数指定されたコマンドを<strong>順番に</strong>実行します。従って、複数のコマンドを１行で指定したいような時に使用します。</p>
+			<p>バックグラウンド実行（バックグラウンドプロセス）はマルチプロセスの機能を使って、<strong>並列的</strong>にコマンドを実行しますので、処理時間のかかるコマンドや永久的に実行するコマンドを実行するときに使用します。バックグラウンドプロセスを実行すると、すぐにプロンプトが表示されますので、次のコマンドを実行できます。</p>
+			<p>バックグラウンドプロセスに対して、今までのコマンド実行をフォアグラウンドプロセスと呼んでいます。フォアグラウンドプロセスの場合は、終了するまでプロンプトが表示されないため、次のコマンドは実行できません。（フォアグラウンドプロセスが終了するとプロンプトが表示されます）</p>
+			<p>実行結果の判別実行は直前のコマンドの終了条件（終了ステータス）により、実行するか否かを判定します。直前のコマンドが正常終了したときに実行する、或は、異常終了したときに実行するという制御が出来ます。なお、標準で提供されるコマンドは終了ステータスと呼ぶ値を設定しており、この値は正常終了したときは0、異常終了したときは0以外です。終了ステータスを調べるには、調べたいコマンドの実行直後に「<kbd>echo $?</kbd>」を実行します。</p>
+			<section>
+				<h3>2.4.1 一般形式</h3>
+				<p>連続実行は<strong>;</strong>記号、バックグラウンド実行は<strong>&amp;</strong>記号、実行結果の判別実行は<strong>&amp;&amp;</strong>と<strong>||</strong>を使用します。（これらの記号の前後に空白文字が有っても無くても構いません）</p>
+				<div class="form-exp">
+					$ コマンド１ ; コマンド２ ; コマンド３ …<br />
+					$ コマンド &amp;<br />
+					$ コマンド１ &amp;&amp; コマンド２<strong> ← コマンド１が正常終了したときにコマンド２を実行します</strong><br />
+					$ コマンド１ || コマンド２<strong> ← コマンド１が異常終了したときにコマンド２を実行します</strong>
+				</div>
+			</section>
+			<section>
+				<h3>2.4.2 実行例</h3>
+				<p>clearコマンドとdateコマンドを１行で指定します。</p>
+				<div class="exe-samp">
+<pre><samp>$ <kbd>clear ; date "+%c"</kbd>
+（ターミナルがクリアされて、先頭行にdateコマンドの実行結果が表示されます）
+</samp></pre>
+				</div>
+				<p>xclock（時計のアプリケーション）をバックグラウンドで実行します。</p>
+				<div class="exe-samp">
+<pre><samp>$ <kbd>xclock &amp;</kbd>
+[1] 2993<strong> ← ジョブ番号とプロセスIDが表示されます（詳細は<a href="../SECTION5/section5_2.html#proc">「5.6 プロセスの操作」</a>をご覧ください）</strong>
+$<strong> ← すぐにプロンプトが表示されますので、コマンドの実行が可能です</strong>
+</samp></pre>
+				</div>
+				<p>前のcatコマンドの実行結果により、dateコマンドを実行するか否かが決まります。</p>
+				<div class="exe-samp">
+<pre><samp>$ <kbd>cat file2.txt &amp;&amp; date "+%c" &gt;&gt; file2.txt</kbd>
+<strong>    　↑ catコマンドが正常終了したときのみ、dateコマンドを実行します</strong>
+$ <kbd>cat file2.txt || date "+%c" &gt;&gt; file2.txt</kbd>
+<strong>    　↑ catコマンドが異常終了したときのみ、dateコマンドを実行します</strong>
+</samp></pre>
+				</div>
+				<p>catコマンドの終了ステータスを表示します。</p>
+				<div class="exe-samp">
+<pre><samp>$ <kbd>cat file2.txt</kbd>
+2000年12月24日 19時48分34秒
+2000年12月24日 19時49分51秒
+$ <kbd>echo $?</kbd>
+0<strong> ← 終了ステータスは０です（正常終了）</strong>
+$ 
+$ <kbd>cat file2.txt ; echo $?</kbd><strong> ← 上記２つのコマンドを１行（連続実行）で指定します</strong>
+2000年12月24日 19時48分34秒
+2000年12月24日 19時49分51秒
+0
+$ 
+$ <kbd>cat file3.txt || echo $?</kbd><strong> ← catコマンドが異常終了した場合、echoコマンドを実行します</strong>
+cat: file3.txt: そのようなファイルやディレクトリはありません
+1<strong> ← 終了ステータスは０以外です（異常終了）</strong>
+$
+</samp></pre>
+				</div>
+				<aside>
+					<h4 id="lbl_sup_xclock">補足</h4>
+					<ul>
+						<li>xclockは強制終了しない限り永久に動いています。終了させたいときはウィンドウ操作の強制終了機能を使ってください。プロセスの強制終了に付いては<a href="../SECTION5/section5_2.html#proc">「5.6 プロセスの操作」</a>をご覧ください。</li>
+						<li>xclockがインストールされていない場合は、xorg-x11-appsパッケージをインストールしてください（Fedoraの場合です）インストール方法については<a href="../SECTION7/section7_3.html">「7.3 パッケージ管理」</a>をご覧ください。</li>
+						<li>xclockを実行するとフォントに関する警告メッセージが出る場合は、言語環境を標準（LANG=C）に設定して実行してみてください。<br><samp>$ <kbd>LANG=C xclock &amp;</kbd></samp></li>
+					</ul>
+				</aside>
+			</section>
+		</section>
+	</section>
+
+	<footer>
+		<nav>
+			<ul>
+				<li><a href="../../index.html">ホーム</a></li>
+				<li><a href="../cmdtop.html#lbl_index">目次</a></li>
+				<li><a href="./section2_1.html">前のページ</a></li>
+				<li><a href="../SECTION3/section3_1.html">次のページ</a></li>
+			</ul>
+		</nav>
+		<p id="footer-author">更新日：<time datetime="2017-11-23">2017年11月23日</time> Merry</p>
+	</footer>
+</div>
+</body>
+</html>

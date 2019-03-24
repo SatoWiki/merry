@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initialscale=1.0">
+	<meta name="robots" content="INDEX,FOLLOW">
+	<meta name="keywords" content="入出力ライブラリ,関数,書式,フラグ,最小フィールド幅,精度,長さ修飾子,変換指定子,fprintf,printf,sprintf">
+	<meta name="description" content="fprintf関数、printf関数、sprintf関数の使い方を説明します。">
+	<meta name="author" content="T.Hagiwara">
+	<link rel="stylesheet" href="../../../CSS3/seminar.css" type="text/css">
+	<link rel="stylesheet" href="../../../CSS3/hl_clang.css" type="text/css">
+	<link rel="prev" href="./s14_01_4.html">
+	<link rel="next" href="./s14_01_6.html">
+	<title>Ｃ言語プログラミング入門&nbsp;-&nbsp;ライブラリ関数&nbsp;-&nbsp;入出力ライブラリ（5/10）-</title>
+	<style type="text/css">
+	</style>
+</head>
+<body>
+<div id="container">
+	<header>
+		<p>Linux講座にようこそ。このページは「Ｃ言語プログラミング入門&nbsp;-&nbsp;第14章．ライブラリ関数&nbsp;-&nbsp;入出力ライブラリ」です。</p>
+		<h1>Ｃ言語プログラミング入門</h1>
+		<nav>
+			<ul>
+				<li><a href="../../../index.html">ホーム</a></li>
+				<li><a href="../../c_langtop.html#lbl_index">目次</a></li>
+				<li><a href="./s14_01_4.html">前のページ</a></li>
+				<li><a href="./s14_01_6.html">次のページ</a></li>
+			</ul>
+		</nav>
+	</header>
+
+	<section class="contents">
+		<h1>14. ライブラリ関数（6/36）&nbsp;-&nbsp;入出力ライブラリ（5/10）</h1>
+		<section>
+			<h2>14.8 書式出力関数</h2>
+			<p>ここで紹介する出力関数は、int型やdoubl型などの変数に格納されている値を<strong>書式制御文字列</strong>に従い、文字列に編集して出力します。</p>
+			<section>
+				<h3 id="lbl_fprintf">14.8.1 fprintf関数</h3>
+				<p>fprintf関数はファイルポインタに対応したファイルに、書式制御文字列に従い編集した文字列を出力します。</p>
+				<table>
+					<caption>【表14-1-20】 fprintf関数</caption>
+					<tr><th>形式</th><td>#include &lt;stdio.h&gt;<br>
+										int fprintf(FILE *fp, const char *format, ...);</td></tr>
+					<tr><th>返り値</th><td>出力できた場合は出力文字数を返します。エラーが発生した場合は負の値を返します。</td></tr>
+					<tr><th>引数</th>
+						<td>
+							<dl>
+								<dt>FILE *fp</dt>
+									<dd>出力するファイルのファイルポインタを指定します。</dd>
+								<dt>const char *format</dt>
+									<dd>書式制御文字列を指定します。</dd>
+								<dt>...</dt>
+									<dd>編集するデータが格納されている変数を指定します。</dd>
+							</dl>
+						</td></tr>
+				</table>
+				<p id="lbl_format">第２引数のformat（書式制御文字列）は「%（パーセント）」で始まり、「フラグ」、「最小フィールド幅」、「精度」、「長さ修飾子」、「変換指定子」が続きます。%と変換指定子以外は省略可能です。なお、これら以外の文字は、そのまま出力します。</p>
+				<dl>
+					<dt>フラグ</dt>
+						<dd>フラグとして「【表14-1-21】 フラグ一覧」のものが指定できます。</dd>
+					<dt>最小フィールド幅</dt>
+						<dd>十進整数値で指定し、最小限、何文字分のフィールド幅を確保するかを指定します。</dd>
+					<dt>精度</dt>
+						<dd>「.数値」の形式で指定し、変換指定子により、次のような意味になります。
+							<ul>
+								<li>dやi等の整数変換の場合は、最小桁数です。</li>
+								<li>e、E、fの浮動小数点変換の場合は、小数点以下の桁数です。</li>
+								<li>g、Gの浮動小数点変換の場合は、仮数の桁数です。</li>
+								<li>sの文字列変換の場合は、文字列の長さの最大値です。</li>
+							</ul></dd>
+					<dt>長さ修飾子</dt>
+						<dd>short型を表す「h」、longやunsigned&nbsp;longを表す「l」（小文字のL）及び、long&nbsp;double型を表す「L」を指定できます。なお、これらは数値データを出力する場合に指定します。</dd>
+					<dt>変換指定子</dt>
+						<dd>出力データをどのように編集（変換）するかを「表14-1-22 変換指定子一覧」に示す変換指定子で指定します。数値を編集する場合には、長さ修飾子と組み合わせることができます。</dd>
+				</dl>
+				<table class="simple-table">
+					<caption>【表14-1-21】 フラグ一覧</caption>
+					<tr><th>フラグ</th><th>意味</th></tr>
+					<tr><td>+</td><td>常に符号（+か-）を出力します。デフォルトでは負の場合のみ出力します。</td></tr>
+					<tr><td>-</td><td>左詰めで出力します。</td></tr>
+					<tr><td>0</td><td>０埋めで出力します。</td></tr>
+					<tr><td>１個の半角スペース</td><td>正の数字の前に空白を出力します。</td></tr>
+					<tr><td>#</td><td>変換指定子により、次のような意味になります。
+								<ul>
+									<li>o変換の場合、先頭に０を追加出力します。</li>
+									<li>xとX変換の場合、先頭に0x（X変換の場合は0X）を追加出力します。</li>
+									<li>eやf等の浮動小数点変換の場合、常に小数点を出力します。（通常は、小数点の後に数字が続く場合にのみ、小数点を出力します）</li>
+									<li>gとG変換の場合、末尾の０も出力します。</li>
+								</ul></td></tr>
+				</table>
+				<table class="simple-table">
+					<caption>【表14-1-22】 変換指定子一覧</caption>
+					<tr><th>変換指定子</th><th>意味</th></tr>
+					<tr><td>c</td><td>文字として出力します。出力するデータの型はint型または、char型です。最小フィールド幅以外は意味を持ちません。</td></tr>
+					<tr><td>d、i</td><td>符号つき十進整数として出力します。出力するデータの型はint型、short型、long型ですが、short型の場合は長さ修飾子にhを、long型の場合はlを指定する必要があります。<br>精度を指定した場合は、指定した桁数は必ず出力されますが、変換後の値が指定された桁数に足りない場合は、左側が０で埋められます。デフォルトの精度は１です。なお、０を表示しようとした時に、明示的に精度として０が指定されていると、出力は空文字列になります。</td></tr>
+					<tr><td>e、E</td><td>符号つき十進浮動少数点数を指数形式で出力します。出力するデータの型はdouble型または、long&nbsp;double型ですが、long&nbsp;double型の場合は長さ修飾子にLを指定する必要があります。<br>eとEの相違は、指数を表すEが英大文字か英小文字かだけです。</td></tr>
+					<tr><td>f</td><td>符号つき十進浮動少数点数を小数点を用いて出力します。出力するデータの型はfloat型、double型、long&nbsp;double型ですが、long&nbsp;double型の場合は長さ修飾子にLを指定する必要があります。float型の場合はdouble型に変換されます。<br>小数点の後の桁数は、精度で指定された値となりますが、精度として明示的に０が指定された場合は、小数点以下は表示されません。また、小数点を表示する際には、小数点の前に少なくとも一桁は数字が表示されます。精度が指定されていない場合には６として扱われます。</td></tr>
+					<tr><td>g、G</td><td>符号つき十進浮動少数点数を指数形式または、小数点を用いて出力します。上記、e、E、fとの相違は変換する値の大きさにより、出力形式が変わることです。</td></tr>
+					<tr><td>n</td><td>これまでに出力された文字数をint型のポインタ変数の引数に整数値として保存します。</td></tr>
+					<tr><td>o、u、x、X</td><td>unsigned&nbsp;int型の値を符号なし八進数（o）、符号なし十進数（u）、符号なし十六進数（xとX）として出力します。xは英小文字で、Xは英大文字で出力します。また、精度指定があれば精度で指定した桁数は必ず出力され、変換後の値が指定された桁数に足りない場合は、左側が０で埋められます。</td></tr>
+					<tr><td>s</td><td>char型の配列を文字列としてを出力します。配列中の文字は終端のヌル文字（`\0'）の前まで出力されます。ただし、精度が指定されていると指定された文字数だけ出力します。（この場合はヌル文字は無くてもかまいません）</td></tr>
+					<tr><td>p</td><td>void&nbsp;*型（void型のポインタ）を十六進数で出力します。</td></tr>
+				</table>
+				<p>浮動小数点実数値を出力する場合の書式はfloat型もdouble型も「%f」です。fscanf系の関数の場合と異なりますので注意して下さい。</p>
+			</section>
+			<section>
+				<h3 id="lbl_printf">14.8.2 printf関数</h3>
+				<p>printf関数は書式制御文字列に従い編集した文字列を標準出力に出力します。fprintf関数との相違は出力が標準出力に限定されていることだけです。</p>
+				<table>
+					<caption>【表14-1-23】 printf関数</caption>
+					<tr><th>形式</th><td>#include &lt;stdio.h&gt;<br>
+										int printf(const char *format, ...);</td></tr>
+					<tr><th>返り値</th><td>fprintf関数と同じです。</td></tr>
+					<tr><th>引数</th>
+						<td>
+							<dl>
+								<dt>const char *format</dt>
+									<dd>書式制御文字列を指定します。内容はfprintf関数と同じです。</dd>
+								<dt>...</dt>
+									<dd>編集するデータが格納されている変数を指定します。</dd>
+							</dl>
+						</td></tr>
+				</table>
+			</section>
+			<section>
+				<h3 id="lbl_sprintf">14.8.3 sprintf関数</h3>
+				<p>sprintf関数は書式制御文字列に従い編集した文字列を引数に指定した変数に設定します。fprintf関数との相違は出力がchar型の配列に限定されていることだけです。</p>
+				<table>
+					<caption>【表14-1-24】 sprintf関数</caption>
+					<tr><th>形式</th><td>#include &lt;stdio.h&gt;<br>
+										int sprintf(char *str, const char *format, ...);</td></tr>
+					<tr><th>返り値</th><td>fprintf関数と同じです。</td></tr>
+					<tr><th>引数</th>
+						<td>
+							<dl>
+								<dt>char *str</dt>
+									<dd>編集結果を出力する文字列を指定します。</dd>
+								<dt>const char *format</dt>
+									<dd>書式制御文字列を指定します。内容はfprintf関数と同じです。</dd>
+								<dt>...</dt>
+									<dd>編集するデータが格納されている変数を指定します。</dd>
+							</dl>
+						</td></tr>
+				</table>
+			</section>
+			<section>
+				<h3>14.8.4 例題</h3>
+				<p>下記のような,（コンマ）で区切って、番号・体重・身長・血液型のデータが登録されているex14_1_6.datファイルを入力して標準出力に編集出力します。ただし、血液型は出力しませんので入力しません。</p>
+				<div class="source-code">
+					1,67,188,A<br>
+					2,98,176.5,O<br>
+					3,43.2,156.5,AB<br>
+					4,55.5,167.5,B<br>
+					5,75.7,166.5,A
+				</div>
+				<div class="source-code">
+					<div class="c"><ol><li class="li1"><div class="de1"><span class="co2">#include &lt;stdio.h&gt;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1"><span class="kw4">int</span> main<span class="br0">&#40;</span><span class="kw4">void</span><span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; FILE &nbsp; &nbsp; &nbsp; &nbsp;<span class="sy0">*</span>fp<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">char</span> &nbsp; &nbsp; &nbsp; &nbsp;in_file<span class="br0">&#91;</span><span class="br0">&#93;</span> <span class="sy0">=</span> <span class="st0">&quot;./DATA/ex14_1_6.dat&quot;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">short</span> <span class="kw4">int</span> &nbsp; number<span class="sy0">;</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="coMULTI">/* 番号 &nbsp;*/</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">float</span> &nbsp; &nbsp; &nbsp; weight<span class="sy0">;</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="coMULTI">/* 体重 &nbsp;*/</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">double</span> &nbsp; &nbsp; &nbsp;height<span class="sy0">;</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="coMULTI">/* 身長 &nbsp;*/</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">int</span> &nbsp; &nbsp; &nbsp; &nbsp; return_code <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">if</span><span class="br0">&#40;</span><span class="br0">&#40;</span>fp <span class="sy0">=</span> <span class="kw3">fopen</span><span class="br0">&#40;</span>in_file<span class="sy0">,</span> <span class="st0">&quot;r&quot;</span><span class="br0">&#41;</span><span class="br0">&#41;</span> <span class="sy0">!=</span> NULL<span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;%-4s &nbsp;%-8s %-8s<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> <span class="st0">&quot;番号&quot;</span><span class="sy0">,</span> <span class="st0">&quot;体重&quot;</span><span class="sy0">,</span> <span class="st0">&quot;身長&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* &nbsp;番号、体重、身長を入力 */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">while</span><span class="br0">&#40;</span><span class="kw3">fscanf</span><span class="br0">&#40;</span>fp<span class="sy0">,</span> <span class="st0">&quot;%hd,%f,%lf,%*s&quot;</span><span class="sy0">,</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="sy0">&amp;</span>number<span class="sy0">,</span> <span class="sy0">&amp;</span>weight<span class="sy0">,</span> <span class="sy0">&amp;</span>height<span class="br0">&#41;</span> <span class="sy0">!=</span> EOF<span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot; %03hd %6.1f %6.1f<span class="es1">\n</span>&quot;</span><span class="sy0">,</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; number<span class="sy0">,</span> weight<span class="sy0">,</span> height<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">fclose</span><span class="br0">&#40;</span>fp<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">else</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;%sがオープン出来ませんでした。&quot;</span><span class="sy0">,</span> in_file<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; return_code <span class="sy0">=</span> <span class="nu0">1</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">return</span> return_code<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#125;</span></div></li>
+					</ol></div>
+				</div>
+				<div class="exe-samp">
+<pre><samp>$ <kbd>./ex14_1_7.prg</kbd>
+番号  体重   身長
+ 001   67.0  188.0
+ 002   98.0  176.5
+ 003   43.2  156.5
+ 004   55.5  167.5
+ 005   75.7  166.5</samp></pre>
+				</div>
+				<dl>
+					<dt>16行目</dt>
+						<dd>fscanf関数で番号・体重・身長データを入力します。</dd>
+					<dt>19行目</dt>
+						<dd>printf関数で入力したデータを出力します。番号は３桁で０埋めです。体重と身長は小数点以下１桁までで、最小フィールド幅は６桁です。体重と身長はそれぞれ、float型とdouble型で型名は異なりますが、変換指定子は両方共「f」です。</dd>
+				</dl>
+			</section>
+		</section>
+	</section>
+
+	<footer>
+		<nav>
+			<ul>
+				<li><a href="../../../index.html">ホーム</a></li>
+				<li><a href="../../c_langtop.html#lbl_index">目次</a></li>
+				<li><a href="./s14_01_4.html">前のページ</a></li>
+				<li><a href="./s14_01_6.html">次のページ</a></li>
+			</ul>
+		</nav>
+		<p id="footer-author">更新日：<time datetime="2018-12-23">2018年12月23日</time> Merry</p>
+	</footer>
+</div>
+</body>
+</html>

@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initialscale=1.0">
+	<meta name="robots" content="INDEX,FOLLOW">
+	<meta name="keywords" content="繰り返し,for文,前処理,制御条件,後処理,break文,continue文,goto文">
+	<meta name="description" content="繰り返し処理のためのfor文とその他の制御文を説明します。">
+	<meta name="author" content="T.Hagiwara">
+	<link rel="stylesheet" href="../../CSS3/seminar.css" type="text/css">
+	<link rel="stylesheet" href="../../CSS3/hl_clang.css" type="text/css">
+	<link rel="prev" href="./section06_1.html">
+	<link rel="next" href="../SECTION07/section07_1.html">
+	<title>Ｃ言語プログラミング入門&nbsp;-&nbsp;繰り返し処理の制御（2/2）</title>
+	<style type="text/css">
+	</style>
+</head>
+<body>
+<div id="container">
+	<header>
+		<p>Linux講座にようこそ。このページは「Ｃ言語プログラミング入門&nbsp;-&nbsp;第６章．繰り返し処理の制御」です。</p>
+		<h1>Ｃ言語プログラミング入門</h1>
+		<nav>
+			<ul>
+				<li><a href="../../index.html">ホーム</a></li>
+				<li><a href="../c_langtop.html#lbl_index">目次</a></li>
+				<li><a href="./section06_1.html">前のページ</a></li>
+				<li><a href="../SECTION07/section07_1.html">次のページ</a></li>
+			</ul>
+		</nav>
+	</header>
+
+	<section class="contents">
+		<h1>6. 繰り返し処理の制御（2/2）</h1>
+		<section>
+		<h2 id="lbl_for">6.3 for文</h2>
+			<p>for文も条件が成立している間、繰り返しの処理を実行しますが、while文と異なりfor文中で繰り返し制御条件を変えることができます。従って、予め繰り返し制御条件が分かっている場合はfor文が適しています。</p>
+			<section>
+				<h3>6.3.1 形式</h3>
+				<p>for文は括弧の中にセミコロンで区切って式を３つ指定します。式はそれぞれ、前処理、繰り返し制御条件、後処理になります。</p>
+				<div class="form-exp">
+					for(式１; 式２; 式３)<br>
+					&nbsp;&nbsp;&nbsp;&nbsp;繰り返し実行する処理;
+				</div>
+				<dl>
+					<dt>式１</dt>
+						<dd>繰り返し処理に入る前の<strong>前処理</strong>を指定します。通常、繰り返しを制御する変数の初期化を行います。</dd>
+					<dt>式２</dt>
+						<dd><strong>繰り返し制御条件</strong>を指定します。条件が成立（真）している間は繰り返しの処理を続行し、不成立（偽）になると繰り返しから抜け出します。</dd>
+					<dt>式３</dt>
+						<dd>繰り返し処理の後の<strong>後処理</strong>を指定します。通常、繰り返しを制御する変数の更新を行います。</dd>
+					<dt>繰り返し実行する処理</dt>
+						<dd>処理が１文のみの場合はブロックにする必要はありませんが、複数の場合は{と}で括ってブロックにします。</dd>
+				</dl>
+				<p>式１は最初に１回実行するのみです。「式２ → 繰り返し実行する処理 → 式３」を式２の値が真の間繰り返します。</p>
+				<p>式１、式２、式３は省略可能です。ただし、区切り記号の;（セミコロン）は省略できません。なお、全て省略した場合は永久ループになります。</p>
+			</section>
+			<section>
+				<h3>6.3.2 例題</h3>
+				<p>九九の表を出力します。行と列をカウントする変数を用意し、繰り返しの中で１〜９までカウントアップします。そして、「行&nbsp;×&nbsp;列」の計算を行うことで九九の計算を行います。</p>
+				<div class="source-code">
+					<div class="c"><ol><li class="li1"><div class="de1"><span class="co2">#include &lt;stdio.h&gt;</span></div></li>
+					<li class="li1"><div class="de1"><span class="kw4">int</span> main<span class="br0">&#40;</span><span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">int</span> &nbsp; &nbsp; gyou<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">int</span> &nbsp; &nbsp; retu<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;九九の表を作成します<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">for</span><span class="br0">&#40;</span>gyou <span class="sy0">=</span> <span class="nu0">1</span><span class="sy0">;</span> gyou <span class="sy0">&lt;=</span> <span class="nu0">9</span><span class="sy0">;</span> <span class="sy0">++</span>gyou<span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">for</span><span class="br0">&#40;</span>retu <span class="sy0">=</span> <span class="nu0">1</span><span class="sy0">;</span> retu <span class="sy0">&lt;=</span> <span class="nu0">9</span><span class="sy0">;</span> <span class="sy0">++</span>retu<span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;<span class="es1">\t</span>%d&quot;</span><span class="sy0">,</span> gyou <span class="sy0">*</span> retu<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">return</span> <span class="nu0">0</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#125;</span></div></li>
+					</ol></div>
+				</div>
+				<div class="exe-samp">
+<pre><samp>$ <kbd>./ex06_3.prg</kbd>
+九九の表を作成します
+       1       2       3       4       5       6       7       8       9
+       2       4       6       8       10      12      14      16      18
+       3       6       9       12      15      18      21      24      27
+       4       8       12      16      20      24      28      32      36
+       5       10      15      20      25      30      35      40      45
+       6       12      18      24      30      36      42      48      54
+       7       14      21      28      35      42      49      56      63
+       8       16      24      32      40      48      56      64      72
+       9       18      27      36      45      54      63      72      81
+$</samp></pre>
+				</div>
+				<dl>
+					<dt>8行目</dt>
+						<dd>行の出力を制御します。変数gyouの値が１〜９の間、繰り返し処理を行います。「gyou = 1」が前処理、「gyou &lt;= 9」が繰り返し制御条件、「++gyou」が後処理になります。</dd>
+					<dt>10行目</dt>
+						<dd>列の出力を制御します。変数retuの値が１〜９の間、繰り返し処理を行います。</dd>
+					<dt>12行目</dt>
+						<dd>「gyou * retu」で九九の計算を行います。</dd>
+					<dt>15行目</dt>
+						<dd>１行分出力したので改行します。</dd>
+				</dl>
+				<aside>
+					<h4>補足</h4>
+					<p>12行目のprintf関数の書式制御文字として「\t%d」を指定していますが、<strong>\t</strong>（バックスラッシュとt）はタブ文字を表しています。</p>
+				</aside>
+			</section>
+		</section>
+
+		<section>
+			<h2 id="lbl_other">6.4 その他の文</h2>
+			<p>ここでは繰り返し処理に関連する次の文を説明します。これらの文は処理の流れを強制的に変更しますので、多用すると理解しにくいプログラムになりがちです（特にgoto文）ので、使用は極力控えた方がよいでしょう。</p>
+			<ul>
+				<li>break文</li>
+				<li>continue文</li>
+				<li>goto文</li>
+			</ul>
+			<section>
+				<h3>6.4.1 形式</h3>
+				<p>break文は繰り返し（while文、do文、for文）やswitch文から抜け出ます。</p>
+				<p>continue文は繰り返し（while文、do文、for文）処理を中断し、繰り返し条件のチェックを行います。for文の場合は、式３（後処理）を行った後に繰り返し条件のチェックを行います。</p>
+				<p>goto文は指定したラベル行に制御を移します。</p>
+				<div class="form-exp">
+					break;<br><br>
+
+					continue;<br><br>
+
+					goto ラベル;
+				</div>
+			</section>
+			<section>
+				<h3>6.4.2 例題</h3>
+				<p>while文の例題として紹介したプログラムと同じ機能ですが、こちらはbreak文で繰り返しから抜け出しています。</p>
+				<div class="source-code">
+					<div class="c"><ol><li class="li1"><div class="de1"><span class="co2">#include &lt;stdio.h&gt;</span></div></li>
+					<li class="li1"><div class="de1"><span class="kw4">int</span> main<span class="br0">&#40;</span><span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">char</span> &nbsp; &nbsp;cont<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">double</span> &nbsp;taijyu<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw4">double</span> &nbsp;sinchyo<span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;肥満度(BMI)の計算を行います<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">while</span><span class="br0">&#40;</span><span class="nu0">1</span><span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;体重(kg)と身長(m)を入力してください ==&gt; &quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">scanf</span><span class="br0">&#40;</span><span class="st0">&quot;%lf%lf&quot;</span><span class="sy0">,</span> <span class="sy0">&amp;</span>taijyu<span class="sy0">,</span> <span class="sy0">&amp;</span>sinchyo<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="coMULTI">/* 肥満度(BMI) = 体重(kg) / 身長(m) / 身長(m) */</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;肥満度は%.2fです<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> taijyu <span class="sy0">/</span> sinchyo <span class="sy0">/</span> sinchyo<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;繰り返し肥満度の計算をしますか（Y/N） ==&gt; &quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">scanf</span><span class="br0">&#40;</span><span class="st0">&quot;%*c%c&quot;</span><span class="sy0">,</span> <span class="sy0">&amp;</span>cont<span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">if</span><span class="br0">&#40;</span>cont <span class="sy0">!=</span> <span class="st0">'Y'</span> <span class="sy0">&amp;&amp;</span> cont <span class="sy0">!=</span> <span class="st0">'y'</span><span class="br0">&#41;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#123;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw2">break</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;終了します<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1">&nbsp;</div></li>
+					<li class="li1"><div class="de1">&nbsp; &nbsp; <span class="kw1">return</span> <span class="nu0">0</span><span class="sy0">;</span></div></li>
+					<li class="li1"><div class="de1"><span class="br0">&#125;</span></div></li>
+					</ol></div>
+				</div>
+				<dl>
+					<dt>10行目</dt>
+						<dd>Ｃ言語の場合、式の値が０は偽、０以外は真となりますので、１は真となり永久ループになります。「<code>for(; ;)</code>」も同じです。</dd>
+					<dt>21行目</dt>
+						<dd>変数contの値が「Y」でない場合、while文による繰り返しから抜け出します。</dd>
+				</dl>
+			</section>
+		</section>
+	</section>
+
+	<footer>
+		<nav>
+			<ul>
+				<li><a href="../../index.html">ホーム</a></li>
+				<li><a href="../c_langtop.html#lbl_index">目次</a></li>
+				<li><a href="./section06_1.html">前のページ</a></li>
+				<li><a href="../SECTION07/section07_1.html">次のページ</a></li>
+			</ul>
+		</nav>
+		<p id="footer-author">更新日：<time datetime="2018-05-17">2018年05月17日</time> Merry</p>
+	</footer>
+</div>
+</body>
+</html>

@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initialscale=1.0">
+	<meta name="robots" content="INDEX,FOLLOW">
+	<meta name="keywords" content="シェルスクリプト,関数,関数呼び出し,function,return">
+	<meta name="description" content="シェルスクリプトでの関数の使用方法をご紹介します。ここでは関数宣言と関数呼び出しについて説明します。">
+	<meta name="author" content="T.Hagiwara">
+	<script type="text/javascript" src="../../SCRIPT/common.js"></script>
+	<link rel="stylesheet" href="../../CSS3/seminar.css" type="text/css">
+	<link rel="stylesheet" href="../../CSS3/hl_bash.css" type="text/css">
+	<link rel="prev" href="./section6_7.html">
+	<link rel="next" href="../SECTION7/section7_1.html">
+	<title>Linuxの使い方 - シェルスクリプトの作り方（8/8）</title>
+	<style type="text/css">
+	</style>
+</head>
+<body>
+<div id="container">
+	<header>
+		<p>Linux講座にようこそ。このページは「Linuxの使い方&nbsp;-&nbsp;第６章&nbsp;シェルスクリプトの作り方」です。</p>
+		<h1>Linuxの使い方</h1>
+		<nav>
+			<ul>
+				<li><a href="../../index.html">ホーム</a></li>
+				<li><a href="../cmdtop.html#lbl_index">目次</a></li>
+				<li><a href="./section6_7.html">前のページ</a></li>
+				<li><a href="../SECTION7/section7_1.html">次のページ</a></li>
+			</ul>
+		</nav>
+	</header>
+
+	<section class="contents">
+		<h1>6. シェルスクリプトの作り方（8/8）</h1>
+		<section>
+			<h2>6.8 関数（2/2）</h2>
+			<section>
+				<h3 id="func_def">6.8.2 関数宣言</h3>
+				<p>関数は定義（宣言）しただけでは実行しません。<strong>関数呼び出し</strong>を行って、初めて実行します。関数が終了すると、呼び出した次のコマンドに制御が移ります。また、関数呼び出しで指定した引数は関数側では<strong>位置パラメータ</strong>として受け取ります。</p>
+				<section>
+					<h4>形式</h4>
+					<p>関数宣言の形式１と形式２は機能的な相違はありませんので、使いやすいほうを使うと良いでしょう。returnを指定しないと関数の最後のコマンドを実行して終了します。</p>
+					<p>なお、returnで返せるのは数値のみですし、関数宣言は関数呼び出しの前に記述しますので注意してください。</p>
+					<div class="form-exp">
+						※ 関数宣言の形式１<br>
+						function 関数名()<br>
+						{<br>
+						&nbsp;&nbsp;コマンドリスト<br>
+						&nbsp;&nbsp;return n<strong> ← 終了ステータスnを返して終了します</strong><br>
+						}<br>
+						<br>
+						※ 関数宣言の形式２<br>
+						関数名()<br>
+						{<br>
+						&nbsp;&nbsp;コマンドリスト<br>
+						&nbsp;&nbsp;return n<br>
+						}<br>
+						<br>
+						※ 関数呼び出し<br>
+						関数名 引数１ 引数２ … 引数n<strong> ← 必要に応じて引数を指定します</strong>
+					</div>
+				</section>
+				<section>
+					<h4>例題</h4>
+					<p>以降の例題では、シェルスクリプト内でどこでも使えるグローバル変数を英大文字の名前にしていますが、これはグローバル変数ということを明確にするためです。それ以上の意味はありません。</p>
+					<p>設定ファイルに記述したディレクトリパス名（絶対パス名）のバックアップを~/BACKUPに取得します。設定ファイルは第１引数で指定しますが、指定しない場合は~/mybin/ex60.confを使用します。（ex60.sh）</p>
+					<div class="exe-samp">
+<pre class="bash"><span class="co0">#!/bin/bash</span>
+<span class="co0"># 機能  :  設定ファイルに記述したディレクトリパス名のバックアップを~/BACKUPに取得します。</span>
+<span class="co0">#          設定ファイルは第１引数で指定しますが、指定しない場合は「~/mybin/ex60.conf」を使用します</span>
+<span class="co0"># 作成  :  メリー</span>
+&nbsp;
+<span class="re2">BACKUP_CONFIG_PATH</span>=<span class="co1">${1:-${HOME}</span><span class="sy0">/</span>mybin<span class="sy0">/</span>ex60.conf<span class="br0">&#125;</span>       <span class="co0"># 設定ファイルのパス名</span>
+<span class="re2">BACKUP_DEST_PATH</span>=<span class="st0">&quot;<span class="es3">${HOME}</span>/BACKUP/&quot;</span>                     <span class="co0"># バックアップファイル格納先のパス名</span>
+<span class="kw3">declare</span> <span class="re5">-a</span> BACKUP_SOURCE_DIR                           <span class="co0"># バックアップ対象ディレクトリの格納用配列</span>
+&nbsp;
+<span class="co0"># バックアップ作業を行う</span>
+<span class="kw1">function</span> ExecBackup<span class="br0">&#40;</span><span class="br0">&#41;</span>                  <span class="co0"># バックアップ取得関数</span>
+<span class="br0">&#123;</span>
+    <span class="kw2">tar</span> <span class="re5">-C</span> <span class="st0">&quot;$1&quot;</span> <span class="re5">-cjf</span> - .  <span class="sy0">&gt;</span> <span class="st0">&quot;$2&quot;</span>       <span class="co0"># バックアップ取得</span>
+&nbsp;
+    <span class="kw3">return</span> <span class="re4">$?</span>                          <span class="co0"># バックアップの結果を戻す</span>
+<span class="br0">&#125;</span>
+&nbsp;
+<span class="co0"># 設定ファイルの内容をBACKUP_SOURCE_DIRに取得</span>
+<span class="kw1">function</span> GetConfig<span class="br0">&#40;</span><span class="br0">&#41;</span>                   <span class="co0"># 設定ファイルの内容取得関数</span>
+<span class="br0">&#123;</span>
+    <span class="kw3">local</span> path
+    <span class="kw3">local</span> <span class="re5">-i</span> index
+&nbsp;
+    <span class="co0"># 設定ファイルの有無をチェック</span>
+    <span class="kw1">if</span> <span class="br0">&#91;</span><span class="br0">&#91;</span> <span class="sy0">!</span> <span class="re5">-f</span> <span class="st0">&quot;<span class="es2">$BACKUP_CONFIG_PATH</span>&quot;</span> <span class="br0">&#93;</span><span class="br0">&#93;</span>
+    <span class="kw1">then</span>
+        <span class="kw3">echo</span> <span class="st0">&quot;設定ファイルの<span class="es3">${BACKUP_CONFIG_PATH}</span>がありません。中止します。&quot;</span>
+        <span class="kw3">exit</span> <span class="nu0">1</span>;
+    <span class="kw1">fi</span>
+&nbsp;
+    <span class="re2">index</span>=<span class="nu0">0</span>
+    <span class="kw1">for</span> path <span class="kw1">in</span> $<span class="br0">&#40;</span><span class="kw2">cat</span> <span class="st0">&quot;<span class="es2">$BACKUP_CONFIG_PATH</span>&quot;</span><span class="br0">&#41;</span>
+    <span class="kw1">do</span>
+        <span class="co0"># バックアップ対象ディレクトリの有無をチェック</span>
+        <span class="kw1">if</span> <span class="br0">&#91;</span><span class="br0">&#91;</span> <span class="re5">-d</span> <span class="st0">&quot;<span class="es2">$path</span>&quot;</span> <span class="br0">&#93;</span><span class="br0">&#93;</span>
+        <span class="kw1">then</span>
+            <span class="co0"># バックアップ対象ディレクトリを格納</span>
+            BACKUP_SOURCE_DIR<span class="br0">&#91;</span><span class="re1">$index</span><span class="br0">&#93;</span>=<span class="st0">&quot;<span class="es2">$path</span>&quot;</span>
+            <span class="re2">index</span>=$<span class="br0">&#40;</span><span class="br0">&#40;</span> <span class="re1">$index</span> + <span class="nu0">1</span> <span class="br0">&#41;</span><span class="br0">&#41;</span>
+        <span class="kw1">else</span>
+            <span class="kw3">echo</span> <span class="st0">&quot;バックアップ対象の<span class="es3">${path}</span>がありません。スキップします。&quot;</span>
+        <span class="kw1">fi</span>
+    <span class="kw1">done</span>
+&nbsp;
+    <span class="co0"># バックアップ対象ディレクトリの数をチェック</span>
+    <span class="kw1">if</span> <span class="br0">&#40;</span><span class="br0">&#40;</span> <span class="co1">${#BACKUP_SOURCE_DIR[*]}</span> == <span class="nu0">0</span> <span class="br0">&#41;</span><span class="br0">&#41;</span>
+    <span class="kw1">then</span>
+        <span class="kw3">echo</span> <span class="st0">&quot;バックアップ対象ディレクトリがありません。中止します。&quot;</span>
+        <span class="kw3">exit</span> <span class="nu0">2</span>
+    <span class="kw1">fi</span>
+&nbsp;
+    <span class="kw3">return</span> <span class="nu0">0</span>
+<span class="br0">&#125;</span>
+&nbsp;
+<span class="co0"># 設定ファイルの内容をBACKUP_SOURCE_DIRに取得</span>
+GetConfig                              <span class="co0"># 設定ファイルの内容取得関数の呼び出し</span>
+&nbsp;
+<span class="kw1">for</span> path <span class="kw1">in</span> <span class="co1">${BACKUP_SOURCE_DIR[*]}</span>
+<span class="kw1">do</span>
+    <span class="co0"># バックアップ対象ディレクトリの最後のディレクトリ名を取得</span>
+    <span class="re2">dir_name</span>=<span class="st0">&quot;<span class="es3">${path##/*/}</span>&quot;</span>
+    <span class="co0"># バックアップファイルのパス名を生成（YYMMDD_HHMMSS_ディレクトリ名.tar.bz2）</span>
+    <span class="re2">backup_file</span>=<span class="st0">&quot;<span class="es3">${BACKUP_DEST_PATH}</span><span class="es4">$(date &quot;+%Y%m%d_%H%M%S_${dir_name}.tar.bz2&quot;)</span>&quot;</span>
+&nbsp;
+    ExecBackup <span class="st0">&quot;<span class="es2">$path</span>&quot;</span> <span class="st0">&quot;<span class="es2">$backup_file</span>&quot;</span>  <span class="co0"># バックアップ取得関数の呼び出し</span>
+    <span class="co0"># バックアップ結果のチェック</span>
+    <span class="kw1">if</span> <span class="br0">&#40;</span><span class="br0">&#40;</span> <span class="re4">$?</span> == <span class="nu0">0</span> <span class="br0">&#41;</span><span class="br0">&#41;</span>
+    <span class="kw1">then</span>
+        <span class="kw3">echo</span> <span class="st0">&quot;<span class="es3">${path}</span>のバックアップを取得しました。&quot;</span>
+    <span class="kw1">else</span>
+        <span class="kw3">echo</span> <span class="st0">&quot;<span class="es3">${path}</span>のバックアップを取得できませんでした。&quot;</span>
+    <span class="kw1">fi</span>
+<span class="kw1">done</span>
+&nbsp;
+<span class="kw3">echo</span> <span class="st0">&quot;バックアップを終了します。&quot;</span></pre>
+					</div>
+					<div class="exe-samp">
+<pre><samp>$ <kbd>cat ~/mybin/ex60.conf</kbd><strong> ← 設定ファイルの内容を表示します</strong>
+/home/merry/WORK/DATA
+/home/merry/WORK/DUMMY
+/home/merry/WORK/PHOTO
+/home/merry/WORK/SCRIPT
+/home/merry/TMP/WORK/bookmarks.html
+$
+$ <kbd>ex60.sh</kbd><strong> ← バックアップを実行します</strong>
+バックアップ対象の/home/merry/WORK/DUMMYがありません。スキップします。
+バックアップ対象の/home/merry/TMP/WORK/bookmarks.htmlがありません。スキップします。
+/home/merry/WORK/DATAのバックアップを取得しました。
+/home/merry/WORK/PHOTOのバックアップを取得しました。
+/home/merry/WORK/SCRIPTのバックアップを取得しました。
+バックアップを終了します。
+$
+$ <kbd>ls -l ~/BACKUP</kbd><strong> ← バックアップの実行結果を確認します</strong>
+合計 732
+-rw-r--r-- 1 merry merry 676106  2月 19 09:52 20180219_095246_DATA.tar.bz2
+-rw-r--r-- 1 merry merry  59131  2月 19 09:52 20180219_095246_PHOTO.tar.bz2
+-rw-r--r-- 1 merry merry   5775  2月 19 09:52 20180219_095246_SCRIPT.tar.bz2
+$
+$ <kbd>tar -tf ~/BACKUP/20180219_095246_SCRIPT.tar.bz2</kbd><strong> ← バックアップファイルの内容を表示します</strong>
+./
+./loop.prg
+./ex02.sh
+./loop.c
+./ex03.sh
+./ex01.sh
+$</samp></pre>
+					</div>
+				</section>
+			</section>
+			<section>
+				<!-- 関数宣言の分離 -->
+				<h3 id="func_load">6.8.3 関数宣言の分離</h3>
+				<p>シェルスクリプトの機能を関数として宣言しておくと、別のシェルスクリプトでもその関数を使いたいということがあります。その場合、エディタで関数宣言の部分をコピーしても良いのですが、関数に変更が起きたときの処置が面倒です。そこで、複数のシェルスクリプトで共通に使われるような関数は共通関数として、１つのファイルにまとめて宣言しておくと便利です。</p>
+				<p>共通関数を使用するシェルスクリプトでは、共通関数を宣言しているファイルを取り込むことにより、共通関数を使用することが出来ます。ファイルの取り込みは<strong>source</strong>コマンドを使用します。</p>
+				<section>
+					<h4>形式</h4>
+					<p>sourceコマンドは引数で指定されたファイルをsourceコマンド実行プロセスと同じプロセスで実行させるためのコマンドです。</p>
+					<div class="form-exp">
+						source 取り込むファイルのパス名<strong> ← sourceの替わりに.（ドット）も使えます。引数の指定もできます</strong>
+					</div>
+				</section>
+				<section>
+					<h4>例題</h4>
+					<p>前の例題の２つの関数（ExecBackupとGetConfig）を共通関数として、１つのファイル（ex62.sh）にまとめました。ex62.shは省略します。</p>
+					<p>標準入力から入力したディレクトリパス名のバックアップを~/BACKUPに取得します。入力した値は作業用ファイル（/tmp/ex61.conf）に出力し、設定ファイルとして使用します。（ex61.sh）</p>
+					<div class="exe-samp">
+<pre class="bash"><span class="co0">#!/bin/bash</span>
+<span class="co0"># 機能  :   標準入力から入力したディレクトリパス名のバックアップを~/BACKUPに取得します。</span>
+<span class="co0">#           入力した値は/tmp/ex61.confに出力し、設定ファイルとして使用します。</span>
+<span class="co0"># 作成  :   メリー</span>
+&nbsp;
+<span class="kw3">source</span> ex62.sh                         <span class="co0"># 共通関数の取り込み</span>
+&nbsp;
+<span class="re2">BACKUP_CONFIG_PATH</span>=<span class="st0">&quot;/tmp/ex61.conf&quot;</span>    <span class="co0"># 設定ファイルのパス名</span>
+<span class="re2">BACKUP_DEST_PATH</span>=<span class="st0">&quot;<span class="es3">${HOME}</span>/BACKUP/&quot;</span>     <span class="co0"># バックアップファイル格納先のパス名</span>
+<span class="kw3">declare</span> <span class="re5">-a</span> BACKUP_SOURCE_DIR           <span class="co0"># バックアップ対象ディレクトリの格納用配列</span>
+&nbsp;
+<span class="kw3">echo</span> <span class="st0">&quot;バックアップ対象ディレクトリの絶対パス名を入力してください。&quot;</span>
+<span class="co0"># 絶対パス名としてendが入力されるまで繰り返す</span>
+<span class="kw1">until</span> <span class="br0">&#91;</span><span class="br0">&#91;</span> <span class="st0">&quot;<span class="es2">$path</span>&quot;</span> = <span class="st0">&quot;end&quot;</span> <span class="br0">&#93;</span><span class="br0">&#93;</span>
+<span class="kw1">do</span>
+    <span class="kw2">read</span> <span class="re5">-p</span> <span class="st0">&quot;絶対パス名 ==&gt; &quot;</span> path
+&nbsp;
+    <span class="kw1">if</span> <span class="br0">&#91;</span><span class="br0">&#91;</span> <span class="st0">&quot;<span class="es2">$path</span>&quot;</span> <span class="sy0">!</span>= <span class="st0">&quot;end&quot;</span> <span class="br0">&#93;</span><span class="br0">&#93;</span>
+    <span class="kw1">then</span>
+        <span class="co0"># 入力した値を設定ファイルに追加出力</span>
+        <span class="kw3">echo</span> <span class="st0">&quot;<span class="es2">$path</span>&quot;</span> <span class="sy0">&gt;&gt;</span> <span class="re1">$BACKUP_CONFIG_PATH</span>
+    <span class="kw1">fi</span>
+<span class="kw1">done</span>
+<span class="kw3">echo</span>
+&nbsp;
+<span class="co0"># 設定ファイルの内容をBACKUP_SOURCE_DIRに取得</span>
+GetConfig
+&nbsp;
+<span class="kw3">echo</span> <span class="st0">&quot;バックアップを開始します。&quot;</span>
+&nbsp;
+<span class="kw1">for</span> path <span class="kw1">in</span> <span class="co1">${BACKUP_SOURCE_DIR[*]}</span>
+<span class="kw1">do</span>
+    <span class="co0"># バックアップ対象ディレクトリの最後のディレクトリ名を取得</span>
+    <span class="re2">dir_name</span>=<span class="st0">&quot;<span class="es3">${path##/*/}</span>&quot;</span>
+    <span class="co0"># バックアップファイルのパス名を生成（YYMMDD_HHMMSS_ディレクトリ名.tar.bz2）</span>
+    <span class="re2">backup_file</span>=<span class="st0">&quot;<span class="es3">${BACKUP_DEST_PATH}</span><span class="es4">$(date &quot;+%Y%m%d_%H%M%S_${dir_name}.tar.bz2&quot;)</span>&quot;</span>
+&nbsp;
+    ExecBackup <span class="st0">&quot;<span class="es2">$path</span>&quot;</span> <span class="st0">&quot;<span class="es2">$backup_file</span>&quot;</span>
+    <span class="co0"># バックアップ結果のチェック</span>
+    <span class="kw1">if</span> <span class="br0">&#40;</span><span class="br0">&#40;</span> <span class="re4">$?</span> == <span class="nu0">0</span> <span class="br0">&#41;</span><span class="br0">&#41;</span>
+    <span class="kw1">then</span>
+        <span class="kw3">echo</span> <span class="st0">&quot;<span class="es3">${path}</span>のバックアップを取得しました。&quot;</span>
+    <span class="kw1">else</span>
+        <span class="kw3">echo</span> <span class="st0">&quot;<span class="es3">${path}</span>のバックアップを取得できませんでした。&quot;</span>
+    <span class="kw1">fi</span>
+<span class="kw1">done</span>
+&nbsp;
+<span class="kw3">echo</span> <span class="st0">&quot;バックアップを終了します。&quot;</span>
+<span class="kw2">rm</span> <span class="re5">-f</span> <span class="re1">$BACKUP_CONFIG_PATH</span>              <span class="co0"># 設定ファイルを削除</span></pre>
+					</div>
+					<div class="exe-samp">
+<pre><samp>$ <kbd>ex61.sh</kbd>
+バックアップ対象ディレクトリの絶対パス名を入力してください。
+絶対パス名 ==&gt; /home/merry/WORK/PHOTO
+絶対パス名 ==&gt; /home/merry/SCRIPT
+絶対パス名 ==&gt; /home/merry/WORK/SCRIPT
+絶対パス名 ==&gt; end
+
+バックアップ対象の/home/merry/SCRIPTがありません。スキップします。
+バックアップを開始します。
+/home/merry/WORK/PHOTOのバックアップを取得しました。
+/home/merry/WORK/SCRIPTのバックアップを取得しました。
+バックアップを終了します。
+$</samp></pre>
+					</div>
+				</section>
+				<aside>
+					<h4>補足</h4>
+					<p>上記例題のex60.shとex61.shでは、ExecBackup関数が設定した終了ステータスをifコマンドで判定しています。</p>
+					<div class="exe-samp">
+<pre class="bash">    ExecBackup <span class="st0">&quot;<span class="es2">$path</span>&quot;</span> <span class="st0">&quot;<span class="es2">$backup_file</span>&quot;</span>
+    <span class="co0"># バックアップ結果のチェック</span>
+    <span class="kw1">if</span> <span class="br0">&#40;</span><span class="br0">&#40;</span> <span class="re4">$?</span> == <span class="nu0">0</span> <span class="br0">&#41;</span><span class="br0">&#41;</span>
+    <span class="kw1">then</span>
+        <span class="kw3">echo</span> <span class="st0">&quot;<span class="es3">${path}</span>のバックアップを取得しました。&quot;</span>
+    <span class="kw1">else</span>
+        <span class="kw3">echo</span> <span class="st0">&quot;<span class="es3">${path}</span>のバックアップを取得できませんでした。&quot;</span>
+    <span class="kw1">fi</span></pre>
+					</div>
+					<p>この場合、ifコマンドにExecBackup関数の呼び出しを直接記述できます。</p>
+					<div class="exe-samp">
+<pre class="bash">    <span class="co0"># バックアップ取得関数の呼び出し</span>
+    <span class="kw1">if</span> ExecBackup <span class="st0">&quot;<span class="es2">$path</span>&quot;</span> <span class="st0">&quot;<span class="es2">$backup_file</span>&quot;</span>
+    <span class="kw1">then</span>
+        <span class="kw3">echo</span> <span class="st0">&quot;<span class="es3">${path}</span>のバックアップを取得しました。&quot;</span>
+    <span class="kw1">else</span>
+        <span class="kw3">echo</span> <span class="st0">&quot;<span class="es3">${path}</span>のバックアップを取得できませんでした。&quot;</span>
+    <span class="kw1">fi</span></pre>
+					</div>
+					<p>関数だけではなく、終了ステータスを設定する通常のコマンドもifやwhileコマンドに直接記述できます。</p>
+				</aside>
+			</section>
+		</section>
+	</section>
+
+	<footer>
+		<nav>
+			<ul>
+				<li><a href="../../index.html">ホーム</a></li>
+				<li><a href="../cmdtop.html#lbl_index">目次</a></li>
+				<li><a href="./section6_7.html">前のページ</a></li>
+				<li><a href="../SECTION7/section7_1.html">次のページ</a></li>
+			</ul>
+		</nav>
+		<p id="footer-author">更新日：<time datetime="2018-02-19">2018年02月19日</time> Merry</p>
+	</footer>
+</div>
+</body>
+</html>
